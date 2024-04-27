@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react'
 import { View, Text, Dimensions, TextInput, TouchableOpacity, Image, SafeAreaView, StyleSheet } from 'react-native'
 import GlobalStyles from '../../assets/styles/GlobalStyles'
 import colors from '../../assets/colors/Colors';
+import customFonts from '../../assets/fonts/Fonts';
 
 
 const { height, width } = Dimensions.get("window");
@@ -71,14 +72,14 @@ export default function EmailVerification({route,navigation}) {
         <SafeAreaView>
             <View style={[GlobalStyles.container, { justifyContent: 'flex-start' }]}>
                 <View style={{ width: width - 40, marginTop: 50, alignSelf: 'center' }}>
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}  style ={{alignSelf:'flex-start'}}>
                         <View style={GlobalStyles.backBtn}>
                             <Image source={require('../../assets/images/backArrow.png')}
                                 style={GlobalStyles.backBtnImage}
                             />
                         </View>
                     </TouchableOpacity>
-                    <Text style={{ fontSize: 28, fontWeight: '700', marginTop: 30 }}>
+                    <Text style={{ fontSize: 28, fontWeight: '700', marginTop: 30,fontFamily:customFonts.semibold  }}>
                         Verification
                     </Text>
 

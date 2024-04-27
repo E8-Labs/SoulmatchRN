@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { View, Text, Dimensions, TextInput, TouchableOpacity, Image, SafeAreaView } from 'react-native'
+import { View, Text, Dimensions, Keyboard,KeyboardAvoidingView,TouchableWithoutFeedback,Platform, TouchableOpacity, Image, SafeAreaView } from 'react-native'
 import GlobalStyles from '../../assets/styles/GlobalStyles'
 import colors from '../../assets/colors/Colors';
+import customFonts from '../../assets/fonts/Fonts';
 
 
 const { height, width } = Dimensions.get("window");
@@ -16,36 +17,42 @@ export default function SuccessfullyPasswordChanged(props) {
 
     return (
         <SafeAreaView>
-            <View style={[GlobalStyles.container, ]}>
-                {/* <View style={{ width: width - 40, marginTop: 50, alignItems: 'flex-start' }}>
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                style={{ flex: 1, flexDirection: 'column', }}>
+                <TouchableWithoutFeedback style={GlobalStyles.container} onPress={Keyboard.dismiss}>
+                    <View style={[GlobalStyles.container,]}>
+                        {/* <View style={{ width: width - 40, marginTop: 50, alignItems: 'flex-start' }}>
                    
                     
                 </View> */}
-                <View style={{ width: width - 40,    alignItems: 'center' }}>
-                    <Image source={require('../../assets/images/congratsImage.png')}
-                        style={{ width: 205 / 430 * width, height: 198 / 930 * height, resizeMode: 'contain' }}
-                    />
-                    <Text style={{ fontSize: 28, fontWeight: '700', marginTop: 30 }}>
-                        Password changed!
-                    </Text>
+                        <View style={{ width: width - 40, alignItems: 'center' }}>
+                            <Image source={require('../../assets/images/congratsImage.png')}
+                                style={{ width: 205 / 430 * width, height: 198 / 930 * height, resizeMode: 'contain' }}
+                            />
+                            <Text style={{ fontSize: 28, fontWeight: '700', marginTop: 30, fontFamily: customFonts.semibold }}>
+                                Password changed!
+                            </Text>
 
-                    <Text style={[GlobalStyles.splashMeduimText, { marginTop: 10 ,textAlign:'center'}]}>
-                        Your password has been changed successfully.
-                    </Text>
+                            <Text style={[GlobalStyles.splashMeduimText, { marginTop: 10, textAlign: 'center' }]}>
+                                Your password has been changed successfully.
+                            </Text>
 
-                    <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 50 / 924 * height }]}
-                        onPress={()=>props.navigation.push("LoginUser",{
-                            forScreen:"Password"
-                        })}
-                    >
-                        <Text style={GlobalStyles.btnText}>
-                            Continue
-                        </Text>
-                    </TouchableOpacity>
+                            <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 50 / 924 * height }]}
+                                onPress={() => props.navigation.push("LoginUser", {
+                                    forScreen: "Password"
+                                })}
+                            >
+                                <Text style={GlobalStyles.btnText}>
+                                    Continue
+                                </Text>
+                            </TouchableOpacity>
 
-                </View>
+                        </View>
 
-            </View>
+                    </View>
+                </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     )
 }
