@@ -54,26 +54,26 @@ export default function App() {
 
   return (
 
-    // <NavigationContainer>
-    //   <Stack.Navigator initialRouteName="SlideContainer" screenOptions={{ headerShown: false }}>
-    //     <Stack.Screen name="SplashMainScreen" component={SplashMainScreen} options={{ gestureEnabled: false }} />
-    //     <Stack.Screen name="SlideContainer" component={SlideContainer} />
-    //     <Stack.Screen name="RegisterUser" component={RegisterUser} options={{ gestureEnabled: false }} />
-    //     <Stack.Screen name="LoginUser" component={LoginUser} options={{ gestureEnabled: false }} />
-    //     <Stack.Screen name="GetEmail" component={GetEmail} options={{ gestureEnabled: false }} />
-    //     <Stack.Screen name="EmailVerification" component={EmailVerification} options={{ gestureEnabled: false }} />
-    //     <Stack.Screen name="SuccessfullyPasswordChanged" component={SuccessfullyPasswordChanged} options={{ gestureEnabled: false }} />
-    //     <Stack.Screen name="CreateNewPassword" component={CreateNewPassword} options={{ gestureEnabled: false }} />
-    //     <Stack.Screen name="TabBarContainer" component={TabBarContainer} options={{ gestureEnabled: false }} />
-    //     <Stack.Screen name="CardContainerMain" component={CardContainerMain} options={{ gestureEnabled: false }} /> 
-    //     <Stack.Screen name="LikesList" component={LikesList} options={{ gestureEnabled: false }} /> 
-    //     <Stack.Screen name="ProfileDetail" component={ProfileDetail} options={{ gestureEnabled: false }} /> 
-    //   </Stack.Navigator>
-    // </NavigationContainer>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="SlideContainer" screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="SplashMainScreen" component={SplashMainScreen} options={{ gestureEnabled: false }} />
+        <Stack.Screen name="SlideContainer" component={SlideContainer} />
+        <Stack.Screen name="RegisterUser" component={RegisterUser} options={{ gestureEnabled: false }} />
+        <Stack.Screen name="LoginUser" component={LoginUser} options={{ gestureEnabled: false }} />
+        <Stack.Screen name="GetEmail" component={GetEmail} options={{ gestureEnabled: false }} />
+        <Stack.Screen name="EmailVerification" component={EmailVerification} options={{ gestureEnabled: false }} />
+        <Stack.Screen name="SuccessfullyPasswordChanged" component={SuccessfullyPasswordChanged} options={{ gestureEnabled: false }} />
+        <Stack.Screen name="CreateNewPassword" component={CreateNewPassword} options={{ gestureEnabled: false }} />
+        <Stack.Screen name="TabBarContainer" component={TabBarContainer} options={{ gestureEnabled: false }} />
+        <Stack.Screen name="CardContainerMain" component={CardContainerMain} options={{ gestureEnabled: false }} /> 
+        <Stack.Screen name="LikesList" component={LikesList} options={{ gestureEnabled: false }} /> 
+        <Stack.Screen name="ProfileDetail" component={ProfileDetail} options={{ gestureEnabled: false }} /> 
+      </Stack.Navigator>
+    </NavigationContainer>
 
 // {/* <Testfile /> */}
     // <ProfileDetail/>
-<LikesList/>
+// {/* <LikesList/> */}
     // <SplashMainScreen />
     // <SlideScreen3/>
     // <SplashMainScreen/>
