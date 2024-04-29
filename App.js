@@ -20,6 +20,10 @@ import Testfile from './Testfile';
 import CardContainerMain from './Screens/DiscoverFlow/CardSwipContainer/CardContainerMain';
 import ProfileDetail from './Screens/DiscoverFlow/ProfileDetail';
 import LikesList from './Screens/DiscoverFlow/LikesList';
+import FilterPopup from './Components/FilterPopup';
+import DiscoverGotMatch from './Components/DiscoverGotMatch';
+import GotMatch from './Screens/DiscoverFlow/GotMatch';
+import MessagesList from './Screens/ChatFlow/MessagesList';
 
 // import { NavigationContainer } from "@react-navigation/native";
 // import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -55,7 +59,7 @@ export default function App() {
   return (
 
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="SlideContainer" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName="MessagesList" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="SplashMainScreen" component={SplashMainScreen} options={{ gestureEnabled: false }} />
         <Stack.Screen name="SlideContainer" component={SlideContainer} />
         <Stack.Screen name="RegisterUser" component={RegisterUser} options={{ gestureEnabled: false }} />
@@ -68,6 +72,10 @@ export default function App() {
         <Stack.Screen name="CardContainerMain" component={CardContainerMain} options={{ gestureEnabled: false }} /> 
         <Stack.Screen name="LikesList" component={LikesList} options={{ gestureEnabled: false }} /> 
         <Stack.Screen name="ProfileDetail" component={ProfileDetail} options={{ gestureEnabled: false }} /> 
+        <Stack.Screen name="FilterPopup" component={FilterPopup} options={{ gestureEnabled: false }} /> 
+        <Stack.Screen name="DiscoverGotMatch" component={DiscoverGotMatch} options={{ gestureEnabled: false }} /> 
+        <Stack.Screen name="GotMatch" component={GotMatch} options={{ gestureEnabled: false }} /> 
+        <Stack.Screen name="MessagesList" component={MessagesList} options={{ gestureEnabled: false }} /> 
       </Stack.Navigator>
     </NavigationContainer>
 

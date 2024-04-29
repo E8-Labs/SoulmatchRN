@@ -1,43 +1,57 @@
-import React from 'react'
+import React ,{useState}from 'react'
 import { View, Text, Dimensions, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import CardContainerMain from '../DiscoverFlow/CardSwipContainer/CardContainerMain'
 import customFonts from '../../assets/fonts/Fonts';
 import LikesList from '../DiscoverFlow/LikesList';
+import FilterPopup from '../../Components/FilterPopup';
+import DiscoverGotMatch from '../../Components/DiscoverGotMatch';
 
 
 const { height, width } = Dimensions.get("window");
 
 
+
 export default function DiscoverMain(props) {
+
+const [openModal, setOpenModal] = useState(false);
+
+const closeModal = () =>{
+  setOpenModal(false)
+}
+
   return (
     <View style={{ flex: 1, alignItems: 'center' }}>
-      <View style={{ flexDirection: 'row', marginTop: 40 / 930 * height, width: width - 30, justifyContent: 'space-between' }}>
+      <View style={{ flexDirection: 'row', marginTop: 60 / 930 * height, width: width - 30, justifyContent: 'space-between' }}>
         <Text style={{ fontSize: 24, fontFamily: customFonts.meduim }}>Emily Grace</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 / 430 * width }}>
-          <TouchableOpacity onPress={()=>{
+          <TouchableOpacity onPress={() => {
             props.navigation.navigate("LikesList")
           }}>
             <Image source={require('../../assets/images/profileLike.png')}
               style={styles.image}
             />
           </TouchableOpacity>
-          
+
           <TouchableOpacity>
             <Image source={require('../../assets/images/bell.png')}
               style={styles.image}
             />
           </TouchableOpacity>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => {
+              setOpenModal(true)
+          }}>
             <Image source={require('../../assets/images/setting.png')}
               style={styles.image}
             />
           </TouchableOpacity>
+          <FilterPopup visible ={openModal} close = {closeModal}/>
 
 
         </View>
       </View>
       <CardContainerMain />
+      {/* <DiscoverGotMatch/> */}
     </View>
   )
 }

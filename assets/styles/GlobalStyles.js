@@ -53,8 +53,9 @@ const GlobalStyles = {
         borderColor: colors.greyText,
         borderRadius: 10,
         marginTop: 10,
-        fontSize: 12,
-        fontWeight: '500'
+        fontSize: 14,
+        fontWeight: '500',
+        fontFamily:customFonts.meduim
     },
     backBtn: {
         height: 46 / 924 * height,
