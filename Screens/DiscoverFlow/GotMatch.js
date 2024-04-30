@@ -24,7 +24,7 @@ export default function GotMatch() {
       />
 
       <Text style={{ fontSize: 28, fontFamily: customFonts.semibold, marginTop: 25 }}>You got a match!</Text>
-      <Text style={{ fontSize: 16, fontFamily: customFonts.reqular, marginTop: 8,marginBottom:40 }}>
+      <Text style={{ fontSize: 16, fontFamily: customFonts.regular, marginTop: 8,marginBottom:40 }}>
         You both liked each other.
       </Text>
 

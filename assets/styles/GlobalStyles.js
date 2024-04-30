@@ -16,7 +16,7 @@ const GlobalStyles = {
         color: colors.blueColor,
         fontSize: 18,
         fontWeight: '500',
-        fontFamily: customFonts.reqular
+        fontFamily: customFonts.regular
     },
     splashBoldText: {
         fontSize: 28 / 430 * width,
@@ -28,7 +28,7 @@ const GlobalStyles = {
         fontSize: 16 / 430 * width,
         fontWeight: '400',
         color: colors.greyLightText,
-        fontFamily: customFonts.reqular
+        fontFamily: customFonts.regular
 
     },
     reqtengularBtn: {
@@ -75,7 +75,7 @@ const GlobalStyles = {
         fontSize: 14,
         fontWeight: '400',
         color: 'red',
-        fontFamily: customFonts.reqular
+        fontFamily: customFonts.regular
     },
     likeBtn: {
         height: 46,
@@ -89,6 +89,12 @@ const GlobalStyles = {
     likeBtnImage:{
         height: 27,
          width: 27, 
+    },
+    divider: {
+        width: width - 60,
+        borderWidth: 0.5,
+        borderColor: colors.greyText,
+        marginTop: 25 / 930 * height
     }
 }
 

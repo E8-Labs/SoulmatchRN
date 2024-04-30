@@ -1,0 +1,63 @@
+# Query: reqular
+# ContextLines: 1
+
+13 results - 8 files
+
+assets/fonts/Fonts.js:
+  2      bold:'PoppinsBold',
+  3:     regular:'PoppinsRegular',
+  4      meduim:'PoppinsMedium',
+
+assets/styles/GlobalStyles.js:
+  18          fontWeight: '500',
+  19:         fontFamily: customFonts.regular
+  20      },
+
+  30          color: colors.greyLightText,
+  31:         fontFamily: customFonts.regular
+  32  
+
+  77          color: 'red',
+  78:         fontFamily: customFonts.regular
+  79      },
+
+Components/DiscoverGotMatch.js:
+  19              <Text style={{
+  20:                 fontSize: 16, fontFamily: customFonts.regular, width: width - 60, textAlign: 'center', marginTop: 10
+  21              }}>
+
+Components/FilterPopup.js:
+  107  
+  108:                                                 <Text style={{ fontSize: 14, fontFamily: customFonts.regular }}>{item.name}</Text>
+  109  
+
+Screens/ChatFlow/MessagesList.js:
+  42                                  <View style={{ flexDirection: 'column', alignItems: 'flex-end', }}>
+  43:                                     <Text style={{ fontSize: 12, fontFamily: customFonts.regular,}}>{item.time}</Text>
+  44                                      <View style={{ backgroundColor: colors.blueColor, paddingVertical: 5, borderRadius: 50, paddingHorizontal: 8 }}>
+
+Screens/DiscoverFlow/GotMatch.js:
+  26        <Text style={{ fontSize: 28, fontFamily: customFonts.semibold, marginTop: 25 }}>You got a match!</Text>
+  27:       <Text style={{ fontSize: 16, fontFamily: customFonts.regular, marginTop: 8,marginBottom:40 }}>
+  28          You both liked each other.
+
+Screens/DiscoverFlow/ProfileDetail.js:
+  215                              }}>
+  216:                                 <Text style={{ fontSize: 16, fontFamily: customFonts.regular }}>{item.name}</Text>
+  217                                  {
+  218                                      item.hashtage ? (
+  219:                                         <Text style={{ fontSize: 16, fontFamily: customFonts.regular }}>{item.hashtage}</Text>
+  220                                      ) : ''
+
+  241                                  <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, color: '#000' }}>Travel Dreaming</Text>
+  242:                                 <Text style={{ fontSize: 16, fontFamily: customFonts.regular, color: '#4D4D4D' }}>If you could visit any country in the world, where would you go and why?</Text>
+  243                                  {
+
+  266                                              }}>
+  267:                                                 <Text style={{ fontSize: 14, fontFamily: customFonts.regular, color: '#000' }}>{item.name}</Text>
+  268  
+
+Screens/LoginFlow/RegisterUser.js:
+  131                                      />
+  132:                                     <Text style={{ color: colors.greyLightText, fontSize: 14, fontWeight: '400', fontFamily: customFonts.regular }}>or</Text>
+  133                                      <Image source={require('../../assets/images/Line.png')}

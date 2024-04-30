@@ -24,6 +24,8 @@ import FilterPopup from './Components/FilterPopup';
 import DiscoverGotMatch from './Components/DiscoverGotMatch';
 import GotMatch from './Screens/DiscoverFlow/GotMatch';
 import MessagesList from './Screens/ChatFlow/MessagesList';
+import ChatScreen from './Screens/ChatFlow/ChatScreen';
+import ReportChat from './Components/ReportChat';
 
 // import { NavigationContainer } from "@react-navigation/native";
 // import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -46,20 +48,25 @@ export default function App() {
 
  useEffect(()=>{
   if (fontsLoaded || fontError) {
-     console.log(fontsLoaded)
-     console.log(fontError)
+     console.log("Loading fonts ", fontsLoaded)
+     console.log("Font error ", fontError)
   }
  },[fontsLoaded,fontError])
     
 
   if (!fontsLoaded && !fontError) {
-    return 
+    return (
+    
+      <View> 
+          <Text>Loading Fonts</Text>
+      </View>
+  )
   } else {
 
   return (
 
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="MessagesList" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName="ChatScreen" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="SplashMainScreen" component={SplashMainScreen} options={{ gestureEnabled: false }} />
         <Stack.Screen name="SlideContainer" component={SlideContainer} />
         <Stack.Screen name="RegisterUser" component={RegisterUser} options={{ gestureEnabled: false }} />
@@ -76,6 +83,8 @@ export default function App() {
         <Stack.Screen name="DiscoverGotMatch" component={DiscoverGotMatch} options={{ gestureEnabled: false }} /> 
         <Stack.Screen name="GotMatch" component={GotMatch} options={{ gestureEnabled: false }} /> 
         <Stack.Screen name="MessagesList" component={MessagesList} options={{ gestureEnabled: false }} /> 
+        <Stack.Screen name="ChatScreen" component={ChatScreen} options={{ gestureEnabled: false }} /> 
+        <Stack.Screen name="ReportChat" component={ReportChat} options={{ gestureEnabled: false }} /> 
       </Stack.Navigator>
     </NavigationContainer>
 

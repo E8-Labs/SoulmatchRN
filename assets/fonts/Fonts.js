@@ -1,6 +1,6 @@
 const customFonts = {
     bold:'PoppinsBold',
-    reqular:'PoppinsRegular',
+    regular:'PoppinsRegular',
     meduim:'PoppinsMedium',
     semibold:'PoppinsSemiBold',
    

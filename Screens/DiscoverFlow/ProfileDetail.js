@@ -213,10 +213,10 @@ export default function ProfileDetail({ navigation, route }) {
                                 borderWidth: 1, borderColor: colors.greyText, padding: 16, borderRadius: 10, width: width - 30,
                                 marginTop: 22 / 930 * height,
                             }}>
-                                <Text style={{ fontSize: 16, fontFamily: customFonts.reqular }}>{item.name}</Text>
+                                <Text style={{ fontSize: 16, fontFamily: customFonts.regular }}>{item.name}</Text>
                                 {
                                     item.hashtage ? (
-                                        <Text style={{ fontSize: 16, fontFamily: customFonts.reqular }}>{item.hashtage}</Text>
+                                        <Text style={{ fontSize: 16, fontFamily: customFonts.regular }}>{item.hashtage}</Text>
                                     ) : ''
                                 }
                                 <Image source={item.image}
@@ -239,7 +239,7 @@ export default function ProfileDetail({ navigation, route }) {
                                 marginTop: 22 / 930 * height,
                             }}>
                                 <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, color: '#000' }}>Travel Dreaming</Text>
-                                <Text style={{ fontSize: 16, fontFamily: customFonts.reqular, color: '#4D4D4D' }}>If you could visit any country in the world, where would you go and why?</Text>
+                                <Text style={{ fontSize: 16, fontFamily: customFonts.regular, color: '#4D4D4D' }}>If you could visit any country in the world, where would you go and why?</Text>
                                 {
                                     item.image ? (<>
                                         <Image source={item.image}
@@ -264,7 +264,7 @@ export default function ProfileDetail({ navigation, route }) {
                                                 marginTop: 8, marginBottom: 8, width: 345 / 430 * width, backgroundColor: '#F5F5F5',
                                                 borderRadius: 10, paddingVertical: 10, paddingHorizontal: 16, alignItems: 'center'
                                             }}>
-                                                <Text style={{ fontSize: 14, fontFamily: customFonts.reqular, color: '#000' }}>{item.name}</Text>
+                                                <Text style={{ fontSize: 14, fontFamily: customFonts.regular, color: '#000' }}>{item.name}</Text>
 
                                             </View>
                                             <TouchableOpacity style={{ alignSelf: 'flex-end', }}

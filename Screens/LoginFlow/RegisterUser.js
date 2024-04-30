@@ -129,7 +129,7 @@ export default function RegisterUser(props) {
                                     <Image source={require('../../assets/images/Line.png')}
                                         style={{ height: 1, width: 170 / 430 * width, }}
                                     />
-                                    <Text style={{ color: colors.greyLightText, fontSize: 14, fontWeight: '400', fontFamily: customFonts.reqular }}>or</Text>
+                                    <Text style={{ color: colors.greyLightText, fontSize: 14, fontWeight: '400', fontFamily: customFonts.regular }}>or</Text>
                                     <Image source={require('../../assets/images/Line.png')}
                                         style={{ height: 1, width: 170 / 430 * width, }}
                                     />

@@ -54,7 +54,7 @@ export default function FilterPopup({visible,close}) {
                                 </TouchableOpacity>
                             </View>
 
-                            <View style={[styles.divider, { width: width }]}></View>
+                            <View style={[GlobalStyles.divider, { width: width }]}></View>
 
 
                             <View style={{ width: width - 60, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 22 / 930 * height }}>
@@ -68,7 +68,7 @@ export default function FilterPopup({visible,close}) {
 
                             {/* add range picker here */}
 
-                            <View style={styles.divider}></View>
+                            <View style={GlobalStyles.divider}></View>
 
 
 
@@ -84,7 +84,7 @@ export default function FilterPopup({visible,close}) {
                             {/* add range picker here */}
 
 
-                            <View style={styles.divider}></View>
+                            <View style={GlobalStyles.divider}></View>
 
 
                             <View style={{ width: width - 60, flexDirection: 'column', marginTop: 22 / 930 * height }}>
@@ -105,7 +105,7 @@ export default function FilterPopup({visible,close}) {
                                                     style={{ height: 24 / 930 * height, width: 24 / 930 * height }}
                                                 />
 
-                                                <Text style={{ fontSize: 14, fontFamily: customFonts.reqular }}>{item.name}</Text>
+                                                <Text style={{ fontSize: 14, fontFamily: customFonts.regular }}>{item.name}</Text>
 
                                             </View>
                                         </TouchableOpacity>
@@ -115,7 +115,7 @@ export default function FilterPopup({visible,close}) {
 
                             </View>
 
-                            <View style={styles.divider}></View>
+                            <View style={GlobalStyles.divider}></View>
                             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                                 style={{}}>
                                 <TouchableWithoutFeedback style={GlobalStyles.container} onPress={Keyboard.dismiss}>
@@ -165,10 +165,7 @@ export default function FilterPopup({visible,close}) {
 }
 
 const styles = StyleSheet.create({
-    divider: {
-        width: width - 60,
-        borderWidth: 0.5,
-        borderColor: colors.greyText,
-        marginTop: 25 / 930 * height
-    }
+    
+
+
 })

@@ -2,17 +2,20 @@ import React from 'react'
 import { View, Text, Dimensions, Image, TouchableOpacity } from 'react-native'
 import customFonts from '../../assets/fonts/Fonts'
 import GlobalStyles from '../../assets/styles/GlobalStyles'
+import MessagesList from '../ChatFlow/MessagesList'
 
 const { height, width } = Dimensions.get('window')
 
 export default function MessageMain() {
   return (
-    <View style={{ alignItems: 'center', height: height, }}>
+    <View style={{ alignItems: 'center', height: height,backgroundColor:'white' }}>
 
-      <View style={{ backgroundColor: 'white', height: 110 / 930 * height, width: width, shadowColor:'grey',shadowOffset:{
-            width:0,
-            height:2
-          } , shadowRadius:5,shadowOpacity:0.05}}>
+      <View style={{
+        backgroundColor: 'white', height: 110 / 930 * height, width: width, shadowColor: '#000', shadowOffset: {
+          width: 0,
+          height: 5
+        }, shadowRadius: 5, shadowOpacity: 0.04,
+      }}>
         <View style={{
           alignItems: 'flex-end', flexDirection: 'row', height: 110 / 930 * height, width: width - 50, alignSelf: 'center', paddingBottom: 10,
           justifyContent: 'space-between',
@@ -33,6 +36,8 @@ export default function MessageMain() {
           </View>
         </View>
       </View>
+
+      <MessagesList />
 
     </View>
   )

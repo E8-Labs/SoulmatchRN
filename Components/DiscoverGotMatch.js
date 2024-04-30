@@ -17,7 +17,7 @@ export default function DiscoverGotMatch() {
                 </Text>
             </View>
             <Text style={{
-                fontSize: 16, fontFamily: customFonts.reqular, width: width - 60, textAlign: 'center', marginTop: 10
+                fontSize: 16, fontFamily: customFonts.regular, width: width - 60, textAlign: 'center', marginTop: 10
             }}>
                 You’re not able to discover other users if you already have a match.
             </Text>

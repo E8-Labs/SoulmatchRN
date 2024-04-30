@@ -136,7 +136,7 @@ function MyTabBar({ state, descriptors, navigation }) {
                                     }}>
                                 </Image>
                                 <Text style={{
-                                    color: isFocused ? '#673ab7' : '#222', marginBottom: 30 / 930 * height, marginRight: getMarginRight(index),
+                                    color: isFocused ? '#673ab7' : '#222', marginBottom: 40 / 930 * height, marginRight: getMarginRight(index),
                                     marginTop: isFocused ? 35 / 930 * height : 0, fontSize: 12, marginLeft: getMarginLeft(index), fontWeight: '400'
                                 }}>
                                     {isFocused ? label : ''}
