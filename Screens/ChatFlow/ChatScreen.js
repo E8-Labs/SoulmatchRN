@@ -18,7 +18,7 @@ const activeAdd = require('../../assets/images/activeAddIcon.png')
 const add = require('../../assets/images/addIcon.png')
 
 
-export default function ChatScreen() {
+export default function ChatScreen(props) {
     let listViewRef;
 
     const [openModal, setOpenModal] = useState(false);
@@ -114,14 +114,20 @@ export default function ChatScreen() {
                 }}>
                     <View style={{ alignItems: 'center', flexDirection: 'row', width: width - 50 / 430 * width, justifyContent: 'space-between' }}>
                         <View style={{ alignItems: 'center', flexDirection: 'row', gap: 15 / 430 * width }}>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={()=>{
+                                props.navigation.goBack()
+                            }}>
                                 <View style={GlobalStyles.backBtn}>
                                     <Image source={require('../../assets/images/backArrow.png')}
                                         style={GlobalStyles.backBtnImage}
                                     />
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={()=>{
+                                props.navigation.navigate("ProfileDetail",{
+                                    fromScreen : "ChatScreen"
+                                })
+                            }}>
                                 <View style={{ alignItems: 'center', flexDirection: 'row', gap: 12 / 430 * width }}>
                                     <Image source={require('../../assets/images/profileImage.png')}
                                         style={{ height: 46 / 930 * height, width: 46 / 930 * height, borderRadius: 25 }}
@@ -137,7 +143,7 @@ export default function ChatScreen() {
 
                         </View>
 
-                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 / 430 * width}}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 / 430 * width }}>
                             <TouchableOpacity>
                                 <Image source={require('../../assets/images/videoCall.png')}
                                     style={GlobalStyles.backBtnImage}
@@ -173,16 +179,16 @@ export default function ChatScreen() {
                     <View style={{ height: height, width: width, alignItems: 'center', justifyContent: 'center', backgroundColor: '#00000050' }}>
 
                         <View style={{
-                            backgroundColor: 'white', justifyContent: 'space-between',gap:15/930*height,
+                            backgroundColor: 'white', justifyContent: 'space-between', gap: 15 / 930 * height,
                             alignItems: 'flex-start', borderRadius: 10, paddingHorizontal: 25, paddingVertical: 25,
                         }}>
                             <Text style={{ fontSize: 20, fontFamily: customFonts.meduim }}>Block Sarah Doe?</Text>
                             <Text style={{ fontSize: 14, fontFamily: customFonts.regular }}>Are you sure you want to block Sarah Doe?</Text>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', width:320/430* width, justifyContent: 'space-between', alignSelf:'center',marginTop:10}}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', width: 320 / 430 * width, justifyContent: 'space-between', alignSelf: 'center', marginTop: 10 }}>
                                 <TouchableOpacity onPress={() => { setOpenModal3(false) }}
                                     style={{
-                                         width: 150 / 430 * width, alignItems: 'center', justifyContent: 'center',
-                                        borderWidth: 1, borderRadius: 10, borderColor: '#000',paddingVertical:12,paddingHorizontal:16,
+                                        width: 150 / 430 * width, alignItems: 'center', justifyContent: 'center',
+                                        borderWidth: 1, borderRadius: 10, borderColor: '#000', paddingVertical: 12, paddingHorizontal: 16,
                                     }}
                                 >
                                     <Text style={{ fontSize: 14, fontFamily: customFonts.meduim }}>Cancel</Text>
@@ -190,8 +196,8 @@ export default function ChatScreen() {
 
                                 <TouchableOpacity onPress={() => { setOpenModal3(false) }}
                                     style={{
-                                        alignItems: 'center', justifyContent: 'center',paddingVertical:12,paddingHorizontal:16,
-                                        borderRadius: 10, backgroundColor: '#E01F1F',width: 150 / 430 * width
+                                        alignItems: 'center', justifyContent: 'center', paddingVertical: 12, paddingHorizontal: 16,
+                                        borderRadius: 10, backgroundColor: '#E01F1F', width: 150 / 430 * width
                                     }}
                                 >
                                     <Text style={{ fontSize: 14, fontFamily: customFonts.meduim, color: 'white' }}>Yes, block</Text>
@@ -269,12 +275,18 @@ export default function ChatScreen() {
 
                     <AddButtonPopup visible={openModal} close={closeModal} />
 
-                    <TextInput placeholder='Send message....' autoFocus={true} multiline value={message}
-                        style={{ width: 246 / 430 * width, backgroundColor: '#f5f5f5', paddingVertical: 16, borderRadius: 10, paddingHorizontal: 16 }}
-                        onChangeText={(item) => {
-                            setMessage(item)
-                        }}
-                    />
+                    <View style={{
+                        width: 246 / 430 * width, backgroundColor: '#f5f5f5', paddingVertical: 10, borderRadius: 10,
+                        paddingHorizontal: 16,
+                    }}>
+                        <TextInput placeholder='Send message....' autoFocus={true} value={message}
+                          
+                            multiline
+                            onChangeText={(item) => {
+                                setMessage(item)
+                            }}
+                        />
+                    </View>
                     <TouchableOpacity>
                         <Image source={require('../../assets/images/micIcon.png')}
                             style={{ height: 24, width: 24 }}

@@ -6,7 +6,7 @@ import MessagesList from '../ChatFlow/MessagesList'
 
 const { height, width } = Dimensions.get('window')
 
-export default function MessageMain() {
+export default function MessageMain(props) {
   return (
     <View style={{ alignItems: 'center', height: height,backgroundColor:'white' }}>
 
@@ -37,7 +37,10 @@ export default function MessageMain() {
         </View>
       </View>
 
-      <MessagesList />
+      <MessagesList navigate={(chat) => {
+        console.log("User selected ", chat)
+        props.navigation.navigate("ChatScreen")
+      }}/>
 
     </View>
   )

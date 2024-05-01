@@ -7,7 +7,7 @@ import GlobalStyles from '../../assets/styles/GlobalStyles';
 const { height, width } = Dimensions.get('window');
 const profile = require('../../assets/images/profileImage.png')
 
-export default function MessagesList() {
+export default function MessagesList({navigate}) {
 
 
 
@@ -120,7 +120,9 @@ export default function MessagesList() {
                     data={messagesList}
                     renderItem={({ item }) => (
                         <>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={() => {
+                                 navigate(item)
+                                }} >
                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 60, alignSelf: 'center',paddingTop: 20, }}>
                                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                                         <Image source={item.profileImage}
