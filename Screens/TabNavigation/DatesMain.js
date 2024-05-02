@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Image, Dimensions, FlatList } from 'react
 import customFonts from '../../assets/fonts/Fonts'
 import GlobalStyles from '../../assets/styles/GlobalStyles'
 import colors from '../../assets/colors/Colors';
+import DatesContainer from '../DatesFlow/DatesContainer';
 
 const { height, width } = Dimensions.get('window')
 
@@ -29,7 +30,7 @@ export default function DatesMain() {
               />
             </TouchableOpacity>
             <TouchableOpacity>
-              <Image source={require('../../assets/images/moreIcon.png')}
+              <Image source={require('../../assets/images/setting.png')}
                 style={GlobalStyles.backBtnImage}
               />
             </TouchableOpacity>
@@ -37,6 +38,8 @@ export default function DatesMain() {
           </View>
         </View>
       </View>
+
+      <DatesContainer/>
 
       
     </View>

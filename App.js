@@ -27,6 +27,7 @@ import MessagesList from './Screens/ChatFlow/MessagesList';
 import ChatScreen from './Screens/ChatFlow/ChatScreen';
 import ReportChat from './Components/ReportChat';
 import DatesContainer from './Screens/DatesFlow/DatesContainer';
+import SelectedDateDetails from './Screens/DatesFlow/SelectedDateDetails';
 
 // import { NavigationContainer } from "@react-navigation/native";
 // import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -67,7 +68,7 @@ export default function App() {
   return (
 
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="DatesContainer" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName="SelectedDateDetails" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="SplashMainScreen" component={SplashMainScreen} options={{ gestureEnabled: false }} />
         <Stack.Screen name="SlideContainer" component={SlideContainer} />
         <Stack.Screen name="RegisterUser" component={RegisterUser} options={{ gestureEnabled: false }} />
@@ -87,6 +88,7 @@ export default function App() {
         <Stack.Screen name="ChatScreen" component={ChatScreen} options={{ gestureEnabled: false }} /> 
         <Stack.Screen name="ReportChat" component={ReportChat} options={{ gestureEnabled: false }} /> 
         <Stack.Screen name="DatesContainer" component={DatesContainer} options={{ gestureEnabled: false }} /> 
+        <Stack.Screen name="SelectedDateDetails" component={SelectedDateDetails} options={{ gestureEnabled: false }} /> 
       </Stack.Navigator>
     </NavigationContainer>
 

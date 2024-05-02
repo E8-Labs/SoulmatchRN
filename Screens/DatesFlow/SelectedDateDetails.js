@@ -1,0 +1,120 @@
+import { View, Text, SafeAreaView, Dimensions, TouchableOpacity, Image, ScrollView } from 'react-native'
+import React from 'react'
+import GlobalStyles from '../../assets/styles/GlobalStyles';
+import customFonts from '../../assets/fonts/Fonts';
+import colors from '../../assets/colors/Colors';
+
+const { height, width } = Dimensions.get('window');
+
+export default function SelectedDateDetails() {
+    return (
+        <SafeAreaView>
+            <View style={{ alignItems: 'center', height: height, width: width }}>
+                <View style={{ width: width - 60 / 430 * width, flexDirection: 'row', alignItems: 'center', gap: 20 / 430 * width }}>
+                    <TouchableOpacity>
+                        <View style={GlobalStyles.backBtn}>
+                            <Image source={require('../../assets/images/backArrow.png')}
+                                style={GlobalStyles.backBtnImage}
+                            />
+                        </View>
+                    </TouchableOpacity>
+                    <Text style={{ fontSize: 24, fontFamily: customFonts.meduim }}>Fancy Bistro</Text>
+
+                </View>
+                <View style={{ height: height * 0.85 }}>
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                        <View style={{ alignItems: 'center', width: width - 60 / 430 * width }}>
+                            <Image source={require('../../assets/images/datenight.png')}
+                                style={{ width: width - 60 / 430 * width, borderRadius: 6, marginTop: 32 / 930 * height }}
+                            />
+
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 65 / 430 * width, marginTop: 20 / 930 * height }}>
+                                <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 5 }}>
+                                    <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Budget</Text>
+                                    <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>$10</Text>
+
+                                </View>
+
+                                <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 5 }}>
+                                    <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Category</Text>
+
+                                    <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>Dinner</Text>
+                                </View>
+
+                                <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 5 }}>
+                                    <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Ratings</Text>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }} >
+                                        <Image source={require('../../assets/images/star.png')}
+                                            style={{ height: 12, width: 12 }}
+                                        />
+                                        <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>$5.0</Text>
+
+                                    </View>
+
+                                </View>
+                            </View>
+
+                            <View style={{ width: width - 60, alignItems: 'flex-start' }}>
+                                <Text style={{ fontSize: 12, fontFamily: customFonts.regular, marginTop: 20 / 930 * height }}>Hours of operation </Text>
+                                <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, marginTop: 5 / 930 * height }}>5:00 PM - 10:00 PM </Text>
+
+                                <Text style={{ fontSize: 12, fontFamily: customFonts.regular, marginTop: 20 / 930 * height }}>Description</Text>
+                                <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, marginTop: 5 / 930 * height }}>An elegant bistro offering exquisite culinary experiences,blending modern flair with timeless classics,set in a warm,inviting ambiance.</Text>
+
+                                <Text style={{ fontSize: 20, fontFamily: customFonts.meduim, marginTop: 20 / 930 * height }}>Reviews</Text>
+                                <Text style={{ fontSize: 12, fontFamily: customFonts.regular, marginTop: 5 / 930 * height }}>108+Ratings . 10 Reviews</Text>
+
+                                <View style={{ flexDirection: 'row', alignItems: 'center', width: width - 60 / 430 * width, justifyContent: 'space-between', marginTop: 22 / 930 * height }}>
+                                    <View style={{
+                                        paddingHorizontal: 16, height: 198 / 930 * height, borderRadius: 10, borderWidth: 1, borderColor: colors.greyText,
+                                        alignItems: 'center', justifyContent: 'center'
+                                    }}>
+
+
+                                        <Text style={{ fontSize: 10, fontFamily: customFonts.regular }}>of 5 stars</Text>
+                                    </View>
+                                    <View style={{
+                                        paddingHorizontal: 16, height: 198 / 930 * height, borderRadius: 10, borderWidth: 1, borderColor: colors.greyText,
+                                        alignItems: 'flex-start', paddingVertical: 16,flexDirection:'column',gap:8
+                                    }}>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', width: 230 / 430 * width, gap: 12 }}>
+                                            <Image source={require('../../assets/images/profileImage.png')}
+                                                style={{ height: 46 / 930 * height, width: 46 / 930 * height, borderRadius: 25 }}
+                                            />
+                                            <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>Olivia Williams</Text>
+                                        </View>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', width: 230 / 430 * width, gap: 12 }}>
+                                            <Image source={require('../../assets/images/star.png')}
+                                                style={{ height: 12 / 930 * height, width: 12 / 930 * height }}
+                                            />
+                                            <Image source={require('../../assets/images/star.png')}
+                                                style={{ height: 12 / 930 * height, width: 12 / 930 * height }}
+                                            />
+                                            <Image source={require('../../assets/images/star.png')}
+                                                style={{ height: 12 / 930 * height, width: 12 / 930 * height }}
+                                            />
+                                            <Image source={require('../../assets/images/star.png')}
+                                                style={{ height: 12 / 930 * height, width: 12 / 930 * height }}
+                                            />
+                                            <Image source={require('../../assets/images/star.png')}
+                                                style={{ height: 12 / 930 * height, width: 12 / 930 * height }}
+                                            />
+                                            <Text style = {{fontSize:12,fontFamily:customFonts.regular,color:'#666666'}}>2 days ago</Text>
+                                        </View>
+                                        <Text style = {{fontSize:14,fontFamily:customFonts.regular,width: 230 / 430 * width}}>Absolutely divine! The flavors,presentation,and service were impeccable.A must- visit for any food enthusiast</Text>
+
+                                    </View>
+                                </View>
+                            </View>
+
+                            <TouchableOpacity style = {[GlobalStyles.reqtengularBtn,{marginTop:30/930*height}]}>
+                                <Text style = {GlobalStyles.btnText}>Reserve a date night</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </ScrollView>
+                </View>
+            </View>
+        </SafeAreaView>
+
+    )
+}

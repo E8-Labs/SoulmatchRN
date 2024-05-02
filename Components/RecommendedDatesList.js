@@ -7,7 +7,7 @@ const { height, width } = Dimensions.get('window');
 
 const dateImage = require('../assets/images/datenight.png')
 
-export default function DateNightsList() {
+export default function RecommendedDatesList() {
 
     const dateNights = [
         {
