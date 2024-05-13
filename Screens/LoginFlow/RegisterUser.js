@@ -49,7 +49,7 @@ export default function RegisterUser(props) {
                 style={{ flex: 1, flexDirection: 'column', }}>
                 <TouchableWithoutFeedback style={GlobalStyles.container} onPress={Keyboard.dismiss}>
                     <View style={[{ flexDirection: 'column', height: height }]}>
-                        <View style={{ justifyContent: 'space-between', height: height * 0.92, }}>
+                        <View style={{ justifyContent: 'space-between', height: height * 0.9, }}>
                             <View style={{ alignItems: 'center', }}>
                                 <View style={{ width: width - 45, marginTop: 0, alignSelf: 'center' }}>
                                     <Text style={{ fontSize: 28, fontFamily: customFonts.semibold }}>

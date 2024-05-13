@@ -8,7 +8,7 @@ import RecommendedDatesList from '../../Components/RecommendedDatesList';
 
 const { height, width } = Dimensions.get('window')
 
-export default function DatesContainer() {
+export default function DatesContainer({navigation}) {
     const [selectedCategory, setSelectedCategory] = useState(1)
 
     const categories = [
@@ -83,8 +83,10 @@ export default function DatesContainer() {
                             </TouchableOpacity>
                         </View>
 
-
-                        <DateNightsList />
+                        <DateNightsList navigate={(item)=>{
+                            console.log('selected date night details are', item)
+                            navigation.navigate("SelectedDateDetails")
+                        }} />
 
 
                         <View style={{
@@ -117,7 +119,11 @@ export default function DatesContainer() {
                             You don't have any upcoming dates planned
                         </Text>
 
-                        <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 40 / 930 * height, marginBottom: 50 }]}>
+                        <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 40 / 930 * height, marginBottom: 50 }]} 
+                            onPress={()=>{
+                                navigation.navigate("PlanDateNight")
+                            }}
+                        >
                             <Text style={GlobalStyles.btnText}>
                                 Plan a date night
                             </Text>

@@ -1,4 +1,7 @@
-import { View, Text, Dimensions, Image, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform, TextInput, Modal, TouchableWithoutFeedback } from 'react-native'
+import {
+    View, Text, Dimensions, Image, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform, StyleSheet,
+    TextInput, Modal, TouchableWithoutFeedback
+} from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import GlobalStyles from '../../assets/styles/GlobalStyles'
 import customFonts from '../../assets/fonts/Fonts'
@@ -114,7 +117,7 @@ export default function ChatScreen(props) {
                 }}>
                     <View style={{ alignItems: 'center', flexDirection: 'row', width: width - 50 / 430 * width, justifyContent: 'space-between' }}>
                         <View style={{ alignItems: 'center', flexDirection: 'row', gap: 15 / 430 * width }}>
-                            <TouchableOpacity onPress={()=>{
+                            <TouchableOpacity onPress={() => {
                                 props.navigation.goBack()
                             }}>
                                 <View style={GlobalStyles.backBtn}>
@@ -123,9 +126,9 @@ export default function ChatScreen(props) {
                                     />
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={()=>{
-                                props.navigation.navigate("ProfileDetail",{
-                                    fromScreen : "ChatScreen"
+                            <TouchableOpacity onPress={() => {
+                                props.navigation.navigate("ProfileDetail", {
+                                    fromScreen: "ChatScreen"
                                 })
                             }}>
                                 <View style={{ alignItems: 'center', flexDirection: 'row', gap: 12 / 430 * width }}>
@@ -167,6 +170,16 @@ export default function ChatScreen(props) {
                     console.log("Menu selected is ", menu)
                     closeModal2()
                     setOpenModal3(true)
+                } else if(menu === "Report"){
+                    console.log("Menu selected is ", menu)
+                   
+                    props.navigation.navigate('ReportChat')
+                    closeModal2()
+                } else if(menu === "InviteDate"){
+                    console.log("Menu selected is ", menu)
+                   
+                    props.navigation.navigate('InviteDateFromChatScreen')
+                    closeModal2()
                 }
             }} />
 
@@ -212,7 +225,7 @@ export default function ChatScreen(props) {
             {/* <View style={{ alignItems: 'center', height: height * 0.75, }}> */}
 
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                style={{ height: height * 0.9, width: width - 50 }}
+                style={{ height: height * 0.87,}}
             >
 
                 <FlatList
@@ -231,26 +244,59 @@ export default function ChatScreen(props) {
                             {
                                 item.fromMe ? (
 
-                                    <View style={{ alignItems: 'flex-end', width: width - 70, marginTop: 10 }}>
+                                    <View style={{ alignItems: 'flex-end', marginTop: 10 }}>
 
                                         <View style={{
-                                            width: 207 / 430 * width, backgroundColor: colors.blueColor, marginTop: 15, borderRadius: 18,
-                                            paddingHorizontal: 12, paddingVertical: 8, gap: 3, alignItems: 'flex-start', flexDirection: 'column'
+                                            backgroundColor: colors.blueColor,
+                                            padding: 10,
+                                            marginLeft: '45%',
+                                            borderRadius: 5,
+
+                                            marginTop: 5,
+                                            marginRight: "5%",
+                                            maxWidth: '50%',
+                                            alignSelf: 'flex-end',
+                                            borderRadius: 20,
+
+                                            // width: 207 / 430 * width, backgroundColor: colors.blueColor, marginTop: 15, borderRadius: 18,
+                                            // paddingHorizontal: 12, paddingVertical: 8, gap: 3, alignItems: 'flex-start', flexDirection: 'column'
                                         }}>
                                             <Text style={{ fontSize: 14, fontFamily: customFonts.regular, color: 'white' }}>{item.message}</Text>
+                                            <View style={styles.rightArrow}>
+
+                                            </View>
+                                            <View style={styles.rightArrowOverlap}></View>
                                             <Text style={{ color: 'white', fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', width: 175 / 430 * width }}>{item.time}</Text>
                                         </View>
                                     </View>
                                 ) : (
 
-                                    <View style={{ alignItems: 'flex-start', width: width - 70, marginTop: 10 }}>
+                                    <View style={{ alignItems: 'flex-start', width: width - 50, marginTop: 10 }}>
 
                                         <View style={{
-                                            width: 207 / 430 * width, backgroundColor: '#F5F5F5', marginTop: 15, borderRadius: 18,
-                                            paddingHorizontal: 12, paddingVertical: 6, gap: 3, alignItems: 'flex-start', flexDirection: 'column'
+                                            backgroundColor: "#F5F5F5",
+                                            padding: 10,
+                                            borderRadius: 5,
+                                            marginTop: 5,
+                                            marginLeft: "5%",
+                                            maxWidth: '50%',
+                                            alignSelf: 'flex-start',
+                                            //maxWidth: 500,
+                                            //padding: 14,
+                                            //alignItems:"center",
+                                            borderRadius: 20,
                                         }}>
                                             <Text style={{ fontSize: 14, fontFamily: customFonts.regular }}>{item.message}</Text>
-                                            <Text style={{ fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', width: 175 / 430 * width }}>{item.time}</Text>
+                                            <View style={styles.leftArrow}>
+
+                                            </View>
+                                            <View style={styles.leftArrowOverlap}></View>
+                                            <Text style={{
+                                                fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', width: 175 / 430 * width,
+                                                paddingRight: 10 / 430 * width
+                                            }}>
+                                                {item.time}
+                                            </Text>
                                         </View>
                                     </View>
                                 )
@@ -263,7 +309,7 @@ export default function ChatScreen(props) {
 
                 <View style={{
                     flexDirection: 'row', alignItems: 'center', height: 90 / 930 * height, backgroundColor: 'transparent',
-                    width: width - 50 / 430 * width, justifyContent: 'center', paddingHorizontal: 10, gap: 8
+                    width: width, justifyContent: 'center', paddingHorizontal: 10, gap: 8
                 }}>
                     <TouchableOpacity onPress={() => {
                         setOpenModal(true)
@@ -279,8 +325,8 @@ export default function ChatScreen(props) {
                         width: 246 / 430 * width, backgroundColor: '#f5f5f5', paddingVertical: 10, borderRadius: 10,
                         paddingHorizontal: 16,
                     }}>
-                        <TextInput placeholder='Send message....' autoFocus={true} value={message}
-                          
+                        <TextInput placeholder='Send message....'  value={message}
+
                             multiline
                             onChangeText={(item) => {
                                 setMessage(item)
@@ -304,3 +350,47 @@ export default function ChatScreen(props) {
         </View>
     )
 }
+const styles = StyleSheet.create({
+    rightArrow: {
+        position: "absolute",
+        backgroundColor: colors.blueColor,
+        //backgroundColor:"red",
+        width: 20,
+        height: 25,
+        bottom: 0,
+        borderBottomLeftRadius: 25,
+        right: -10
+    },
+
+    rightArrowOverlap: {
+        position: "absolute",
+        backgroundColor: "white",
+        //backgroundColor:"green",
+        width: 20,
+        height: 35,
+        bottom: -6,
+        borderBottomLeftRadius: 18,
+        right: -20
+    },
+    leftArrow: {
+        position: "absolute",
+        backgroundColor: "#F5F5F5",
+        //backgroundColor:"red",
+        width: 20,
+        height: 25,
+        bottom: 0,
+        borderBottomRightRadius: 25,
+        left: -10
+    },
+
+    leftArrowOverlap: {
+        position: "absolute",
+        backgroundColor: "#fff",
+        //backgroundColor:"green",
+        width: 20,
+        height: 35,
+        bottom: -6,
+        borderBottomRightRadius: 18,
+        left: -20
+    }
+})

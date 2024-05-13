@@ -7,7 +7,7 @@ const { height, width } = Dimensions.get('window');
 
 const dateImage = require('../assets/images/datenight.png')
 
-export default function DateNightsList() {
+export default function DateNightsList({navigate}) {
 
     const dateNights = [
         {
@@ -48,7 +48,7 @@ export default function DateNightsList() {
             name: "Fancy Bistro",
             budget: 25,
             rating: 5.0,
-            category: 'Dinner'
+            category: 'Dinner'      
         },
     ]
 
@@ -59,7 +59,9 @@ export default function DateNightsList() {
                 showsHorizontalScrollIndicator={false}
                 data={dateNights}
                 renderItem={({ item }) => (
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={()=>{
+                        navigate(item)
+                    }}>
                         <View style={{
                             alignItems: 'center', padding: 12, borderWidth: 1, borderColor: colors.greyText, borderRadius: 10,
                             marginLeft: 15 / 430 * width, flexDirection: 'column', gap: 10 / 930 * height

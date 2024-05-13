@@ -43,7 +43,7 @@ export default function FilterPopup({visible,close}) {
 
                 >
                     <View style={{ height: height, width: width, backgroundColor: '#00000050', justifyContent: 'flex-end' }}>
-                        <View style={{ height: height * 0.8, backgroundColor: 'white', borderRadius: 20, alignItems: 'center', paddingHorizontal: 30, paddingVertical: 25 }}>
+                        <View style={{ height: height * 0.8, backgroundColor: 'white', borderRadius: 20, alignItems: 'center', paddingHorizontal: 30/430*height, paddingVertical: 25/930*height }}>
                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 60 }}>
                                 <Text style={{ fontSize: 20, fontFamily: customFonts.meduim }}> Filter</Text>
 

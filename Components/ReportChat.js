@@ -12,7 +12,7 @@ const selectedImage = require('../assets/images/selectedCircle.png');
 const unselectedImage = require('../assets/images/unselectedCircle.png');
 
 
-export default function ReportChat() {
+export default function ReportChat(props) {
 
   const [selected, setSelected] = useState('')
   const [marginTop, setmarginTop] = useState(0);
@@ -88,7 +88,9 @@ export default function ReportChat() {
 
           <View style={{ width: width - 60 / 430 * width, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={()=>{
+                props.navigation.goBack()
+              }}>
                 <View style={GlobalStyles.backBtn}>
                   <Image source={require('../assets/images/backArrow.png')}
                     style={GlobalStyles.backBtnImage}
@@ -99,7 +101,9 @@ export default function ReportChat() {
               <Text style={{ fontSize: 24, fontFamily: customFonts.meduim }}>Report</Text>
 
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={()=>{
+                props.navigation.goBack()
+              }}>
               <Text style={{ fontSize: 18, fontFamily: customFonts.meduim, color: colors.blueColor }}>Send</Text>
             </TouchableOpacity>
 

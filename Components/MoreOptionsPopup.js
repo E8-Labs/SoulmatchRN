@@ -34,7 +34,9 @@ console.log("Modal 2 visible ", visible)
                             alignItems: 'flex-start', borderRadius: 10, justifyContent: 'space-between',padding:12/930*height
                         }}>
 
-                            <TouchableOpacity onPress={close}>
+                            <TouchableOpacity onPress={()=>{
+                                handleMenu("InviteDate")
+                            }}>
                                 <Text style={{ fontSize: 14, fontFamily: customFonts.regular }}>Invite to date</Text>
                             </TouchableOpacity>
 
@@ -43,7 +45,9 @@ console.log("Modal 2 visible ", visible)
                             </TouchableOpacity>
 
 
-                            <TouchableOpacity onPress={close}>
+                            <TouchableOpacity onPress={()=>{
+                                handleMenu("Report")
+                            }}>
                                 <Text style={{ fontSize: 14, fontFamily: customFonts.regular }}>Report</Text>
                             </TouchableOpacity>
 

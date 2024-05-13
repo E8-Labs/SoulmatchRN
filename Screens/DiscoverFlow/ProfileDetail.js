@@ -58,7 +58,7 @@ const questions = [
 
 export default function ProfileDetail({ navigation, route }) {
 
-    const fromScreen = route.params.fromScreen
+    // const fromScreen = route.params.fromScreen
     // console.log("from screen", fromScreen)
 
     const [selected, setSelected] = useState('');
@@ -80,9 +80,9 @@ export default function ProfileDetail({ navigation, route }) {
         <SafeAreaView>
 
             <View style={{ height: height, alignItems: 'center' }}>
-                {
-                    fromScreen === "LikesList" || fromScreen === "ChatScreen" ? (
-                        <View style={{ flexDirection: 'row', alignItems: 'center', width: width - 60, gap: 15, marginTop: 0 / 930 * height }}>
+                {/* {
+                    fromScreen === "LikesList" || fromScreen === "ChatScreen" ? ( */}
+                        {/* <View style={{ flexDirection: 'row', alignItems: 'center', width: width - 60, gap: 15, marginTop: 0 / 930 * height }}>
 
                             <TouchableOpacity onPress={() => navigation.goBack()}>
                                 <View style={GlobalStyles.backBtn}>
@@ -92,9 +92,9 @@ export default function ProfileDetail({ navigation, route }) {
                                 </View>
                             </TouchableOpacity>
                             <Text style={{ fontSize: 24, fontFamily: customFonts.meduim }}>Isabella Taylor</Text>
-                        </View>
-                    ) : ""
-                }
+                        </View> */}
+                    {/* ) : ""
+                } */}
                 <View style={{ height: height * 0.85 }} >
                     <ScrollView style={{ height: 100 }} showsVerticalScrollIndicator={false}>
 

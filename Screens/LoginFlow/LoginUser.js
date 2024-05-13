@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { View, Text, Dimensions, TextInput, TouchableOpacity, Image, SafeAreaView, Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback, Platform } from 'react-native'
+import { View, Text, Dimensions, TextInput, TouchableOpacity, Image, SafeAreaView, Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback, Platform, Settings } from 'react-native'
 import GlobalStyles from '../../assets/styles/GlobalStyles'
 import colors from '../../assets/colors/Colors';
 import customFonts from '../../assets/fonts/Fonts';
-
+import ApisPath from '../../lib/ApisPath/ApisPath'
 
 const { height, width } = Dimensions.get("window");
 
@@ -30,7 +30,8 @@ export default function LoginUser(props) {
         }
     }
 
-    const loginUser = () => {
+    const loginUser = async () => {
+
         if (email && password) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             const validEmail = emailRegex.test(email);
@@ -39,9 +40,34 @@ export default function LoginUser(props) {
                 setError("Enter valid email")
             } else {
 
-
                 // call login api
+                try {
+                    console.log('tryig login user')
+
+                    let body = JSON.stringify({
+                            email: email, password: password
+                        })
+                        console.log(' body',  body)
+
+                    const result = await fetch(ApisPath.ApiLoginUser, {
+                        method: 'post',
+                        headers:{ "Content-Type": "application/json" },
+                        body: body
+                    })
+                    if (result) {
+                        console.log('result', result)
+                        let json = await result.json();
+                        if (json.status === true) {
+                            console.log('User logged in ', json.data)
+                        }
+                    } else {
+                        console.log('result is', json.message)
+                    }
+                } catch (error) {
+                    console.log('error finding', error)
+                }
             }
+
         } else {
             setError("Enter all cridentials")
         }

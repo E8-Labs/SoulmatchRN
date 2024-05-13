@@ -28,6 +28,10 @@ import ChatScreen from './Screens/ChatFlow/ChatScreen';
 import ReportChat from './Components/ReportChat';
 import DatesContainer from './Screens/DatesFlow/DatesContainer';
 import SelectedDateDetails from './Screens/DatesFlow/SelectedDateDetails';
+import ReserveNightScreen from './Screens/DatesFlow/ReserveNightScreen';
+import InviteDatePopup from './Components/InviteDatePopup';
+import PlanDateNight from './Screens/DatesFlow/PlanDateNight';
+import InviteDateFromChatScreen from './Screens/ChatFlow/InviteDateFromChatScreen';
 
 // import { NavigationContainer } from "@react-navigation/native";
 // import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -68,7 +72,7 @@ export default function App() {
   return (
 
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="SelectedDateDetails" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName="TabBarContainer" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="SplashMainScreen" component={SplashMainScreen} options={{ gestureEnabled: false }} />
         <Stack.Screen name="SlideContainer" component={SlideContainer} />
         <Stack.Screen name="RegisterUser" component={RegisterUser} options={{ gestureEnabled: false }} />
@@ -89,6 +93,10 @@ export default function App() {
         <Stack.Screen name="ReportChat" component={ReportChat} options={{ gestureEnabled: false }} /> 
         <Stack.Screen name="DatesContainer" component={DatesContainer} options={{ gestureEnabled: false }} /> 
         <Stack.Screen name="SelectedDateDetails" component={SelectedDateDetails} options={{ gestureEnabled: false }} /> 
+        <Stack.Screen name="ReserveNightScreen" component={ReserveNightScreen} options={{ gestureEnabled: false }} /> 
+        <Stack.Screen name="InviteDatePopup" component={InviteDatePopup} options={{ gestureEnabled: false }} /> 
+        <Stack.Screen name="PlanDateNight" component={PlanDateNight} options={{ gestureEnabled: false }} /> 
+        <Stack.Screen name="InviteDateFromChatScreen" component={InviteDateFromChatScreen} options={{ gestureEnabled: false }} /> 
       </Stack.Navigator>
     </NavigationContainer>
 

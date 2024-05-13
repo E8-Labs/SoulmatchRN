@@ -5,6 +5,7 @@ import customFonts from '../../assets/fonts/Fonts';
 import LikesList from '../DiscoverFlow/LikesList';
 import FilterPopup from '../../Components/FilterPopup';
 import DiscoverGotMatch from '../../Components/DiscoverGotMatch';
+import ProfileDetail from '../DiscoverFlow/ProfileDetail';
 
 
 const { height, width } = Dimensions.get("window");
@@ -20,7 +21,7 @@ const closeModal = () =>{
 }
 
   return (
-    <View style={{ flex: 1, alignItems: 'center' }}>
+    <View style={{ flex: 1, alignItems: 'center',backgroundColor:'transparent' }}>
       <View style={{ flexDirection: 'row', marginTop: 60 / 930 * height, width: width - 30, justifyContent: 'space-between' }}>
         <Text style={{ fontSize: 24, fontFamily: customFonts.meduim }}>Emily Grace</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 / 430 * width }}>
@@ -50,7 +51,8 @@ const closeModal = () =>{
 
         </View>
       </View>
-      <CardContainerMain />
+      <ProfileDetail fromScreen = {'Main'} />
+      {/* <CardContainerMain /> */}
       {/* <DiscoverGotMatch/> */}
     </View>
   )

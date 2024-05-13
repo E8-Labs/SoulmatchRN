@@ -25,7 +25,7 @@ export default function MessagesList({navigate}) {
             name: "Sarah Doe",
             profileImage: profile,
             time: "12:25 AM",
-            unread: 0,
+            unread: 12,
             lastMessage: "Haha, yes I’ve seen your profile you are very interesting personality"
         },
         {
@@ -126,7 +126,7 @@ export default function MessagesList({navigate}) {
                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 60, alignSelf: 'center',paddingTop: 20, }}>
                                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                                         <Image source={item.profileImage}
-                                            style={{ height: 46 / 930 * height, width: 46 / 430 * width, opacity: item.unread ? 100 : 0.3 }}
+                                            style={{resizeMode:'contain', height: 46 / 930 * height, width: 46 / 430 * width, opacity: item.unread ? 100 : 0.8 }}
                                         />
 
                                         <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 3 }}>
@@ -146,7 +146,7 @@ export default function MessagesList({navigate}) {
                                         </Text>
                                         {
                                             item.unread ? (
-                                                <View style={{ backgroundColor: colors.blueColor, paddingVertical: 5, borderRadius: 50, paddingHorizontal: 8 }}>
+                                                <View style={{ backgroundColor: colors.blueColor,height:20, borderRadius: 50, width: 20,alignItems:'center',justifyContent:'center' }}>
                                                     <Text style={{ fontSize: 10, fontFamily: customFonts.meduim, color: 'white' }}>{item.unread}</Text>
                                                 </View>
                                             ) : ''

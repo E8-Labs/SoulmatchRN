@@ -163,10 +163,12 @@ export default function TabBarContainer() {
             screenOptions={{
                 headerShown: false
             }}
+            
             tabBar={props =>
                 <MyTabBar {...props} />} >
             <Tab.Screen name="Discover" component={DiscoverMain}
                 options={{
+                   
                     tabBarShowLabel: true,
                     tabBarIcon: ({ focused }) =>
                         <Image source={require('../../assets/images/activeDiscover.png')}
@@ -175,7 +177,7 @@ export default function TabBarContainer() {
 
                 }}
             />
-            <Tab.Screen name="Message" component={MessageMain}
+            <Tab.Screen name="Messages" component={MessageMain}
                 options={{
                     tabBarShowLabel: true,
                     tabBarIcon: ({ focused }) =>
