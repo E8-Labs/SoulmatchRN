@@ -85,7 +85,7 @@ export default function RegisterUser(props) {
                                                 setPasswordFocused(true)
                                                 setEmailFocused(false)
                                             }}
-                                            style={{}}
+                                            style={{width:300/430*width}}
                                             secureTextEntry={!showPassword}
                                             onChangeText={(text) => {
                                                 setPassword(text)

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, Dimensions, TextInput, TouchableOpacity, Image, SafeAreaView, Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback, Platform, Settings } from 'react-native'
+import { View, Text, Dimensions, TextInput, TouchableOpacity, Image, SafeAreaView, Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback, Platform, Settings, ActivityIndicator } from 'react-native'
 import GlobalStyles from '../../assets/styles/GlobalStyles'
 import colors from '../../assets/colors/Colors';
 import customFonts from '../../assets/fonts/Fonts';
@@ -21,6 +21,7 @@ export default function LoginUser(props) {
     const [error, setError] = useState("")
     const [passwordFocused, setPasswordFocused] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
+    const [indicator, setIndicator] = useState(false)
 
     const getBtnColor = () => {
         if (email && password) {
@@ -32,6 +33,7 @@ export default function LoginUser(props) {
 
     const loginUser = async () => {
 
+
         if (email && password) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             const validEmail = emailRegex.test(email);
@@ -39,29 +41,31 @@ export default function LoginUser(props) {
             if (!validEmail) {
                 setError("Enter valid email")
             } else {
-
+                setIndicator(true)
                 // call login api
                 try {
                     console.log('tryig login user')
 
                     let body = JSON.stringify({
-                            email: email, password: password
-                        })
-                        console.log(' body',  body)
+                        email: email, password: password
+                    })
 
                     const result = await fetch(ApisPath.ApiLoginUser, {
                         method: 'post',
-                        headers:{ "Content-Type": "application/json" },
+                        headers: { "Content-Type": "application/json" },
                         body: body
                     })
                     if (result) {
-                        console.log('result', result)
+                        setIndicator(false)
                         let json = await result.json();
                         if (json.status === true) {
                             console.log('User logged in ', json.data)
+                            Settings.set({ USER: JSON.stringify(json.data) })
+
+                            props.navigation.navigate('TabBarContainersalman')
+                        } else {
+                            console.log('result is', json.message)
                         }
-                    } else {
-                        console.log('result is', json.message)
                     }
                 } catch (error) {
                     console.log('error finding', error)
@@ -159,13 +163,21 @@ export default function LoginUser(props) {
                                         </TouchableOpacity>
                                     </View>
 
-                                    <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 30 / 924 * height, backgroundColor: getBtnColor() }]}
-                                        onPress={loginUser}
-                                    >
-                                        <Text style={GlobalStyles.btnText}>
-                                            Sign in
-                                        </Text>
-                                    </TouchableOpacity>
+                                    {
+                                        indicator ? (
+                                            <ActivityIndicator size={"large"} style={{ marginTop: 30 / 930 * height }} />
+                                        ) : (
+                                            <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 30 / 924 * height, backgroundColor: getBtnColor() }]}
+                                                onPress={loginUser}
+                                            >
+                                                <Text style={GlobalStyles.btnText}>
+                                                    Sign in
+                                                </Text>
+                                            </TouchableOpacity>
+                                        )
+                                    }
+
+
 
                                 </View>
                                 <View style={{ alignItems: 'center', flexDirection: 'row', gap: 5, marginTop: 35 / 924 * height }}>

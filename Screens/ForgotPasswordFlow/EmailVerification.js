@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { View, Text, Dimensions, TextInput, TouchableOpacity, Image, SafeAreaView, StyleSheet } from 'react-native'
 import GlobalStyles from '../../assets/styles/GlobalStyles'
 import colors from '../../assets/colors/Colors';
@@ -7,8 +7,7 @@ import customFonts from '../../assets/fonts/Fonts';
 
 const { height, width } = Dimensions.get("window");
 
-export default function EmailVerification({route,navigation}) {
-
+export default function EmailVerification({ route, navigation }) {
     const email = route.params.email
 
 
@@ -28,6 +27,7 @@ export default function EmailVerification({route,navigation}) {
     const [input2Vlaue, setinput2Vlaue] = useState("")
     const [input3Vlaue, setinput3Vlaue] = useState("")
     const [input4Vlaue, setinput4Vlaue] = useState("")
+    const [code, setCode] = useState(null)
 
 
     const handelInputChange = (text, ref, inputVlaue) => {
@@ -68,18 +68,33 @@ export default function EmailVerification({route,navigation}) {
         }
     }
 
+    useEffect(()=>{
+        setCode(input1Vlaue+input2Vlaue+input3Vlaue+input4Vlaue)
+    },[input1Vlaue,input2Vlaue,input3Vlaue,input4Vlaue])
+
+    const handleNext = () =>{
+        navigation.navigate('ResetPassword',{
+            user:{
+                email:email,
+                code:code
+            }
+        })
+    }
+
+   
+
     return (
         <SafeAreaView>
             <View style={[GlobalStyles.container, { justifyContent: 'flex-start' }]}>
-                <View style={{ width: width - 40, marginTop: 50, alignSelf: 'center' }}>
-                    <TouchableOpacity onPress={() => navigation.goBack()}  style ={{alignSelf:'flex-start'}}>
+                <View style={{ width: width - 40, marginTop: 0, alignSelf: 'center' }}>
+                    <TouchableOpacity onPress={() => navigation.goBack()} style={{ alignSelf: 'flex-start' }}>
                         <View style={GlobalStyles.backBtn}>
                             <Image source={require('../../assets/images/backArrow.png')}
                                 style={GlobalStyles.backBtnImage}
                             />
                         </View>
                     </TouchableOpacity>
-                    <Text style={{ fontSize: 28, fontWeight: '700', marginTop: 30,fontFamily:customFonts.semibold  }}>
+                    <Text style={{ fontSize: 28, fontWeight: '700', marginTop: 30, fontFamily: customFonts.semibold }}>
                         Verification
                     </Text>
 
@@ -87,7 +102,7 @@ export default function EmailVerification({route,navigation}) {
                         Please enter the 4 digit code sent to your
                         mail {email}
                     </Text>
-                    <View style={{ flexDirection: 'row', marginTop: 54 / 930 * height, gap: 10 / 930 * height, }}>
+                    <View style={{ flexDirection: 'row', marginTop: 54 / 930 * height,justifyContent:'space-between' }}>
                         <View style={[styles.inputStyle, { borderColor: input1Foucused ? colors.blueColor : colors.greyText }]}>
                             <TextInput placeholder=""
                                 autoFocus={true}
@@ -95,7 +110,7 @@ export default function EmailVerification({route,navigation}) {
 
                                 keyboardType="numeric"
                                 maxLength={1}
-                                onfoucus = {()=>setinput1Foucused(true)}
+                                onfoucus={() => setinput1Foucused(true)}
                                 ref={input1Ref}
                                 onChangeText={(text) => {
                                     handelInputChange(text, input2Ref, setinput1Vlaue)
@@ -148,7 +163,7 @@ export default function EmailVerification({route,navigation}) {
                     </View>
 
                     <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 60 / 924 * height }]}
-                        onPress={() => navigation.navigate('CreateNewPassword')}
+                        onPress={handleNext}
                     >
                         <Text style={GlobalStyles.btnText}>
                             Verify
@@ -177,13 +192,12 @@ export default function EmailVerification({route,navigation}) {
 const styles = StyleSheet.create({
     inputStyle: {
         backgroundColor: '#eeeeee',
-        paddingHorizontal: 25,
-        paddingVertical: 10,
+        height: 80/930*height,
+        width: 80/430*width,
         borderWidth: 1,
         borderColor: "#e6e6e6",
         borderRadius: 15,
         alignItems: 'center',
         justifyContent: 'center'
     }
-
 })

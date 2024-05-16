@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
-import { View, Text, Dimensions, TextInput, TouchableOpacity, Image, SafeAreaView, Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback, Platform } from 'react-native'
+import { View, Text, Dimensions, TextInput, TouchableOpacity, Image, SafeAreaView, Keyboard, 
+    KeyboardAvoidingView, TouchableWithoutFeedback, Platform, ActivityIndicator,Settings
+ } from 'react-native'
 import GlobalStyles from '../../assets/styles/GlobalStyles'
 import colors from '../../assets/colors/Colors';
 import customFonts from '../../assets/fonts/Fonts';
+import ApisPath from '../../lib/ApisPath/ApisPath';
 
 const { height, width } = Dimensions.get("window");
 
@@ -11,7 +14,10 @@ const unselectedImage = require('../../assets/images/unSelected.png')
 const eye = require('../../assets/images/eye.png')
 const eyeslash = require('../../assets/images/eye-slash.png')
 
-export default function CreateNewPassword(props) {
+export default function ResetPassword({ navigation, route }) {
+
+    const user = route.params.user
+    console.log('data from prev screen', user)
 
     const [password1, setPassword1] = useState("")
     const [passwordFocused1, setPasswordFocused1] = useState(false)
@@ -20,12 +26,47 @@ export default function CreateNewPassword(props) {
     const [showPassword, setShowPassword] = useState(false)
     const [showPassword1, setShowPassword1] = useState(false)
     const [error, setError] = useState("")
+    const [showIndicator, setShowIndicator] = useState(null)
 
-    const resetPassword = () => {
+    const resetPassword = async () => {
         if (password && password1) {
 
             if (password === password1) {
-                props.navigation.navigate("SuccessfullyPasswordChanged")
+                console.log('api callig')
+                setShowIndicator(true)
+                try {
+                    let body = JSON.stringify({
+                        email: user.email,
+                        code: user.code,
+                        password: password
+                    })
+                    const data = Settings.get("USER")
+                    if (data) {
+                        let d = JSON.parse(data)
+                        const result = await fetch(ApisPath.ApiResetPassword, {
+                            method: 'post',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + d.token
+                            },
+                            body: body
+                        })
+                        if (result) {
+                            setShowIndicator(false)
+                            let json = await result.json()
+                            if (json.status === true) {
+                                console.log('password reset', json.data)
+                                navigation.navigate("SuccessfullyPasswordChanged")
+                            } else {
+                                console.log('password reset messasge', json.message)
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.log('error finding in reset password', error)
+                }
+
+
             } else {
                 setError("Password must be same")
             }
@@ -59,8 +100,8 @@ export default function CreateNewPassword(props) {
                 style={{ flex: 1, flexDirection: 'column', }}>
                 <TouchableWithoutFeedback style={GlobalStyles.container} onPress={Keyboard.dismiss}>
                     <View style={[GlobalStyles.container, { justifyContent: 'flex-start' }]}>
-                        <View style={{ width: width - 40, marginTop: 50, alignSelf: 'center' }}>
-                            <TouchableOpacity  style = {{alignSelf:'flex-start'}} onPress={() => props.navigation.goBack()}>
+                        <View style={{ width: width - 40, marginTop: 0, alignSelf: 'center' }}>
+                            <TouchableOpacity style={{ alignSelf: 'flex-start' }} onPress={() => navigation.goBack()}>
                                 <View style={GlobalStyles.backBtn}>
                                     <Image source={require('../../assets/images/backArrow.png')}
                                         style={GlobalStyles.backBtnImage}
@@ -85,7 +126,7 @@ export default function CreateNewPassword(props) {
                                         setPasswordFocused1(true)
                                         setPasswordFocused(false)
                                     }}
-                                    style={{}}
+                                    style={{width: 300 / 430 * width}}
                                     secureTextEntry={!showPassword1}
                                     onChangeText={(text) => {
                                         setPassword1(text)
@@ -94,9 +135,9 @@ export default function CreateNewPassword(props) {
                                 />
 
                                 <TouchableOpacity
-                                 onPress={() => {
-                                    setShowPassword1(!showPassword1)
-                                }}>
+                                    onPress={() => {
+                                        setShowPassword1(!showPassword1)
+                                    }}>
                                     <Image source={showPassword1 ? eye : eyeslash}
                                         style={{ height: 24 / 930 * height, width: 24 / 930 * height }}
                                     />
@@ -113,7 +154,7 @@ export default function CreateNewPassword(props) {
                                         setPasswordFocused(true)
                                         setPasswordFocused1(false)
                                     }}
-                                    style={{}}
+                                    style={{width: 300 / 430 * width}}
                                     secureTextEntry={!showPassword}
                                     onChangeText={(text) => {
                                         setPassword(text)
@@ -132,13 +173,20 @@ export default function CreateNewPassword(props) {
 
 
                             <Text style={GlobalStyles.errorText}>{error}</Text>
-                            <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 50 / 924 * height, backgroundColor: getBtnColor() }]}
-                                onPress={resetPassword}
-                            >
-                                <Text style={GlobalStyles.btnText}>
-                                    Reset Password
-                                </Text>
-                            </TouchableOpacity>
+                            {
+                                showIndicator ? (
+                                    <ActivityIndicator size={'large'} style={{ marginTop: 50 / 930 * height }} />
+                                ) : (
+                                    <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 50 / 924 * height, backgroundColor: getBtnColor() }]}
+                                        onPress={resetPassword}
+                                    >
+                                        <Text style={GlobalStyles.btnText}>
+                                            Reset Password
+                                        </Text>
+                                    </TouchableOpacity>
+                                )
+                            }
+
 
                         </View>
 
