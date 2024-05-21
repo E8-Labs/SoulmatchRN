@@ -62,9 +62,34 @@ export default function LoginUser(props) {
                             console.log('User logged in ', json.data)
                             Settings.set({ USER: JSON.stringify(json.data) })
 
-                            props.navigation.navigate('TabBarContainersalman')
+                            // check profile complition
+                            let data = json.data.user
+
+                            if (data.profile_completion === 1) {
+                                console.log('profile_completion_comment', data.profile_completion_comment)
+                                props.navigation.navigate('UploadIntroVideo')
+                            }
+                             else if (data.profile_completion === 2) {
+                                console.log('profile_completion_comment', data.profile_completion_comment)
+                                props.navigation.navigate('UploadMedia')
+                            }
+                            else if (data.profile_completion === 3) {
+                                //here user will add zodiac,age,height,school,joband interest
+                                console.log('profile_completion_comment', data.profile_completion_comment)
+                                props.navigation.navigate('AddZodiac')
+                            }  else if (data.profile_completion === 9) {
+
+                                console.log('profile_completion_comment', data.profile_completion_comment)
+                                props.navigation.navigate('EnhancmentQuestions')
+                            }
+
+
+                             
+                            console.log('profile_completion_comment 2',data.profile_completion_comment)
+                            // props.navigation.navigate('TabBarContainer')
                         } else {
-                            console.log('result is', json.message)
+                            console.log('json mesasage', json.message)
+                            setError(json.message)
                         }
                     }
                 } catch (error) {
@@ -120,7 +145,7 @@ export default function LoginUser(props) {
                                                 setPasswordFocused(true)
                                                 setEmailFocused(false)
                                             }}
-                                            style={{}}
+                                            style={{ width: 300 / 430 * width, }}
                                             secureTextEntry={!showPassword}
                                             onChangeText={(text) => {
                                                 setPassword(text)

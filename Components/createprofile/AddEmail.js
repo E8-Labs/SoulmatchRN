@@ -10,36 +10,19 @@ const AddEmail = ({ navigation, route }) => {
     const [focusEmail, setFocusEmail] = useState(false)
     const [indicattor, setIndicator] = useState(false)
     //getting data from previous screen
-    const user = route.params.name;
+    const user = route.params.user;
     user.email = saveemail
     // const UserFirstName = username.FirstName;
     // const UserLastName = username.LastName;
     // const UserImage = username.UserProfileImage;
-    console.log('Name recieved from previous screen is', saveemail);
+    console.log('Name recieved from previous screen is', user);
     // console.log('Image recieved on addname screen is', UserImage)
 
     const handleEmailfocus = () => {
         setFocusEmail(true);
         setEmailError(false)
     }
-
-    //checking email availability
-
-    // if (saveemail.length === 0) {
-    //     setEmailError(true);
-    //     console.log('Please enter email');
-    // } else {
-    //     navigation.navigate('UploadprofilePassword', {
-    //         Email: {
-    //             UserEmail: saveemail,
-    //             ProfileFirstName: UserFirstName,
-    //             ProfileLastName: UserLastName,
-    //             ProfileImage: UserImage
-    //         }
-    //     })
-    // }
-
-
+    
     const handlesaveemail = (saveEmail) => {
         setEmailError(false);
         setSaveemail(saveEmail);

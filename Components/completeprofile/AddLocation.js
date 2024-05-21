@@ -1,11 +1,97 @@
-import React, { useState } from 'react'
-import { View, Image, TouchableOpacity, Text, TouchableWithoutFeedback, Dimensions, Modal } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { View, Image, TouchableOpacity, Text, TouchableWithoutFeedback, Dimensions, Modal, Settings, ActivityIndicator } from 'react-native'
+import * as Location from 'expo-location';
+import ApisPath from '../../lib/ApisPath/ApisPath';
 
 const AddLocation = ({ navigation }) => {
     const { height, width } = Dimensions.get('window')
 
     //code for Modal
     const [openModal, setOpenModal] = useState(false)
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [address, setAddress] = useState(null);
+    const [showIndicator, setShowIndicator] = useState(false)
+
+    const getLocation = async () => {
+        setOpenModal(false)
+        setShowIndicator(true)
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+            setErrorMsg('Permission to access location was denied');
+            return;
+        }
+
+        let location = await Location.getCurrentPositionAsync({});
+        setLocation(location);
+
+        if (location) {
+
+            let reverseGeocode = await Location.reverseGeocodeAsync({
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude
+            });
+
+            if (reverseGeocode.length > 0) {
+                setAddress(reverseGeocode[0]);
+                let userLocation = {
+                    lat:location.coords.latitude,
+                    lang :location.coords.longitude,
+                    city:reverseGeocode[0].city,
+                    state:reverseGeocode[0].region
+                }
+                updateProfile(userLocation)
+            }
+            
+        }
+    };
+
+    const updateProfile = async (userLocation) => {
+        console.log('trying to update profile')
+        const data = Settings.get("USER")
+        try {
+            if (data) {
+                let d = JSON.parse(data)
+
+                let body = JSON.stringify({
+                    lat: userLocation.lat,
+                    lang:userLocation.lang,
+                    state:userLocation.state,
+                    city:userLocation.city
+                })
+                console.log('body', body)
+                // return
+
+                const result = await fetch(ApisPath.ApiUpdateProfile, {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + d.token
+                    },
+                    body: body
+                })
+                if (result) {
+                    setShowIndicator(false)
+                    let json = await result.json()
+                    if (json.status === true) {
+                        console.log('profile udated', json.data)
+                        navigation.navigate('AllowNotification')
+                    } else {
+                        console.log('json message is', json.message)
+                    }
+                }
+            }
+        } catch (error) {
+            console.log('error finding update profile', error)
+        }
+    }
+
+    let text = 'Waiting..';
+    if (errorMsg) {
+        text = errorMsg;
+    } else if (location) {
+        text = JSON.stringify(location);
+    }
 
     const handleModalclick = () => {
         setOpenModal(true);
@@ -39,11 +125,15 @@ const AddLocation = ({ navigation }) => {
                     <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
                     <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
                 </View>
-                <View style={{ display: 'flex', height: height * 0.78, flexDirection: 'column', justifyContent: 'space-between' }}>
+                <View style={{ display: 'flex', height: height * 0.76, flexDirection: 'column', justifyContent: 'space-between' }}>
                     <View style={{ marginTop: 40 / 930 * height }}>
                         <Text style={{ fontSize: 20, fontWeight: '500' }}>
                             Please add your location
                         </Text>
+                        {/* <Text>{location.coords.latitude}</Text>
+                        {address && (
+                            <Text>City: {address.region}</Text>
+                        )} */}
                         <View style={{ marginTop: 150 / 930 * height, display: 'flex', alignItems: 'center' }}>
                             <Image source={require('../../assets/location.png')} />
                             <Text style={{ fontWeight: '500', fontSize: 16, color: '#333333', marginTop: 20 / 930 * height }}>
@@ -58,19 +148,24 @@ const AddLocation = ({ navigation }) => {
 
                     <View>
                         <View>
-                            <TouchableOpacity
-                                onPress={handleModalclick}
-                                style={{ backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
-                                <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>
-                                    Allow location
-                                </Text>
-                            </TouchableOpacity>
+                            {
+                                showIndicator ? (
+                                    <ActivityIndicator size={'large'} />
+                                ) : (
+                                    <TouchableOpacity
+                                        onPress={getLocation}
+                                        style={{ backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
+                                        <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>
+                                            Allow location
+                                        </Text>
+                                    </TouchableOpacity>
+                                )
+                            }
+
                         </View>
                         <View style={{ marginTop: 20 / 930 * height, width: '100%', display: 'flex', alignItems: 'center' }}>
                             <TouchableOpacity
-                                onPress={() => {
-                                    navigation.navigate('AllowNotification');
-                                }}
+                                onPress={handleModalclick}
                                 style={{ height: 54 / 930 * height, width: '40%', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
                                 <Text style={{ color: '#666666', fontWeight: '500', fontSize: 18 }}>
                                     Not now, later
@@ -99,7 +194,7 @@ const AddLocation = ({ navigation }) => {
                                                 </View>
                                                 <View>
                                                     <TouchableOpacity
-                                                        onPress={() => navigation.navigate('AllowNotification')}
+                                                        onPress={getLocation}
                                                         style={{ backgroundColor: '#6050DC', height: 54 / 930 * height, width: 318 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
                                                         <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>
                                                             Allow location

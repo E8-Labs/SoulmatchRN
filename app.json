@@ -15,6 +15,9 @@
       "**/*"
     ],
     "ios": {
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "This app uses your location to show your position on the map."
+      },
       "supportsTablet": true,
       "bundleIdentifier": "com.e8labs.soulmatch"
     },

@@ -113,7 +113,7 @@ const CreatePassword = ({ navigation, route }) => {
                     let json = await result.json()
                     if (json.status === true) {
                         console.log('user registered and user data is', json.data)
-                        navigation.navigate('CongetsScreen');
+                        navigation.navigate('CongratsScreen');
                     } else {
                         console.log(' json message is', json.message)
                     }

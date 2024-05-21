@@ -1,60 +1,60 @@
 import React, { useState } from 'react'
 import { View, Text, Image, TouchableOpacity, Dimensions } from 'react-native'
 import customFonts from '../../assets/fonts/Fonts'
-const AddGender = ({ navigation }) => {
-    const { height, width } = Dimensions.get('window')
-    const [error,setError] = useState(null)
+import colors from '../../assets/colors/Colors'
 
-    //code for selecting gender
 
-    const [Gendermale, setGendermale] = useState('')
-    const handleMaleClick = () => {
-        setError(null)
-        setGendermale(true)
-        setGenderFemale(false)
-        setThirdGender(false)
-    }
+const { height, width } = Dimensions.get('window')
 
-    const [GenderFemale, setGenderFemale] = useState('')
-    const handleFemaleClick = () => {
-        setError(null)
-        setGenderFemale(true)
-        setGendermale(false)
-        setThirdGender(false)
-    }
+const male = require('../../assets/MaleUS.png');
+const female = require('../../assets/female.png');
+const nonBinary = require('../../assets/nonbinary.png');
+const maleS = require('../../assets/male.png');
+const femaleS = require('../../assets/SelectedF.png');
+const nonBinaryS = require('../../assets/SelectedB.png');
 
-    const [ThirdGender, setThirdGender] = useState('')
-    const handleThirdGenderClick = () => {
-        setError(null)
-        setThirdGender(true)
-        setGenderFemale(false)
-        setGendermale(false)
-    }
 
-    //code for navigation
+
+const AddGender = ({ navigation, route }) => {
+
+    const [error, setError] = useState(null)
+    const [selectedGender, setSelectedGender] = useState(null)
+    const [selected, setSelected] = useState(null)
+
+    const user = route.params.user
+    user.gender = selected
+    console.log('user data from prev screen', user)
+
+
+    const genders = [
+        {
+            id: 1,
+            name: 'Male',
+            image: male,
+            imageS: maleS
+        },
+        {
+            id: 2,
+            name: 'Female',
+            image: female,
+            imageS: femaleS
+        },
+        {
+            id: 3,
+            name: 'MaNon-Binarye',
+            image: nonBinary,
+            imageS: nonBinaryS
+        },
+    ]
 
     const handleNextClick = () => {
-        let selectedGender = null;
-
-        if (Gendermale) {
-            selectedGender = 'Male';
-        } else if (GenderFemale) {
-            selectedGender = 'Female';
-        } else if (ThirdGender) {
-            selectedGender = 'Third Gender';
-        }
-
-        if (selectedGender) {
-            console.log('Selected Gender:', selectedGender);
-            navigation.navigate('AddSchool', { 
-                GenderSelected: {
-                    Gender: selectedGender
-                }
-             });
+        if (!selected) {
+            setError("Select any gender")
         } else {
-            setError('Select a gender');
+            navigation.navigate('AddSchool', {
+                user: user
+            })
         }
-
     }
 
     return (
@@ -91,28 +91,35 @@ const AddGender = ({ navigation }) => {
                     </Text>
                 </View>
                 {/* Select gender */}
+
+
+
+
                 <View style={{ display: 'flex', height: height * 0.65, flexDirection: 'column', justifyContent: 'space-between' }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', display: 'flex', marginTop: 50 / 930 * height }}>
-                        <View style={{ height: 105 / 930 * height, width: 103 / 430 * width }}>
-                            <TouchableOpacity onPress={handleMaleClick}>
-                                {Gendermale ? <Image source={require('../../assets/male.png')} style={{ height: 105 / 930 * height, width: 103 / 430 * width, resizeMode: 'contain' }} /> : <Image source={require('../../assets/MaleUS.png')} style={{ height: 105 / 930 * height, width: 103 / 430 * width, resizeMode: 'contain' }} />}
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{ height: 105 / 930 * height, width: 103 / 430 * width }}>
-                            <TouchableOpacity onPress={handleFemaleClick}>
-                                {GenderFemale ? <Image source={require('../../assets/SelectedF.png')} style={{ height: 105 / 930 * height, width: 103 / 430 * width, resizeMode: 'contain' }} /> : <Image source={require('../../assets/female.png')} style={{ height: 105 / 930 * height, width: 103 / 430 * width, resizeMode: 'contain' }} />}
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{ height: 105 / 930 * height, width: 103 / 430 * width }}>
-                            <TouchableOpacity onPress={handleThirdGenderClick}>
-                                {ThirdGender ? <Image source={require('../../assets/SelectedB.png')} style={{ height: 105 / 930 * height, width: 103 / 430 * width, resizeMode: 'contain' }} /> : <Image source={require('../../assets/nonbinary.png')} style={{ height: 105 / 930 * height, width: 103 / 430 * width, resizeMode: 'contain' }} />}
-                            </TouchableOpacity>
-                        </View>
+
+
+                        {
+                            genders.map((item) => (
+                                <TouchableOpacity key={item.id} onPress={() => {
+                                    setError(null)
+                                    setSelected(item.name)
+                                }}>
+                                    <Image source={selected === item.name ? item.imageS : item.image}
+                                        style={{
+                                            height: 105 / 930 * height, width: 103 / 430 * width, resizeMode: 'contain',
+
+                                        }} />
+
+                                </TouchableOpacity>
+                            ))
+                        }
+
                     </View>
-                    <View style={{ display: 'flex', justifyContent: 'flex-end',width:width-50 }}>
-                    {
-                        error&&<Text style = {{fontSize:16,fontFamily:customFonts.meduim,color:'red',textAlign:'center'}}>{error}</Text>
-                    }
+                    <View style={{ display: 'flex', justifyContent: 'flex-end', width: width - 50 }}>
+                        {
+                            error && <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, color: 'red', textAlign: 'center' }}>{error}</Text>
+                        }
                         <TouchableOpacity
                             onPress={handleNextClick}
                             style={{ backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>

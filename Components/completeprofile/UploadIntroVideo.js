@@ -30,7 +30,7 @@ const UploadIntroVideo = ({ navigation }) => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Videos,
             allowsEditing: true,
-            quality: 1,
+            quality: 0.5,
             videoQuality: ImagePicker.UIImagePickerControllerQualityType.Medium,
             videoExportPreset: ImagePicker.VideoExportPreset.H264_960x540,
         });
@@ -63,7 +63,7 @@ const UploadIntroVideo = ({ navigation }) => {
             mediaTypes: ImagePicker.MediaTypeOptions.Videos,
             allowsEditing: true,
             aspect: [4, 3],
-            quality: 1,
+            quality: 0.5,
         });
 
         if (!result.canceled) {
@@ -79,28 +79,36 @@ const UploadIntroVideo = ({ navigation }) => {
             return
         }
         const formdata = new FormData()
-        formdata.append("image", {
+        formdata.append(
+            "media", {
             name: "imageName",
             uri: video,
             type: 'video/mp4'
         });
+        formdata.append("thumbnail", {
+            name: "thumbnail.jpg",
+            uri: image,
+            type: 'image/jpeg',
+        });
+
         setShowIndicator(true)
         try {
-            console.log('trying to upload video', video)
+            console.log('trying to upload video ', formdata)
             const data = Settings.get("USER")
             if (data) {
                 let d = JSON.parse(data)
                 const result = await fetch(ApisPath.ApiUploadIntroVideo, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + d.token
+                        'Authorization': 'Bearer ' + d.token,
+                        'Content-Type': 'multipart/form-data'
                     },
                     body: formdata
                 })
-                if (result.ok) {
+                if (result) {
+                    console.log('api called')
                     setShowIndicator(false)
-
+                    console.log(result)
                     let json = await result.json();
                     console.log('json ', json)
                     if (json.status === true) {
@@ -155,7 +163,7 @@ const UploadIntroVideo = ({ navigation }) => {
                                     video ? (
                                         <Image source={{ uri: image }} style={{ height: 149, width: 149, resizeMode: 'cover', borderRadius: 80 }} />
                                     ) : (
-                                        <View style = {{alignItems:'center'}}>
+                                        <View style={{ alignItems: 'center' }}>
                                             <Image source={require('../../assets/uploadvideoicon22.png')} style={{ height: 149, width: 149, resizeMode: 'contain' }} />
                                             <Text style={{ marginTop: 30 / 930 * height, fontWeight: '600', fontSize: 16 }}>
                                                 Upload

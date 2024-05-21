@@ -33,17 +33,10 @@ import InviteDatePopup from './Components/InviteDatePopup';
 import PlanDateNight from './Screens/DatesFlow/PlanDateNight';
 import InviteDateFromChatScreen from './Screens/ChatFlow/InviteDateFromChatScreen';
 
-import Createprofileaddemail from './Components/createprofile/AddEmail';
-
-import Addgender from './Components/completeprofile/AddGender';
-import Addschool from './Components/completeprofile/AddSchool';
-import Addjobdetails from './Components/completeprofile/AddJobDetails';
 import Addlocation from './Components/completeprofile/AddLocation';
 import Allownotification from './Components/completeprofile/AllowNotification';
-import Enhancementquestions from './Components/completeprofile/EnhancementQuestions';
 import Packageplan from './Components/completeprofile/PackagePlan';
 import CreatePassword from './Components/createprofile/CreatePassword';
-import Addage from './Components/completeprofile/AddAge';
 
 import UploadIntroVideo from './Components/completeprofile/UploadIntroVideo';
 import UploadMedia from './Components/completeprofile/UploadMedia';
@@ -57,7 +50,11 @@ import AddSchool from './Components/completeprofile/AddSchool';
 import AddGender from './Components/completeprofile/AddGender';
 import AddAge from './Components/completeprofile/AddAge';
 import AddName from './Components/createprofile/AddName';
-import EnhancementQuestions from './Components/completeprofile/EnhancementQuestions';
+import EnhancementQuestions from './Components/completeprofile/EnhancmentQuestions';
+import EnhancmentQuestions from './Components/completeprofile/EnhancmentQuestions';
+import AddLocation from './Components/completeprofile/AddLocation';
+import AllowNotification from './Components/completeprofile/AllowNotification';
+import PackagePlan from './Components/completeprofile/PackagePlan';
 
 // import { NavigationContainer } from "@react-navigation/native";
 // import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -98,7 +95,7 @@ export default function App() {
     return (
 
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="AddZodiac" screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName="AddLocation" screenOptions={{ headerShown: false }}>
           <Stack.Screen name="SplashMainScreen" component={SplashMainScreen} options={{ gestureEnabled: false }} />
           <Stack.Screen name="SlideContainer" component={SlideContainer} />
           <Stack.Screen name="RegisterUser" component={RegisterUser} options={{ gestureEnabled: false }} />
@@ -146,10 +143,10 @@ export default function App() {
           <Stack.Screen name='AddSchool' component={AddSchool} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='AddJobDetails' component={AddJobDetails} options={{ gestureEnabled: false, headerShown: false }} />
           {/*add picker here*/}
-          <Stack.Screen name='EnhancementQuestions' component={EnhancementQuestions} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='Addlocation' component={Addlocation} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='Allownotification' component={Allownotification} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='Packageplan' component={Packageplan} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='EnhancmentQuestions' component={EnhancmentQuestions} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='AddLocation' component={AddLocation} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='AllowNotification' component={AllowNotification} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='PackagePlan' component={PackagePlan} options={{ gestureEnabled: false, headerShown: false }} />
 
 
         </Stack.Navigator>

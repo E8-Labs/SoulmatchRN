@@ -1,59 +1,63 @@
-import React ,{useState}from 'react'
-import { View, Text, Dimensions, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import React ,{useEffect, useState}from 'react'
+import { View, Text, Dimensions, Image, StyleSheet, TouchableOpacity, Settings } from 'react-native'
 import CardContainerMain from '../DiscoverFlow/CardSwipContainer/CardContainerMain'
 import customFonts from '../../assets/fonts/Fonts';
 import LikesList from '../DiscoverFlow/LikesList';
 import FilterPopup from '../../Components/FilterPopup';
 import DiscoverGotMatch from '../../Components/DiscoverGotMatch';
 import ProfileDetail from '../DiscoverFlow/ProfileDetail';
+import ApisPath from '../../lib/ApisPath/ApisPath';
 
 
 const { height, width } = Dimensions.get("window");
 
-
-
 export default function DiscoverMain(props) {
 
 const [openModal, setOpenModal] = useState(false);
+const [discovers, setDiscovers] = useState([]);
 
-const closeModal = () =>{
-  setOpenModal(false)
+useEffect(()=>{
+  getDiscover()
+},[])
+
+const getDiscover = async () =>{
+  console.log('getting discover users')
+    const data = Settings.get("USER")
+    try {
+       if(data){
+      let d = JSON.parse(data)
+
+      const result = await fetch(ApisPath.ApiGetDiscover,{
+        method:'get',
+        headers:{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + d.token
+        }
+      })
+      if(result){
+        let json = await result.json();
+        if(json.status === true){
+          console.log('discover users are ', json.data)
+          setDiscovers(json.data)
+        } else{
+          console.log('json message is', json.message)
+        }
+      }
+    }
+    } catch (error) {
+      console.log('error finding in get discover', error)
+    }
+   
 }
+
 
   return (
     <View style={{ flex: 1, alignItems: 'center',backgroundColor:'transparent' }}>
-      <View style={{ flexDirection: 'row', marginTop: 60 / 930 * height, width: width - 30, justifyContent: 'space-between' }}>
-        <Text style={{ fontSize: 24, fontFamily: customFonts.meduim }}>Emily Grace</Text>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 / 430 * width }}>
-          <TouchableOpacity onPress={() => {
-            props.navigation.navigate("LikesList")
-          }}>
-            <Image source={require('../../assets/images/profileLike.png')}
-              style={styles.image}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity>
-            <Image source={require('../../assets/images/bell.png')}
-              style={styles.image}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => {
-              setOpenModal(true)
-          }}>
-            <Image source={require('../../assets/images/setting.png')}
-              style={styles.image}
-            />
-          </TouchableOpacity>
-          <FilterPopup visible ={openModal} close = {closeModal}/>
-
-
-        </View>
-      </View>
-      <ProfileDetail fromScreen = {'Main'} />
-      {/* <CardContainerMain /> */}
-      {/* <DiscoverGotMatch/> */}
+      
+      <ProfileDetail data = {discovers}  fromScreen = {'Main'} navigate = {()=>{
+        props.navigation.navigate("LikesList")
+      }}/>
+     
     </View>
   )
 }

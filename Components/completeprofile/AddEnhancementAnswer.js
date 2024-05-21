@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Dimensions, View, TouchableOpacity, Image, Text, TextInput, Modal, TouchableWithoutFeedback, Keyboard } from 'react-native'
 
 const AddEnhancementAnswer = ({ openModal, closeModal }) => {
     const { height, width } = Dimensions.get('window')
+    const[answerText,setAnswerText] = useState(null)
     return (
         <View style={{ display: 'flex', alignItems: 'center' }}>
             <View style={{ width: 370 / 430 * width }}>
@@ -26,6 +27,7 @@ const AddEnhancementAnswer = ({ openModal, closeModal }) => {
                                     </View>
                                     <View>
                                         <TextInput
+                                            onChangeText={(text)=>setAnswerText(text)}
                                             multiline
                                             numberOfLines={5}
                                             textAlignVertical='top'
@@ -37,7 +39,7 @@ const AddEnhancementAnswer = ({ openModal, closeModal }) => {
                             <View style={{ height: 115 / 930 * height, width: 350 / 430 * width }}>
                                 <View>
                                     <TouchableOpacity
-                                        onPress={closeModal}
+                                        onPress={()=>closeModal(answerText)}
                                         style={{ backgroundColor: '#6050DC', height: 54 / 930 * height, width: 350 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
                                         <Text style={{ color: 'white', fontWeight: '500', fontSize: 16 }}>
                                             Save
@@ -46,7 +48,7 @@ const AddEnhancementAnswer = ({ openModal, closeModal }) => {
                                 </View>
                                 <View>
                                     <TouchableOpacity
-                                        onPress={closeModal}
+                                        onPress={()=>closeModal()}
                                         style={{ height: 54 / 930 * height, width: 350 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
                                         <Text style={{ fontWeight: '500', fontSize: 16 }}>
                                             Cancel

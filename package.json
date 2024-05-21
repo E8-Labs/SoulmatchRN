@@ -12,17 +12,20 @@
     "@react-navigation/bottom-tabs": "^6.5.20",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
-    "expo": "~50.0.14",
+    "expo": "^51.0.5",
     "expo-font": "~11.10.3",
+    "expo-image": "^1.12.9",
     "expo-image-picker": "^15.0.4",
     "expo-status-bar": "~1.11.1",
+    "expo-video-thumbnails": "~7.9.0",
     "react": "18.2.0",
     "react-native": "0.73.6",
     "react-native-circular-progress": "^1.4.0",
     "react-native-modern-datepicker": "^1.0.0-beta.91",
+    "react-native-range-slider-expo": "^1.4.3",
     "react-native-star-rating-widget": "^1.7.3",
     "react-native-wheel-picker-expo": "^0.5.4",
-    "expo-video-thumbnails": "~7.9.0"
+    "expo-location": "~17.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

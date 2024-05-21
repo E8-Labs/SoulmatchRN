@@ -6,21 +6,29 @@ const ProfileEmailVerification = ({ navigation, route }) => {
 
     const { height, width } = Dimensions.get('window');
 
-    //data getting from previous screen
-    const userEmail = route.params.Email;
-    const ProfileEmail = userEmail.UserEmail;
-    const ProfileFirstName = userEmail.ProfileFirstName;
-    const ProfileLastName = userEmail.ProfileLastName;
-    const ProfileImage = userEmail.ProfileImage
-    console.log('Email recieved from previous screen is', userEmail.UserEmail + userEmail.ProfileFirstName + userEmail.ProfileLastName);
-
-    //code for checking the verification code entered by the user
-
+    
     const [Code1, setCode1] = useState('');
     const [Code2, setCode2] = useState('');
     const [Code3, setCode3] = useState('');
     const [Code4, setCode4] = useState('');
 
+   const code = Code1 + Code2 + Code3 + Code4
+   console.log('code', code)
+    //data getting from previous screen
+    const user = route.params.user;
+    user.code =  code.toString()
+
+
+    const ProfileEmail = user.UserEmail;
+    const ProfileFirstName = user.ProfileFirstName;
+    const ProfileLastName = user.ProfileLastName;
+    const ProfileImage = user.ProfileImage
+
+    console.log('Email recieved from previous screen is', user);
+
+    //code for checking the verification code entered by the user
+
+    
     //code for entering verification code
     const inputref1 = useRef(null);
     const inputref2 = useRef(null);
@@ -116,16 +124,7 @@ const ProfileEmailVerification = ({ navigation, route }) => {
 
     const handleContinueClick = () => {
         navigation.navigate('CreatePassword', {
-            Verificationscode: {
-                Value1: Code1,
-                Value2: Code2,
-                Value3: Code3,
-                Value4: Code4,
-                UserFirstName: ProfileFirstName,
-                UserLastName: ProfileLastName,
-                UserEmail: ProfileEmail,
-                UserImage: ProfileImage
-            }
+            user:user
         });
     }
 

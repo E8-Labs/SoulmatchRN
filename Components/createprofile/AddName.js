@@ -53,7 +53,7 @@ const AddName = ({ navigation, route }) => {
             setNameerror(true);
         } else {
             navigation.navigate('AddEmail', {
-                name: {
+                user: {
                     FirstName: saveText1,
                     LastName: saveText2,
                     UserProfileImage: ProfileImage
