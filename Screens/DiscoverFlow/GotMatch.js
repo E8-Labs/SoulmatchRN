@@ -3,12 +3,14 @@ import React from 'react'
 import GlobalStyles from '../../assets/styles/GlobalStyles'
 import customFonts from '../../assets/fonts/Fonts'
 const { height, width } = Dimensions.get('window')
-export default function GotMatch() {
+export default function GotMatch(props) {
   return (
   <SafeAreaView>
     <View style={[GlobalStyles.container,{justifyContent:'flex-start'}]}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20, width: width - 60 }}>
-        <TouchableOpacity >
+        <TouchableOpacity onPress={()=>{
+            props.navigation.goBack()
+        }}>
           <View style={GlobalStyles.backBtn}>
             <Image source={require('../../assets/images/close.png')}
               style={GlobalStyles.backBtnImage}

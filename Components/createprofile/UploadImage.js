@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Dimensions, Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import GlobalStyles from '../../assets/styles/GlobalStyles';
 
 const UploadImage = ({ navigation }) => {
     const { height, width } = Dimensions.get('window');
@@ -8,9 +9,11 @@ const UploadImage = ({ navigation }) => {
     //code for uploading image
 
     const [image, setImage] = useState(null);
+    const [error, setError] = useState(null);
     const pickImage = async () => {
+        setError(null)
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes:ImagePicker.MediaTypeOptions.Images,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             quality: 0.5,
         });
@@ -35,6 +38,7 @@ const UploadImage = ({ navigation }) => {
                 }
             });
         } else {
+            setError("Image not selected")
             console.log('Image not selected')
         }
     }
@@ -42,7 +46,7 @@ const UploadImage = ({ navigation }) => {
     return (
         <View style={{ display: 'flex', alignItems: 'center' }}>
             <View style={{ width: 370 / 430 * width }}>
-                <Text style={{ marginTop: 60 / 930 * height, fontWeight: '500', fontSize: 24 }}>
+                <Text style={{ marginTop: 70 / 930 * height, fontWeight: '500', fontSize: 24 }}>
                     Create Profile
                 </Text>
                 {/* Code for progressbar */}
@@ -59,13 +63,19 @@ const UploadImage = ({ navigation }) => {
                 {/* Add Image */}
                 <View style={{ display: 'flex', height: height * 0.68, flexDirection: 'column', justifyContent: 'space-between' }}>
                     <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        {image ? <Image source={{ uri: image }} style={{ width: 200 / 430 * width, height: 200 / 930 * height, resizeMode: 'cover', marginTop: 50 / 930 * height, borderRadius: 100 }} /> :
+                        {image ?
+                            <Image source={{ uri: image }} style={{ width: 200 / 430 * width, height: 200 / 930 * height, resizeMode: 'cover', marginTop: 50 / 930 * height, borderRadius: 100 }} /> :
                             <TouchableOpacity onPress={pickImage}>
                                 <Image source={require('../../assets/uploadimage.png')} style={{ resizeMode: 'contain', marginTop: 50 / 930 * height }} />
-                            </TouchableOpacity>}
+                            </TouchableOpacity>
+                        }
 
+                        {
+                            error && <Text style={[GlobalStyles.errorText, { textAlign: 'center', marginBottom: 20 }]}>{error}</Text>
+                        }
                     </View>
                     <View style={{ display: 'flex', }}>
+
                         <TouchableOpacity onPress={handleNextClick}>
                             <View style={{ backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
                                 <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>

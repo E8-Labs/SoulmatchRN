@@ -1,6 +1,12 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, StyleSheet, Text, View, Dimensions } from 'react-native';
+import {StyleSheet, Text, View, Dimensions } from 'react-native';
+
+
+
+
+
+
 import RegisterUser from './Screens/LoginFlow/RegisterUser';
 import SplashMainScreen from './Screens/SplashFlow/SplashMainScreen';
 import SlideScreen1 from './Screens/SplashFlow/SlideScreens/SlideScreen1';
@@ -55,6 +61,10 @@ import EnhancmentQuestions from './Components/completeprofile/EnhancmentQuestion
 import AddLocation from './Components/completeprofile/AddLocation';
 import AllowNotification from './Components/completeprofile/AllowNotification';
 import PackagePlan from './Components/completeprofile/PackagePlan';
+import GetInterest from './Components/completeprofile/GetInterest';
+import AddHeight from './Components/completeprofile/AddHeight';
+import CongratulationsScreen from './Components/completeprofile/CongratulationsScreen';
+import SelectedProfile from './Screens/DiscoverFlow/SelectedProfile';
 
 // import { NavigationContainer } from "@react-navigation/native";
 // import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -74,6 +84,7 @@ export default function App() {
     "PoppinsSemiBold": require('./assets/fonts/Poppins/Poppins-SemiBold.ttf'),
 
   })
+
 
   useEffect(() => {
     if (fontsLoaded || fontError) {
@@ -95,7 +106,7 @@ export default function App() {
     return (
 
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="AddLocation" screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName="TabBarContainer" screenOptions={{ headerShown: false }}>
           <Stack.Screen name="SplashMainScreen" component={SplashMainScreen} options={{ gestureEnabled: false }} />
           <Stack.Screen name="SlideContainer" component={SlideContainer} />
           <Stack.Screen name="RegisterUser" component={RegisterUser} options={{ gestureEnabled: false }} />
@@ -119,10 +130,7 @@ export default function App() {
           <Stack.Screen name="InviteDatePopup" component={InviteDatePopup} options={{ gestureEnabled: false }} />
           <Stack.Screen name="PlanDateNight" component={PlanDateNight} options={{ gestureEnabled: false }} />
           <Stack.Screen name="InviteDateFromChatScreen" component={InviteDateFromChatScreen} options={{ gestureEnabled: false }} />
-
-
-
-
+          <Stack.Screen name="SelectedProfile" component={SelectedProfile} options={{ gestureEnabled: false }} />
 
           {/* <Stack.Screen name='Signin' component={Signin} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='Signup' component={Signup} options={{ gestureEnabled: false, headerShown: false }} /> */}
@@ -142,12 +150,15 @@ export default function App() {
           <Stack.Screen name='AddGender' component={AddGender} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='AddSchool' component={AddSchool} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='AddJobDetails' component={AddJobDetails} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='GetInterest' component={GetInterest} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='AddHeight' component={AddHeight} options={{ gestureEnabled: false, headerShown: false }} />
           {/*add picker here*/}
           <Stack.Screen name='EnhancmentQuestions' component={EnhancmentQuestions} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='AddLocation' component={AddLocation} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='AllowNotification' component={AllowNotification} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='PackagePlan' component={PackagePlan} options={{ gestureEnabled: false, headerShown: false }} />
-
+          <Stack.Screen name='CongratulationsScreen' component={CongratulationsScreen} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='Testfile' component={Testfile} options={{ gestureEnabled: false, headerShown: false }} />
 
         </Stack.Navigator>
       </NavigationContainer>

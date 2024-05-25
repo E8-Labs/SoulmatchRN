@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Dimensions, View, TouchableOpacity, Text, FlatList, Modal, TextInput, TouchableWithoutFeedback,
-    Settings, Keyboard ,ActivityIndicator,
+import {
+    Dimensions, View, TouchableOpacity, Text, FlatList, Modal, TextInput, TouchableWithoutFeedback,
+    Settings, Keyboard, ActivityIndicator,
     Alert
 } from 'react-native'
 import AddEnhancementAnswer from './AddEnhancementAnswer';
@@ -9,6 +10,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as VideoThumbnails from 'expo-video-thumbnails';
 import { Image } from 'expo-image';
 import colors from '../../assets/colors/Colors';
+import GlobalStyles from '../../assets/styles/GlobalStyles';
 
 
 const blurhash =
@@ -23,9 +25,11 @@ const EnhancmentQuestions = ({ navigation }) => {
     const [thumb, setThumb] = useState(null);
     const [mediaType, setMediaType] = useState(null)
     const [showIndicator, setShowIndicator] = useState(null)
+    const [showIndicator2, setShowIndicator2] = useState(null)
     const [OpenModal, setOpenModal] = useState(null);
     const [answerText, setAnswerText] = useState(null)
     const [loadImage, setLoadImage] = useState(false)
+
 
     // questions[0].answer = json.data;
 
@@ -38,6 +42,7 @@ const EnhancmentQuestions = ({ navigation }) => {
     }, [])
 
     const getQuestions = async () => {
+        setShowIndicator2(true)
         try {
             const data = Settings.get('USER')
             if (data) {
@@ -53,6 +58,7 @@ const EnhancmentQuestions = ({ navigation }) => {
                 if (result) {
                     let json = await result.json()
                     if (json.status === true) {
+                        setShowIndicator2(false)
                         console.log('enancmennt questions are', json.data)
                         setQuestions(json.data)
                     } else {
@@ -86,7 +92,7 @@ const EnhancmentQuestions = ({ navigation }) => {
 
 
     const captureVideo = async (item) => {
-        if(CheckBox.length > 2){
+        if (CheckBox.length > 2) {
             Alert.alert("You can select maximum 3 questions")
             return
         }
@@ -120,7 +126,7 @@ const EnhancmentQuestions = ({ navigation }) => {
 
 
     const pickMedia = async (item) => {
-        if(CheckBox.length > 2){
+        if (CheckBox.length > 2) {
             Alert.alert("You can select maximum 3 questions")
             return
         }
@@ -155,7 +161,7 @@ const EnhancmentQuestions = ({ navigation }) => {
         console.log('enter in function 2', mediaSelected)
         console.log('ansered questions length', CheckBox.length)
         // return
-       
+
 
 
         // return 
@@ -242,7 +248,7 @@ const EnhancmentQuestions = ({ navigation }) => {
         // if (CheckBox.includes(itemId)) {
         //     setCheckBox(CheckBox.filter(id => id !== itemId));
         // } else {
-            setCheckBox([...CheckBox, itemId]);
+        setCheckBox([...CheckBox, itemId]);
         // }
     };
 
@@ -250,6 +256,7 @@ const EnhancmentQuestions = ({ navigation }) => {
 
 
     const openModalclick = (item) => {
+        console.log('modal data ', item)
 
         setOpenModal(item)
     }
@@ -269,8 +276,14 @@ const EnhancmentQuestions = ({ navigation }) => {
         <View style={{ display: 'flex', alignItems: 'center' }}>
             <View style={{ width: 370 / 430 * width }}>
                 <View style={{ marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => navigation.pop()}>
-                        <Image source={require('../../assets/Backbutton.png')} style={{ resizeMode: 'contain' }} />
+                    <TouchableOpacity onPress={() => {
+                        navigation.goBack()
+                    }}>
+                        <View style={GlobalStyles.backBtn}>
+                            <Image source={require('../../assets/images/backArrow.png')}
+                                style={GlobalStyles.backBtnImage}
+                            />
+                        </View>
                     </TouchableOpacity>
                     <Text style={{ fontWeight: '500', fontSize: 24, marginLeft: 20 / 430 * width }}>
                         Complete your profile
@@ -310,114 +323,121 @@ const EnhancmentQuestions = ({ navigation }) => {
                 <View>
 
                     {/* Flat list code goes here */}
-
-                    <FlatList showsVerticalScrollIndicator={false}
-                        style={{ height: height * 0.55 }}
-                        data={questions}
-                        renderItem={({ item, index }) => (
-                            <View style={{ width: 370 / 430 * width, borderWidth: 1, borderColor: '#E6E6E6', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 30 / 930 * height, borderRadius: 10, padding: 12 }}>
-                                <View style={{ height: 105 / 930 * height, width: 345 / 430 * width, marginBottom: 9 / 930 * height }}>
-                                    {/* <TouchableOpacity onPress={() => {}} style={{ height: 24 / 930 * height, width: 24 / 430 * width, marginTop: 5 }}> */}
-                                        <View>
-                                            <Image source={CheckBox.includes(item.id) ? radioActive : radioInactive}
-                                                style={{ height: 24 / 930 * height, width: 24 / 430 * width, resizeMode: 'contain' }} />
+                    {
+                        showIndicator2 ? (
+                            <ActivityIndicator size={'large'}  style={{ height: height * 0.55 }}/>
+                        ) : (
+                            <FlatList showsVerticalScrollIndicator={false}
+                                style={{ height: height * 0.55 }}
+                                data={questions}
+                                renderItem={({ item, index }) => (
+                                    <View style={{ width: 370 / 430 * width, borderWidth: 1, borderColor: '#E6E6E6', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 30 / 930 * height, borderRadius: 10, padding: 12 }}>
+                                        <View style={{ height: 105 / 930 * height, width: 345 / 430 * width, marginBottom: 9 / 930 * height }}>
+                                            {/* <TouchableOpacity onPress={() => {}} style={{ height: 24 / 930 * height, width: 24 / 430 * width, marginTop: 5 }}> */}
+                                            <View>
+                                                <Image source={CheckBox.includes(item.id) ? radioActive : radioInactive}
+                                                    style={{ height: 24 / 930 * height, width: 24 / 430 * width, resizeMode: 'contain' }} />
+                                            </View>
+                                            {/* </TouchableOpacity> */}
+                                            <Text style={{ fontWeight: '500', fontSize: 16, marginTop: 10 / 930 * height }}>
+                                                {item.title}
+                                            </Text>
+                                            <Text style={{ fontWeight: '500', fontSize: 12, color: '#4D4D4D' }}>
+                                                {item.text}
+                                            </Text>
                                         </View>
-                                    {/* </TouchableOpacity> */}
-                                    <Text style={{ fontWeight: '500', fontSize: 16, marginTop: 10 / 930 * height }}>
-                                        {item.title}
-                                    </Text>
-                                    <Text style={{ fontWeight: '500', fontSize: 12, color: '#4D4D4D' }}>
-                                        {item.text}
-                                    </Text>
-                                </View>
-                                <View style={{ alignItems: 'center' }}>
-                                    {
-                                        item.media ? (
-                                            item.media.answerImage ? (
-                                                <>
-                                                    {
-                                                        item.media.questionId === (index + 1).toString() && (
-                                                            <>
-                                                                <Image source={{ uri: item.media.answerImage }}
-                                                                    onLoadStart={() => { setLoadImage(true) }}
-                                                                    onLoadEnd={() => {
-                                                                        setLoadImage(false)
-                                                                    }}
-                                                                    placeholder={blurhash}
-                                                                    contentFit="cover"
-                                                                    transition={1000}
-                                                                    style={{ width: 340 / 430 * width, height: 208 / 930 * width }}
-                                                                />
-                                                                {/* {
+                                        <View style={{ alignItems: 'center' }}>
+                                            {
+                                                item.media ? (
+                                                    item.media.answerImage ? (
+                                                        <>
+                                                            {
+                                                                item.media.questionId === (index + 1).toString() && (
+                                                                    <>
+                                                                        <Image source={{ uri: item.media.answerImage }}
+                                                                            onLoadStart={() => { setLoadImage(true) }}
+                                                                            onLoadEnd={() => {
+                                                                                setLoadImage(false)
+                                                                            }}
+                                                                            placeholder={blurhash}
+                                                                            contentFit="cover"
+                                                                            transition={1000}
+                                                                            style={{ width: 340 / 430 * width, height: 208 / 930 * width }}
+                                                                        />
+                                                                        {/* {
                                                                     loadImage ? (
                                                                         <ActivityIndicator size={'large'} color={colors.blueColor} style={{marginTop:-50 }} />
                                                                     ) : <></>
                                                                 } */}
-                                                            </>
-                                                        )
-                                                    }
-
-                                                </>
-
-                                            ) : (
-                                                item.media.answerVideo ? (
-                                                    <Image source={{ uri: item.media.videoThumbnail }}
-                                                        style={{ width: 340 / 430 * width, height: 208 / 930 * height }} />
-                                                ) : (
-                                                    item.media.answerText && (
-                                                        <>
-                                                            {
-                                                                item.media.questionId === (index + 1).toString() ? (
-                                                                    <View style={{
-                                                                        backgroundColor: '#F5F5F5', paddingVertical: 8, paddingHorizontal: 12, borderRadius: 4, width: 330 / 430 * width
-                                                                    }}>
-                                                                        <Text>{item.media.answerText}</Text>
-                                                                    </View>
-                                                                ) : null
+                                                                    </>
+                                                                )
                                                             }
 
                                                         </>
+
+                                                    ) : (
+                                                        item.media.answerVideo ? (
+                                                            <Image source={{ uri: item.media.videoThumbnail }}
+                                                                style={{ width: 340 / 430 * width, height: 208 / 930 * height }} />
+                                                        ) : (
+                                                            item.media.answerText && (
+                                                                <>
+                                                                    {
+                                                                        item.media.questionId === (index + 1).toString() ? (
+                                                                            <View style={{
+                                                                                backgroundColor: '#F5F5F5', paddingVertical: 8, paddingHorizontal: 12, borderRadius: 4, width: 330 / 430 * width
+                                                                            }}>
+                                                                                <Text>{item.media.answerText}</Text>
+                                                                            </View>
+                                                                        ) : null
+                                                                    }
+
+                                                                </>
+                                                            )
+
+                                                        )
                                                     )
+                                                ) : null
 
-                                                )
-                                            )
-                                        ) : null
-
-                                    }
-
-                                </View>
-
-                                <View style={{ height: 38 / 930 * height, width: 345 / 430 * width, marginTop: 8, display: 'flex', alignItems: 'flex-end' }}>
-                                    <View style={{ width: 130 / 430 * width, flexDirection: 'row', justifyContent: 'space-between', display: 'flex' }}>
-                                        <TouchableOpacity style={{ width: 36 / 430 * width }} onPress={() => {
-                                             if(CheckBox.length > 2){
-                                                Alert.alert("You can select maximum 3 questions")
-                                                return
-                                            } else {
-                                                 openModalclick(item)
                                             }
-                                           
-                                        }}>
-                                            <Image source={require('../../assets/text.png')} style={{ height: 36 / 930 * height, width: 36 / 430 * width, resizeMode: 'contain' }} />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={{ width: 36 / 430 * width }}
-                                            onPress={() => {
-                                                pickMedia(item)
-                                            }}
-                                        >
-                                            <Image source={require('../../assets/newupload.png')} style={{ height: 36 / 930 * height, width: 36 / 430 * width, resizeMode: 'contain' }} />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={{ width: 36 / 430 * width }}
-                                            onPress={() => captureVideo(item)}
-                                        >
-                                            <Image source={require('../../assets/videoicon2.png')} style={{ height: 36 / 930 * height, width: 36 / 430 * width, resizeMode: 'contain' }} />
-                                        </TouchableOpacity>
+
+                                        </View>
+
+                                        <View style={{ height: 38 / 930 * height, width: 345 / 430 * width, marginTop: 8, display: 'flex', alignItems: 'flex-end' }}>
+                                            <View style={{ width: 130 / 430 * width, flexDirection: 'row', justifyContent: 'space-between', display: 'flex' }}>
+                                                <TouchableOpacity style={{ width: 36 / 430 * width }} onPress={() => {
+                                                    if (CheckBox.length > 2) {
+                                                        Alert.alert("You can select maximum 3 questions")
+                                                        return
+                                                    } else {
+                                                        openModalclick(item)
+                                                    }
+
+                                                }}>
+                                                    <Image source={require('../../assets/text.png')} style={{ height: 36 / 930 * height, width: 36 / 430 * width, resizeMode: 'contain' }} />
+                                                </TouchableOpacity>
+                                                <TouchableOpacity style={{ width: 36 / 430 * width }}
+                                                    onPress={() => {
+                                                        pickMedia(item)
+                                                    }}
+                                                >
+                                                    <Image source={require('../../assets/newupload.png')} style={{ height: 36 / 930 * height, width: 36 / 430 * width, resizeMode: 'contain' }} />
+                                                </TouchableOpacity>
+                                                <TouchableOpacity style={{ width: 36 / 430 * width }}
+                                                    onPress={() => captureVideo(item)}
+                                                >
+                                                    <Image source={require('../../assets/videoicon2.png')} style={{ height: 36 / 930 * height, width: 36 / 430 * width, resizeMode: 'contain' }} />
+                                                </TouchableOpacity>
+                                            </View>
+                                        </View>
                                     </View>
-                                </View>
-                            </View>
-                        )}
-                        keyExtractor={item => item.id}
-                    />
+                                )}
+                                keyExtractor={item => item.id}
+                            />
+
+                        )
+                    }
+
 
                     <View style={{ marginTop: 15 / 930 * height }}>
                         <TouchableOpacity
@@ -450,10 +470,10 @@ const EnhancmentQuestions = ({ navigation }) => {
                                 <View style={{ width: 350 / 430 * width, height: '100%' }}>
                                     <View style={{ width: '100%', height: 73 / 930 * height, justifyContent: 'space-between' }}>
                                         <Text style={{ fontWeight: '500', fontSize: 16 }}>
-                                            Travel Dreaming
+                                            {OpenModal && OpenModal.title}
                                         </Text>
                                         <Text style={{ fontWeight: '500', fontSize: 12, color: '#4D4D4D' }}>
-                                            If you could visit any country in the world, where would you go and why?
+                                            {OpenModal && OpenModal.text}
                                         </Text>
                                     </View>
                                     <View>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { View, Image, TouchableOpacity, Text, TouchableWithoutFeedback, Dimensions, Modal, Settings, ActivityIndicator } from 'react-native'
 import * as Location from 'expo-location';
 import ApisPath from '../../lib/ApisPath/ApisPath';
+import GlobalStyles from '../../assets/styles/GlobalStyles';
 
 const AddLocation = ({ navigation }) => {
     const { height, width } = Dimensions.get('window')
@@ -15,7 +16,7 @@ const AddLocation = ({ navigation }) => {
 
     const getLocation = async () => {
         setOpenModal(false)
-        setShowIndicator(true)
+       
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
             setErrorMsg('Permission to access location was denied');
@@ -26,6 +27,7 @@ const AddLocation = ({ navigation }) => {
         setLocation(location);
 
         if (location) {
+            setShowIndicator(true)
 
             let reverseGeocode = await Location.reverseGeocodeAsync({
                 latitude: location.coords.latitude,
@@ -101,8 +103,14 @@ const AddLocation = ({ navigation }) => {
         <View style={{ display: 'flex', alignItems: 'center' }}>
             <View style={{ width: 370 / 430 * width }}>
                 <View style={{ marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => navigation.pop()}>
-                        <Image source={require('../../assets/Backbutton.png')} style={{ resizeMode: 'contain' }} />
+                    <TouchableOpacity onPress={() => {
+                        navigation.goBack()
+                    }}>
+                        <View style={GlobalStyles.backBtn}>
+                            <Image source={require('../../assets/images/backArrow.png')}
+                                style={GlobalStyles.backBtnImage}
+                            />
+                        </View>
                     </TouchableOpacity>
                     <Text style={{ fontWeight: '500', fontSize: 24, marginLeft: 20 / 430 * width }}>
                         Complete your profile

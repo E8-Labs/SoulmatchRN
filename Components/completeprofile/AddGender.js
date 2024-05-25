@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { View, Text, Image, TouchableOpacity, Dimensions } from 'react-native'
 import customFonts from '../../assets/fonts/Fonts'
 import colors from '../../assets/colors/Colors'
+import GlobalStyles from '../../assets/styles/GlobalStyles';
 
 
 const { height, width } = Dimensions.get('window')
@@ -18,7 +19,6 @@ const nonBinaryS = require('../../assets/SelectedB.png');
 const AddGender = ({ navigation, route }) => {
 
     const [error, setError] = useState(null)
-    const [selectedGender, setSelectedGender] = useState(null)
     const [selected, setSelected] = useState(null)
 
     const user = route.params.user
@@ -61,8 +61,14 @@ const AddGender = ({ navigation, route }) => {
         <View style={{ display: 'flex', alignItems: 'center' }}>
             <View style={{ width: 370 / 430 * width }}>
                 <View style={{ marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => navigation.pop()}>
-                        <Image source={require('../../assets/Backbutton.png')} style={{ resizeMode: 'contain' }} />
+                    <TouchableOpacity onPress={() => {
+                        navigation.goBack()
+                    }}>
+                        <View style={GlobalStyles.backBtn}>
+                            <Image source={require('../../assets/images/backArrow.png')}
+                                style={GlobalStyles.backBtnImage}
+                            />
+                        </View>
                     </TouchableOpacity>
                     <Text style={{ fontWeight: '500', fontSize: 24, marginLeft: 20 / 430 * width }}>
                         Complete your profile

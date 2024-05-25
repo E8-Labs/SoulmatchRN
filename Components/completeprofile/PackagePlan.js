@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Dimensions, View, TouchableOpacity, Text, Image, Modal } from 'react-native'
-
+import GlobalStyles from '../../assets/styles/GlobalStyles';
 const PackagePlan = ({ navigation }) => {
     const { height, width } = Dimensions.get('window');
     const [packages, setPackages] = useState([]);
@@ -40,8 +40,14 @@ const PackagePlan = ({ navigation }) => {
         <View style={{ display: 'flex', alignItems: 'center' }}>
             <View style={{ width: 370 / 430 * width }}>
                 <View style={{ marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => navigation.pop()}>
-                        <Image source={require('../../assets/Backbutton.png')} style={{ resizeMode: 'contain' }} />
+                    <TouchableOpacity onPress={() => {
+                        navigation.goBack()
+                    }}>
+                        <View style={GlobalStyles.backBtn}>
+                            <Image source={require('../../assets/images/backArrow.png')}
+                                style={GlobalStyles.backBtnImage}
+                            />
+                        </View>
                     </TouchableOpacity>
                     <Text style={{ fontWeight: '500', fontSize: 24, marginLeft: 20 / 430 * width }}>
                         Complete your profile
@@ -107,8 +113,8 @@ const PackagePlan = ({ navigation }) => {
                                             </View>
                                             <View style={{ width: '50%', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
                                                 <TouchableOpacity onPress={handleModalclick}>
-                                                    <View style={{ height: 32 / 930 * height, width: 32 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#00000020', borderRadius: 50 }}>
-                                                        <Image source={require('../../assets/forward.png')} style={{ height: 20 / 930 * height, width: 20 / 430 * width, }} />
+                                                    <View style={{ height: 35 / 930 * height, width: 32 / 930 * height, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#00000020', borderRadius: 50 }}>
+                                                        <Image source={require('../../assets/forward.png')} style={{ height: 20 / 930 * height, width: 20 / 930 * height, }} />
                                                     </View>
                                                 </TouchableOpacity>
                                             </View>
@@ -128,7 +134,7 @@ const PackagePlan = ({ navigation }) => {
                                         </View>
                                         <View style={{ width: '50%', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
                                             <TouchableOpacity onPress={handleModalclick}>
-                                                <View style={{ height: 32 / 930 * height, width: 32 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#00000020', borderRadius: 50 }}>
+                                                <View style={{ height: 32 / 930 * height, width: 32 / 930 * height, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#00000020', borderRadius: 50 }}>
                                                     <Image source={require('../../assets/forward.png')} style={{ height: 20 / 930 * height, width: 20 / 430 * width, }} />
                                                 </View>
                                             </TouchableOpacity>
@@ -180,7 +186,7 @@ const PackagePlan = ({ navigation }) => {
                                     </View>
                                     <View>
                                         <TouchableOpacity onPress={handleModalclick}>
-                                            <View style={{ height: 32 / 930 * height, width: 32 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#00000020', borderRadius: 50 }}>
+                                            <View style={{ height: 32 / 930 * height, width: 32/930*height, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#00000020', borderRadius: 50 }}>
                                                 <Image source={require('../../assets/forward.png')} style={{ height: 20 / 930 * height, width: 20 / 430 * width, }} />
                                             </View>
                                         </TouchableOpacity>
@@ -204,7 +210,7 @@ const PackagePlan = ({ navigation }) => {
                                     </View>
                                     <View style={{ width: '50%', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
                                         <TouchableOpacity>
-                                            <View style={{ height: 32 / 930 * height, width: 32 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#00000020', borderRadius: 50 }}>
+                                            <View style={{ height: 32 / 930 * height, width: 32 /930*height, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#00000020', borderRadius: 50 }}>
                                                 <Image source={require('../../assets/forward.png')} style={{ height: 20 / 930 * height, width: 20 / 430 * width, }} />
                                             </View>
                                         </TouchableOpacity>
@@ -215,7 +221,11 @@ const PackagePlan = ({ navigation }) => {
                             <View style={{ height: 0.1, borderWidth: 0.2, borderColor: '#E6E6E6', width: 370 / 430 * width, marginTop: 20 / 930 * height, marginTop: 20 / 930 * height }}></View>
 
                             <View style={{ marginTop: 30 / 930 * height }}>
-                                <TouchableOpacity>
+                                <TouchableOpacity 
+                                    onPress={()=>{
+                                        // navigation.navigate('Congates')
+                                    }}
+                                >
                                     <Image source={require('../../assets/SideButtonIndicator.png')} style={{ height: 38 / 930 * height, width: 38 / 430 * width, resizeMode: 'contain' }} />
                                 </TouchableOpacity>
                             </View>

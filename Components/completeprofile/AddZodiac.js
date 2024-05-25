@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Text, View, TouchableOpacity, Image, Dimensions, ScrollView } from 'react-native'
 import { enableScreens } from 'react-native-screens';
 import customFonts from '../../assets/fonts/Fonts';
+import GlobalStyles from '../../assets/styles/GlobalStyles';
 
 const AddZodiac = ({ navigation }) => {
     const { height, width } = Dimensions.get('window');
@@ -108,8 +109,14 @@ const AddZodiac = ({ navigation }) => {
         <View style={{ display: 'flex', alignItems: 'center' }}>
             <View style={{ width: 370 / 430 * width }}>
                 <View style={{ marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => navigation.pop()}>
-                        <Image source={require('../../assets/Backbutton.png')} style={{ resizeMode: 'contain' }} />
+                    <TouchableOpacity onPress={() => {
+                        navigation.goBack()
+                    }}>
+                        <View style={GlobalStyles.backBtn}>
+                            <Image source={require('../../assets/images/backArrow.png')}
+                                style={GlobalStyles.backBtnImage}
+                            />
+                        </View>
                     </TouchableOpacity>
                     <Text style={{ fontWeight: '500', fontSize: 24, marginLeft: 20 / 430 * width }}>
                         Complete your profile
@@ -140,7 +147,7 @@ const AddZodiac = ({ navigation }) => {
 
                 {/* Code for zodiac icons grid list */}
 
-                <ScrollView style={{ height:height*0.5, marginTop: 20 }} showsVerticalScrollIndicator={false} >
+                <ScrollView style={{ height:height*0.55, marginTop: 20 }} showsVerticalScrollIndicator={false} >
                     <View style={{ flexDirection: 'row', flexWrap: 'wrap', display: 'flex', justifyContent: 'space-between' }}>
                         {Users.map((item, index) => (
                             <View key={item.id} style={{ height: 113 / 930 * height, width: 113 / 430 * width, marginTop: 20 / 930 * height }}>
@@ -158,7 +165,7 @@ const AddZodiac = ({ navigation }) => {
                     }
                     <TouchableOpacity
                         onPress={handleContinueclick}
-                        style={{ marginTop: 30 / 930 * height, backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
+                        style={{ marginTop: 10 / 930 * height, backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
                         <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>
                             Next
                         </Text>

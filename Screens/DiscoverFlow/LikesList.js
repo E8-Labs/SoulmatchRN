@@ -23,64 +23,6 @@ export default function LikesList(props) {
   const [showIndidator, setShowIndicator] = useState(false)
   const [loadImage, setLoadImage] = useState(false)
 
-  // const likes = [
-  //   {
-  //     id: 1,
-  //     name: "Isabella Taylor",
-  //     image: require('../../assets/images/profileImage.png')
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Isabella Taylor",
-  //     image: require('../../assets/images/profileImage.png')
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Isabella Taylor",
-  //     image: require('../../assets/images/profileImage.png')
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "Isabella Taylor",
-  //     image: require('../../assets/images/profileImage.png')
-  //   },
-  //   {
-  //     id: 5,
-  //     name: "Isabella Taylor",
-  //     image: require('../../assets/images/profileImage.png')
-  //   },
-  //   {
-  //     id: 6,
-  //     name: "Isabella Taylor",
-  //     image: require('../../assets/images/profileImage.png')
-  //   },
-  //   {
-  //     id: 7,
-  //     name: "Isabella Taylor",
-  //     image: require('../../assets/images/profileImage.png')
-  //   },
-  //   {
-  //     id: 8,
-  //     name: "Isabella Taylor",
-  //     image: require('../../assets/images/profileImage.png')
-  //   },
-  //   {
-  //     id: 9,
-  //     name: "Isabella Taylor",
-  //     image: require('../../assets/images/profileImage.png')
-  //   },
-  //   {
-  //     id: 10,
-  //     name: "Isabella Taylor",
-  //     image: require('../../assets/images/profileImage.png')
-  //   },
-  //   {
-  //     id: 11,
-  //     name: "Isabella Taylor",
-  //     image: require('../../assets/images/profileImage.png')
-  //   },
-  // ]
-
   useEffect(() => {
     getProfiles()
   }, [])
@@ -253,8 +195,8 @@ export default function LikesList(props) {
                         <View style={{ width: width - 60, borderWidth: 1, borderColor: colors.greyText, borderRadius: 10, padding: 13, marginTop: 13 / 930 * height }}>
                           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                             <TouchableOpacity onPress={() => {
-                              props.navigation.navigate("ProfileDetail", {
-                                fromScreen: "LikesList"
+                              props.navigation.navigate("SelectedProfile", {
+                                user: item
                               })
                             }}>
                               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 18 }}>

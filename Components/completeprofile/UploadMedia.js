@@ -24,6 +24,7 @@ const UploadMedia = ({ navigation }) => {
     const [loadImage, setLoadImage] = useState(false)
     const handleModalclick = () => {
         setPopup(true);
+        setError(null)
     }
 
     const [media, setMedia] = useState([]);
@@ -161,7 +162,7 @@ const UploadMedia = ({ navigation }) => {
         try {
             console.log('trying to upload video', formdata)
             const data = Settings.get("USER")
-            console.log("Data of usr is ", data)
+            // console.log("Data of usr is ", data)
             if (data) {
                 let d = JSON.parse(data)
 
@@ -188,9 +189,11 @@ const UploadMedia = ({ navigation }) => {
                             // let thumb = await generateThumbnail(selectedMedia)
                             // console.log("Thumb image is ", thumb)
                             setMedia([...media, { media: json.data.url, type: json.data.type, caption: caption, thumbnail: json.data.thumb_url }]);
+                            setCaption('')
                         }
                         else {
                             setMedia([...media, { media: json.data.url, type: json.data.type, caption: caption, thumbnail: null }]);
+                            setCaption('')
                         }
 
                     } else {
@@ -199,7 +202,7 @@ const UploadMedia = ({ navigation }) => {
                 }
             }
         } catch (error) {
-            console.log('error finding in video upload', error)
+            console.log('error finding in upload media', error)
         }
     }
 
@@ -243,8 +246,14 @@ const UploadMedia = ({ navigation }) => {
         <View style={{ display: 'flex', alignItems: 'center' }}>
             <View style={{ width: 370 / 430 * width }}>
                 <View style={{ marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => navigation.pop()}>
-                        <Image source={require('../../assets/Backbutton.png')} style={{ resizeMode: 'contain' }} />
+                    <TouchableOpacity onPress={() => {
+                        navigation.goBack()
+                    }}>
+                        <View style={GlobalStyles.backBtn}>
+                            <Image source={require('../../assets/images/backArrow.png')}
+                                style={GlobalStyles.backBtnImage}
+                            />
+                        </View>
                     </TouchableOpacity>
                     <Text style={{ fontWeight: '500', fontSize: 24, marginLeft: 20 / 430 * width }}>
                         Complete your profile
@@ -310,14 +319,7 @@ const UploadMedia = ({ navigation }) => {
                                                         <ActivityIndicator size={'large'} style={{ marginTop: 50, marginRight: 50 }} />
                                                     ) : (
                                                         <View style={{ width: width, backgroundColor: 'transparent', marginTop: 5 }}>
-                                                            <TouchableOpacity onPress={() => deleteMedia(item.media, item.type)}
-                                                                style={{
-                                                                    position: 'absolute', alignSelf: 'flex-start', right: 50, top: 0
-                                                                }}  >
-                                                                <Image source={require('../../assets/closeButton.png')}
-                                                                    style={{ height: 24 / 930 * height, width: 24 / 930 * height, resizeMode: 'contain', }}
-                                                                />
-                                                            </TouchableOpacity>
+                                                           
                                                             <View style={{
                                                                 width: 370 / 430 * width, paddingVertical: 16 / 930 * height, paddingHorizontal: 16 / 430 * width,
                                                                 borderWidth: 1, borderColor: colors.greyText, borderRadius: 10, marginTop: 30 / 930 * height, gap: 10
@@ -345,6 +347,14 @@ const UploadMedia = ({ navigation }) => {
                                                                 }
 
                                                             </View>
+                                                            <TouchableOpacity onPress={() => deleteMedia(item.media, item.type)}
+                                                                style={{
+                                                                    position: 'absolute', alignSelf: 'flex-start', right: 52, top: 25
+                                                                }}  >
+                                                                <Image source={require('../../assets/closeButton.png')}
+                                                                    style={{ height: 24 / 930 * height, width: 24 / 930 * height, resizeMode: 'contain', }}
+                                                                />
+                                                            </TouchableOpacity>
                                                         </View>
                                                     )
                                                 }
@@ -361,8 +371,15 @@ const UploadMedia = ({ navigation }) => {
                     />
 
                     <View>
+                        {
+                            error && <Text style = {[GlobalStyles.errorText,{textAlign:'center'}]}>{error}</Text>                       }
                         <TouchableOpacity onPress={() => {
-                            navigation.navigate('AddZodiac')
+                            if(media.length > 0){
+                                navigation.navigate('AddZodiac')
+                            } else{
+                                setError('Upload media')
+                            }
+                            
                         }}
                             style={{
                                 marginTop: 10, backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width,

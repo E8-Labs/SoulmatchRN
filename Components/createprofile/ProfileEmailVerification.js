@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRef, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, Dimensions, TextInput } from 'react-native'
-
+import GlobalStyles from '../../assets/styles/GlobalStyles';
 const ProfileEmailVerification = ({ navigation, route }) => {
 
     const { height, width } = Dimensions.get('window');
@@ -132,8 +132,14 @@ const ProfileEmailVerification = ({ navigation, route }) => {
         <View style={{ display: 'flex', alignItems: 'center' }}>
             <View style={{ width: 370 / 430 * width }}>
                 <View style={{ marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => navigation.pop()}>
-                        <Image source={require('../../assets/Backbutton.png')} style={{ resizeMode: 'contain' }} />
+                    <TouchableOpacity onPress={() => {
+                        navigation.goBack()
+                    }}>
+                        <View style={GlobalStyles.backBtn}>
+                            <Image source={require('../../assets/images/backArrow.png')}
+                                style={GlobalStyles.backBtnImage}
+                            />
+                        </View>
                     </TouchableOpacity>
                     <Text style={{ fontWeight: '500', fontSize: 24, marginLeft: 20 / 430 * width }}>
                         Create Profile
@@ -152,7 +158,7 @@ const ProfileEmailVerification = ({ navigation, route }) => {
                         Please verify your email
                     </Text>
                     <Text style={{ fontWeight: '500', fontSize: 16, color: '#333333', marginTop: 30 / 930 * height }}>
-                        Please enter the 4 digit code sent to your mail john....@gmail.com
+                        Please enter the 4 digit code sent to your mail11 {user.email}
                     </Text>
                 </View>
                 {/* Code for Input Verification Code */}

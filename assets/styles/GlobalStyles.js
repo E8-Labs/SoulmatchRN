@@ -75,7 +75,7 @@ const GlobalStyles = {
         fontSize: 14,
         fontWeight: '400',
         color: 'red',
-        fontFamily: customFonts.regular
+        fontFamily: customFonts.meduim
     },
     likeBtn: {
         height: 46,

@@ -26,15 +26,23 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.e8labs.soulmatch"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-font",
-      "expo-image-picker",
-      "@react-native-firebase/app"
-    ]
+      "expo-image-picker"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "bf8b393c-6afb-47c2-824b-0b300428c338"
+      }
+    }
   }
 }

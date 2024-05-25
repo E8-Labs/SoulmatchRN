@@ -3,6 +3,7 @@ import { TouchableOpacity, View, Image, Text, Dimensions } from 'react-native';
 import { useState } from 'react';
 import WheelPickerExpo from 'react-native-wheel-picker-expo';
 import colors from '../../assets/colors/Colors';
+import GlobalStyles from '../../assets/styles/GlobalStyles';
 
 const AddAge = ({ navigation, route }) => {
     const { height, width } = Dimensions.get('window');
@@ -19,7 +20,7 @@ const AddAge = ({ navigation, route }) => {
     const CITIES = '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,61,62,63,64,65,66,67,68,69,70,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100'.split(',');
 
     const handleNextClick = () => {
-        navigation.navigate('AddGender', {
+        navigation.navigate('AddHeight', {
             user: user
         })
     }
@@ -27,8 +28,14 @@ const AddAge = ({ navigation, route }) => {
         <View style={{ display: 'flex', alignItems: 'center' }}>
             <View style={{ width: 370 / 430 * width }}>
                 <View style={{ marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => navigation.pop()}>
-                        <Image source={require('../../assets/Backbutton.png')} style={{ resizeMode: 'contain' }} />
+                    <TouchableOpacity onPress={() => {
+                       navigation.goBack()
+                    }}>
+                        <View style={GlobalStyles.backBtn}>
+                            <Image source={require('../../assets/images/backArrow.png')}
+                                style={GlobalStyles.backBtnImage}
+                            />
+                        </View>
                     </TouchableOpacity>
                     <Text style={{ fontWeight: '500', fontSize: 24, marginLeft: 20 / 430 * width }}>
                         Complete your profile

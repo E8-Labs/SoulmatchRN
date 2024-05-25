@@ -1,37 +1,84 @@
-// import RangeSlider, { Slider } from 'react-native-range-slider-expo';
-// import { View, Text } from 'react-native';
+import React, { useRef, useEffect } from 'react';
+import { View, Animated, StyleSheet, Easing } from 'react-native';
 
-// import { useState } from 'react';
-// import GlobalStyles from './assets/styles/GlobalStyles';
+const CircleAnimation = () => {
+  const animations = useRef([
+    new Animated.Value(0),
+    new Animated.Value(0),
+    new Animated.Value(0),
+    new Animated.Value(0),
+  ]).current;
 
-// export default function Testfile (){
+  useEffect(() => {
+    const createAnimation = (animation) => {
+      return Animated.loop(
+        Animated.sequence([
+          Animated.timing(animation, {
+            toValue: 1,
+            duration: 2000,
+            easing: Easing.linear,
+            useNativeDriver: true,
+          }),
+          Animated.timing(animation, {
+            toValue: 0,
+            duration: 2000,
+            easing: Easing.linear,
+            useNativeDriver: true,
+          }),
+        ])
+      );
+    };
 
-// const [fromValue, setFromValue] = useState(0);
-//      const [toValue, setToValue] = useState(0);
-//      const [value, setValue] = useState(0);
-     
-//      return (
-//           <View style={GlobalStyles.container}>
-//                <View>
-//                     <RangeSlider min={5} max={25}
-//                          fromValueOnChange={value => setFromValue(value)}
-//                          toValueOnChange={value => setToValue(value)}
-//                          initialFromValue={11}
-//                     />
-//                     <Text>from value:  {fromValue}</Text>
-//                     <Text>to value:  {toValue}</Text>
-//                </View>
-//                <View>
-//                     <Slider min={0} max={40} step={4}
-//                          valueOnChange={value => setValue(value)}
-//                          initialValue={12}
-//                          knobColor='red'
-//                          valueLabelsBackgroundColor='black'
-//                          inRangeBarColor='purple'
-//                          outOfRangeBarColor='orange'
-//                     />
-//                     <Text>value:  {value}</Text>
-//                </View>
-//           </View>
-//      );
-// }
+    const animatedSequences = animations.map((animation) =>
+      createAnimation(animation)
+    );
+
+    animatedSequences.forEach((seq) => seq.start());
+
+    return () => {
+      animatedSequences.forEach((seq) => seq.stop());
+    };
+  }, [animations]);
+
+  const interpolatedAnimations = animations.map((animation, index) => {
+    const inputRange = [0, 1];
+    const outputRange = [index % 2 === 0 ? -100 : 50, index % 2 === 0 ? 50 : -100];
+    return animation.interpolate({ inputRange, outputRange });
+  });
+
+  return (
+    <View style={styles.container}>
+      {interpolatedAnimations.map((anim, index) => (
+        <Animated.View
+          key={index}
+          style={[
+            styles.circle,
+            {
+              transform: [
+                { translateX: anim },
+                { translateY: anim },
+              ],
+            },
+          ]}
+        />
+      ))}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  circle: {
+    position: 'absolute',
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#8A2BE2',
+  },
+});
+
+export default CircleAnimation;

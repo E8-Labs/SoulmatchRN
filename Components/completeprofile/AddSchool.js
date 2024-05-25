@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Dimensions, Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback, View, Text, Image, Platform, TouchableOpacity, TextInput } from 'react-native'
 import customFonts from '../../assets/fonts/Fonts'
+import GlobalStyles from '../../assets/styles/GlobalStyles';
 
 const AddSchool = ({ navigation, route }) => {
 
@@ -15,8 +16,8 @@ const AddSchool = ({ navigation, route }) => {
     console.log('user is', user)
 
     const handleNext = () => {
-        navigation.navigate("AddJobDetails",{
-            user:user
+        navigation.navigate("AddJobDetails", {
+            user: user
         })
     }
 
@@ -24,12 +25,18 @@ const AddSchool = ({ navigation, route }) => {
         // <KeyboardAvoidingView
         //     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         // >
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()} style = {{height:height}}>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()} style={{ height: height }}>
             <View style={{ display: 'flex', alignItems: 'center' }}>
                 <View style={{ width: 370 / 430 * width }}>
                     <View style={{ marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-                        <TouchableOpacity onPress={() => navigation.pop()}>
-                            <Image source={require('../../assets/Backbutton.png')} style={{ resizeMode: 'contain' }} />
+                        <TouchableOpacity onPress={() => {
+                            navigation.goBack()
+                        }}>
+                            <View style={GlobalStyles.backBtn}>
+                                <Image source={require('../../assets/images/backArrow.png')}
+                                    style={GlobalStyles.backBtnImage}
+                                />
+                            </View>
                         </TouchableOpacity>
                         <Text style={{ fontWeight: '500', fontSize: 24, marginLeft: 20 / 430 * width }}>
                             Complete your profile
@@ -63,6 +70,9 @@ const AddSchool = ({ navigation, route }) => {
                                 School name
                             </Text>
                             <TextInput
+                                autoCorrect = {false}
+                                spellCheck = {false}
+                                autoComplete='off'
                                 placeholder='Enter your school name'
                                 style={{
                                     width: 370 / 430 * width,

@@ -69,23 +69,23 @@ export default function LoginUser(props) {
                                 console.log('profile_completion_comment', data.profile_completion_comment)
                                 props.navigation.navigate('UploadIntroVideo')
                             }
-                             else if (data.profile_completion === 2) {
+                            else if (data.profile_completion === 2) {
                                 console.log('profile_completion_comment', data.profile_completion_comment)
                                 props.navigation.navigate('UploadMedia')
                             }
                             else if (data.profile_completion === 3) {
-                                //here user will add zodiac,age,height,school,joband interest
+                                //here user will add zodiac,age,height,school,job and interest
                                 console.log('profile_completion_comment', data.profile_completion_comment)
                                 props.navigation.navigate('AddZodiac')
-                            }  else if (data.profile_completion === 9) {
+                            } else if (data.profile_completion === 9) {
 
                                 console.log('profile_completion_comment', data.profile_completion_comment)
-                                props.navigation.navigate('EnhancmentQuestions')
+                                props.navigation.navigate('GetInterest')
                             }
 
 
-                             
-                            console.log('profile_completion_comment 2',data.profile_completion_comment)
+
+                            // console.log('profile_completion_comment 2', data.profile_completion_comment)
                             // props.navigation.navigate('TabBarContainer')
                         } else {
                             console.log('json mesasage', json.message)
@@ -122,6 +122,8 @@ export default function LoginUser(props) {
                                     <Text style={{ fontSize: 16, fontWeight: '500', marginTop: 20, fontFamily: customFonts.meduim }}>Email</Text>
 
                                     <TextInput
+                                        autoCapitalize='none'
+                                        autoCorrect={false} spellCheck={false}
                                         placeholder='Enter Email'
                                         onFocus={() => {
                                             setEmailFocused(true)
@@ -140,6 +142,8 @@ export default function LoginUser(props) {
                                     <View style={[GlobalStyles.textInput,
                                     { borderColor: passwordFocused ? colors.blueColor : colors.greyText, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
                                         <TextInput
+                                        autoCapitalize='none'
+                                            autoCorrect={false} spellCheck={false}
                                             placeholder='Enter Password'
                                             onFocus={() => {
                                                 setPasswordFocused(true)

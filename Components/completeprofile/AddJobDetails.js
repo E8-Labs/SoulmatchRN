@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 import customFonts from '../../assets/fonts/Fonts';
 import ApisPath from '../../lib/ApisPath/ApisPath';
-
+import GlobalStyles from '../../assets/styles/GlobalStyles';
 const { height, width } = Dimensions.get('window');
 
 
@@ -19,57 +19,63 @@ const AddJobDetails = ({ navigation, route }) => {
 
 
     const user = route.params.user
+    user.jobTitle = jobTitle,
+    user.company = company
 
     console.log('user data from prev screens', user)
 
     const handleNext = async () => {
-        setShowIndicator(true)
+        // setShowIndicator(true)
         if (!jobTitle) {
             setError("Select your jog title")
         } else if (!company) {
             setError("Select your company")
         } else {
-
-            let body = JSON.stringify({
-                zodiac: user.Zodiac,
-                age: user.age,
-                gender: user.gender,
-                school: user.school,
-                job_title:jobTitle,
-                company: company
-
+            navigation.navigate('GetInterest',{
+                user:user
             })
-
-            const data = Settings.get("USER")
-            try {
-                if (data) {
-                    let d = JSON.parse(data)
-                    console.log('user data is', d)
-                    const result = await fetch(ApisPath.ApiUpdateProfile, {
-                        method: 'post',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': 'Bearer ' + d.token
-                        },
-                        body: body
-                    })
-                    if (result) {
-                        setShowIndicator(false)
-                        let json =await result.json();
-                        if (json.status === true) {
-
-                            console.log('user profile', json.data)
-                            navigation.navigate('EnhancementQuestions')
-                        }
-                        else {
-                            console.log('json message', json)
-                        }
-                    }
-                }
-            } catch (error) {
-                console.log('error finding in updating profile', error)
-            }
         }
+
+        //     let body = JSON.stringify({
+        //         zodiac: user.Zodiac,
+        //         age: user.age,
+        //         gender: user.gender,
+        //         school: user.school,
+        //         job_title:jobTitle,
+        //         company: company
+
+        //     })
+
+        //     const data = Settings.get("USER")
+        //     try {
+        //         if (data) {
+        //             let d = JSON.parse(data)
+        //             console.log('user data is', d)
+        //             const result = await fetch(ApisPath.ApiUpdateProfile, {
+        //                 method: 'post',
+        //                 headers: {
+        //                     'Content-Type': 'application/json',
+        //                     'Authorization': 'Bearer ' + d.token
+        //                 },
+        //                 body: body
+        //             })
+        //             if (result) {
+        //                 setShowIndicator(false)
+        //                 let json =await result.json();
+        //                 if (json.status === true) {
+
+        //                     console.log('user profile', json.data)
+        //                     navigation.navigate('GetInterest')
+        //                 }
+        //                 else {
+        //                     console.log('json message', json)
+        //                 }
+        //             }
+        //         }
+        //     } catch (error) {
+        //         console.log('error finding in updating profile', error)
+        //     }
+        // }
 
     }
 
@@ -81,8 +87,14 @@ const AddJobDetails = ({ navigation, route }) => {
             <View style={{ display: 'flex', alignItems: 'center' }}>
                 <View style={{ width: 370 / 430 * width }}>
                     <View style={{ marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-                        <TouchableOpacity onPress={() => navigation.pop()}>
-                            <Image source={require('../../assets/Backbutton.png')} style={{ resizeMode: 'contain' }} />
+                    <TouchableOpacity onPress={() => {
+                            navigation.goBack()
+                        }}>
+                            <View style={GlobalStyles.backBtn}>
+                                <Image source={require('../../assets/images/backArrow.png')}
+                                    style={GlobalStyles.backBtnImage}
+                                />
+                            </View>
                         </TouchableOpacity>
                         <Text style={{ fontWeight: '500', fontSize: 24, marginLeft: 20 / 430 * width }}>
                             Complete your profile

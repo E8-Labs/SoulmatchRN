@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Dimensions, Image, Text, TouchableOpacity, View, TextInput } from 'react-native'
-
+import GlobalStyles from '../../assets/styles/GlobalStyles';
 const AddName = ({ navigation, route }) => {
     const { height, width } = Dimensions.get('window');
 
@@ -73,8 +73,14 @@ const AddName = ({ navigation, route }) => {
         <View style={{ display: 'flex', alignItems: 'center' }}>
             <View style={{ width: 370 / 430 * width }}>
                 <View style={{ marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => navigation.pop()}>
-                        <Image source={require('../../assets/Backbutton.png')} style={{ resizeMode: 'contain' }} />
+                    <TouchableOpacity onPress={() => {
+                        navigation.goBack()
+                    }}>
+                        <View style={GlobalStyles.backBtn}>
+                            <Image source={require('../../assets/images/backArrow.png')}
+                                style={GlobalStyles.backBtnImage}
+                            />
+                        </View>
                     </TouchableOpacity>
                     <Text style={{ fontWeight: '500', fontSize: 24, marginLeft: 20 / 430 * width }}>
                         Create Profile
@@ -96,8 +102,9 @@ const AddName = ({ navigation, route }) => {
                     <Text style={{ fontWeight: '500', fontSize: 16, color: '#333333', marginTop: 40 / 930 * height }}>
                         First name
                     </Text>
-                    <TextInput placeholder='Ex.Sarah'
+                    <TextInput placeholder='Enter first name'
                         onFocus={handleInputfocus1}
+                        autoCorrect={false} spellCheck={false}
                         onChangeText={handleSave1}
                         value={saveText1}
                         style={{
@@ -114,10 +121,11 @@ const AddName = ({ navigation, route }) => {
                     <Text style={{ fontWeight: '500', fontSize: 16, color: '#333333', marginTop: 30 / 930 * height }}>
                         Last name
                     </Text>
-                    {/* Adjusting code for next button */}
+                {/* Adjusting code for next button */}
                     <View style={{ display: 'flex', height: height * 0.45, flexDirection: 'column', justifyContent: 'space-between' }}>
                         <View>
-                            <TextInput placeholder='Ex.Doe'
+                            <TextInput placeholder='Emter last name'
+                            autoCorrect={false} spellCheck={false}
                                 onFocus={handleInputfocus2}
                                 onChangeText={handleSave2}
                                 value={saveText2}

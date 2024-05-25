@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, TouchableOpacity, Image, Dimensions, TextInput, Settings, ActivityIndicator } from 'react-native';
 import ApisPath from '../../lib/ApisPath/ApisPath';
+import GlobalStyles from '../../assets/styles/GlobalStyles';
 
 const AddEmail = ({ navigation, route }) => {
 
@@ -38,7 +39,7 @@ const AddEmail = ({ navigation, route }) => {
             let data = Settings.get("USER")
             if (data) {
                 let d = JSON.parse(data)
-                // console.log('user data from local ', d)
+                console.log('user data from local ', d)
 
                 //code for api
                 const Apiurl = ApisPath.ApiSendVerificationEmail;
@@ -49,7 +50,7 @@ const AddEmail = ({ navigation, route }) => {
                     method: 'post',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + AuthToken
+                       
                     },
                     body: JSON.stringify({ "email": saveemail })
                 });
@@ -71,6 +72,7 @@ const AddEmail = ({ navigation, route }) => {
             }
         }
         catch (error) {
+            setIndicator(false)
             console.log('Error is', error)
         }
 
@@ -80,8 +82,14 @@ const AddEmail = ({ navigation, route }) => {
         <View style={{ display: 'flex', alignItems: 'center' }}>
             <View style={{ width: 370 / 430 * width }}>
                 <View style={{ marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => navigation.pop()}>
-                        <Image source={require('../../assets/Backbutton.png')} style={{ resizeMode: 'contain' }} />
+                    <TouchableOpacity onPress={() => {
+                        navigation.goBack()
+                    }}>
+                        <View style={GlobalStyles.backBtn}>
+                            <Image source={require('../../assets/images/backArrow.png')}
+                                style={GlobalStyles.backBtnImage}
+                            />
+                        </View>
                     </TouchableOpacity>
                     <Text style={{ fontWeight: '500', fontSize: 24, marginLeft: 20 / 430 * width }}>
                         Create Profile
@@ -107,8 +115,11 @@ const AddEmail = ({ navigation, route }) => {
     </Text>*/}
                 <View style={{ display: 'flex', height: height * 0.58, flexDirection: 'column', justifyContent: 'space-between' }}>
                     <View>
-                        <TextInput placeholder='Saraahdie@gmail.com' keyboardType='email-address' onFocus={handleEmailfocus}
+                        <TextInput placeholder='Enter email' keyboardType='email-address' onFocus={handleEmailfocus}
                             onChangeText={handlesaveemail}
+                            autoCapitalize='none'
+                            autoCorrect={false} 
+                            spellCheck={false}
                             value={saveemail}
                             style={{
                                 width: 370 / 430 * width,
