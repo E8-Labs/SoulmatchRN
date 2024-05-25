@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Text, View, TouchableOpacity, Image, Dimensions, TextInput, Settings, ActivityIndicator } from 'react-native';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
+import colors from '../../assets/colors/Colors';
 
 const AddEmail = ({ navigation, route }) => {
 
@@ -10,6 +11,7 @@ const AddEmail = ({ navigation, route }) => {
     const [saveemail, setSaveemail] = useState('')
     const [focusEmail, setFocusEmail] = useState(false)
     const [indicattor, setIndicator] = useState(false)
+     const [emailError, setEmailError] = useState(false)
     //getting data from previous screen
     const user = route.params.user;
     user.email = saveemail
@@ -31,20 +33,20 @@ const AddEmail = ({ navigation, route }) => {
     };
 
     //code for Getting email Verification code
-    const [emailError, setEmailError] = useState(false)
+   
 
     const handleNextClick = async () => {
         try {
             setIndicator(true)
             let data = Settings.get("USER")
-            if (data) {
-                let d = JSON.parse(data)
-                console.log('user data from local ', d)
+            // if (data) {
+            //     let d = JSON.parse(data)
+            //     console.log('user data from local ', d)
 
                 //code for api
                 const Apiurl = ApisPath.ApiSendVerificationEmail;
                 // const Link = "http://13.58.134.250:8004/api/users/send_verification_email"
-                const AuthToken = d.token;
+                // const AuthToken = d.token;
                 console.log('Email for verification is', saveemail)
                 const response = await fetch(Apiurl, {
                     method: 'post',
@@ -70,7 +72,7 @@ const AddEmail = ({ navigation, route }) => {
                     console.log('Error Data:', errorData);
                 }
             }
-        }
+        // }
         catch (error) {
             setIndicator(false)
             console.log('Error is', error)
@@ -144,7 +146,7 @@ const AddEmail = ({ navigation, route }) => {
 
                         {
                             indicattor ? (
-                                <ActivityIndicator size={'large'} />
+                                <ActivityIndicator size={'large'}  color={colors.blueColor}/>
                             ) : (
                                 <TouchableOpacity onPress={handleNextClick} style={{ backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
                                     <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>Next</Text>

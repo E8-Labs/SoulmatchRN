@@ -3,6 +3,7 @@ import { Dimensions, Text, View, Image, TouchableOpacity, Modal, Settings, Activ
 import * as VideoThumbnails from 'expo-video-thumbnails';
 import * as ImagePicker from 'expo-image-picker';
 import ApisPath from '../../lib/ApisPath/ApisPath';
+import colors from '../../assets/colors/Colors';
 
 const UploadIntroVideo = ({ navigation }) => {
     const { height, width } = Dimensions.get('window');
@@ -113,6 +114,10 @@ const UploadIntroVideo = ({ navigation }) => {
                     console.log('json ', json)
                     if (json.status === true) {
                         console.log('video uploaded')
+                        d.user = json.data
+                        Settings.set({
+                            USER:JSON.stringify(d)
+                        })
                         navigation.navigate('UploadMedia')
                     } else {
                         console.log('json message is', json.message)
@@ -191,7 +196,7 @@ const UploadIntroVideo = ({ navigation }) => {
                             }
                             {
                                 showIndicator ? (
-                                    <ActivityIndicator size={'large'} />
+                                    <ActivityIndicator size={'large'}  color={colors.blueColor}/>
                                 ) : (
                                     <TouchableOpacity
                                         onPress={uploadVideo}

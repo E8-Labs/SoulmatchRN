@@ -23,6 +23,10 @@ const blurhash =
 const likeImage = require('../../assets/images/like.png');
 const unlikeImage = require('../../assets/images/unLike.png');
 
+const male = require('../../assets/images/maleIcon.png');
+const female = require('../../assets/images/femaleIcon.png');
+const nonBinary = require('../../assets/images/nonBinaryIcon.png');
+
 export default function ProfileDetail({ navigation, fromScreen, data, onMenuClick }) {
 
     // const fromScreen = route.params.fromScreen
@@ -37,14 +41,16 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
     const [rejecIndicator, setRejectIndicator] = useState(false);
     const [questions, setQuestions] = useState([]);
 
-    console.log("data from prev screen", data)
+    console.log("data from prev screen", currentIndex)
+    console.log("current index", currentIndex)
+    console.log("data length", data.length)
 
     const logoutUser = async () => {
         try {
             Settings.set({ USER: null })
-            Settings.set({ Journal: null })
+
             let data = {
-                navigate:'Logout'
+                navigate: 'Logout'
             }
             onMenuClick(data)
 
@@ -239,8 +245,18 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
         setOpenModal(false)
     }
 
-    const getGenderIcon = () =>{
-        
+    const getGenderIcon = () => {
+        if (data[currentIndex] === null) {
+            return
+        }
+        if (data[currentIndex] && data[currentIndex].gender === 'Male') {
+            return male
+        } else if (data[currentIndex] && data[currentIndex].gender === 'Female') {
+            return female
+        } else if (data[currentIndex] && data[currentIndex].gender === 'Non-Binary') {
+            return nonBinary
+        }
+
     }
 
     return (
@@ -266,9 +282,14 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                             </View>
                         ) : (
                             <View style={{ flexDirection: 'row', marginBottom: 20 / 930 * height, width: width - 40, justifyContent: 'space-between' }}>
-                                <Text style={{ fontSize: 24, fontFamily: customFonts.meduim }}>
-                                    {data[currentIndex] ? data[currentIndex].first_name + data[currentIndex].last_name : ''}
-                                </Text>
+                                {
+                                    currentIndex !== data.length - 1 ?  (
+                                        <Text style={{ fontSize: 24, fontFamily: customFonts.meduim }}>
+                                            {data[currentIndex] ? data[currentIndex].first_name : ''} {data[currentIndex] ? data[currentIndex].last_name : ''}
+                                        </Text>
+                                    ) :<View style = {{width:50}}></View>
+                                }
+
                                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 / 430 * width }}>
                                     <TouchableOpacity onPress={() => {
                                         let data = {
@@ -302,7 +323,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                         )
                     }
                     {
-                        data.length > 0 ? (
+                        currentIndex !== data.length - 1 ? (
 
                             <View style={{ height: fromScreen === "Main" ? height * 0.755 : height * 0.85 }} >
 
@@ -396,7 +417,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                     <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 30 / 930 * height }}>
 
                                         <View style={styles.viewStyle}>
-                                            <Image source={require('../../assets/images/femaleIcon.png')}
+                                            <Image source={getGenderIcon()}
                                                 style={styles.viewImage}
                                             />
                                             <Text style={styles.viewText}>{data[currentIndex] ? data[currentIndex].gender : ''}</Text>
@@ -605,9 +626,9 @@ const styles = StyleSheet.create({
         marginTop: 8
     },
     viewImage: {
-        height: 24,
-        width: 24
-        // resizeMode:'contain'
+        height: 20,
+        width: 20,
+        resizeMode: 'contain'
     },
     viewText: {
         fontSize: 16,

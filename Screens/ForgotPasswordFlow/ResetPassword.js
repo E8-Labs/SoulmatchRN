@@ -40,14 +40,14 @@ export default function ResetPassword({ navigation, route }) {
                         code: user.code,
                         password: password
                     })
-                    const data = Settings.get("USER")
-                    if (data) {
-                        let d = JSON.parse(data)
+                    // const data = Settings.get("USER")
+                    // if (data) {
+                        // let d = JSON.parse(data)
                         const result = await fetch(ApisPath.ApiResetPassword, {
                             method: 'post',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'Authorization': 'Bearer ' + d.token
+                                // 'Authorization': 'Bearer ' + d.token
                             },
                             body: body
                         })
@@ -60,7 +60,7 @@ export default function ResetPassword({ navigation, route }) {
                             } else {
                                 console.log('password reset messasge', json.message)
                             }
-                        }
+                        // }
                     }
                 } catch (error) {
                     console.log('error finding in reset password', error)
@@ -175,7 +175,7 @@ export default function ResetPassword({ navigation, route }) {
                             <Text style={GlobalStyles.errorText}>{error}</Text>
                             {
                                 showIndicator ? (
-                                    <ActivityIndicator size={'large'} style={{ marginTop: 50 / 930 * height }} />
+                                    <ActivityIndicator size={'large'} style={{ marginTop: 50 / 930 * height }}  color={colors.blueColor}/>
                                 ) : (
                                     <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 50 / 924 * height, backgroundColor: getBtnColor() }]}
                                         onPress={resetPassword}

@@ -124,6 +124,7 @@ const UploadMedia = ({ navigation }) => {
         });
 
         if (!result.canceled) {
+            const ImageUrl = result.assets[0].uri;
             setPopup2(true)
             let thumb = await generateThumbnail(ImageUrl)
             setThumnail(thumb)
@@ -230,6 +231,10 @@ const UploadMedia = ({ navigation }) => {
                     let json = await result.json()
                     if (json.status === true) {
                         setMedia(json.data)
+                        d.user = json.data
+                        Settings.set({
+                            USER:JSON.stringify(d)
+                        })
                         console.log('media deleted', json.data)
                     } else {
                         console.log('json message', json.message)
@@ -316,7 +321,7 @@ const UploadMedia = ({ navigation }) => {
                                             <>
                                                 {
                                                     showIndicator2 ? (
-                                                        <ActivityIndicator size={'large'} style={{ marginTop: 50, marginRight: 50 }} />
+                                                        <ActivityIndicator size={'large'} style={{ marginTop: 50, marginRight: 50 }}  color={colors.blueColor}/>
                                                     ) : (
                                                         <View style={{ width: width, backgroundColor: 'transparent', marginTop: 5 }}>
                                                            
@@ -343,7 +348,7 @@ const UploadMedia = ({ navigation }) => {
                                                                     style={{ resizeMode: 'cover', width: 338 / 430 * width, height: 232 / 930 * height, borderRadius: 10, }}
                                                                 />
                                                                 {
-                                                                    loadImage && <ActivityIndicator size={'large'} style = {{position:'relative',top:-130}} />
+                                                                    loadImage && <ActivityIndicator size={'large'} style = {{position:'relative',top:-130}}  color={colors.blueColor}/>
                                                                 }
 
                                                             </View>
@@ -440,7 +445,7 @@ const UploadMedia = ({ navigation }) => {
                                     </View>
                                     {
                                         showIndicator ? (
-                                            <ActivityIndicator size={'large'} />
+                                            <ActivityIndicator size={'large'}  color={colors.blueColor}/>
                                         ) : (
                                             <TouchableOpacity
                                                 onPress={uploadMedia}

@@ -41,7 +41,7 @@ const AddGender = ({ navigation, route }) => {
         },
         {
             id: 3,
-            name: 'MaNon-Binarye',
+            name: 'Non-Binary',
             image: nonBinary,
             imageS: nonBinaryS
         },

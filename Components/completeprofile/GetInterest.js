@@ -45,7 +45,7 @@ const GetInterest = ({ navigation, route }) => {
             setError(null)
             setSelectedGender('both')
         }
-    }, [])
+    }, [SelectMen,SelectWomen,SelectBoth])
 
     const handleNextClick = async () => {
 
@@ -93,6 +93,10 @@ const GetInterest = ({ navigation, route }) => {
                     if (json.status === true) {
 
                         console.log('user profile', json.data)
+                        d.user = json.data
+                        Settings.set({
+                            USER: JSON.stringify(d)
+                        })
                         navigation.navigate('EnhancmentQuestions')
                     }
                     else {
@@ -215,7 +219,10 @@ const GetInterest = ({ navigation, route }) => {
                                     selectedStyle={{ borderWidth: 2, width: "4", borderRadius: 50, borderColor: colors.blueColor }}
                                     initialSelectedIndex={15}
                                     items={SelectMinAge.map(name => ({ label: name, value: '' }))}
-                                    onChange={({ item }) => setMinAge(item.label)} />
+                                    onChange={({ item }) => {
+                                        setMinAge(item.label)
+                                        setError(null)
+                                        }} />
                             </View>
                         </View>
                         <View style={{ alignItems: 'center', height: 270 / 930 * height, }}>
@@ -232,18 +239,21 @@ const GetInterest = ({ navigation, route }) => {
                                     selectedStyle={{ borderWidth: 2, width: "4", borderRadius: 50, borderColor: colors.blueColor }}
                                     initialSelectedIndex={49}
                                     items={SelectMaxAge.map(name => ({ label: name, value: '' }))}
-                                    onChange={({ item }) => setMaxAge(item.label)} />
+                                    onChange={({ item }) =>{
+                                         setMaxAge(item.label)
+                                        setError(null)
+                                         }} />
                             </View>
                         </View>
                     </View>
                 </View>
                 {
-                    error && <Text style = {[GlobalStyles.errorText,{textAlign:'center',marginBottom:20}]}>{error}</Text>
+                    error ? <Text style = {[GlobalStyles.errorText,{textAlign:'center',marginBottom:20}]}>{error}</Text> : ''
                 }
 
                 {
                     showIndicator ? (
-                        <ActivityIndicator size={'large'} />
+                        <ActivityIndicator size={'large'}  color={colors.blueColor} />
                     ) : (
                         <TouchableOpacity onPress={handleNextClick}
                             style={{

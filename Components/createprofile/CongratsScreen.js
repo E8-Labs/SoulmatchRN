@@ -39,7 +39,7 @@ const CongratsScreen = ({ navigation }) => {
                 <View style={{ height: 200 / 930 * height, display: 'flex', justifyContent: 'flex-end' }}>
                     <TouchableOpacity onPress={() => navigation.navigate('UploadIntroVideo')} style={{ backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
                         <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>
-                            Next
+                            Continue
                         </Text>
                     </TouchableOpacity>
                 </View>

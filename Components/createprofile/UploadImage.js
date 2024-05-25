@@ -71,7 +71,7 @@ const UploadImage = ({ navigation }) => {
                         }
 
                         {
-                            error && <Text style={[GlobalStyles.errorText, { textAlign: 'center', marginBottom: 20 }]}>{error}</Text>
+                            error && <Text style={[GlobalStyles.errorText, { textAlign: 'center', marginTop: 20 }]}>{error}</Text>
                         }
                     </View>
                     <View style={{ display: 'flex', }}>

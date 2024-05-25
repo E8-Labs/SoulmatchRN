@@ -9,6 +9,7 @@ const { height, width } = Dimensions.get("window");
 
 export default function EmailVerification({ route, navigation }) {
     const email = route.params.email
+    console.log('email from prev screen', email)
 
 
     const input1Ref = useRef(null);

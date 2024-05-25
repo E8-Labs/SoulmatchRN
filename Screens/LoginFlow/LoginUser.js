@@ -4,6 +4,8 @@ import GlobalStyles from '../../assets/styles/GlobalStyles'
 import colors from '../../assets/colors/Colors';
 import customFonts from '../../assets/fonts/Fonts';
 import ApisPath from '../../lib/ApisPath/ApisPath'
+import AddLocation from '../../Components/completeprofile/AddLocation';
+import TabBarContainer from '../TabNavigation/TabBarContainer';
 
 const { height, width } = Dimensions.get("window");
 
@@ -74,18 +76,31 @@ export default function LoginUser(props) {
                                 props.navigation.navigate('UploadMedia')
                             }
                             else if (data.profile_completion === 3) {
+
                                 //here user will add zodiac,age,height,school,job and interest
-                                console.log('profile_completion_comment', data.profile_completion_comment)
-                                props.navigation.navigate('AddZodiac')
-                            } else if (data.profile_completion === 9) {
 
                                 console.log('profile_completion_comment', data.profile_completion_comment)
-                                props.navigation.navigate('GetInterest')
+                                props.navigation.navigate('AddZodiac')
+
+                            } else if (data.profile_completion === 10) {
+
+                                // if last condition runs then profile complition comment will 11
+
+                                console.log('profile_completion_comment', data.profile_completion_comment)
+                                props.navigation.navigate("AddLocation")
+                            }
+
+                            else if (data.profile_completion === 11) {
+
+                                // if last condition runs then profile complition comment will 11
+
+                                console.log('profile_completion_comment', data.profile_completion_comment)
+                                props.navigation.navigate("TabBarContainer")
                             }
 
 
 
-                            // console.log('profile_completion_comment 2', data.profile_completion_comment)
+                            console.log('profile_completion_comment 2', data.profile_completion_comment)
                             // props.navigation.navigate('TabBarContainer')
                         } else {
                             console.log('json mesasage', json.message)
@@ -107,8 +122,8 @@ export default function LoginUser(props) {
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={{ flex: 1, flexDirection: 'column', }}>
                 <TouchableWithoutFeedback style={GlobalStyles.container} onPress={Keyboard.dismiss}>
-                    <View style={[{ flexDirection: 'column', height: height }]}>
-                        <View style={{ justifyContent: 'space-between', height: height * 0.85, }}>
+                    <View style={[{ flexDirection: 'column', height: height,marginTop:20/930*height }]}>
+                        <View style={{ justifyContent: 'space-between', height: height * 0.8, }}>
                             <View style={{ alignItems: 'center', justifyContent: 'center', }}>
                                 <View style={{ width: width - 40, marginTop: 0, alignSelf: 'center' }}>
                                     <Text style={{ fontSize: 28, fontFamily: customFonts.semibold }}>
@@ -142,7 +157,7 @@ export default function LoginUser(props) {
                                     <View style={[GlobalStyles.textInput,
                                     { borderColor: passwordFocused ? colors.blueColor : colors.greyText, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
                                         <TextInput
-                                        autoCapitalize='none'
+                                            autoCapitalize='none'
                                             autoCorrect={false} spellCheck={false}
                                             placeholder='Enter Password'
                                             onFocus={() => {
@@ -194,7 +209,7 @@ export default function LoginUser(props) {
 
                                     {
                                         indicator ? (
-                                            <ActivityIndicator size={"large"} style={{ marginTop: 30 / 930 * height }} />
+                                            <ActivityIndicator size={"large"} style={{ marginTop: 30 / 930 * height }} color={colors.blueColor} />
                                         ) : (
                                             <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 30 / 924 * height, backgroundColor: getBtnColor() }]}
                                                 onPress={loginUser}
@@ -212,7 +227,7 @@ export default function LoginUser(props) {
                                 <View style={{ alignItems: 'center', flexDirection: 'row', gap: 5, marginTop: 35 / 924 * height }}>
                                     <Text style={GlobalStyles.splashMeduimText}>Don't have an account?</Text>
                                     <TouchableOpacity style={{}}
-                                        onPress={() => props.navigation.navigate("RegisterUser")}
+                                        onPress={() => props.navigation.navigate("UploadImage")}
                                     >
                                         <Text style={{ color: colors.blueColor, fontSize: 14, fontWeight: '500', fontFamily: customFonts.meduim }}>
                                             Sign up

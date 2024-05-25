@@ -61,7 +61,7 @@ const SlideContainer = (props) => {
             // scrolRef.current.scrollTo({ x: (currentIndex + 1) * width, animated: true });
             setCurrentIndex(currentIndex + 1);
         } else{
-            props.navigation.navigate("UploadImage")
+            props.navigation.navigate("LoginUser")
         }
 
     }
@@ -103,7 +103,7 @@ const SlideContainer = (props) => {
                 }
                 <TouchableOpacity style={{ alignSelf: 'flex-end' }}
                     onPress={() => {
-                        props.navigation.navigate("UploadImage")
+                        props.navigation.navigate("LoginUser")
                     }}
                 >
                     <Text style={GlobalStyles.skipText}>

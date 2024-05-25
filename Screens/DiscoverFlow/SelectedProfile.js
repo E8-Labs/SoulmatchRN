@@ -22,6 +22,9 @@ const blurhash =
 
 const likeImage = require('../../assets/images/like.png');
 const unlikeImage = require('../../assets/images/unLike.png');
+const male = require('../../assets/images/maleIcon.png');
+const female = require('../../assets/images/femaleIcon.png');
+const nonBinary = require('../../assets/images/nonBinaryIcon.png');
 
 export default function SelectedProfile({ navigation, route }) {
 
@@ -214,6 +217,20 @@ export default function SelectedProfile({ navigation, route }) {
     const closeModal = () => {
         setOpenModal(false)
     }
+
+    const getGenderIcon = () =>{
+        if(user === null){
+            return 
+        }
+        if(user.gender === 'Male'){
+            return male
+        } else  if(user.gender === 'Female'){
+            return female
+        }else  if(user.gender === 'Non-Binary'){
+            return nonBinary
+        }
+        
+    }
     return (
 
         <SafeAreaView>
@@ -314,7 +331,7 @@ export default function SelectedProfile({ navigation, route }) {
                         <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 30 / 930 * height }}>
 
                             <View style={styles.viewStyle}>
-                                <Image source={require('../../assets/images/femaleIcon.png')}
+                                <Image source={getGenderIcon()}
                                     style={styles.viewImage}
                                 />
                                 <Text style={styles.viewText}>
@@ -504,9 +521,9 @@ const styles = StyleSheet.create({
         marginTop: 8
     },
     viewImage: {
-        height: 24,
-        width: 24
-        // resizeMode:'contain'
+        height: 20,
+        width: 20,
+        resizeMode:'contain'
     },
     viewText: {
         fontSize: 16,

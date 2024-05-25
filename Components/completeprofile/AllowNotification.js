@@ -42,6 +42,10 @@ const AllowNotification = ({ navigation }) => {
                     let json = await result.json()
                     if (json.status === true) {
                         console.log('updated profile data is', json.data)
+                        d.user=json.data
+                        Settings.set({
+                            USER:JSON.stringify(d)
+                        })
                         navigation.navigate("CongratulationsScreen")
                     } else {
                         console.log('json message is', json.message)

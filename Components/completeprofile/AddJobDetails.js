@@ -8,6 +8,7 @@ import {
 import customFonts from '../../assets/fonts/Fonts';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
+import colors from '../../assets/colors/Colors';
 const { height, width } = Dimensions.get('window');
 
 
@@ -27,7 +28,7 @@ const AddJobDetails = ({ navigation, route }) => {
     const handleNext = async () => {
         // setShowIndicator(true)
         if (!jobTitle) {
-            setError("Select your jog title")
+            setError("Select your job title")
         } else if (!company) {
             setError("Select your company")
         } else {
@@ -128,8 +129,7 @@ const AddJobDetails = ({ navigation, route }) => {
                             <Text style={{ fontWeight: '500', fontSize: 16, color: '#333333' }}>
                                 Job title
                             </Text>
-                            <TextInput placeholder='Enter your job title'
-                                style={{
+                            <TextInput placeholder='Enter your job title' autoCorrect = {false} autoComplete='none'                                style={{
                                     width: 370 / 430 * width,
                                     height: 52,
                                     borderWidth: 1,
@@ -174,7 +174,7 @@ const AddJobDetails = ({ navigation, route }) => {
                         <View style={{ display: 'flex', justifyContent: 'flex-end', width: width - 50 }}>
                             {
                                 showIndicator ? (
-                                    <ActivityIndicator size={'large'} />
+                                    <ActivityIndicator size={'large'} color={colors.blueColor} />
                                 ) : (
                                     <TouchableOpacity
                                         onPress={handleNext}

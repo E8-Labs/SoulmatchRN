@@ -1,22 +1,22 @@
 import React from 'react';
 import { useRef, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, Dimensions, TextInput } from 'react-native'
+import { View, Text, Image, TouchableOpacity, Dimensions, TextInput, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 const ProfileEmailVerification = ({ navigation, route }) => {
 
     const { height, width } = Dimensions.get('window');
 
-    
+
     const [Code1, setCode1] = useState('');
     const [Code2, setCode2] = useState('');
     const [Code3, setCode3] = useState('');
     const [Code4, setCode4] = useState('');
 
-   const code = Code1 + Code2 + Code3 + Code4
-   console.log('code', code)
+    const code = Code1 + Code2 + Code3 + Code4
+    console.log('code', code)
     //data getting from previous screen
     const user = route.params.user;
-    user.code =  code.toString()
+    user.code = code.toString()
 
 
     const ProfileEmail = user.UserEmail;
@@ -28,7 +28,7 @@ const ProfileEmailVerification = ({ navigation, route }) => {
 
     //code for checking the verification code entered by the user
 
-    
+
     //code for entering verification code
     const inputref1 = useRef(null);
     const inputref2 = useRef(null);
@@ -124,155 +124,157 @@ const ProfileEmailVerification = ({ navigation, route }) => {
 
     const handleContinueClick = () => {
         navigation.navigate('CreatePassword', {
-            user:user
+            user: user
         });
     }
 
     return (
-        <View style={{ display: 'flex', alignItems: 'center' }}>
-            <View style={{ width: 370 / 430 * width }}>
-                <View style={{ marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => {
-                        navigation.goBack()
-                    }}>
-                        <View style={GlobalStyles.backBtn}>
-                            <Image source={require('../../assets/images/backArrow.png')}
-                                style={GlobalStyles.backBtnImage}
-                            />
-                        </View>
-                    </TouchableOpacity>
-                    <Text style={{ fontWeight: '500', fontSize: 24, marginLeft: 20 / 430 * width }}>
-                        Create Profile
-                    </Text>
-                </View>
-                {/* Code for progressbar */}
-                <View style={{ flexDirection: 'row', marginTop: 40 / 930 * height, justifyContent: 'space-between', display: 'flex', alignItems: 'center' }}>
-                    <Image source={require('../../assets/Message2.png')} style={{ height: 56, width: 56, resizeMode: 'contain' }} />
-                    <View style={{ height: 4 / 930 * height, width: 68 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 68 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 68 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 68 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                </View>
-                <View style={{ marginTop: 40 / 930 * height }}>
-                    <Text style={{ fontWeight: '500', fontSize: 20 }}>
-                        Please verify your email
-                    </Text>
-                    <Text style={{ fontWeight: '500', fontSize: 16, color: '#333333', marginTop: 30 / 930 * height }}>
-                        Please enter the 4 digit code sent to your mail11 {user.email}
-                    </Text>
-                </View>
-                {/* Code for Input Verification Code */}
-                <View style={{ display: 'flex', height: height * 0.55, flexDirection: 'column', justifyContent: 'space-between' }}>
-                    <View>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 40 / 930 * height }}>
-                            <TextInput keyboardType='numeric'
-                                onFocus={handlefocusInput1}
-                                maxLength={1}
-                                autoFocus={true}
-                                ref={inputref1}
-                                onChangeText={(text) =>
-                                    handleBordercolor1(text, setCode1, inputref2)
-                                }
-                                style={{
-                                    width: 78 / 430 * width,
-                                    height: 78 / 930 * height,
-                                    borderWidth: 1,
-                                    borderColor: input || focusInput1 ? '#6050Dc' : '#CCCCCC',
-                                    borderRadius: 10,
-                                    padding: 17,
-                                    // marginBottom: 10,
-                                    marginTop: 10 / 930 * height,
-                                    color: '#333333',
-                                    fontWeight: '500',
-                                    backgroundColor: '#E6E6E680',
-                                    textAlign: 'center'
-                                }} />
-                            <TextInput keyboardType='numeric'
-                                maxLength={1}
-                                ref={inputref2}
-                                onFocus={handlefocusInput2}
-                                onChangeText={(text) =>
-                                    handleBordercolor2(text, setCode2, inputref3)
-                                }
-                                style={{
-                                    width: 78 / 430 * width,
-                                    height: 78 / 930 * height,
-                                    borderWidth: 1,
-                                    borderColor: input2 || focusInput2 ? '#6050Dc' : '#CCCCCC',
-                                    borderRadius: 10,
-                                    padding: 17,
-                                    // marginBottom: 10,
-                                    marginTop: 10 / 930 * height,
-                                    color: '#333333',
-                                    fontWeight: '500',
-                                    backgroundColor: '#E6E6E680',
-                                    textAlign: 'center'
-                                }} />
-                            <TextInput keyboardType='numeric'
-                                onFocus={handlefocusInput3}
-                                maxLength={1}
-                                ref={inputref3}
-                                onChangeText={(text) =>
-                                    handleBordercolor3(text, setCode3, inputref4)
-                                }
-                                style={{
-                                    width: 78 / 430 * width,
-                                    height: 78 / 930 * height,
-                                    borderWidth: 1,
-                                    borderColor: input3 || focusInput3 ? '#6050Dc' : '#CCCCCC',
-                                    borderRadius: 10,
-                                    padding: 17,
-                                    // marginBottom: 10,
-                                    marginTop: 10 / 930 * height,
-                                    color: '#333333',
-                                    fontWeight: '500',
-                                    backgroundColor: '#E6E6E680',
-                                    textAlign: 'center'
-                                }} />
-                            <TextInput keyboardType='numeric'
-                                onFocus={handlefocusInput4}
-                                maxLength={1}
-                                ref={inputref4}
-                                onChangeText={(text) =>
-                                    handleBordercolor4(text, setCode4)
-                                }
-                                style={{
-                                    width: 78 / 430 * width,
-                                    height: 78 / 930 * height,
-                                    borderWidth: 1,
-                                    borderColor: input4 || focusInput4 ? '#6050Dc' : '#CCCCCC',
-                                    borderRadius: 10,
-                                    padding: 17,
-                                    // marginBottom: 10,
-                                    marginTop: 10 / 930 * height,
-                                    color: '#333333',
-                                    fontWeight: '500',
-                                    backgroundColor: '#E6E6E680',
-                                    textAlign: 'center'
-                                }} />
-                        </View>
+        <TouchableWithoutFeedback  style={{ display: 'flex', alignItems: 'center', height: height }} onPress={Keyboard.dismiss} >
+            <View style={{ display: 'flex', alignItems: 'center' }}>
+                <View style={{ width: 370 / 430 * width }}>
+                    <View style={{ marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
+                        <TouchableOpacity onPress={() => {
+                            navigation.goBack()
+                        }}>
+                            <View style={GlobalStyles.backBtn}>
+                                <Image source={require('../../assets/images/backArrow.png')}
+                                    style={GlobalStyles.backBtnImage}
+                                />
+                            </View>
+                        </TouchableOpacity>
+                        <Text style={{ fontWeight: '500', fontSize: 24, marginLeft: 20 / 430 * width }}>
+                            Create Profile
+                        </Text>
+                    </View>
+                    {/* Code for progressbar */}
+                    <View style={{ flexDirection: 'row', marginTop: 40 / 930 * height, justifyContent: 'space-between', display: 'flex', alignItems: 'center' }}>
+                        <Image source={require('../../assets/Message2.png')} style={{ height: 56, width: 56, resizeMode: 'contain' }} />
+                        <View style={{ height: 4 / 930 * height, width: 68 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                        <View style={{ height: 4 / 930 * height, width: 68 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                        <View style={{ height: 4 / 930 * height, width: 68 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                        <View style={{ height: 4 / 930 * height, width: 68 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                    </View>
+                    <View style={{ marginTop: 40 / 930 * height }}>
+                        <Text style={{ fontWeight: '500', fontSize: 20 }}>
+                            Please verify your email
+                        </Text>
+                        <Text style={{ fontWeight: '500', fontSize: 16, color: '#333333', marginTop: 30 / 930 * height }}>
+                            Please enter the 4 digit code sent to your mail1 {user.email}
+                        </Text>
+                    </View>
+                    {/* Code for Input Verification Code */}
+                    <View style={{ display: 'flex', height: height * 0.55, flexDirection: 'column', justifyContent: 'space-between' }}>
+                        <View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 40 / 930 * height }}>
+                                <TextInput keyboardType='numeric'
+                                    onFocus={handlefocusInput1}
+                                    maxLength={1}
+                                    autoFocus={true}
+                                    ref={inputref1}
+                                    onChangeText={(text) =>
+                                        handleBordercolor1(text, setCode1, inputref2)
+                                    }
+                                    style={{
+                                        width: 78 / 430 * width,
+                                        height: 78 / 930 * height,
+                                        borderWidth: 1,
+                                        borderColor: input || focusInput1 ? '#6050Dc' : '#CCCCCC',
+                                        borderRadius: 10,
+                                        padding: 17,
+                                        // marginBottom: 10,
+                                        marginTop: 10 / 930 * height,
+                                        color: '#333333',
+                                        fontWeight: '500',
+                                        backgroundColor: '#E6E6E680',
+                                        textAlign: 'center'
+                                    }} />
+                                <TextInput keyboardType='numeric'
+                                    maxLength={1}
+                                    ref={inputref2}
+                                    onFocus={handlefocusInput2}
+                                    onChangeText={(text) =>
+                                        handleBordercolor2(text, setCode2, inputref3)
+                                    }
+                                    style={{
+                                        width: 78 / 430 * width,
+                                        height: 78 / 930 * height,
+                                        borderWidth: 1,
+                                        borderColor: input2 || focusInput2 ? '#6050Dc' : '#CCCCCC',
+                                        borderRadius: 10,
+                                        padding: 17,
+                                        // marginBottom: 10,
+                                        marginTop: 10 / 930 * height,
+                                        color: '#333333',
+                                        fontWeight: '500',
+                                        backgroundColor: '#E6E6E680',
+                                        textAlign: 'center'
+                                    }} />
+                                <TextInput keyboardType='numeric'
+                                    onFocus={handlefocusInput3}
+                                    maxLength={1}
+                                    ref={inputref3}
+                                    onChangeText={(text) =>
+                                        handleBordercolor3(text, setCode3, inputref4)
+                                    }
+                                    style={{
+                                        width: 78 / 430 * width,
+                                        height: 78 / 930 * height,
+                                        borderWidth: 1,
+                                        borderColor: input3 || focusInput3 ? '#6050Dc' : '#CCCCCC',
+                                        borderRadius: 10,
+                                        padding: 17,
+                                        // marginBottom: 10,
+                                        marginTop: 10 / 930 * height,
+                                        color: '#333333',
+                                        fontWeight: '500',
+                                        backgroundColor: '#E6E6E680',
+                                        textAlign: 'center'
+                                    }} />
+                                <TextInput keyboardType='numeric'
+                                    onFocus={handlefocusInput4}
+                                    maxLength={1}
+                                    ref={inputref4}
+                                    onChangeText={(text) =>
+                                        handleBordercolor4(text, setCode4)
+                                    }
+                                    style={{
+                                        width: 78 / 430 * width,
+                                        height: 78 / 930 * height,
+                                        borderWidth: 1,
+                                        borderColor: input4 || focusInput4 ? '#6050Dc' : '#CCCCCC',
+                                        borderRadius: 10,
+                                        padding: 17,
+                                        // marginBottom: 10,
+                                        marginTop: 10 / 930 * height,
+                                        color: '#333333',
+                                        fontWeight: '500',
+                                        backgroundColor: '#E6E6E680',
+                                        textAlign: 'center'
+                                    }} />
+                            </View>
 
-                        <View style={{ flexDirection: 'row', display: 'flex', justifyContent: 'center', marginTop: 60 / 930 * height }}>
-                            <Text style={{ textAlign: 'center', fontSize: 14, fontWeight: '400', color: '#666666' }}>
-                                If you didn't recieve a code?
-                            </Text>
-                            <TouchableOpacity style={{ marginLeft: 5 }}>
-                                <Text style={{ color: '#0A74DA', fontWeight: '500', fontSize: 14, }}>
-                                    Resend code
+                            <View style={{ flexDirection: 'row', display: 'flex', justifyContent: 'center', marginTop: 60 / 930 * height }}>
+                                <Text style={{ textAlign: 'center', fontSize: 14, fontWeight: '400', color: '#666666' }}>
+                                    If you didn't recieve a code?
+                                </Text>
+                                <TouchableOpacity style={{ marginLeft: 5 }}>
+                                    <Text style={{ color: '#0A74DA', fontWeight: '500', fontSize: 14, }}>
+                                        Resend code
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <View style={{ display: 'flex', justifyContent: 'flex-start', marginTop: -50}}>
+                            <TouchableOpacity onPress={handleContinueClick} style={{ backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
+                                <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>
+                                    Next
                                 </Text>
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <TouchableOpacity onPress={handleContinueClick} style={{ backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
-                            <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>
-                                Next
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
                 </View>
             </View>
-        </View>
+        </TouchableWithoutFeedback>
     )
 }
 

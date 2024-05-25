@@ -14,11 +14,11 @@ import SlideScreen2 from './Screens/SplashFlow/SlideScreens/SlideScreen2';
 import SlideScreen3 from './Screens/SplashFlow/SlideScreens/SlideScreen3';
 import SlideContainer from './Screens/SplashFlow/SlideScreens/SlideContainer';
 import LoginUser from './Screens/LoginFlow/LoginUser';
-import GetEmail from './Screens/ForgotPasswordFlow/GetEmail';
+import GetEmail from './Screens/ForgotPasswordFlow/GetEmail';4
+import ResetPassword from'./Screens/ForgotPasswordFlow/ResetPassword'
 import EmailVerification from './Screens/ForgotPasswordFlow/EmailVerification';
-import CreateNewPassword from './Screens/ForgotPasswordFlow/ResetPassword';
 import SuccessfullyPasswordChanged from './Screens/ForgotPasswordFlow/SuccessfullyPasswordChanged';
-import { useFonts } from 'expo-font';
+// import { useFonts } from 'expo-font';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabBarContainer from './Screens/TabNavigation/TabBarContainer';
@@ -77,24 +77,24 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
 
-  const [fontsLoaded, fontError] = useFonts({
-    "PoppinsRegular": require('./assets/fonts/Poppins/Poppins-Regular.ttf'),
-    "PoppinsBold": require('./assets/fonts/Poppins/Poppins-Bold.ttf'),
-    "PoppinsMedium": require('./assets/fonts/Poppins/Poppins-Medium.ttf'),
-    "PoppinsSemiBold": require('./assets/fonts/Poppins/Poppins-SemiBold.ttf'),
+  // const [fontsLoaded, fontError] = useFonts({
+  //   "PoppinsRegular": require('./assets/fonts/Poppins/Poppins-Regular.ttf'),
+  //   "PoppinsBold": require('./assets/fonts/Poppins/Poppins-Bold.ttf'),
+  //   "PoppinsMedium": require('./assets/fonts/Poppins/Poppins-Medium.ttf'),
+  //   "PoppinsSemiBold": require('./assets/fonts/Poppins/Poppins-SemiBold.ttf'),
 
-  })
-
-
-  useEffect(() => {
-    if (fontsLoaded || fontError) {
-      console.log("Loading fonts ", fontsLoaded)
-      console.log("Font error ", fontError)
-    }
-  }, [fontsLoaded, fontError])
+  // })
 
 
-  if (!fontsLoaded && !fontError) {
+  // useEffect(() => {
+  //   if (fontsLoaded || fontError) {
+  //     console.log("Loading fonts ", fontsLoaded)
+  //     console.log("Font error ", fontError)
+  //   }
+  // }, [fontsLoaded, fontError])
+
+
+  if (false){//(!fontsLoaded && !fontError) {
     return (
 
       <View>
@@ -106,13 +106,14 @@ export default function App() {
     return (
 
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="TabBarContainer" screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName="SplashMainScreen" screenOptions={{ headerShown: false }}>
           <Stack.Screen name="SplashMainScreen" component={SplashMainScreen} options={{ gestureEnabled: false }} />
           <Stack.Screen name="SlideContainer" component={SlideContainer} />
           <Stack.Screen name="RegisterUser" component={RegisterUser} options={{ gestureEnabled: false }} />
           <Stack.Screen name="LoginUser" component={LoginUser} options={{ gestureEnabled: false }} />
           <Stack.Screen name="GetEmail" component={GetEmail} options={{ gestureEnabled: false }} />
           <Stack.Screen name="EmailVerification" component={EmailVerification} options={{ gestureEnabled: false }} />
+          <Stack.Screen name="ResetPassword" component={ResetPassword} options={{ gestureEnabled: false }} />
           <Stack.Screen name="SuccessfullyPasswordChanged" component={SuccessfullyPasswordChanged} options={{ gestureEnabled: false }} />
           <Stack.Screen name="TabBarContainer" component={TabBarContainer} options={{ gestureEnabled: false }} />
           <Stack.Screen name="CardContainerMain" component={CardContainerMain} options={{ gestureEnabled: false }} />
@@ -137,7 +138,7 @@ export default function App() {
           {/* <Stack.Screen name='ForgetPassword' component={Forgetpassword} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='EmailVerification' component={Emailverification} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='NewPassword' component={CreateNewPassword} options={{ gestureEnabled: false, headerShown: false }} /> */}
-          <Stack.Screen name='UploadImage' component={UploadImage} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='UploadImage' component={UploadImage} />
           <Stack.Screen name='AddEmail' component={AddEmail} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='ProfileEmailverification' component={ProfileEmailVerification} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='AddName' component={AddName} options={{ gestureEnabled: false, headerShown: false }} />

@@ -3,6 +3,7 @@ import { View, Image, TouchableOpacity, Text, TouchableWithoutFeedback, Dimensio
 import * as Location from 'expo-location';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
+import colors from '../../assets/colors/Colors';
 
 const AddLocation = ({ navigation }) => {
     const { height, width } = Dimensions.get('window')
@@ -77,6 +78,10 @@ const AddLocation = ({ navigation }) => {
                     let json = await result.json()
                     if (json.status === true) {
                         console.log('profile udated', json.data)
+                        d.user = json.data
+                        Settings.set({
+                            USER:JSON.stringify(d)
+                        })
                         navigation.navigate('AllowNotification')
                     } else {
                         console.log('json message is', json.message)
@@ -158,7 +163,7 @@ const AddLocation = ({ navigation }) => {
                         <View>
                             {
                                 showIndicator ? (
-                                    <ActivityIndicator size={'large'} />
+                                    <ActivityIndicator size={'large'} color={colors.blueColor} />
                                 ) : (
                                     <TouchableOpacity
                                         onPress={getLocation}

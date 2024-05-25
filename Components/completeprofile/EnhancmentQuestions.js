@@ -26,6 +26,7 @@ const EnhancmentQuestions = ({ navigation }) => {
     const [mediaType, setMediaType] = useState(null)
     const [showIndicator, setShowIndicator] = useState(null)
     const [showIndicator2, setShowIndicator2] = useState(null)
+
     const [OpenModal, setOpenModal] = useState(null);
     const [answerText, setAnswerText] = useState(null)
     const [loadImage, setLoadImage] = useState(false)
@@ -85,8 +86,10 @@ const EnhancmentQuestions = ({ navigation }) => {
             );
             console.log('genrated thumnail is', uri)
             setThumb(uri);
+            return uri
         } catch (e) {
             console.log(e);
+            return null
         }
     };
 
@@ -112,11 +115,12 @@ const EnhancmentQuestions = ({ navigation }) => {
         if (!result.canceled) {
             // setMedia(result.assets[0].uri);
             const ImageUrl = result.assets[0].uri;
-            generateThumbnail(ImageUrl)
+            let thumbnail = await generateThumbnail(ImageUrl)
             // setThumb(thumbnail)
             // setMedia(result.assets[0].uri)
-            setMediaType(result.assets[0].type)
-            let mediaSelected = { uri: ImageUrl, thumb: thumb, text: null, type: result.assets[0].type }
+            let type = result.assets[0].type
+            setMediaType(type)
+            let mediaSelected = { uri: ImageUrl, thumb: thumbnail, text: null, type: type }
             uploadMedia(item, mediaSelected)
 
             console.log(result.assets[0].uri);
@@ -162,8 +166,7 @@ const EnhancmentQuestions = ({ navigation }) => {
         console.log('ansered questions length', CheckBox.length)
         // return
 
-
-
+        setShowIndicator(true)
         // return 
         const formdata = new FormData()
 
@@ -189,7 +192,7 @@ const EnhancmentQuestions = ({ navigation }) => {
             console.log('can not upload text ', mediaSelected.text)
         }
         formdata.append("questionId", item.id);
-        setShowIndicator(true)
+
         console.log('trying to upload media', mediaSelected)
         // return
         try {
@@ -325,7 +328,7 @@ const EnhancmentQuestions = ({ navigation }) => {
                     {/* Flat list code goes here */}
                     {
                         showIndicator2 ? (
-                            <ActivityIndicator size={'large'}  style={{ height: height * 0.55 }}/>
+                            <ActivityIndicator size={'large'}  color={colors.blueColor} style={{ height: height * 0.55 }} />
                         ) : (
                             <FlatList showsVerticalScrollIndicator={false}
                                 style={{ height: height * 0.55 }}
@@ -347,8 +350,13 @@ const EnhancmentQuestions = ({ navigation }) => {
                                             </Text>
                                         </View>
                                         <View style={{ alignItems: 'center' }}>
+
                                             {
+
                                                 item.media ? (
+                                                    // showIndicator ? (
+                                                    //     <ActivityIndicator size={'large'} />
+                                                    // ) : (
                                                     item.media.answerImage ? (
                                                         <>
                                                             {
@@ -364,11 +372,12 @@ const EnhancmentQuestions = ({ navigation }) => {
                                                                             transition={1000}
                                                                             style={{ width: 340 / 430 * width, height: 208 / 930 * width }}
                                                                         />
-                                                                        {/* {
-                                                                    loadImage ? (
-                                                                        <ActivityIndicator size={'large'} color={colors.blueColor} style={{marginTop:-50 }} />
-                                                                    ) : <></>
-                                                                } */}
+
+                                                                        {
+                                                                            loadImage ? (
+                                                                                <ActivityIndicator size={'small'} color={colors.blueColor} style={{ marginTop: -50 }} />
+                                                                            ) : <></>
+                                                                        }
                                                                     </>
                                                                 )
                                                             }
@@ -397,7 +406,9 @@ const EnhancmentQuestions = ({ navigation }) => {
 
                                                         )
                                                     )
+                                                    // )
                                                 ) : null
+
 
                                             }
 
@@ -453,6 +464,8 @@ const EnhancmentQuestions = ({ navigation }) => {
 
                 </View>
 
+
+                
                 {/* code for modal */}
 
                 <Modal
@@ -512,6 +525,15 @@ const EnhancmentQuestions = ({ navigation }) => {
                 </Modal>
 
             </View>
+            {showIndicator &&
+                    <View style={{
+                      width:width,height:height,position:'absolute',
+                        justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)'
+                    }}>
+                        <ActivityIndicator size="large" color ={colors.blueColor} />
+                    </View>
+                }
+
         </View>
     )
 }

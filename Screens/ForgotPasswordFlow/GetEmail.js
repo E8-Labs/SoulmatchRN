@@ -35,16 +35,16 @@ export default function GetEmail(props) {
                 try {
                     console.log('sending reset code')
                     const data = Settings.get('USER')
-                    if (data) {
-                        let d = JSON.parse(data)
+                    // if (data) {
+                    //     let d = JSON.parse(data)
                         let body = JSON.stringify({ email: email })
-                        console.log('data from local is', d)
+                        // console.log('data from local is', d)
 
                         const result = await fetch(ApisPath.ApiSendResetCode, {
                             method: 'post',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'Authorization': 'Bearer ' + d.token
+                                // 'Authorization': 'Bearer ' + d.token
                             },
                             body: body
                         })
@@ -58,10 +58,11 @@ export default function GetEmail(props) {
                                     email:email
                                 })
                             } else {
+                                setError(json.message)
                                 console.log('code sent message', json.message)
                             }
                         }
-                    }
+                    // }
 
                 } catch (error) {
                     console.log('error finding in sending reset code', error)
@@ -119,7 +120,7 @@ export default function GetEmail(props) {
 
                             {
                                 showIndicator ? (
-                                    <ActivityIndicator size={'large'} style={{ marginTop: 60 / 930 * height }} />
+                                    <ActivityIndicator size={'large'} style={{ marginTop: 60 / 930 * height }} color={colors.blueColor} />
                                 ) : (
                                     <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 60 / 924 * height, backgroundColor: getBtnColor() }]}
                                         onPress={sendCond}
