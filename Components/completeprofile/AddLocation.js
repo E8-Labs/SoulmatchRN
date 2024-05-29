@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Image, TouchableOpacity, Text, TouchableWithoutFeedback, Dimensions, Modal, Settings, ActivityIndicator } from 'react-native'
+import { View, Image, TouchableOpacity, Text, TouchableWithoutFeedback, Dimensions, Modal, Settings, ActivityIndicator, Alert } from 'react-native'
 import * as Location from 'expo-location';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
@@ -95,7 +95,7 @@ const AddLocation = ({ navigation }) => {
 
     let text = 'Waiting..';
     if (errorMsg) {
-        text = errorMsg;
+       Alert.alert('Allow location from settings ');
     } else if (location) {
         text = JSON.stringify(location);
     }

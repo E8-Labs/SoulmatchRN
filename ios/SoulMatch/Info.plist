@@ -4,6 +4,8 @@
   <dict>
     <key>CADisableMinimumFrameDurationOnPhone</key>
     <true/>
+    <key>CFBundleAllowMixedLocalizations</key>
+    <true/>
     <key>CFBundleDevelopmentRegion</key>
     <string>$(DEVELOPMENT_LANGUAGE)</string>
     <key>CFBundleDisplayName</key>
@@ -27,7 +29,35 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>com.e8labs.soulmatch</string>
+          <string>plurawlapp.com</string>
+        </array>
+      </dict>
+      <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>com.googleusercontent.apps.532960006063-0lrmd4ktecke70t7ncjr2v7vapt230h6</string>
+        </array>
+      </dict>
+      <dict>
+        <key>CFBundleURLTypes</key>
+        <array>
+          <dict>
+            <key>CFBundleURLSchemes</key>
+            <array>
+              <string>fb753527366987241</string>
+            </array>
+          </dict>
+        </array>
+        <key>FacebookAppID</key>
+        <string>753527366987241</string>
+        <key>FacebookDisplayName</key>
+        <string>SoulMatch</string>
+        <key>LSApplicationQueriesSchemes</key>
+        <array>
+          <string>fbapi</string>
+          <string>fb-messenger-api</string>
+          <string>fbauth2</string>
+          <string>fbshareextension</string>
         </array>
       </dict>
     </array>
@@ -43,17 +73,15 @@
       <true/>
     </dict>
     <key>NSCameraUsageDescription</key>
-    <string>Allow $(PRODUCT_NAME) to access your camera</string>
+    <string>Allow $(PRODUCT_NAME) to open the camera</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your location</string>
     <key>NSLocationAlwaysUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your location</string>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>This app uses your location to show your position on the map.</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>Allow $(PRODUCT_NAME) to access your microphone</string>
+    <string>This app uses your location to find you nearby matches.</string>
     <key>NSPhotoLibraryUsageDescription</key>
-    <string>Allow $(PRODUCT_NAME) to access your photos</string>
+    <string>Allow $(PRODUCT_NAME) to open the Photos</string>
     <key>UILaunchStoryboardName</key>
     <string>SplashScreen</string>
     <key>UIRequiredDeviceCapabilities</key>

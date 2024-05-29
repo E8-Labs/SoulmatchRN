@@ -15,12 +15,34 @@
       "**/*"
     ],
     "ios": {
-      "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "This app uses your location to show your position on the map."
-      },
+      "usesAppleSignIn": true,
       "supportsTablet": true,
       "bundleIdentifier": "com.e8labs.soulmatch",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "This app uses your location to find you nearby matches.",
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": [
+              "plurawlapp.com"
+            ]
+          },
+          {
+            "CFBundleURLSchemes": [
+              "com.googleusercontent.apps.532960006063-0lrmd4ktecke70t7ncjr2v7vapt230h6"
+            ]
+          },
+         { "CFBundleURLTypes": [
+            {
+              "CFBundleURLSchemes": ["fb753527366987241"]
+            }
+          ],
+          "FacebookAppID": "753527366987241",
+          "FacebookDisplayName": "SoulMatch",
+          "LSApplicationQueriesSchemes": ["fbapi", "fb-messenger-api", "fbauth2", "fbshareextension"]
+        }
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -36,8 +58,23 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      
-      "expo-image-picker"
+      "expo-apple-authentication",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to open the Photos",
+          "cameraPermission": "Allow $(PRODUCT_NAME) to open the camera",
+          "//": "Disables the microphone permission",
+          "microphonePermission": false
+        }
+      ],
+      [
+        "@react-native-google-signin/google-signin",
+        
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.532960006063-0lrmd4ktecke70t7ncjr2v7vapt230h6"
+        }
+      ]
     ],
     "extra": {
       "eas": {

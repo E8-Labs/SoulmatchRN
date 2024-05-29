@@ -23,7 +23,7 @@ export default function PlanDateNigth(props) {
     const [openTimePicker, setOpenTimePicker] = useState('')
     const [selectedDate, setSelectedDate] = useState("Select date");
     const [selectedTime, setSelectedTime] = useState("Select time");
-    const [time, setTime] = useState("Select date");
+    const [time, setTime] = useState("Select time");
     const [selected, setSelected] = useState(null);
 
     const [openModal, setOpenModal] = useState(false)
@@ -51,6 +51,7 @@ export default function PlanDateNigth(props) {
         today.setDate(today.getDate() + 1),
         "DD/MM/YYYY"
     );
+    console.log('today date', startDate)
 
 
     function handleChangeDate(propDate) {
@@ -222,7 +223,7 @@ export default function PlanDateNigth(props) {
             >
                 <TouchableWithoutFeedback style={{ height: height }}
                     onPress={() => {
-                        Keyboard.dismiss()
+                        Keyboard.dismiss()   
                     }}
                 >
                     <View style={{ height: height, width: width, backgroundColor: '#00000050', justifyContent: 'flex-end' }}>
@@ -290,7 +291,7 @@ export default function PlanDateNigth(props) {
                     <View style={styles.modalView}>
                         <DatePicker
                             mode="calendar"
-                            minimumDate={startDate}
+                            // minimumDate={startDate}
                             selected={startedDate}
                             onDateChanged={handleChangeDate}
                             onSelectedChange={(date) => {

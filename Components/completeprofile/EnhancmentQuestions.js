@@ -374,7 +374,7 @@ const EnhancmentQuestions = ({ navigation }) => {
                                                                         />
 
                                                                         {
-                                                                            loadImage ? (
+                                                                            loadImage? (
                                                                                 <ActivityIndicator size={'small'} color={colors.blueColor} style={{ marginTop: -50 }} />
                                                                             ) : <></>
                                                                         }

@@ -46,9 +46,21 @@ const UploadImage = ({ navigation }) => {
     return (
         <View style={{ display: 'flex', alignItems: 'center' }}>
             <View style={{ width: 370 / 430 * width }}>
-                <Text style={{ marginTop: 70 / 930 * height, fontWeight: '500', fontSize: 24 }}>
+                <View style = {{flexDirection:'row',alignItems:'center',marginTop: 70 / 930 * height,gap:20}}>
+                    <TouchableOpacity onPress={() => {
+                        navigation.goBack()
+                    }}>
+                        <View style={GlobalStyles.backBtn}>
+                            <Image source={require('../../assets/images/backArrow.png')}
+                                style={GlobalStyles.backBtnImage}
+                            />
+                        </View>
+                    </TouchableOpacity>
+                    <Text style={{  fontWeight: '500', fontSize: 24 }}>
                     Create Profile
                 </Text>
+                </View>
+                
                 {/* Code for progressbar */}
                 <View style={{ flexDirection: 'row', marginTop: 40 / 930 * height, justifyContent: 'space-between', display: 'flex', alignItems: 'center' }}>
                     <Image source={require('../../assets/User.png')} style={{ height: 56, width: 56, resizeMode: 'contain' }} />

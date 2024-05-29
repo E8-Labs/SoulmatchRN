@@ -1,5 +1,6 @@
 import {
-  View, Text, SafeAreaView, Dimensions, TouchableOpacity, Image, StyleSheet, Modal
+  View, Text, SafeAreaView, Dimensions, TouchableOpacity, Image, StyleSheet, Modal, ActivityIndicator,
+  Settings
 } from 'react-native'
 import React, { useState } from 'react'
 import GlobalStyles from '../../assets/styles/GlobalStyles';
@@ -8,30 +9,88 @@ import colors from '../../assets/colors/Colors';
 import { getFormatedDate } from "react-native-modern-datepicker";
 import DatePicker from "react-native-modern-datepicker";
 import InviteDatePopup from '../../Components/InviteDatePopup';
+import ApisPath from '../../lib/ApisPath/ApisPath';
 
 
 const { height, width } = Dimensions.get('window');
 
 
-export default function ReserveNightScreen({navigation}) {
+export default function ReserveNightScreen({ navigation, route }) {
+
+  const dateId = route.params.dateId
+  console.log('selected date id is', dateId)
 
   const [numberofGuest, setNumberofGuest] = useState(2)
   const [startedDate, setStartedDate] = useState('')
   const [openDatePicker, setOpenDatePicker] = useState('')
   const [openTimePicker, setOpenTimePicker] = useState('')
   const [selectedDate, setSelectedDate] = useState("Select date");
-  const [selectedTime, setSelectedTime] = useState("Select time");
-  const [time, setTime] = useState("Select date");
+  const [loadImage, setloadImage] = useState(false)
+  const [showIndicator, setShowIndicator] = useState(false)
+  const [time, setTime] = useState("Select time");
+  const [error, setError] = useState(null);
+
 
   const [openModal, setOpenModal] = useState(false)
-  const [profileImage, setProfileImage] = useState(null)
+  const [selectedDateProfile, setSelectedDateProfile] = useState(null)
+
+
+  const bookDate = async () => {
+
+    if (time === "Select time" || selectedDate === "Select date" || !numberofGuest || !selectedDateProfile) {
+      setError("Enter all cridentials")
+      return
+     
+    }
+
+    setShowIndicator(true)
+    const data = Settings.get("USER")
+
+    if (data) {
+      let d = JSON.parse(data)
+
+      let body = JSON.stringify({
+        datePlaceId: dateId,
+        date: selectedDate,
+        time: time,
+        numberOfGuests: numberofGuest,
+        dateUserId: selectedDateProfile.id
+      })
+
+      try {
+        const result = await fetch(ApisPath.ApiBookDate, {
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + d.token
+          },
+          body: body
+        })
+        if (result) {
+          setShowIndicator(false)
+          let json = await result.json()
+          if (json.status === true) {
+            console.log('book date data', json.data)
+            navigation.navigate('TabBarContainer')
+          } else {
+            console.log('json message is', json.message)
+          }
+        }
+      } catch (error) {
+        console.log('error finding in book a date', error)
+      }
+    }
+
+  }
 
 
   const increment = () => {
+    setError(null)
     setNumberofGuest(numberofGuest + 1)
   }
   const decrement = () => {
     if (numberofGuest > 2) {
+      setError(null)
       setNumberofGuest(numberofGuest - 1)
     } else {
       null
@@ -66,9 +125,9 @@ export default function ReserveNightScreen({navigation}) {
     setOpenTimePicker(!openTimePicker)
   }
 
-  const closeModal = (image) => {
-    console.log('profile image', image)
-    setProfileImage(image)
+  const closeModal = (user) => {
+    console.log('selected date profile', user)
+    setSelectedDateProfile(user)
     setOpenModal(false)
   }
   return (
@@ -76,8 +135,8 @@ export default function ReserveNightScreen({navigation}) {
       <View style={{ alignItems: 'center', height: height - 85 / 930 * height, width: width, flexDirection: 'column', justifyContent: 'space-between' }}>
         <View style={{ alignItems: 'center', flexDirection: 'column', gap: 32 / 930 * height }}>
           <View style={{ width: width - 60 / 430 * width, flexDirection: 'row', alignItems: 'center', gap: 20 / 430 * width }}>
-            <TouchableOpacity 
-              onPress={()=>{
+            <TouchableOpacity
+              onPress={() => {
                 navigation.goBack()
               }}
             >
@@ -158,15 +217,31 @@ export default function ReserveNightScreen({navigation}) {
           </View>
 
           {
-            profileImage ? (
-              <Image source={profileImage} style={{
-                height: 370 / 930 * height, width: 370 / 430 * width, resizeMode: 'contain', borderRadius: 10,
-                backgroundColor: 'red',
-              }} />
+            selectedDateProfile ? (
+              <>
+                <Image source={selectedDateProfile && { uri: selectedDateProfile.profile_image }} style={{
+                  height: 370 / 930 * height, width: 370 / 430 * width, resizeMode: 'cover', borderRadius: 10, borderWidth: 1
+
+                }}
+                  onLoadStart={() => { setloadImage(true) }}
+                  onLoadEnd={() => {
+                    setloadImage(false)
+                  }}
+                />
+                {
+                  loadImage ? (
+                    <ActivityIndicator style={{ position: 'absolute', bottom: 130, left: 150 }} size={'large'} color={colors.blueColor} />
+                  ) : null
+                }
+
+              </>
+
+
             ) : (
               <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { backgroundColor: 'transparent', borderWidth: 2 }]}
                 onPress={() => {
                   setOpenModal(true)
+                  setError(null)
                 }}
               >
                 <Text style={[GlobalStyles.btnText, { color: '#000' }]}>
@@ -188,11 +263,12 @@ export default function ReserveNightScreen({navigation}) {
               <View style={styles.modalView}>
                 <DatePicker
                   mode="calendar"
-                  minimumDate={startDate}
+                  // minimumDate={startDate}
                   selected={startedDate}
                   onDateChanged={handleChangeDate}
                   onSelectedChange={(date) => {
                     setSelectedDate(date)
+                    setError(null)
 
                   }}
                   options={{
@@ -227,6 +303,7 @@ export default function ReserveNightScreen({navigation}) {
                 mode="time"
                 minuteInterval={1}
                 onTimeChange={selectedTime => {
+                  setError(null)
                   setTime(selectedTime)
                   setOpenTimePicker(!openTimePicker)
                   console.log('selected time is', selectedTime)
@@ -244,14 +321,24 @@ export default function ReserveNightScreen({navigation}) {
             </View>
           </View>
         </Modal>
+        {
+          error && <Text style={GlobalStyles.errorText}>{error}</Text>
+        }
+        {
+          showIndicator ? (
+            <ActivityIndicator size={'large'} color={colors.blueColor} />
+          ) : (
+            <TouchableOpacity style={GlobalStyles.reqtengularBtn}
+              onPress={bookDate}
+            >
+              <Text style={GlobalStyles.btnText}>
+                Reserve a date night
+              </Text>
+            </TouchableOpacity>
+          )
+        }
 
-        <TouchableOpacity style={GlobalStyles.reqtengularBtn}
 
-        >
-          <Text style={GlobalStyles.btnText}>
-            Reserve a date night
-          </Text>
-        </TouchableOpacity>
 
 
 

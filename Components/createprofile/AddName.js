@@ -124,7 +124,7 @@ const AddName = ({ navigation, route }) => {
                 {/* Adjusting code for next button */}
                     <View style={{ display: 'flex', height: height * 0.45, flexDirection: 'column', justifyContent: 'space-between' }}>
                         <View>
-                            <TextInput placeholder='Emter last name'
+                            <TextInput placeholder='Enter last name'
                             autoCorrect={false} spellCheck={false}
                                 onFocus={handleInputfocus2}
                                 onChangeText={handleSave2}

@@ -419,7 +419,7 @@ const UploadMedia = ({ navigation }) => {
                                             <TouchableOpacity onPress={() => setPopup2(false)} style={{ marginRight: 10 }}
 
                                             >
-                                                <Image source={require('../../assets/crossicon.png')} style={{ height: 24 / 930 * height, width: 24 / 430 * width, resizeMode: 'contain', }} />
+                                                <Image source={require('../../assets/crossicon.png')} style={{ height: 20 / 930 * height, width: 20 / 430 * width, resizeMode: 'contain', }} />
                                             </TouchableOpacity>
                                         </View>
                                     </View>
@@ -478,7 +478,7 @@ const UploadMedia = ({ navigation }) => {
                                         Upload
                                     </Text>
                                     <TouchableOpacity onPress={() => setPopup(false)} style={{ marginRight: 10 }}>
-                                        <Image source={require('../../assets/crossicon.png')} style={{ height: 24 / 930 * height, width: 24 / 430 * width, resizeMode: 'contain', }} />
+                                        <Image source={require('../../assets/crossicon.png')} style={{ height: 20 / 930 * height, width: 20 / 430 * width, resizeMode: 'contain', }} />
                                     </TouchableOpacity>
                                 </View>
                             </View>

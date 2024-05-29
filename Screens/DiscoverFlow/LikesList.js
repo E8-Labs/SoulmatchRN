@@ -9,7 +9,7 @@ import ApisPath from '../../lib/ApisPath/ApisPath'
 
 const { height, width } = Dimensions.get('window')
 
-const placholder = require('../../assets/images/imagePlaceholder.jpeg')
+const placholder = require('../../assets/images/imagePlaceholder.webp')
 
 const likeImage = require('../../assets/images/like.png')
 const unlikeImage = require('../../assets/images/unLike.png')

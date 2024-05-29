@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, TouchableOpacity, Image, Dimensions, TextInput, Settings, ActivityIndicator } from 'react-native';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
@@ -6,26 +6,72 @@ import colors from '../../assets/colors/Colors';
 
 const AddEmail = ({ navigation, route }) => {
 
-    
+
     const { height, width } = Dimensions.get('window');
     const [saveemail, setSaveemail] = useState('')
     const [focusEmail, setFocusEmail] = useState(false)
     const [indicattor, setIndicator] = useState(false)
-     const [emailError, setEmailError] = useState(false)
+    const [emailError, setEmailError] = useState(false)
+    const [emailExists, setEmailExists] = useState(false);
+    const [emailNotExists, setEmailNotExists] = useState(false);
+    const timerRef = useRef(null);
     //getting data from previous screen
     const user = route.params.user;
     user.email = saveemail
-    // const UserFirstName = username.FirstName;
-    // const UserLastName = username.LastName;
-    // const UserImage = username.UserProfileImage;
+
     console.log('Name recieved from previous screen is', user);
-    // console.log('Image recieved on addname screen is', UserImage)
+
+    useEffect(() => {
+        if (saveemail) {
+            // Clear the previous timer
+            if (timerRef.current) {
+                clearTimeout(timerRef.current);
+            }
+
+            // Set a new timer
+            timerRef.current = setTimeout(() => {
+                checkEmailExistence(saveemail);
+            }, 1000);
+
+            // Cleanup function to clear the timer when component unmounts
+            return () => clearTimeout(timerRef.current);
+        }
+    }, [saveemail]);
+
+    const checkEmailExistence = async () => {
+        try {
+            const ApiUrl = ApisPath.ApiCheckEmailExistance
+            const response = await fetch(ApiUrl, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "email": saveemail })
+            });
+            if (response.ok) {
+                let data = await response.json();
+                if (data.status === true) {
+                    console.log('Data recieved from api is', data.status)
+                    setEmailExists(true);
+                    setEmailNotExists(false);
+                } else if (data.status === false) {
+                    setEmailExists(false);
+                    setEmailNotExists(true);
+                    console.log('Email doesnot exists')
+                }
+            } else {
+                console.warn('Api is not working')
+            }
+        } catch (error) {
+            console.warn(error)
+        }
+    }
 
     const handleEmailfocus = () => {
         setFocusEmail(true);
         setEmailError(false)
     }
-    
+
     const handlesaveemail = (saveEmail) => {
         setEmailError(false);
         setSaveemail(saveEmail);
@@ -33,7 +79,7 @@ const AddEmail = ({ navigation, route }) => {
     };
 
     //code for Getting email Verification code
-   
+
 
     const handleNextClick = async () => {
         try {
@@ -43,35 +89,35 @@ const AddEmail = ({ navigation, route }) => {
             //     let d = JSON.parse(data)
             //     console.log('user data from local ', d)
 
-                //code for api
-                const Apiurl = ApisPath.ApiSendVerificationEmail;
-                // const Link = "http://13.58.134.250:8004/api/users/send_verification_email"
-                // const AuthToken = d.token;
-                console.log('Email for verification is', saveemail)
-                const response = await fetch(Apiurl, {
-                    method: 'post',
-                    headers: {
-                        'Content-Type': 'application/json',
-                       
-                    },
-                    body: JSON.stringify({ "email": saveemail })
-                });
-                // console.log('Btn is working')
-                // console.log('Auth token is', AuthToken);
-                if (response) {
-                    setIndicator(false)
-                    const Data = await response.json();
-                    if (Data.status === true)
-                        console.log('Response is', Data);
-                    navigation.navigate("ProfileEmailverification", {
-                        user: user
-                    })
-                } else {
-                    console.log('Error:', response.status, response.statusText);
-                    const errorData = await response.json(); // If server returns error message in JSON
-                    console.log('Error Data:', errorData);
-                }
+            //code for api
+            const Apiurl = ApisPath.ApiSendVerificationEmail;
+            // const Link = "http://13.58.134.250:8004/api/users/send_verification_email"
+            // const AuthToken = d.token;
+            console.log('Email for verification is', saveemail)
+            const response = await fetch(Apiurl, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json',
+
+                },
+                body: JSON.stringify({ "email": saveemail })
+            });
+            // console.log('Btn is working')
+            // console.log('Auth token is', AuthToken);
+            if (response) {
+                setIndicator(false)
+                const Data = await response.json();
+                if (Data.status === true)
+                    console.log('Response is', Data);
+                navigation.navigate("ProfileEmailverification", {
+                    user: user
+                })
+            } else {
+                console.log('Error:', response.status, response.statusText);
+                const errorData = await response.json(); // If server returns error message in JSON
+                console.log('Error Data:', errorData);
             }
+        }
         // }
         catch (error) {
             setIndicator(false)
@@ -117,24 +163,47 @@ const AddEmail = ({ navigation, route }) => {
     </Text>*/}
                 <View style={{ display: 'flex', height: height * 0.58, flexDirection: 'column', justifyContent: 'space-between' }}>
                     <View>
-                        <TextInput placeholder='Enter email' keyboardType='email-address' onFocus={handleEmailfocus}
-                            onChangeText={handlesaveemail}
-                            autoCapitalize='none'
-                            autoCorrect={false} 
-                            spellCheck={false}
-                            value={saveemail}
-                            style={{
-                                width: 370 / 430 * width,
-                                height: 52,
-                                borderWidth: 1,
-                                borderColor: focusEmail ? '#6050DC' : '#CCCCCC',
-                                borderRadius: 10,
-                                padding: 17,
-                                marginTop: 10 / 930 * height,
-                                color: '#333333',
-                                fontWeight: '500',
-                            }} />
                         <View>
+                            <TextInput placeholder='Saraahdie@gmail.com' keyboardType='email-address' onFocus={handleEmailfocus}
+                                onChangeText={handlesaveemail}
+                                value={saveemail}
+                                autoCapitalize='none'
+                                autoCorrect={false}
+                                spellCheck={false}
+                                style={{
+                                    width: 370 / 430 * width,
+                                    height: 52,
+                                    borderWidth: 1,
+                                    borderColor: focusEmail ? '#6050DC' : '#CCCCCC',
+                                    borderRadius: 10,
+                                    padding: 17,
+                                    marginTop: 10 / 930 * height,
+                                    color: '#333333',
+                                    fontWeight: '500',
+                                }} />
+                            <View>
+                                {emailError ? <View>
+                                    <Text style={{ color: '#E01F1F', fontSize: 14, fontWeight: '500', marginTop: 5 / 930 * height }}>
+                                        Please enter email
+                                    </Text>
+                                </View> : ''}
+                                {
+                                    emailExists &&
+                                    <View>
+                                        <Text style={{ color: 'green', fontSize: 15, fontWeight: '500', marginTop: 5 / 930 * height }}>
+                                            Email available
+                                        </Text>
+                                    </View>
+                                }
+                                {
+                                    emailNotExists &&
+                                    <View>
+                                        <Text style={{ color: '#E01F1F', fontSize: 15, fontWeight: '500', marginTop: 5 / 930 * height }}>
+                                            Email already taken
+                                        </Text>
+                                    </View>
+                                }
+                            </View>
                             {emailError ? <View>
                                 <Text style={{ color: '#E01F1F', fontSize: 14, fontWeight: '500', marginTop: 5 / 930 * height }}>
                                     Please enter email
@@ -146,7 +215,7 @@ const AddEmail = ({ navigation, route }) => {
 
                         {
                             indicattor ? (
-                                <ActivityIndicator size={'large'}  color={colors.blueColor}/>
+                                <ActivityIndicator size={'large'} color={colors.blueColor} />
                             ) : (
                                 <TouchableOpacity onPress={handleNextClick} style={{ backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
                                     <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>Next</Text>

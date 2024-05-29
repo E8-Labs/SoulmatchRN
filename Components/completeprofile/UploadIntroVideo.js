@@ -224,7 +224,7 @@ const UploadIntroVideo = ({ navigation }) => {
                                                     Upload
                                                 </Text>
                                                 <TouchableOpacity onPress={() => setPopup(false)} style={{ marginRight: 10 }}>
-                                                    <Image source={require('../../assets/crossicon.png')} style={{ height: 24 / 930 * height, width: 24 / 430 * width, resizeMode: 'contain', }} />
+                                                    <Image source={require('../../assets/crossicon.png')} style={{ height: 20 / 930 * height, width: 20 / 430 * width, resizeMode: 'contain', }} />
                                                 </TouchableOpacity>
                                             </View>
                                         </View>
@@ -255,7 +255,7 @@ const UploadIntroVideo = ({ navigation }) => {
                                         <View style={{ width: 370 / 430 * width }}>
                                             <TouchableOpacity
                                                 onPress={() => {
-                                                    navigation.navigate('AddAge');
+                                                    // navigation.navigate('AddAge');
                                                 }}
                                                 style={{ backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
                                                 <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>

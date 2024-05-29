@@ -35,6 +35,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
     const [selected, setSelected] = useState('');
     const [like, setLike] = useState(false);
     const [loadImage, setLoadImage] = useState(false)
+    const [loadImage2, setLoadImage2] = useState(false)
     const [currentIndex, setCurrentIndex] = useState(0);
     const [openModal, setOpenModal] = useState(false);
     const [LikeIndicator, setLikeIndicator] = useState(false);
@@ -283,11 +284,11 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                         ) : (
                             <View style={{ flexDirection: 'row', marginBottom: 20 / 930 * height, width: width - 40, justifyContent: 'space-between' }}>
                                 {
-                                    currentIndex !== data.length - 1 ?  (
+                                    currentIndex !== data.length - 1 ? (
                                         <Text style={{ fontSize: 24, fontFamily: customFonts.meduim }}>
                                             {data[currentIndex] ? data[currentIndex].first_name : ''} {data[currentIndex] ? data[currentIndex].last_name : ''}
                                         </Text>
-                                    ) :<View style = {{width:50}}></View>
+                                    ) : <View style={{ width: 50 }}></View>
                                 }
 
                                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 / 430 * width }}>
@@ -491,9 +492,25 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                         } */}
                                                         {
                                                             item.url || item.thumb_url ? (
-                                                                <Image source={{ uri: item.url ? item.url : thumb_url }}
-                                                                    style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
-                                                                />
+                                                                <>
+                                                                    <Image source={{ uri: item.url ? item.url : thumb_url }}
+                                                                        onLoadStart={() => { setLoadImage2(true) }}
+                                                                        onLoadEnd={() => {
+                                                                            setLoadImage2(false)
+                                                                        }}
+                                                                        placeholder={blurhash}
+                                                                        contentFit="cover"
+                                                                        transition={1000}
+                                                                        style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
+                                                                    />
+
+                                                                    {
+                                                                        !loadImage2 ? (
+                                                                            <ActivityIndicator size={'small'} color={colors.blueColor} style = {{position:'absolute',bottom:100,left:150}}/>
+                                                                        ) : <></>
+                                                                    }
+                                                                </>
+
                                                             ) : null
                                                         }
 

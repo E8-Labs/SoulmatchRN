@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
-import { View, Text, Dimensions, TextInput, TouchableOpacity, Image, SafeAreaView, Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback, Platform, Settings, ActivityIndicator } from 'react-native'
+import {
+    View, Text, Dimensions, TextInput, TouchableOpacity, Image, SafeAreaView, Keyboard, KeyboardAvoidingView,
+    TouchableWithoutFeedback, Platform, Settings, ActivityIndicator
+} from 'react-native'
 import GlobalStyles from '../../assets/styles/GlobalStyles'
 import colors from '../../assets/colors/Colors';
 import customFonts from '../../assets/fonts/Fonts';
-import ApisPath from '../../lib/ApisPath/ApisPath'
-import AddLocation from '../../Components/completeprofile/AddLocation';
-import TabBarContainer from '../TabNavigation/TabBarContainer';
+import ApisPath from '../../lib/ApisPath/ApisPath';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import * as AppleAuthentication from 'expo-apple-authentication';
 
 const { height, width } = Dimensions.get("window");
 
@@ -24,6 +27,13 @@ export default function LoginUser(props) {
     const [passwordFocused, setPasswordFocused] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
     const [indicator, setIndicator] = useState(false)
+    const [indicator1, setIndicator1] = useState(false)
+
+
+    GoogleSignin.configure({
+        iosClientId: '532960006063-0lrmd4ktecke70t7ncjr2v7vapt230h6.apps.googleusercontent.com',
+         // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+    });
 
     const getBtnColor = () => {
         if (email && password) {
@@ -32,6 +42,181 @@ export default function LoginUser(props) {
             return colors.lightColor
         }
     }
+
+
+    const socialLogin = async (data) => {
+        console.log('data is', data)
+        // return
+
+        try {
+            const result = await fetch(ApisPath.ApiSocialLogin, {
+                method: 'post',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            })
+            if (data.provider_name === 'apple') {
+                // setShowIndicater2(true)
+            } else if (data.provider_name === 'google') {
+                setIndicator1(true)
+            } else if (data.provider_name === 'facebook') {
+                // setShowIndicater4(true)
+            }
+            if (result) {
+                let json = await result.json();
+                console.log(json)
+                if (json.status == true) {
+                    Settings.set(
+                        {
+                            USER:
+                                JSON.stringify(json.data)
+                        }
+                    )
+                    console.log("Stored user data in local is ", json.data)
+
+                    if (json.message === 'Logged in') {
+                        let data = json.data.user
+
+                        if (data.profile_completion === 1) {
+                            console.log('profile_completion_comment', data.profile_completion_comment)
+                            props.navigation.navigate('UploadIntroVideo')
+                        }
+                        else if (data.profile_completion === 2) {
+                            console.log('profile_completion_comment', data.profile_completion_comment)
+                            props.navigation.navigate('UploadMedia')
+                        }
+                        else if (data.profile_completion === 3) {
+
+                            //here user will add zodiac,age,height,school,job and interest
+
+                            console.log('profile_completion_comment', data.profile_completion_comment)
+                            props.navigation.navigate('AddZodiac')
+
+                        } else if (data.profile_completion === 10) {
+
+                            // if last condition runs then profile complition comment will 11
+
+                            console.log('profile_completion_comment', data.profile_completion_comment)
+                            props.navigation.navigate("AddLocation")
+                        }
+
+                        else if (data.profile_completion === 11) {
+
+                            // if last condition runs then profile complition comment will 11
+
+                            console.log('profile_completion_comment', data.profile_completion_comment)
+                            props.navigation.navigate("TabBarContainer")
+                        }
+
+                    } else if (json.message === 'User registered') {
+                        props.navigation.navigate("UploadIntroVideo")
+                    }
+                    setIndicator1(false)
+                }
+                else {
+
+                    setError(json.message)
+                }
+
+            }
+        } catch (error) {
+            setError(error.message)
+            console.log('error finding', error)
+        }
+    }
+
+    const appleLogin = async() =>{
+        try {
+            
+            let credential = await AppleAuthentication.signInAsync({
+                requestedScopes: [
+                    AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+                    AppleAuthentication.AppleAuthenticationScope.EMAIL,
+                ],
+            });
+            // signed in
+            // let cr = {"authorizationCode": "c352b03fb0d6e4defa3f626d9d9d45fa5.0.styx.lBXUeXBx15Ohk42_CU_rKQ", "email": "spidyzno3@gmail.com", "fullName": {"familyName": "Bin khalid", "givenName": "Waleed", "middleName": null, "namePrefix": null, "nameSuffix": null, "nickname": null}, "identityToken": "eyJraWQiOiJsVkhkT3g4bHRSIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiY29tLmU4bGFicy5wbHVyYXdsIiwiZXhwIjoxNzEwNjI5MDE0LCJpYXQiOjE3MTA1NDI2MTQsInN1YiI6IjAwMDM4Ny5lMDYyYzMxZTBlMjg0YmQwOTcxYzE1NzI5ZmNmOGU2ZS4yMjQzIiwiY19oYXNoIjoiZjBpdy1mdGpjOXBfblVPNlBqRVdxZyIsImVtYWlsIjoic3BpZHl6bm8zQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdXRoX3RpbWUiOjE3MTA1NDI2MTQsIm5vbmNlX3N1cHBvcnRlZCI6dHJ1ZSwicmVhbF91c2VyX3N0YXR1cyI6Mn0.Z41O2oWCfpIxQtnTdwgNuHdwHx1W0iS-P7qf-L4HusgEswzhGZ8G1Ss1FMNnh0FXXwkX174uj_kykhGROqMelNnbQ_HkvCU1yYhlAQ29rQNu7GyAzLUs070wU1RdrHO7napvUtHh4JncAnUyXm6zxLGaciDKVOQ8RX4GOVPogcczjKSQse6Y9CggMLHpvjrZ-pSFyyw4oLssm1GXteEhGCckhl3V_h4QIhLstr03ZUVErVoyy2gtq0pV55Xf6jc28p666Ph2K2Cgh_AeSh_cq8I4iv3CgaD_A25dOmtJrweRYDgKYJYGYAmNVhC9xVFIxedQG8L34GC-4C29p1n_qQ", "realUserStatus": 2, "state": null, "user": "000387.e062c31e0e284bd0971c15729fcf8e6e.2243"}
+
+            if (credential.email !== null) {
+                //save credentials here
+                Settings.set({ applelogin: JSON.stringify(credential) })
+            }
+            else {
+                //get credentials here
+                let cr = Settings.get("applelogin")
+                if (cr) {
+                    credential = JSON.parse(cr)
+                }
+            }
+            //Call the api here
+            signInSocial({ name: `${credential.fullName.givenName} ${credential.fullName.familyName}`, email: credential.email, provider_name: "apple", provider_id: credential.user })
+
+            console.log("Apple credentials ", credential)
+        } catch (e) {
+            console.log("Exception ", e)
+            if (e.code === 'ERR_REQUEST_CANCELED') {
+                // handle that the user canceled the sign-in flow
+            } else {
+                // handle other errors
+            }
+        }
+    }
+
+
+    // const facebookLogin = () => {
+    //     try {
+    //         LoginManager.logInWithPermissions(["public_profile", "email"]).then(
+    //             function (result) {
+    //                 if (result.isCancelled) {
+    //                     console.log("Login cancelled");
+    //                 } else {
+    //                     console.log(
+    //                         "Login success with permissions: ", result
+    //                     );
+    //                     const currentProfile = Profile.getCurrentProfile().then(
+    //                         function (currentProfile) {
+    //                             console.log("Current Profile ", currentProfile)
+    //                             if (currentProfile) {
+    //                                 console.log("The current logged user is: ",
+    //                                     currentProfile
+    //                                 );
+    //                                 signInSocial({ name: currentProfile.name, email: currentProfile.email, provider_name: "facebook", provider_id: currentProfile.userID, profile_image: currentProfile.imageURL, device_id: did })
+
+    //                             }
+    //                         }
+    //                     );
+    //                 }
+    //             },
+    //             function (error) {
+    //                 console.log("Login fail with error: " + error);
+    //             }
+    //         );
+    //     }
+    //     catch (error) {
+    //         console.log("Error", error)
+    //     }
+    // }
+
+    const GoogleLogin = async () => {
+        console.log("trying to login google")
+        try {
+            // await GoogleSignin.hasPlayServices();
+            const userInfo = await GoogleSignin.signIn();
+            console.log("user info from google",userInfo)
+
+            socialLogin({ first_name: userInfo.user.name, email: userInfo.user.email, provider_name: "google", provider_id: userInfo.user.id, profile_image: userInfo.user.photo, })
+
+            console.log("Trying to signin with google ")
+
+
+
+            // setState({ userInfo });
+        } catch (error) {
+            console.log("Error ", error)
+
+        }
+    };
+
+
 
     const loginUser = async () => {
 
@@ -61,6 +246,7 @@ export default function LoginUser(props) {
                         setIndicator(false)
                         let json = await result.json();
                         if (json.status === true) {
+                            //check if the user role admin then navigate to admin flow
                             console.log('User logged in ', json.data)
                             Settings.set({ USER: JSON.stringify(json.data) })
 
@@ -122,7 +308,7 @@ export default function LoginUser(props) {
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={{ flex: 1, flexDirection: 'column', }}>
                 <TouchableWithoutFeedback style={GlobalStyles.container} onPress={Keyboard.dismiss}>
-                    <View style={[{ flexDirection: 'column', height: height,marginTop:20/930*height }]}>
+                    <View style={[{ flexDirection: 'column', height: height, marginTop: 20 / 930 * height }]}>
                         <View style={{ justifyContent: 'space-between', height: height * 0.8, }}>
                             <View style={{ alignItems: 'center', justifyContent: 'center', }}>
                                 <View style={{ width: width - 40, marginTop: 0, alignSelf: 'center' }}>
@@ -245,15 +431,22 @@ export default function LoginUser(props) {
                                 </View>
 
                                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 18 / 430 * width, marginTop: 50 / 924 * height }}>
-                                    <TouchableOpacity>
+                                    {
+                                        indicator1 ? (
+                                            <ActivityIndicator size={'large'} />
+                                        ) : (
+                                            <TouchableOpacity onPress={GoogleLogin}>
 
-                                        <View style={{ borderWidth: 1, borderRadius: 10, borderColor: colors.greyText, padding: 18 }}>
-                                            <Image source={require('../../assets/images/google.png')}
-                                                style={{ height: 25 / 930 * height, width: 25 / 924 * height, resizeMode: 'contain' }}
-                                            />
+                                                <View style={{ borderWidth: 1, borderRadius: 10, borderColor: colors.greyText, padding: 18 }}>
+                                                    <Image source={require('../../assets/images/google.png')}
+                                                        style={{ height: 25 / 930 * height, width: 25 / 924 * height, resizeMode: 'contain' }}
+                                                    />
 
-                                        </View>
-                                    </TouchableOpacity>
+                                                </View>
+                                            </TouchableOpacity>
+                                        )
+                                    }
+
                                     <TouchableOpacity>
 
                                         <View style={{ borderWidth: 1, borderRadius: 10, borderColor: colors.greyText, padding: 18 }}>
@@ -263,7 +456,7 @@ export default function LoginUser(props) {
                                         </View>
 
                                     </TouchableOpacity>
-                                    <TouchableOpacity>
+                                    <TouchableOpacity onPress={appleLogin}>
 
                                         <View style={{ borderWidth: 1, borderRadius: 10, borderColor: colors.greyText, padding: 18 }}>
                                             <Image source={require('../../assets/images/apple.png')}

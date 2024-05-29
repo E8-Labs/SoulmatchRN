@@ -8,7 +8,12 @@ import { StarRatingDisplay } from 'react-native-star-rating-widget';
 
 const { height, width } = Dimensions.get('window');
 
-export default function SelectedDateDetails({ navigation }) {
+export default function SelectedDateDetails({ navigation,route }) {
+
+    const data = route.params.data
+
+    console.log('selected date details are ', data)
+
     return (
         <SafeAreaView>
             <View style={{ alignItems: 'center', height: height, width: width }}>
@@ -22,7 +27,7 @@ export default function SelectedDateDetails({ navigation }) {
                             />
                         </View>
                     </TouchableOpacity>
-                    <Text style={{ fontSize: 24, fontFamily: customFonts.meduim }}>Fancy Bistro</Text>
+                    <Text style={{ fontSize: 24, fontFamily: customFonts.meduim }}>{data.name}</Text>
 
                 </View>
                 <View style={{ height: height * 0.85 }}>
@@ -35,20 +40,20 @@ export default function SelectedDateDetails({ navigation }) {
                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 65 / 430 * width, marginTop: 20 / 930 * height }}>
                                 <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 5 }}>
                                     <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Budget</Text>
-                                    <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>$10</Text>
+                                    <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>${data.maxBudget}</Text>
 
                                 </View>
 
                                 <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 5 }}>
                                     <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Category</Text>
 
-                                    <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>Dinner</Text>
+                                    <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>{data.Category.name}</Text>
                                 </View>
 
                                 <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 5 }}>
                                     <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Ratings</Text>
                                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }} >
-                                        <Image source={require('../../assets/images/star.png')}
+                                        <Image source={data.imageUrl}
                                             style={{ height: 12, width: 12 }}
                                         />
                                         <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>$5.0</Text>
@@ -62,25 +67,27 @@ export default function SelectedDateDetails({ navigation }) {
                                 <Text style={{ fontSize: 12, fontFamily: customFonts.regular, marginTop: 20 / 930 * height }}>
                                     Hours of operation
                                 </Text>
-                                <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, marginTop: 5 / 930 * height }}>5:00 PM - 10:00 PM </Text>
+                                <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, marginTop: 5 / 930 * height }}>{
+                                data.openTime} - {data.closeTime} 
+                                </Text>
 
                                 <Text style={{ fontSize: 12, fontFamily: customFonts.regular, marginTop: 20 / 930 * height }}>
                                     Description
                                 </Text>
                                 <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, marginTop: 5 / 930 * height }}>
-                                    An elegant bistro offering exquisite culinary experiences,blending modern flair with timeless classics,set in a warm,inviting ambiance.
+                                    {data.description}
                                 </Text>
 
-                                <Text style={{ fontSize: 12, fontFamily: customFonts.regular, marginTop: 20 / 930 * height }}>
+                                {/* <Text style={{ fontSize: 12, fontFamily: customFonts.regular, marginTop: 20 / 930 * height }}>
                                     Link
-                                </Text>
-                                <Text style={{ fontSize: 12, fontFamily: customFonts.meduim, marginTop: 5 / 930 * height, color: colors.blueColor }}
+                                </Text> */}
+                                {/* <Text style={{ fontSize: 12, fontFamily: customFonts.meduim, marginTop: 5 / 930 * height, color: colors.blueColor }}
                                     onPress={() => (
                                         Linking.openURL("https://www.youtube.com/")
                                     )}
                                 >
                                     https://soulmatch-c7991c.webflow.io/
-                                </Text>
+                                </Text> */}
 
                                 <Text style={{ fontSize: 20, fontFamily: customFonts.meduim, marginTop: 20 / 930 * height }}>
                                     Reviews
@@ -152,7 +159,9 @@ export default function SelectedDateDetails({ navigation }) {
 
                             <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 30 / 930 * height }]}
                                 onPress={() => {
-                                    navigation.navigate("ReserveNightScreen")
+                                    navigation.navigate("ReserveNightScreen",{
+                                        dateId:data.id
+                                    })
                                 }}
                             >
                                 <Text style={GlobalStyles.btnText}>Reserve a date night</Text>

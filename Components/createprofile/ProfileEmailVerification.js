@@ -159,7 +159,7 @@ const ProfileEmailVerification = ({ navigation, route }) => {
                             Please verify your email
                         </Text>
                         <Text style={{ fontWeight: '500', fontSize: 16, color: '#333333', marginTop: 30 / 930 * height }}>
-                            Please enter the 4 digit code sent to your mail1 {user.email}
+                            Please enter the 4 digit code sent to your mail {user.email}
                         </Text>
                     </View>
                     {/* Code for Input Verification Code */}
