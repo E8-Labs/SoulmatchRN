@@ -10,12 +10,13 @@ import colors from '../../assets/colors/Colors';
 import customFonts from '../../assets/fonts/Fonts';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import { Image } from 'expo-image';
+import { getProfile } from '../../Services/ProfileServices/GetProfile';
 
 const blurhash =
     '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
 
-const UploadMedia = ({ navigation }) => {
+const UploadMedia = ({ navigation, route }) => {
 
     const { height, width } = Dimensions.get('window');
 
@@ -27,7 +28,7 @@ const UploadMedia = ({ navigation }) => {
         setError(null)
     }
 
-    const [media, setMedia] = useState([]);
+    const [media, setMedia] = useState(null);
     const [selectedMedia, setselectedMedia] = useState(null);
     const [selectedMediaType, setselectedMediaType] = useState(null);
     const [error, setError] = useState(null);
@@ -36,6 +37,31 @@ const UploadMedia = ({ navigation }) => {
     const [caption, setCaption] = useState(null);
     const [thumbnail, setThumnail] = useState(null);
     const [modalHeight, setModalHeight] = useState(null)
+    const [loading, setLoading] = useState(false)
+
+    const [user, setUser] = useState(null)
+    const data = route.params.data
+    console.log('user data is', data)
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const data = await getProfile();
+                setUser(data);
+                setMedia(data.media)
+            } catch (err) {
+                setError(err);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchProfile()
+    }, []);
+    useEffect(() => {
+        console.log("Media updated", media)
+    }, [media]);
 
     useEffect(() => {
         console.log("Use Effect")
@@ -50,7 +76,7 @@ const UploadMedia = ({ navigation }) => {
         return () => {
             keyboardDidShowListener.remove();
             keyboardDidHideListener.remove();
-          };
+        };
     }, [])
 
 
@@ -91,15 +117,6 @@ const UploadMedia = ({ navigation }) => {
             setThumnail(thumb)
             setselectedMedia(result.assets[0].uri)
             setselectedMediaType(result.assets[0].type)
-
-            // if (result.assets[0].type === 'video') {
-            //     let thumb = await generateThumbnail(ImageUrl)
-            //     console.log("Thumb image is ", thumb)
-            //     setMedia([...media, { media: result.assets[0].uri, type: result.assets[0].type, caption: "hello", thumbnail: thumb }]);
-            // }
-            // else {
-            //     setMedia([...media, { media: result.assets[0].uri, type: result.assets[0].type, caption: "", thumbnail: null }]);
-            // }
 
             console.log(result.assets[0].uri);
         } else {
@@ -158,6 +175,7 @@ const UploadMedia = ({ navigation }) => {
                 type: 'image/jpeg'
             });
         }
+        formdata.append("caption", caption);
         setShowIndicator(true)
 
         try {
@@ -189,11 +207,23 @@ const UploadMedia = ({ navigation }) => {
                         if (json.data.type === 'video') {
                             // let thumb = await generateThumbnail(selectedMedia)
                             // console.log("Thumb image is ", thumb)
-                            setMedia([...media, { media: json.data.url, type: json.data.type, caption: caption, thumbnail: json.data.thumb_url }]);
+                            if (media === null) {
+                                setMedia([{ url: json.data.url, type: json.data.type, caption: json.data.caption, thumbnail: json.data.thumb_url }]);
+                            }
+                            else {
+                                setMedia([...media, { url: json.data.url, type: json.data.type, caption: json.data.caption, thumbnail: json.data.thumb_url }]);
+                            }
+
                             setCaption('')
                         }
                         else {
-                            setMedia([...media, { media: json.data.url, type: json.data.type, caption: caption, thumbnail: null }]);
+                            if (media === null) {
+                                setMedia([{ url: json.data.url, type: json.data.type, caption: json.data.caption, thumbnail: null }]);
+                            }
+                            else {
+                                setMedia([...media, { url: json.data.url, type: json.data.type, caption: json.data.caption, thumbnail: null }]);
+                            }
+
                             setCaption('')
                         }
 
@@ -227,7 +257,7 @@ const UploadMedia = ({ navigation }) => {
                 })
                 if (result) {
                     setShowIndicator2(false)
-                    console.log('result is', result)
+                    // console.log('result is', result)
                     let json = await result.json()
                     if (json.status === true) {
                         setMedia(json.data)
@@ -248,6 +278,9 @@ const UploadMedia = ({ navigation }) => {
     }
 
     return (
+        // <View> 
+        //     <Text>This is media screeni</Text> 
+        // </View>
         <View style={{ display: 'flex', alignItems: 'center' }}>
             <View style={{ width: 370 / 430 * width }}>
                 <View style={{ marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
@@ -302,10 +335,11 @@ const UploadMedia = ({ navigation }) => {
 
                     </View>
                     <FlatList style={{ height: height * 0.53, width: width }} showsVerticalScrollIndicator={false}
-                        data={[{ type: 'Button' }, ...media]}
-                        renderItem={function (itemAtIndex) {
-                            let item = itemAtIndex.item;
-                            console.log("Showing ", item)
+                        data={media ? [{ type: 'Button' }, ...media] : [{ type: 'Button' }]}
+                        keyExtractor={(item, index) => `${item.type}-${index}`}
+                        renderItem={({ item, index }) => {
+                            // let item = itemAtIndex.item;
+                            // console.log("Showing ", item)
 
                             return (
                                 <View>
@@ -318,73 +352,75 @@ const UploadMedia = ({ navigation }) => {
                                                 </View>
                                             </TouchableOpacity>
                                         ) : (
-                                            <>
-                                                {
-                                                    showIndicator2 ? (
-                                                        <ActivityIndicator size={'large'} style={{ marginTop: 50, marginRight: 50 }}  color={colors.blueColor}/>
-                                                    ) : (
-                                                        <View style={{ width: width, backgroundColor: 'transparent', marginTop: 5 }}>
-                                                           
-                                                            <View style={{
-                                                                width: 370 / 430 * width, paddingVertical: 16 / 930 * height, paddingHorizontal: 16 / 430 * width,
-                                                                borderWidth: 1, borderColor: colors.greyText, borderRadius: 10, marginTop: 30 / 930 * height, gap: 10
-
-                                                            }}>
 
 
-                                                                {
-                                                                    item.caption && <Text style={{ fontSize: 16, fontFamily: customFonts.regular, color: 'black' }}>
-                                                                        {item.caption}
-                                                                    </Text>
-                                                                }
-                                                                <Image source={{ uri: item.type === "video" ? item.thumbnail : item.media }}
-                                                                    onLoadStart={() => { setLoadImage(true) }}
-                                                                    onLoadEnd={() => {
-                                                                        setLoadImage(false)
-                                                                    }}
-                                                                    placeholder={blurhash}
-                                                                    contentFit="cover"
-                                                                    transition={1000}
-                                                                    style={{ resizeMode: 'cover', width: 338 / 430 * width, height: 232 / 930 * height, borderRadius: 10, }}
-                                                                />
-                                                                {
-                                                                    loadImage && <ActivityIndicator size={'large'} style = {{position:'relative',top:-130}}  color={colors.blueColor}/>
-                                                                }
+                                            <View style={{ width: width, backgroundColor: 'transparent', marginTop: 5 }}>
 
-                                                            </View>
-                                                            <TouchableOpacity onPress={() => deleteMedia(item.media, item.type)}
-                                                                style={{
-                                                                    position: 'absolute', alignSelf: 'flex-start', right: 52, top: 25
-                                                                }}  >
-                                                                <Image source={require('../../assets/closeButton.png')}
-                                                                    style={{ height: 24 / 930 * height, width: 24 / 930 * height, resizeMode: 'contain', }}
-                                                                />
-                                                            </TouchableOpacity>
-                                                        </View>
-                                                    )
-                                                }
+                                                <View style={{
+                                                    width: 370 / 430 * width, paddingVertical: 16 / 930 * height, paddingHorizontal: 16 / 430 * width,
+                                                    borderWidth: 1, borderColor: colors.greyText, borderRadius: 10, marginTop: 30 / 930 * height, gap: 10
 
-                                            </>
+                                                }}>
 
 
+                                                    {
+                                                        item.caption && <Text style={{ fontSize: 16, fontFamily: customFonts.regular, color: 'black' }}>
+                                                            {item.caption}
+                                                        </Text>
+                                                    }
+                                                    <Image source={{ uri: item.type === "video" ? item.thumb_url : item.url }}
+                                                        onLoadStart={() => { setLoadImage(true) }}
+                                                        onLoadEnd={() => {
+                                                            setLoadImage(false)
+                                                        }}
+                                                        placeholder={blurhash}
+                                                        contentFit="cover"
+                                                        transition={1000}
+                                                        style={{ resizeMode: 'cover', width: 338 / 430 * width, height: 232 / 930 * height, borderRadius: 10, }}
+                                                    />
+                                                    {
+                                                        loadImage && <ActivityIndicator size={'small'} style={{ position: 'relative', top: -130 }} color={colors.blueColor} />
+                                                    }
+
+                                                </View>
+                                                <TouchableOpacity onPress={() => deleteMedia(item.url, item.type)}
+                                                    style={{
+                                                        position: 'absolute', alignSelf: 'flex-start', right: 52, top: 25
+                                                    }}  >
+                                                    <Image source={require('../../assets/closeButton.png')}
+                                                        style={{ height: 24 / 930 * height, width: 24 / 930 * height, resizeMode: 'contain', }}
+                                                    />
+                                                </TouchableOpacity>
+                                            </View>
+
+                                            // )
                                         )
                                     }
                                 </View>
                             )
                         }}
-
                     />
 
                     <View>
                         {
-                            error && <Text style = {[GlobalStyles.errorText,{textAlign:'center'}]}>{error}</Text>                       }
+                            error && <Text style={[GlobalStyles.errorText, { textAlign: 'center' }]}>{error}</Text>}
                         <TouchableOpacity onPress={() => {
-                            if(media.length > 0){
-                                navigation.navigate('AddZodiac')
-                            } else{
+                            if(data.from === 'profile'){
+                                navigation.goBack()
+                                return
+                            }
+
+                            if (media) {
+                                navigation.navigate('AddZodiac',{
+                                    data:{
+                                        user:'',
+                                        from:'Media'
+                                    }
+                                })
+                            } else {
                                 setError('Upload media')
                             }
-                            
+
                         }}
                             style={{
                                 marginTop: 10, backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width,
@@ -392,9 +428,18 @@ const UploadMedia = ({ navigation }) => {
                             }}
 
                         >
-                            <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>
-                                Next
-                            </Text>
+                            {
+                                data.from === 'profile' ? (
+                                    <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>
+                                        Save
+                                    </Text>
+                                ) : (
+                                    <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>
+                                        Next
+                                    </Text>
+                                )
+                            }
+
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -445,7 +490,7 @@ const UploadMedia = ({ navigation }) => {
                                     </View>
                                     {
                                         showIndicator ? (
-                                            <ActivityIndicator size={'large'}  color={colors.blueColor}/>
+                                            <ActivityIndicator size={'large'} color={colors.blueColor} />
                                         ) : (
                                             <TouchableOpacity
                                                 onPress={uploadMedia}
@@ -523,6 +568,14 @@ const UploadMedia = ({ navigation }) => {
                 </Modal>
 
             </View>
+            {showIndicator2 &&
+                <View style={{
+                    width: width, height: height, position: 'absolute',
+                    justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)'
+                }}>
+                    <ActivityIndicator size="large" color={colors.blueColor} />
+                </View>
+            }
         </View>
     )
 }

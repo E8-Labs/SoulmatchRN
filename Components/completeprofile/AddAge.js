@@ -1,35 +1,72 @@
-import React from 'react';
-import { TouchableOpacity, View, Image, Text, Dimensions } from 'react-native';
+import React, { useEffect } from 'react';
+import { TouchableOpacity, View, Image, Text, Dimensions, ActivityIndicator } from 'react-native';
 import { useState } from 'react';
 import WheelPickerExpo from 'react-native-wheel-picker-expo';
 import colors from '../../assets/colors/Colors';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
+import { UpdateProfile } from '../../Services/ProfileServices/UpdateProfile';
 
 const AddAge = ({ navigation, route }) => {
+
+    const data = route.params.data
+    console.log('user data', data)
+
     const { height, width } = Dimensions.get('window');
-    const [age, setAge] = useState('');
-    
+
+    const [age, setAge] = useState(1);
+    const [error, setError] = useState(null)
+    const [loading, setLoading] = useState(false)
+
+    useEffect(()=>{
+        if(data.from === 'Profile'){
+            setAge(data.user.age)
+        }
+    },[])
+
     //getting data from previous screen
-    const user = route.params.user;
-    user.age = age
-    console.log('user is', user);
+
 
     //code for picker
 
     // console.log('Focused age is', age)
     const CITIES = '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,61,62,63,64,65,66,67,68,69,70,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100'.split(',');
 
-    const handleNextClick = () => {
-        navigation.navigate('AddHeight', {
-            user: user
+    const handleNextClick = async () => {
+
+        setLoading(true)
+        let body = JSON.stringify({
+            age: age
         })
+
+        try {
+            await UpdateProfile(body);
+            if(data.from === 'Profile'){
+                navigation.goBack()
+            }else{
+                navigation.navigate('AddHeight',{
+                    data:{
+                        user:'',
+                        from:'Agg'
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            setError('Failed to update profile.');
+        } finally {
+            setLoading(false);
+        }
+        // setLoading(false)
+        // navigation.navigate('AddHeight', {
+        //     user: user
+        // })
     }
     return (
         <View style={{ display: 'flex', alignItems: 'center' }}>
             <View style={{ width: 370 / 430 * width }}>
                 <View style={{ marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
                     <TouchableOpacity onPress={() => {
-                       navigation.goBack()
+                        navigation.goBack()
                     }}>
                         <View style={GlobalStyles.backBtn}>
                             <Image source={require('../../assets/images/backArrow.png')}
@@ -71,18 +108,33 @@ const AddAge = ({ navigation, route }) => {
                             width={50 / width * 430}
                             // backgroundColor='#000000'
                             selectedStyle={{ borderWidth: 2, borderColor: colors.blueColor, width: "4", borderRadius: 50 }}
-                            initialSelectedIndex={4}
+                            initialSelectedIndex={age-1}
                             items={CITIES.map(name => ({ label: name, value: '' }))}
                             onChange={({ item }) => setAge(item.label)} />
                     </View>
                 </View>
-                <TouchableOpacity onPress={handleNextClick}
-                    style={{
-                        backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10, marginTop: 70 / 930 * height
-                    }}>
-                    <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>Next</Text>
-                </TouchableOpacity>
+                {
+                    loading ? (
+                        <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop: 70 / 930 * height }} />
+                    ) : (
+
+                        <TouchableOpacity onPress={handleNextClick}
+                            style={{
+                                backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width,
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10, marginTop: 70 / 930 * height
+                            }}>
+                            {
+                                data.from === 'Profile' ? (
+                                    <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>Save</Text>
+                                ) : (
+                                    <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>Next</Text>
+                                )
+                            }
+
+                        </TouchableOpacity>
+                    )
+                }
+
             </View>
         </View>
     )

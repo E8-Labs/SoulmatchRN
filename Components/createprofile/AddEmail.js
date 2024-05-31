@@ -164,7 +164,7 @@ const AddEmail = ({ navigation, route }) => {
                 <View style={{ display: 'flex', height: height * 0.58, flexDirection: 'column', justifyContent: 'space-between' }}>
                     <View>
                         <View>
-                            <TextInput placeholder='Saraahdie@gmail.com' keyboardType='email-address' onFocus={handleEmailfocus}
+                            <TextInput placeholder='Enter email' keyboardType='email-address' onFocus={handleEmailfocus}
                                 onChangeText={handlesaveemail}
                                 value={saveemail}
                                 autoCapitalize='none'

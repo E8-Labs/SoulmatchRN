@@ -1,24 +1,52 @@
-import React, { useState } from 'react'
-import { Dimensions, Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback, View, Text, Image, Platform, TouchableOpacity, TextInput } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Dimensions, Keyboard, TouchableWithoutFeedback, View, Text, Image, ActivityIndicator, TouchableOpacity, TextInput } from 'react-native'
 import customFonts from '../../assets/fonts/Fonts'
 import GlobalStyles from '../../assets/styles/GlobalStyles';
-
+import colors from '../../assets/colors/Colors';
+import { UpdateProfile } from '../../Services/ProfileServices/UpdateProfile';
 const AddSchool = ({ navigation, route }) => {
 
     const { height, width } = Dimensions.get('window')
 
+    const data = route.params.data
+
     const [error, setError] = useState(null)
     const [school, setSchool] = useState(null)
+    const [loading, setLoading] = useState(false)
 
-    //Getting Selected gender from previous screen
-    const user = route.params.user
-    user.school = school
-    console.log('user is', user)
+    useEffect(() => {
+        if (data.from === 'Profile') {
+            setSchool(data.user.school)
+        }
+    }, [])
 
-    const handleNext = () => {
-        navigation.navigate("AddJobDetails", {
-            user: user
+    const handleNext = async () => {
+        setLoading(true)
+        let body = JSON.stringify({
+            school: school
         })
+
+        try {
+            await UpdateProfile(body);
+            if (data.from === 'Profile') {
+                navigation.goBack()
+            } else {
+                navigation.navigate('AddJobDetails',{
+                     data:{
+                            user:'',
+                            from:'School'
+                        }
+                });
+            }
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            setError('Failed to update profile.');
+        } finally {
+            setLoading(false);
+        }
+        // navigation.navigate("AddJobDetails", {
+        //     user: user
+        // })
     }
 
     return (
@@ -70,8 +98,8 @@ const AddSchool = ({ navigation, route }) => {
                                 School name
                             </Text>
                             <TextInput
-                                autoCorrect = {false}
-                                spellCheck = {false}
+                                autoCorrect={false}
+                                spellCheck={false}
                                 autoComplete='off'
                                 placeholder='Enter your school name'
                                 style={{
@@ -97,13 +125,26 @@ const AddSchool = ({ navigation, route }) => {
                             {
                                 error && <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, color: 'red', textAlign: 'center' }}>{error}</Text>
                             }
-                            <TouchableOpacity
-                                onPress={handleNext}
-                                style={{ backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
-                                <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>
-                                    Next
-                                </Text>
-                            </TouchableOpacity>
+                            {
+                                loading ? (
+                                    <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop: 70 / 930 * height }} />
+                                ) : (
+                                    <TouchableOpacity onPress={handleNext}
+                                        style={{
+                                            backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width,
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10, marginTop: 70 / 930 * height
+                                        }}>
+                                        {
+                                            data.from === 'Profile' ? (
+                                                <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>Save</Text>
+                                            ) : (
+                                                <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>Next</Text>
+                                            )
+                                        }
+
+                                    </TouchableOpacity>
+                                )
+                            }
                         </View>
                     </View>
                 </View>

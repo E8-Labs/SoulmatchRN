@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react'
-import { TouchableOpacity, View, Image, Text, Dimensions, ActivityIndicator,Settings } from 'react-native';
+import { TouchableOpacity, View, Image, Text, Dimensions, ActivityIndicator, Settings } from 'react-native';
 import { useState } from 'react';
 import WheelPickerExpo from 'react-native-wheel-picker-expo';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
+import { UpdateProfile } from '../../Services/ProfileServices/UpdateProfile';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 
-const GetInterest = ({ navigation, route }) => {
+const GetInterest = ({ navigation }) => {
 
 
     const { height, width } = Dimensions.get('window');
@@ -18,13 +19,13 @@ const GetInterest = ({ navigation, route }) => {
     const [SelectedGender, setSelectedGender] = useState(null)
     const [error, setError] = useState(null)
     const [showIndicator, setShowIndicator] = useState(false)
+    const [loading, setLoading] = useState(false)
+    // const user = route.params.user
+    // user.interestedGender = SelectedGender
+    // user.minAge = MinAge
+    // user.maxAge = MaxAge
 
-    const user = route.params.user
-    user.interestedGender = SelectedGender
-    user.minAge = MinAge
-    user.maxAge = MaxAge
-
-    console.log('user data from prev screen is', user)
+    // console.log('user data from prev screen is', user)
 
 
 
@@ -45,67 +46,38 @@ const GetInterest = ({ navigation, route }) => {
             setError(null)
             setSelectedGender('both')
         }
-    }, [SelectMen,SelectWomen,SelectBoth])
+    }, [SelectMen, SelectWomen, SelectBoth])
 
-    const handleNextClick = async () => {
+    const handleNext = async () => {
 
         if (MinAge > MaxAge) {
             setError("Minimum age must be less then maximum age")
             return
-        } else if(!SelectedGender){
+        } else if (!SelectedGender) {
             setError("Select interested gender")
             return
         }
-        setShowIndicator(true)
+        setLoading(true)
         let body = JSON.stringify({
-            zodiac: user.Zodiac,
-            age: user.age,
-            gender: user.gender,
-            school: user.school,
-            job_title: user.jobTitle,
-            company: user.company,
-            height_feet: user.heightFeet,
-            height_inches: user.heightInch,
-            interested_max_age: MaxAge,
             interested_min_age: MinAge,
-            interested_gender: SelectedGender
-
+            interested_max_age: MaxAge,
+            interested_gender: SelectedGender,
         })
-        console.log('body is', body)
-        // return
 
-        const data = Settings.get("USER")
         try {
-            if (data) {
-                let d = JSON.parse(data)
-                console.log('user data is', d)
-                const result = await fetch(ApisPath.ApiUpdateProfile, {
-                    method: 'post',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + d.token
-                    },
-                    body: body
-                })
-                if (result) {
-                    setShowIndicator(false)
-                    let json = await result.json();
-                    if (json.status === true) {
+            await UpdateProfile(body);
 
-                        console.log('user profile', json.data)
-                        d.user = json.data
-                        Settings.set({
-                            USER: JSON.stringify(d)
-                        })
-                        navigation.navigate('EnhancmentQuestions')
-                    }
-                    else {
-                        console.log('json message', json)
-                    }
+            navigation.navigate('EnhancmentQuestions',{
+                data:{
+                    user:'',
+                    from:'Interest'
                 }
-            }
+            });
         } catch (error) {
-            console.log('error finding in updating profile', error)
+            console.error('Error updating profile:', error);
+            setError('Failed to update profile.');
+        } finally {
+            setLoading(false);
         }
         //  navigation.navigation("EnhancmentQuestions")
     }
@@ -222,7 +194,7 @@ const GetInterest = ({ navigation, route }) => {
                                     onChange={({ item }) => {
                                         setMinAge(item.label)
                                         setError(null)
-                                        }} />
+                                    }} />
                             </View>
                         </View>
                         <View style={{ alignItems: 'center', height: 270 / 930 * height, }}>
@@ -239,26 +211,26 @@ const GetInterest = ({ navigation, route }) => {
                                     selectedStyle={{ borderWidth: 2, width: "4", borderRadius: 50, borderColor: colors.blueColor }}
                                     initialSelectedIndex={49}
                                     items={SelectMaxAge.map(name => ({ label: name, value: '' }))}
-                                    onChange={({ item }) =>{
-                                         setMaxAge(item.label)
+                                    onChange={({ item }) => {
+                                        setMaxAge(item.label)
                                         setError(null)
-                                         }} />
+                                    }} />
                             </View>
                         </View>
                     </View>
                 </View>
                 {
-                    error ? <Text style = {[GlobalStyles.errorText,{textAlign:'center',marginBottom:20}]}>{error}</Text> : ''
+                    error ? <Text style={[GlobalStyles.errorText, { textAlign: 'center', marginBottom: 20 }]}>{error}</Text> : ''
                 }
 
                 {
-                    showIndicator ? (
-                        <ActivityIndicator size={'large'}  color={colors.blueColor} />
+                    loading ? (
+                        <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop: 0 / 930 * height }} />
                     ) : (
-                        <TouchableOpacity onPress={handleNextClick}
+                        <TouchableOpacity onPress={handleNext}
                             style={{
                                 backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width,
-                                display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10, marginTop: 0 / 930 * height
                             }}>
                             <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>Next</Text>
                         </TouchableOpacity>

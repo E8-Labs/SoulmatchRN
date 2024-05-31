@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
-import { View, Text, Image, TouchableOpacity, Dimensions } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { View, Text, Image, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native'
 import customFonts from '../../assets/fonts/Fonts'
-import colors from '../../assets/colors/Colors'
 import GlobalStyles from '../../assets/styles/GlobalStyles';
-
+import colors from '../../assets/colors/Colors';
+import { UpdateProfile } from '../../Services/ProfileServices/UpdateProfile';
 
 const { height, width } = Dimensions.get('window')
 
@@ -20,10 +20,20 @@ const AddGender = ({ navigation, route }) => {
 
     const [error, setError] = useState(null)
     const [selected, setSelected] = useState(null)
+    const [loading, setLoading] = useState(false)
 
-    const user = route.params.user
-    user.gender = selected
-    console.log('user data from prev screen', user)
+    const data = route.params.data
+
+    useEffect(() => {
+        if (data.from === 'Profile') {
+            setSelected(data.user.gender)
+        }
+    }, [])
+
+
+    // const user = route.params.user
+    // user.gender = selected
+    // console.log('user data from prev screen', user)
 
 
     const genders = [
@@ -47,13 +57,37 @@ const AddGender = ({ navigation, route }) => {
         },
     ]
 
-    const handleNextClick = () => {
+    const handleNextClick = async () => {
         if (!selected) {
             setError("Select any gender")
         } else {
-            navigation.navigate('AddSchool', {
-                user: user
+
+            setLoading(true)
+            let body = JSON.stringify({
+                gender: selected
             })
+
+            try {
+                await UpdateProfile(body);
+                if(data.from === 'Profile'){
+                    navigation.goBack()
+                }else{
+                    navigation.navigate('AddSchool',{
+                        data:{
+                            user:'',
+                            from:'Gender'
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                setError('Failed to update profile.');
+            } finally {
+                setLoading(false);
+            }
+            // navigation.navigate('AddSchool', {
+            //     user: user
+            // })
         }
     }
 
@@ -126,13 +160,26 @@ const AddGender = ({ navigation, route }) => {
                         {
                             error && <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, color: 'red', textAlign: 'center' }}>{error}</Text>
                         }
-                        <TouchableOpacity
-                            onPress={handleNextClick}
-                            style={{ backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
-                            <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>
-                                Next
-                            </Text>
-                        </TouchableOpacity>
+                        {
+                            loading ? (
+                                <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop: 70 / 930 * height }} />
+                            ) : (
+                                <TouchableOpacity onPress={handleNextClick}
+                                    style={{
+                                        backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width,
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10, marginTop: 70 / 930 * height
+                                    }}>
+                                    {
+                                        data.from === 'Profile' ? (
+                                            <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>Save</Text>
+                                        ) : (
+                                            <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>Next</Text>
+                                        )
+                                    }
+
+                                </TouchableOpacity>
+                            )
+                        }
                     </View>
                 </View>
             </View>

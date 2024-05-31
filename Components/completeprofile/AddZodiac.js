@@ -1,106 +1,146 @@
-import React, { useState } from 'react'
-import { Text, View, TouchableOpacity, Image, Dimensions, ScrollView } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Text, View, TouchableOpacity, Image, Dimensions, ScrollView, ActivityIndicator } from 'react-native'
 import { enableScreens } from 'react-native-screens';
 import customFonts from '../../assets/fonts/Fonts';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
+import { UpdateProfile } from '../../Services/ProfileServices/UpdateProfile';
+import colors from '../../assets/colors/Colors';
 
-const AddZodiac = ({ navigation }) => {
+const AddZodiac = ({ navigation, route }) => {
     const { height, width } = Dimensions.get('window');
-    const [error,setError] = useState(null)
+    const data = route.params.data
+
+
+    console.log('user data ', data)
+
+
+    const [error, setError] = useState(null)
+    const [loading, setLoading] = useState(false)
+    const [selectedZodiac, setSelectedZodiac] = useState(null)
+
+    useEffect(() => {
+        if (data.from === 'Profile') {
+            console.log('from profile screen')
+            setSelectedZodiac(data.user.zodiac)
+        }
+    }, [])
+
     const Users = [
         {
             id: 1,
-            name:"Aries",
+            name: "Aries",
             zodiacicon: require('../../assets/Zodiac1.png'),
             selectedZodiacicon: require('../../assets/zodiaciconsS1.png')
         },
         {
             id: 2,
-            name:"Taurus",
+            name: "Taurus",
             zodiacicon: require('../../assets/zodiacicon2.png'),
             selectedZodiacicon: require('../../assets/zodiaciconsS2.png')
         },
         {
             id: 3,
-            name:"Gemini",
+            name: "Gemini",
             zodiacicon: require('../../assets/zodiacicon3.png'),
             selectedZodiacicon: require('../../assets/zodiaciconsS3.png')
         },
         {
             id: 4,
-            name:"Cancer",
+            name: "Cancer",
             zodiacicon: require('../../assets/zodiacicon4.png'),
             selectedZodiacicon: require('../../assets/zodiaciconsS4.png')
         },
         {
             id: 5,
-            name:"Leo",
+            name: "Leo",
             zodiacicon: require('../../assets/Zodiac5.png'),
             selectedZodiacicon: require('../../assets/zodiacicon5.png')
         },
         {
             id: 6,
-            name:"Virgo",
+            name: "Virgo",
             zodiacicon: require('../../assets/zodiacicon6.png'),
             selectedZodiacicon: require('../../assets/zodiaciconsS6.png')
         },
         {
             id: 7,
-            name:"Libra",
+            name: "Libra",
             zodiacicon: require('../../assets/zodiacicon7.png'),
             selectedZodiacicon: require('../../assets/zodiaciconsS7.png')
         },
         {
             id: 8,
-            name:"Scorpio",
+            name: "Scorpio",
             zodiacicon: require('../../assets/zodiacicon8.png'),
             selectedZodiacicon: require('../../assets/zodiaciconsS8.png')
         },
         {
             id: 9,
-            name:"Sagittarius",
+            name: "Sagittarius",
             zodiacicon: require('../../assets/zodiacicon9.png'),
             selectedZodiacicon: require('../../assets/zodiaciconsS9.png')
         },
         {
             id: 10,
-            name:"Capricorn",
+            name: "Capricorn",
             zodiacicon: require('../../assets/Zodiac10.png'),
             selectedZodiacicon: require('../../assets/zodiaciconsS10.png')
         },
         {
             id: 11,
-            name:"Aquarius",
+            name: "Aquarius",
             zodiacicon: require('../../assets/Zodiac11.png'),
             selectedZodiacicon: require('../../assets/zodiaciconsS11.png')
         },
         {
             id: 12,
-            name:"Pisces",
+            name: "Pisces",
             zodiacicon: require('../../assets/Zodiac12.png'),
             selectedZodiacicon: require('../../assets/zodiaciconsS12.png')
         },
-        
+
     ]
 
     //code to check the selected zodiac icon
-    const [selectedZodiac, setSelectedZodiac] = useState(null)
+
 
     const handleSelectZodiac = (item) => {
         setError(null)
         setSelectedZodiac(item === selectedZodiac ? null : item);
     };
 
-    const handleContinueclick = () => {
+
+    const handleContinueclick = async () => {
         // console.log('Selected zodiac by user is', selectedZodiac)
         if (selectedZodiac !== null) {
             console.log('User Selected zodiac', selectedZodiac);
-            navigation.navigate('AddAge', {
-                user: {
-                    Zodiac: selectedZodiac
+
+            setLoading(true)
+            let body = JSON.stringify({
+                zodiac: selectedZodiac
+            })
+
+            try {
+                await UpdateProfile(body);
+                if (data.from === 'Profile') {
+                    navigation.goBack()
+                } else {
+                    navigation.navigate('AddAge',{
+                        data:{
+                            user:'',
+                            from:'Zodiac'
+                        }
+                    });
                 }
-            });
-        } else{
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                setError('Failed to update profile.');
+            } finally {
+                setLoading(false);
+            }
+            setLoading(false)
+
+        } else {
             setError('Select any Zodiac')
         }
     }
@@ -147,7 +187,7 @@ const AddZodiac = ({ navigation }) => {
 
                 {/* Code for zodiac icons grid list */}
 
-                <ScrollView style={{ height:height*0.55, marginTop: 20 }} showsVerticalScrollIndicator={false} >
+                <ScrollView style={{ height: height * 0.55, marginTop: 20 }} showsVerticalScrollIndicator={false} >
                     <View style={{ flexDirection: 'row', flexWrap: 'wrap', display: 'flex', justifyContent: 'space-between' }}>
                         {Users.map((item, index) => (
                             <View key={item.id} style={{ height: 113 / 930 * height, width: 113 / 430 * width, marginTop: 20 / 930 * height }}>
@@ -159,17 +199,34 @@ const AddZodiac = ({ navigation }) => {
                     </View>
                 </ScrollView>
 
-                <View style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 10 / 930 * height,width:width-50 }}>
+                <View style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 10 / 930 * height, width: width - 50 }}>
                     {
-                        error&&<Text style = {{fontSize:16,fontFamily:customFonts.meduim,color:'red',textAlign:'center'}}>{error}</Text>
+                        error && <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, color: 'red', textAlign: 'center' }}>{error}</Text>
                     }
-                    <TouchableOpacity
-                        onPress={handleContinueclick}
-                        style={{ marginTop: 10 / 930 * height, backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
-                        <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>
-                            Next
-                        </Text>
-                    </TouchableOpacity>
+                    {
+                        loading ? (
+                            <ActivityIndicator size={'large'} color={colors.blueColor} />
+                        ) : (
+                            <TouchableOpacity
+                                onPress={handleContinueclick}
+                                style={{ marginTop: 10 / 930 * height, backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
+                                {
+                                    data.from === 'Profile' ? (
+                                        <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>
+                                            Save
+                                        </Text>
+                                    ) : (
+                                        <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>
+                                            Next
+                                        </Text>
+                                    )
+                                }
+
+
+                            </TouchableOpacity>
+                        )
+                    }
+
                 </View>
 
             </View>

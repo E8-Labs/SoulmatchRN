@@ -3,6 +3,7 @@ import { View, Text, Settings, TouchableOpacity, Dimensions, SafeAreaView, Style
 import colors from '../../assets/colors/Colors';
 import { Image } from 'expo-image'
 import ApisPath from '../../lib/ApisPath/ApisPath';
+import { useFocusEffect } from '@react-navigation/native';
 
 const { height, width } = Dimensions.get('window');
 const placholder = require('../../assets/images/imagePlaceholder.webp')
@@ -12,6 +13,13 @@ export default function ProfileMain(props) {
 
   const [user, setUser] = useState(null)
   const [loadImage, setLoadImage] = useState(false)
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("Use Focus Effect")
+      getProfile()
+    }, [])
+  );
   useEffect(() => {
     getProfile()
   }, [])
@@ -90,14 +98,13 @@ export default function ProfileMain(props) {
           {user && user.first_name} {user && user.last_name}
         </Text>
 
-        <View style = {{alignItems:'center',height:height*0.61, marginTop: 20 / 930 * height, }}>
+        <View style={{ alignItems: 'center', height: height * 0.61, marginTop: 20 / 930 * height, }}>
 
-          <ScrollView style={{}} showsVerticalScrollIndicator = {false}>
+          <ScrollView style={{}} showsVerticalScrollIndicator={false}>
             <View style={{ flexDirection: 'column', gap: 10, alignItems: 'center', }}>
-              <TouchableOpacity 
-                onPress={()=>{
-                  props.navigation.navigate('MyAccount')
-                }}
+              <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate('MyAccount')}}
               >
                 <View style={styles.mainView}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
@@ -132,7 +139,16 @@ export default function ProfileMain(props) {
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate('EnhancmentQuestions', {
+                    data: {
+                      user: user
+                    }
+
+                  })
+                }}
+              >
                 <View style={styles.mainView}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                     <Image source={require('../../assets/images/question.png')}
@@ -199,7 +215,7 @@ export default function ProfileMain(props) {
 
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={logoutUser}
               >
                 <View style={styles.mainView}>
@@ -217,7 +233,7 @@ export default function ProfileMain(props) {
 
                 </View>
               </TouchableOpacity>
-              <View style={{height:40}}></View>
+              <View style={{ height: 40 }}></View>
             </View>
           </ScrollView>
         </View>

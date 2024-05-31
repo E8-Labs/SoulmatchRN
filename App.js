@@ -66,6 +66,9 @@ import AddHeight from './Components/completeprofile/AddHeight';
 import CongratulationsScreen from './Components/completeprofile/CongratulationsScreen';
 import SelectedProfile from './Screens/DiscoverFlow/SelectedProfile';
 import MyAccount from './Screens/ProfileFlow/MyAccount';
+import AccountDetails from './Screens/ProfileFlow/AccountDetails';
+import ChangePassword from './Screens/ProfileFlow/ChangePassword';
+import ChangeIntroVideo from './Screens/ProfileFlow/ChangeIntroVideo';
 
 // import { NavigationContainer } from "@react-navigation/native";
 // import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -161,6 +164,9 @@ export default function App() {
           <Stack.Screen name='PackagePlan' component={PackagePlan} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='CongratulationsScreen' component={CongratulationsScreen} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='MyAccount' component={MyAccount} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='AccountDetails' component={AccountDetails} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='ChangePassword' component={ChangePassword} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='ChangeIntroVideo' component={ChangeIntroVideo} options={{ gestureEnabled: false, headerShown: false }} />
 
 
 

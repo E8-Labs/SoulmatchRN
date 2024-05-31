@@ -32,7 +32,7 @@ export default function LoginUser(props) {
 
     GoogleSignin.configure({
         iosClientId: '532960006063-0lrmd4ktecke70t7ncjr2v7vapt230h6.apps.googleusercontent.com',
-         // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+        // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
     });
 
     const getBtnColor = () => {
@@ -76,20 +76,102 @@ export default function LoginUser(props) {
                     if (json.message === 'Logged in') {
                         let data = json.data.user
 
+
                         if (data.profile_completion === 1) {
                             console.log('profile_completion_comment', data.profile_completion_comment)
                             props.navigation.navigate('UploadIntroVideo')
                         }
                         else if (data.profile_completion === 2) {
                             console.log('profile_completion_comment', data.profile_completion_comment)
-                            props.navigation.navigate('UploadMedia')
+                            props.navigation.navigate('UploadMedia', {
+                                data: {
+                                    from: 'Login'
+                                }
+                            })
                         }
                         else if (data.profile_completion === 3) {
 
                             //here user will add zodiac,age,height,school,job and interest
 
                             console.log('profile_completion_comment', data.profile_completion_comment)
-                            props.navigation.navigate('AddZodiac')
+                            props.navigation.navigate('AddZodiac', {
+                                data: {
+                                    from: 'Login',
+                                    user: ''
+                                }
+                            })
+
+                        } else if (data.profile_completion === 4) {
+
+                            //here user will add zodiac,age,height,school,job and interest
+
+                            console.log('profile_completion_comment', data.profile_completion_comment)
+                            props.navigation.navigate('AddAge', {
+                                data: {
+                                    from: 'Login',
+                                    user: ''
+                                }
+                            })
+
+                        } else if (data.profile_completion === 5) {
+
+                            //here user will add zodiac,age,height,school,job and interest
+
+                            console.log('profile_completion_comment', data.profile_completion_comment)
+                            props.navigation.navigate('AddHeight', {
+                                data: {
+                                    from: 'Login',
+                                    user: ''
+                                }
+                            })
+
+                        } else if (data.profile_completion === 6) {
+
+                            //here user will add zodiac,age,height,school,job and interest
+
+                            console.log('profile_completion_comment', data.profile_completion_comment)
+                            props.navigation.navigate('AddGender', {
+                                data: {
+                                    from: 'Login',
+                                    user: ''
+                                }
+                            })
+
+                        } else if (data.profile_completion === 7) {
+
+                            //here user will add zodiac,age,height,school,job and interest
+
+                            console.log('profile_completion_comment', data.profile_completion_comment)
+                            props.navigation.navigate('AddSchool', {
+                                data: {
+                                    from: 'Splash',
+                                    user: ''
+                                }
+                            })
+
+                        } else if (data.profile_completion === 8) {
+
+                            //here user will add zodiac,age,height,school,job and interest
+
+                            console.log('profile_completion_comment', data.profile_completion_comment)
+                            props.navigation.navigate('AddJobDetails', {
+                                data: {
+                                    from: 'Splash',
+                                    user: ''
+                                }
+                            })
+
+                        } else if (data.profile_completion === 9) {
+
+                            //here user will add zodiac,age,height,school,job and interest
+
+                            console.log('profile_completion_comment', data.profile_completion_comment)
+                            props.navigation.navigate('GetInterest', {
+                                data: {
+                                    from: 'Login',
+                                    user: ''
+                                }
+                            })
 
                         } else if (data.profile_completion === 10) {
 
@@ -106,7 +188,6 @@ export default function LoginUser(props) {
                             console.log('profile_completion_comment', data.profile_completion_comment)
                             props.navigation.navigate("TabBarContainer")
                         }
-
                     } else if (json.message === 'User registered') {
                         props.navigation.navigate("UploadIntroVideo")
                     }
@@ -124,9 +205,9 @@ export default function LoginUser(props) {
         }
     }
 
-    const appleLogin = async() =>{
+    const appleLogin = async () => {
         try {
-            
+
             let credential = await AppleAuthentication.signInAsync({
                 requestedScopes: [
                     AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
@@ -201,7 +282,7 @@ export default function LoginUser(props) {
         try {
             // await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
-            console.log("user info from google",userInfo)
+            console.log("user info from google", userInfo)
 
             socialLogin({ first_name: userInfo.user.name, email: userInfo.user.email, provider_name: "google", provider_id: userInfo.user.id, profile_image: userInfo.user.photo, })
 
@@ -316,7 +397,7 @@ export default function LoginUser(props) {
                                         Welcome back!
                                     </Text>
 
-                                    <Text style={[GlobalStyles.splashMeduimText, { marginTop: 5 }]}>
+                                    <Text style={[GlobalStyles.LoginMeduimText, { marginTop: 5 }]}>
                                         Please enter your details to sign in.
                                     </Text>
 
@@ -380,7 +461,7 @@ export default function LoginUser(props) {
                                                     <Image source={selected ? selectedImage : unselectedImage}
                                                         style={{ height: 20, width: 20, resizeMode: 'contain' }}
                                                     />
-                                                    <Text style={[GlobalStyles.splashMeduimText, { paddingLeft: 10 }]}>Remember me</Text>
+                                                    <Text style={[GlobalStyles.LoginMeduimText, { paddingLeft: 10 }]}>Remember me</Text>
                                                 </View>
                                             </TouchableOpacity>
                                         </View>
@@ -411,7 +492,7 @@ export default function LoginUser(props) {
 
                                 </View>
                                 <View style={{ alignItems: 'center', flexDirection: 'row', gap: 5, marginTop: 35 / 924 * height }}>
-                                    <Text style={GlobalStyles.splashMeduimText}>Don't have an account?</Text>
+                                    <Text style={GlobalStyles.LoginMeduimText}>Don't have an account?</Text>
                                     <TouchableOpacity style={{}}
                                         onPress={() => props.navigation.navigate("UploadImage")}
                                     >
@@ -471,20 +552,20 @@ export default function LoginUser(props) {
                             <View style={{ flexDirection: 'row', width: width - 45, alignSelf: 'center', alignItems: 'center', justifyContent: 'center' }}>
                                 <Text style={[{ fontSize: 12, }]}>By signing up you agree to our </Text>
                                 <TouchableOpacity>
-                                    <Text style={[GlobalStyles.splashMeduimText, { fontSize: 12, color: '#000', fontWeight: '500', fontFamily: customFonts.meduim }]}>
+                                    <Text style={[GlobalStyles.LoginMeduimText, { fontSize: 12, color: '#000', fontWeight: '500', fontFamily: customFonts.meduim }]}>
                                         Terms
                                     </Text>
                                 </TouchableOpacity>
-                                <Text style={[GlobalStyles.splashMeduimText, { fontSize: 12 }]}> and </Text>
+                                <Text style={[GlobalStyles.LoginMeduimText, { fontSize: 12 }]}> and </Text>
                                 <TouchableOpacity>
-                                    <Text style={[GlobalStyles.splashMeduimText, { fontSize: 12, color: '#000', fontWeight: '500', fontFamily: customFonts.meduim }]}>
+                                    <Text style={[GlobalStyles.LoginMeduimText, { fontSize: 12, color: '#000', fontWeight: '500', fontFamily: customFonts.meduim }]}>
                                         Conditions
                                     </Text>
                                 </TouchableOpacity>
 
                             </View>
                             <TouchableOpacity>
-                                <Text style={[GlobalStyles.splashMeduimText, { fontSize: 12, color: '#000', fontWeight: '500', fontFamily: customFonts.meduim }]}>
+                                <Text style={[GlobalStyles.LoginMeduimText, { fontSize: 12, color: '#000', fontWeight: '500', fontFamily: customFonts.meduim }]}>
                                     and Privacy Policy
                                 </Text>
                             </TouchableOpacity>

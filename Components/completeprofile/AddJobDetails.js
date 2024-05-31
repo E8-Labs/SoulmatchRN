@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     View, TouchableOpacity, TouchableWithoutFeedback, Image, Text, KeyboardAvoidingView, Platform, Keyboard, Dimensions
     , TextInput,
@@ -9,21 +9,34 @@ import customFonts from '../../assets/fonts/Fonts';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
+import { UpdateProfile } from '../../Services/ProfileServices/UpdateProfile';
+
 const { height, width } = Dimensions.get('window');
 
 
-const AddJobDetails = ({ navigation, route }) => {
+const AddJobDetails = ({ navigation,route }) => {
+
+    const data = route.params.data
+
     const [jobTitle, setJobTitle] = useState(null);
     const [company, setCompany] = useState(null)
     const [error, setError] = useState(null)
     const [showIndicator, setShowIndicator] = useState(false)
+    const [loading, setLoading] = useState(false)
 
 
-    const user = route.params.user
-    user.jobTitle = jobTitle,
-    user.company = company
+    useEffect(()=>{
+        if(data.from === 'Profile'){
+            setCompany(data.user.company)
+            setJobTitle(data.user.job_title)
+        }
+    },[])
 
-    console.log('user data from prev screens', user)
+    // const user = route.params.user
+    // user.jobTitle = jobTitle,
+    // user.company = company
+
+    // console.log('user data from prev screens', user)
 
     const handleNext = async () => {
         // setShowIndicator(true)
@@ -32,51 +45,29 @@ const AddJobDetails = ({ navigation, route }) => {
         } else if (!company) {
             setError("Select your company")
         } else {
-            navigation.navigate('GetInterest',{
-                user:user
+
+            setLoading(true)
+            let body = JSON.stringify({
+                job_title:jobTitle,
+                company:company
             })
+
+            try {
+                await UpdateProfile(body);
+                if(data.from === 'Profile'){
+                    navigation.goBack()
+                } else{
+                navigation.navigate('GetInterest');
+                }
+
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                setError('Failed to update profile.');
+            } finally {
+                setLoading(false);
+            }
         }
 
-        //     let body = JSON.stringify({
-        //         zodiac: user.Zodiac,
-        //         age: user.age,
-        //         gender: user.gender,
-        //         school: user.school,
-        //         job_title:jobTitle,
-        //         company: company
-
-        //     })
-
-        //     const data = Settings.get("USER")
-        //     try {
-        //         if (data) {
-        //             let d = JSON.parse(data)
-        //             console.log('user data is', d)
-        //             const result = await fetch(ApisPath.ApiUpdateProfile, {
-        //                 method: 'post',
-        //                 headers: {
-        //                     'Content-Type': 'application/json',
-        //                     'Authorization': 'Bearer ' + d.token
-        //                 },
-        //                 body: body
-        //             })
-        //             if (result) {
-        //                 setShowIndicator(false)
-        //                 let json =await result.json();
-        //                 if (json.status === true) {
-
-        //                     console.log('user profile', json.data)
-        //                     navigation.navigate('GetInterest')
-        //                 }
-        //                 else {
-        //                     console.log('json message', json)
-        //                 }
-        //             }
-        //         }
-        //     } catch (error) {
-        //         console.log('error finding in updating profile', error)
-        //     }
-        // }
 
     }
 
@@ -88,7 +79,7 @@ const AddJobDetails = ({ navigation, route }) => {
             <View style={{ display: 'flex', alignItems: 'center' }}>
                 <View style={{ width: 370 / 430 * width }}>
                     <View style={{ marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => {
+                        <TouchableOpacity onPress={() => {
                             navigation.goBack()
                         }}>
                             <View style={GlobalStyles.backBtn}>
@@ -129,18 +120,19 @@ const AddJobDetails = ({ navigation, route }) => {
                             <Text style={{ fontWeight: '500', fontSize: 16, color: '#333333' }}>
                                 Job title
                             </Text>
-                            <TextInput placeholder='Enter your job title' autoCorrect = {false} autoComplete='none'                                style={{
-                                    width: 370 / 430 * width,
-                                    height: 52,
-                                    borderWidth: 1,
-                                    borderColor: '#CCCCCC',
-                                    borderRadius: 10,
-                                    padding: 17,
-                                    // marginBottom: 10,
-                                    marginTop: 10 / 930 * height,
-                                    // color: '#999999',
-                                    fontWeight: '500',
-                                }}
+                            <TextInput placeholder='Enter your job title' autoCorrect={false} autoComplete='none' style={{
+                                width: 370 / 430 * width,
+                                height: 52,
+                                borderWidth: 1,
+                                borderColor: '#CCCCCC',
+                                borderRadius: 10,
+                                padding: 17,
+                                // marginBottom: 10,
+                                marginTop: 10 / 930 * height,
+                                // color: '#999999',
+                                fontWeight: '500',
+                            }}
+                            value={jobTitle}
                                 onChangeText={(item) => {
                                     setError(null)
                                     setJobTitle(item)
@@ -162,6 +154,7 @@ const AddJobDetails = ({ navigation, route }) => {
                                     // color: '#999999',
                                     fontWeight: '500',
                                 }}
+                                value={company}
                                 onChangeText={(item) => {
                                     setError(null)
                                     setCompany(item)
@@ -172,22 +165,26 @@ const AddJobDetails = ({ navigation, route }) => {
                             }
                         </View>
                         <View style={{ display: 'flex', justifyContent: 'flex-end', width: width - 50 }}>
-                            {
-                                showIndicator ? (
-                                    <ActivityIndicator size={'large'} color={colors.blueColor} />
-                                ) : (
-                                    <TouchableOpacity
-                                        onPress={handleNext}
-                                        style={{
-                                            backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width,
-                                            display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10
-                                        }}>
-                                        <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>
-                                            Next
-                                        </Text>
-                                    </TouchableOpacity>
-                                )
-                            }
+                        {
+                            loading ? (
+                                <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop: 70 / 930 * height }} />
+                            ) : (
+                                <TouchableOpacity onPress={handleNext}
+                                    style={{
+                                        backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width,
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10, marginTop: 70 / 930 * height
+                                    }}>
+                                        {
+                                            data.from === 'Profile'?(
+                                                <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>Save</Text>
+                                            ):(
+                                                <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>Next</Text>
+                                            )
+                                        }
+                                   
+                                </TouchableOpacity>
+                            )
+                        }
 
                         </View>
                     </View>

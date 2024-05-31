@@ -113,12 +113,16 @@ const UploadIntroVideo = ({ navigation }) => {
                     let json = await result.json();
                     console.log('json ', json)
                     if (json.status === true) {
-                        console.log('video uploaded')
+                        console.log('video uploaded',json.data)
                         d.user = json.data
                         Settings.set({
                             USER:JSON.stringify(d)
                         })
-                        navigation.navigate('UploadMedia')
+                        navigation.navigate('UploadMedia',{
+                            data:{
+                                from:'IntroVideo'
+                            }
+                        })
                     } else {
                         console.log('json message is', json.message)
                     }
