@@ -43,18 +43,19 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
     const [rejecIndicator, setRejectIndicator] = useState(false);
     const [questions, setQuestions] = useState([]);
 
-    console.log("data from prev screen", data)
+    console.log("data from prev screen", currentIndex)
     console.log("current index", currentIndex)
-    // console.log("data length", data[currentIndex])
+    console.log("data length", data.length)
 
     const logoutUser = async () => {
         try {
             Settings.set({ USER: null })
 
-            let data = {
-                navigate: 'Logout'
+            let routeData = {
+                navigate: 'Logout',
+                user:''
             }
-            onMenuClick(data)
+            onMenuClick(routeData)
 
         } catch (error) {
             console.log(error)
@@ -155,11 +156,11 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                         console.log('profile liked', json.data)
                         console.log('Liked:', data[currentIndex].id);
                         if (typeof json.match !== "undefined" && json.match === true) {
-                            let data = {
+                            let routeData = {
                                 navigate: 'GotMatch',
                                 user: data[currentIndex]
                             }
-                            onMenuClick(data)
+                            onMenuClick(routeData)
                         } else {
                             handleNext();
                         }
@@ -293,15 +294,11 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
 
                                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 / 430 * width }}>
                                     <TouchableOpacity onPress={() => {
-                                        console.log('user on manu click is', currentIndex)
-                                        console.log(data.length)
-                                        // return
-                                       let routeData = {
-                                        navigate: 'GotMatch',
-                                        user: data[currentIndex]
-                                    }
-                                    onMenuClick(routeData)
-                                        // onMenuClick(data)
+                                          let routeData = {
+                                            navigate: 'LikesList',
+                                            user: ''
+                                        }
+                                        onMenuClick(routeData)
                                     }}>
                                         <Image source={require('../../assets/images/profileLike.png')}
                                             style={styles.image}
@@ -311,10 +308,11 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                     <TouchableOpacity
                                         onPress={() => {
 
-                                            let data = {
+                                            let routeData = {
+                                                user:'',
                                                 navigate: 'Notifications'
                                             }
-                                            onMenuClick(data)
+                                            onMenuClick(routeData)
                                         }}
                                     >
                                         <Image source={require('../../assets/images/bell.png')}

@@ -58,7 +58,7 @@ export default function DiscoverMain(props) {
           props.navigation.navigate("LikesList")
         } else if (data.navigate === 'GotMatch') {
           props.navigation.navigate("GotMatch", {
-
+            data:data
           })
         }
         else if (data.navigate === 'Logout') {
