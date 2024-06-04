@@ -181,9 +181,9 @@ const UploadMedia = ({ navigation, route }) => {
         try {
             console.log('trying to upload video', formdata)
             const data = Settings.get("USER")
-            // console.log("Data of usr is ", data)
             if (data) {
                 let d = JSON.parse(data)
+                // console.log('user data from local', d)
 
 
                 const result = await fetch(ApisPath.ApiUploadMedia, {
@@ -233,6 +233,7 @@ const UploadMedia = ({ navigation, route }) => {
                 }
             }
         } catch (error) {
+            setShowIndicator(false)
             console.log('error finding in upload media', error)
         }
     }
@@ -263,7 +264,7 @@ const UploadMedia = ({ navigation, route }) => {
                         setMedia(json.data)
                         d.user = json.data
                         Settings.set({
-                            USER:JSON.stringify(d)
+                            USER: JSON.stringify(d)
                         })
                         console.log('media deleted', json.data)
                     } else {
@@ -297,23 +298,28 @@ const UploadMedia = ({ navigation, route }) => {
                         Complete your profile
                     </Text>
                 </View>
+                {
+                    data.from !== "profile" ? (
+                        <View style={{ flexDirection: 'row', marginTop: 40 / 930 * height, justifyContent: 'space-between', display: 'flex', alignItems: 'center' }}>
+                            <Image source={require('../../assets/uploadpic.png')} style={{ height: 56, width: 56, resizeMode: 'contain' }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                        </View>
+                    ) : null
+                }
                 {/* Code for progressbar */}
-                <View style={{ flexDirection: 'row', marginTop: 40 / 930 * height, justifyContent: 'space-between', display: 'flex', alignItems: 'center' }}>
-                    <Image source={require('../../assets/uploadpic.png')} style={{ height: 56, width: 56, resizeMode: 'contain' }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                </View>
+
 
 
                 {/* Code to upload media */}
@@ -334,7 +340,7 @@ const UploadMedia = ({ navigation, route }) => {
                     <View style={{ display: 'flex', alignItems: 'center', marginTop: 50 / 930 * height }}>
 
                     </View>
-                    <FlatList style={{ height: height * 0.53, width: width }} showsVerticalScrollIndicator={false}
+                    <FlatList style={{ height:data.from !== "profile"? height * 0.53:height*0.65, width: width }} showsVerticalScrollIndicator={false}
                         data={media ? [{ type: 'Button' }, ...media] : [{ type: 'Button' }]}
                         keyExtractor={(item, index) => `${item.type}-${index}`}
                         renderItem={({ item, index }) => {
@@ -364,9 +370,9 @@ const UploadMedia = ({ navigation, route }) => {
 
 
                                                     {
-                                                        item.caption && <Text style={{ fontSize: 16, fontFamily: customFonts.regular, color: 'black' }}>
+                                                        item.caption !== "null" ? <Text style={{ fontSize: 16, fontFamily: customFonts.regular, color: 'black' }}>
                                                             {item.caption}
-                                                        </Text>
+                                                        </Text> : null
                                                     }
                                                     <Image source={{ uri: item.type === "video" ? item.thumb_url : item.url }}
                                                         onLoadStart={() => { setLoadImage(true) }}
@@ -405,16 +411,16 @@ const UploadMedia = ({ navigation, route }) => {
                         {
                             error && <Text style={[GlobalStyles.errorText, { textAlign: 'center' }]}>{error}</Text>}
                         <TouchableOpacity onPress={() => {
-                            if(data.from === 'profile'){
+                            if (data.from === 'profile') {
                                 navigation.goBack()
                                 return
                             }
 
                             if (media) {
-                                navigation.navigate('AddZodiac',{
-                                    data:{
-                                        user:'',
-                                        from:'Media'
+                                navigation.navigate('AddZodiac', {
+                                    data: {
+                                        user: '',
+                                        from: 'Media'
                                     }
                                 })
                             } else {

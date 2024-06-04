@@ -50,7 +50,6 @@ export default function DiscoverMain(props) {
 
   }
 
-
   return (
     <View style={{ flex: 1, alignItems: 'center', backgroundColor: 'transparent' }}>
 
@@ -58,16 +57,20 @@ export default function DiscoverMain(props) {
         if (data.navigate === 'LikesList') {
           props.navigation.navigate("LikesList")
         } else if (data.navigate === 'GotMatch') {
-          props.navigation.navigate("GotMatch",{
+          props.navigation.navigate("GotMatch", {
 
           })
-
         }
         else if (data.navigate === 'Logout') {
           props.navigation.push("LoginUser")
 
+        } else if (data.navigate === 'Notifications') {
+          props.navigation.navigate("NotificationsScreen", {
+
+          })
         }
-      }} />
+      }}
+      />
 
     </View>
   )

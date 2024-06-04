@@ -83,6 +83,8 @@ const AddHeight = ({ navigation, route }) => {
                     </Text>
                 </View>
                 {/* Code for progressbar */}
+                {
+                    data.from !== "Profile" ? (
                 <View style={{ flexDirection: 'row', marginTop: 40 / 930 * height, justifyContent: 'space-between', display: 'flex', alignItems: 'center' }}>
                     <Image source={require('../../assets/heighticon.png')} style={{ height: 56, width: 56, resizeMode: 'contain' }} />
                     <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
@@ -99,6 +101,8 @@ const AddHeight = ({ navigation, route }) => {
                     <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
                     <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
                 </View>
+                    ):null
+                }
 
                 <Text style={{ marginTop: 40 / 930 * height, fontWeight: '500', fontSize: 20 }}>
                     Select your height
@@ -106,7 +110,7 @@ const AddHeight = ({ navigation, route }) => {
 
                 <View style={{ height: 416 / 930 * height, width: 370 / 430 * width, marginTop: 60 / 930 * height, flexDirection: 'row', justifyContent: 'center' }}>
                     <View style={{ alignItems: 'center', width: 260 / 430 * width, marginTop: 20, display: 'flex', gap: 50, flexDirection: 'row', justifyContent: 'center' }}>
-                        <View style={{ alignItems: 'center' }}>
+                        <View style={{ alignItems: 'center' ,height: 380 / 930 * height,}}>
                             <Text style={{ textAlign: 'center', fontWeight: '500', fontSize: 18 }}>
                                 Feet
                             </Text>
@@ -121,7 +125,7 @@ const AddHeight = ({ navigation, route }) => {
                                 items={SelectHeightFeet.map(name => ({ label: name, value: '' }))}
                                 onChange={({ item }) => setHeightFeet(item.label)} />
                         </View>
-                        <View style={{ alignItems: 'center' }}>
+                        <View style={{ alignItems: 'center' ,height: 380 / 930 * height,}}>
                             <Text style={{ textAlign: 'center', fontWeight: '500', fontSize: 18 }}>
                                 Inch
                             </Text>
@@ -140,12 +144,12 @@ const AddHeight = ({ navigation, route }) => {
                 </View>
                 {
                     loading ? (
-                        <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop: 70 / 930 * height }} />
+                        <ActivityIndicator size={'large'} color={colors.blueColor} style={{  marginTop:data.from === "Profile"? 200/930*height: 70 / 930 * height}} />
                     ) : (
                         <TouchableOpacity onPress={handleNextClick}
                             style={{
                                 backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width,
-                                display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10, marginTop: 70 / 930 * height
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10, marginTop:data.from === "Profile"? 200/930*height: 70 / 930 * height
                             }}>
                             {
                                 data.from === 'Profile' ? (

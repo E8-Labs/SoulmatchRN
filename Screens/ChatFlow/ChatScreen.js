@@ -9,6 +9,12 @@ import colors from '../../assets/colors/Colors'
 import MoreOptionsPopup from '../../Components/MoreOptionsPopup'
 import AddButtonPopup from '../../Components/AddButtonPopup'
 import BlockPopup from '../../Components/BlockPopup'
+import {
+    Pusher,
+    PusherMember,
+    PusherChannel,
+    PusherEvent,
+  } from '@pusher/pusher-websocket-react-native';
 
 const { height, width } = Dimensions.get('window');
 
@@ -85,6 +91,25 @@ export default function ChatScreen(props) {
         },
     ]
 
+    async function SubscribeChatEvents() {
+        const pusher = Pusher.getInstance();
+    
+        await pusher.init({
+          apiKey: "404f727e86e2044ed1f4",
+          cluster: "us3"
+        });
+    
+        await pusher.connect();
+        await pusher.subscribe({
+          channelName: `my-channel-${props.route.params.chat.id}`,
+          onEvent: (event) => {
+            console.log(`Event received: ${event}`);
+            let newMessage = event.data;
+            //push this into message list 
+          }
+        });
+      }
+
     const closeModal2 = () => {
         setOpenModal2(false)
     }
@@ -99,6 +124,10 @@ export default function ChatScreen(props) {
     useEffect(() => {
         console.log("Open Modal 3 changed ", openModal3)
     }, [openModal3])
+    useEffect(() => {
+        //call getmessages api
+        SubscribeChatEvents()
+    }, [])
 
     return (
 

@@ -1,9 +1,6 @@
-import { useCallback, useEffect} from 'react';
+import { useCallback, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import {StyleSheet, Text, View, Dimensions } from 'react-native';
-
-
-
+import { StyleSheet, Text, View, Dimensions } from 'react-native';
 
 
 
@@ -14,8 +11,8 @@ import SlideScreen2 from './Screens/SplashFlow/SlideScreens/SlideScreen2';
 import SlideScreen3 from './Screens/SplashFlow/SlideScreens/SlideScreen3';
 import SlideContainer from './Screens/SplashFlow/SlideScreens/SlideContainer';
 import LoginUser from './Screens/LoginFlow/LoginUser';
-import GetEmail from './Screens/ForgotPasswordFlow/GetEmail';4
-import ResetPassword from'./Screens/ForgotPasswordFlow/ResetPassword'
+import GetEmail from './Screens/ForgotPasswordFlow/GetEmail'; 4
+import ResetPassword from './Screens/ForgotPasswordFlow/ResetPassword'
 import EmailVerification from './Screens/ForgotPasswordFlow/EmailVerification';
 import SuccessfullyPasswordChanged from './Screens/ForgotPasswordFlow/SuccessfullyPasswordChanged';
 // import { useFonts } from 'expo-font';
@@ -70,6 +67,9 @@ import AccountDetails from './Screens/ProfileFlow/AccountDetails';
 import ChangePassword from './Screens/ProfileFlow/ChangePassword';
 import ChangeIntroVideo from './Screens/ProfileFlow/ChangeIntroVideo';
 
+import Resources from './Components/Resources/Resources';
+import SelectedResourceDetails from './Components/Resources/SelectedResourceDetails';
+import NotificationsScreen from './Screens/NotificationsFlow/NotificationsScreen';
 // import { NavigationContainer } from "@react-navigation/native";
 // import { createNativeStackNavigator } from "@react-navigation/native-stack";
 // import * as SplashScreen from 'expo-splash-screen';
@@ -78,6 +78,17 @@ import ChangeIntroVideo from './Screens/ProfileFlow/ChangeIntroVideo';
 
 const { screenHeight, screenWidth } = Dimensions.get('window');
 const Stack = createNativeStackNavigator();
+
+
+
+import {
+  Pusher,
+  PusherMember,
+  PusherChannel,
+  PusherEvent,
+} from '@pusher/pusher-websocket-react-native';
+
+
 
 export default function App() {
 
@@ -89,6 +100,27 @@ export default function App() {
 
   // })
 
+  async function TestPusher() {
+    const pusher = Pusher.getInstance();
+
+    await pusher.init({
+      apiKey: "404f727e86e2044ed1f4",
+      cluster: "us3"
+    });
+
+    await pusher.connect();
+    await pusher.subscribe({
+      channelName: "my-channel",
+      onEvent: (event) => {
+        console.log(`Event received: ${event}`);
+      }
+    });
+  }
+  useEffect(() => {
+    // useCallback(()=>{
+      //  TestPusher()
+    // })
+  })
 
   // useEffect(() => {
   //   if (fontsLoaded || fontError) {
@@ -98,7 +130,7 @@ export default function App() {
   // }, [fontsLoaded, fontError])
 
 
-  if (false){//(!fontsLoaded && !fontError) {
+  if (false) {//(!fontsLoaded && !fontError) {
     return (
 
       <View>
@@ -169,6 +201,9 @@ export default function App() {
           <Stack.Screen name='ChangeIntroVideo' component={ChangeIntroVideo} options={{ gestureEnabled: false, headerShown: false }} />
 
 
+          <Stack.Screen name='Resources' component={Resources} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='SelectedResourceDetails' component={SelectedResourceDetails} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='NotificationsScreen' component={NotificationsScreen} options={{ gestureEnabled: false, headerShown: false }} />
 
           <Stack.Screen name='Testfile' component={Testfile} options={{ gestureEnabled: false, headerShown: false }} />
 

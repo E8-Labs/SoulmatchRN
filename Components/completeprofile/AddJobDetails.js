@@ -57,7 +57,12 @@ const AddJobDetails = ({ navigation,route }) => {
                 if(data.from === 'Profile'){
                     navigation.goBack()
                 } else{
-                navigation.navigate('GetInterest');
+                navigation.navigate('GetInterest',{
+                    data:{
+                        from:'JobDetails',
+                        user:''
+                    }
+                });
                 }
 
             } catch (error) {

@@ -69,13 +69,13 @@ const AddGender = ({ navigation, route }) => {
 
             try {
                 await UpdateProfile(body);
-                if(data.from === 'Profile'){
+                if (data.from === 'Profile') {
                     navigation.goBack()
-                }else{
-                    navigation.navigate('AddSchool',{
-                        data:{
-                            user:'',
-                            from:'Gender'
+                } else {
+                    navigation.navigate('AddSchool', {
+                        data: {
+                            user: '',
+                            from: 'Gender'
                         }
                     });
                 }
@@ -109,22 +109,26 @@ const AddGender = ({ navigation, route }) => {
                     </Text>
                 </View>
                 {/* Code for progressbar */}
-                <View style={{ flexDirection: 'row', marginTop: 40 / 930 * height, justifyContent: 'space-between', display: 'flex', alignItems: 'center' }}>
-                    <Image source={require('../../assets/gendericon.png')} style={{ height: 56, width: 56, resizeMode: 'contain' }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                </View>
+                {
+                    data.from !== "Profile" ? (
+                        < View style={{ flexDirection: 'row', marginTop: 40 / 930 * height, justifyContent: 'space-between', display: 'flex', alignItems: 'center' }}>
+                            <Image source={require('../../assets/gendericon.png')} style={{ height: 56, width: 56, resizeMode: 'contain' }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                        </View>
+                    ) : null
+                }
                 <View style={{ marginTop: 40 / 930 * height }}>
                     <Text style={{ fontSize: 20, fontWeight: '500' }}>
                         Select your gender
@@ -135,7 +139,7 @@ const AddGender = ({ navigation, route }) => {
 
 
 
-                <View style={{ display: 'flex', height: height * 0.65, flexDirection: 'column', justifyContent: 'space-between' }}>
+                <View style={{ display: 'flex', height: data.from ===height * 0.66, flexDirection: 'column', justifyContent: 'space-between' }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', display: 'flex', marginTop: 50 / 930 * height }}>
 
 
@@ -156,18 +160,18 @@ const AddGender = ({ navigation, route }) => {
                         }
 
                     </View>
-                    <View style={{ display: 'flex', justifyContent: 'flex-end', width: width - 50 }}>
+                    <View style={{ display: 'flex', width: width - 50 }}>
                         {
                             error && <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, color: 'red', textAlign: 'center' }}>{error}</Text>
                         }
                         {
                             loading ? (
-                                <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop: 70 / 930 * height }} />
+                                <ActivityIndicator size={'large'} color={colors.blueColor} style={{  marginTop:data.from === "Profile"? 200/930*height: 70 / 930 * height }} />
                             ) : (
                                 <TouchableOpacity onPress={handleNextClick}
                                     style={{
                                         backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width,
-                                        display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10, marginTop: 70 / 930 * height
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10,  marginTop:data.from === "Profile"? 200/930*height: 70 / 930 * height
                                     }}>
                                     {
                                         data.from === 'Profile' ? (
@@ -183,7 +187,7 @@ const AddGender = ({ navigation, route }) => {
                     </View>
                 </View>
             </View>
-        </View>
+        </View >
     )
 }
 

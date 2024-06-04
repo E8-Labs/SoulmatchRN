@@ -1,14 +1,15 @@
 import { Settings } from "react-native"
 import ApisPath from "../../lib/ApisPath/ApisPath"
 
-export const getProfile = async (user) => {
-
+export const getProfile = async () => {
+  console.log('try to get profile')
     const data = Settings.get('USER')
     try {
       if (data) {
         let d = JSON.parse(data)
+        console.log('user data is', d)
         const result = await fetch(ApisPath.ApiGetProfile, {
-          method: 'post',
+          method: 'get',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + d.token 
@@ -26,6 +27,8 @@ export const getProfile = async (user) => {
             console.log('json message is', json.message)
           }
         }
+      }else{
+        console.log('user data is unawailable')
       }
     } catch (error) {
       console.log('error finding in get profile', error)

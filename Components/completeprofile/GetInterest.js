@@ -7,12 +7,16 @@ import colors from '../../assets/colors/Colors';
 import { UpdateProfile } from '../../Services/ProfileServices/UpdateProfile';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 
-const GetInterest = ({ navigation }) => {
+const GetInterest = ({ navigation, route }) => {
+
+    const data = route.params.data
+    console.log('user from prev screen', data)
+
 
 
     const { height, width } = Dimensions.get('window');
-    const [MinAge, setMinAge] = useState('');
-    const [MaxAge, setMaxAge] = useState('');
+    const [MinAge, setMinAge] = useState(16);
+    const [MaxAge, setMaxAge] = useState(50);
     const [SelectMen, setSelectMen] = useState(false);
     const [SelectWomen, setSelectWomen] = useState(false);
     const [SelectBoth, setSelectBoth] = useState(false);
@@ -20,12 +24,36 @@ const GetInterest = ({ navigation }) => {
     const [error, setError] = useState(null)
     const [showIndicator, setShowIndicator] = useState(false)
     const [loading, setLoading] = useState(false)
-    // const user = route.params.user
-    // user.interestedGender = SelectedGender
-    // user.minAge = MinAge
-    // user.maxAge = MaxAge
 
-    // console.log('user data from prev screen is', user)
+    const interestedGenders = [
+        {
+            id: 1,
+            name: 'Men',
+            value: 'male'
+        },
+        {
+            id: 2,
+            name: 'Women',
+            value: 'female'
+        },
+        {
+            id: 3,
+            name: 'Both',
+            value: 'both'
+        },
+    ]
+
+
+    useEffect(() => {
+        if (data.from === "Profile") {
+            let user = data.user
+            setMinAge(user.interested_min_age)
+            setMaxAge(user.interested_max_age)
+            setSelectedGender(user.interested_gender)
+        }
+    }, [])
+
+    console.log('max age is', MaxAge)
 
 
 
@@ -33,22 +61,8 @@ const GetInterest = ({ navigation }) => {
     const SelectMaxAge = '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,61,62,63,64,65,66,67,68,69,70,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100'.split(',');
 
 
-
-
-    useEffect(() => {
-        if (SelectMen === true) {
-            setSelectedGender('male')
-            setError(null)
-        } else if (SelectWomen === true) {
-            setError(null)
-            setSelectedGender('female')
-        } else if (SelectBoth === true) {
-            setError(null)
-            setSelectedGender('both')
-        }
-    }, [SelectMen, SelectWomen, SelectBoth])
-
     const handleNext = async () => {
+
 
         if (MinAge > MaxAge) {
             setError("Minimum age must be less then maximum age")
@@ -67,12 +81,19 @@ const GetInterest = ({ navigation }) => {
         try {
             await UpdateProfile(body);
 
-            navigation.navigate('EnhancmentQuestions',{
-                data:{
-                    user:'',
-                    from:'Interest'
-                }
-            });
+
+            if (data.from === 'Profile') {
+                navigation.goBack()
+
+            } else {
+                navigation.navigate('EnhancmentQuestions', {
+                    data: {
+                        user: '',
+                        from: 'Interest'
+                    }
+                });
+            }
+
         } catch (error) {
             console.error('Error updating profile:', error);
             setError('Failed to update profile.');
@@ -82,27 +103,8 @@ const GetInterest = ({ navigation }) => {
         //  navigation.navigation("EnhancmentQuestions")
     }
 
-
-
-
-
-
-    const handleMenClick = () => {
-        setSelectMen(true);
-        setSelectWomen(false);
-        setSelectBoth(false);
-    }
-
-    const handleWomenClick = () => {
-        setSelectWomen(true);
-        setSelectMen(false);
-        setSelectBoth(false);
-    }
-
-    const handleBothClick = () => {
-        setSelectBoth(true);
-        setSelectMen(false);
-        setSelectWomen(false);
+    const handleGengerPress = (value) => {
+        setSelectedGender(value)
     }
 
     return (
@@ -149,6 +151,24 @@ const GetInterest = ({ navigation }) => {
                 </Text>
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 / 930 * height }}>
+
+                    {
+                        interestedGenders.map((item) => (
+                            <TouchableOpacity key={item.id} onPress={() => handleGengerPress(item.value)}
+                                style={{
+                                    borderWidth: 1, borderColor: SelectMen ? '' : '#CCCCCC75', borderRadius: 10,
+                                    backgroundColor: SelectedGender === item.value ? '#6050DC' : 'transparent'
+                                }}>
+                                <View style={{ height: 52 / 930 * height, width: 110 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
+                                    <Text style={{ fontWeight: '500', fontSize: 14, color: SelectedGender === item.value ? 'white' : '#333333' }}>
+                                        {item.name}
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        ))
+                    }
+
+                    {/* 
                     <TouchableOpacity onPress={handleMenClick} style={{ borderWidth: 1, borderColor: SelectMen ? '' : '#CCCCCC75', borderRadius: 10, backgroundColor: SelectMen ? '#6050DC' : 'transparent' }}>
                         <View style={{ height: 52 / 930 * height, width: 110 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
                             <Text style={{ fontWeight: '500', fontSize: 14, color: SelectMen ? 'white' : '#333333' }}>
@@ -169,7 +189,7 @@ const GetInterest = ({ navigation }) => {
                                 Both
                             </Text>
                         </View>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
                 <Text style={{ fontWeight: '500', fontSize: 18, color: '#66666690', marginTop: 20 / 930 * height }}>
                     Age range
@@ -189,7 +209,7 @@ const GetInterest = ({ navigation }) => {
                                     width={50 / width * 430}
                                     // backgroundColor='#000000'
                                     selectedStyle={{ borderWidth: 2, width: "4", borderRadius: 50, borderColor: colors.blueColor }}
-                                    initialSelectedIndex={15}
+                                    initialSelectedIndex={MinAge-1}
                                     items={SelectMinAge.map(name => ({ label: name, value: '' }))}
                                     onChange={({ item }) => {
                                         setMinAge(item.label)
@@ -209,7 +229,7 @@ const GetInterest = ({ navigation }) => {
                                     width={50 / width * 430}
                                     // backgroundColor='#000000'
                                     selectedStyle={{ borderWidth: 2, width: "4", borderRadius: 50, borderColor: colors.blueColor }}
-                                    initialSelectedIndex={49}
+                                    initialSelectedIndex={MaxAge-1}
                                     items={SelectMaxAge.map(name => ({ label: name, value: '' }))}
                                     onChange={({ item }) => {
                                         setMaxAge(item.label)
@@ -232,7 +252,15 @@ const GetInterest = ({ navigation }) => {
                                 backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width,
                                 display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10, marginTop: 0 / 930 * height
                             }}>
-                            <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>Next</Text>
+                            {
+                                data.from === "Profile" ? (
+                                    <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>Save</Text>
+
+                                ) : (
+                                    <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>Next</Text>
+
+                                )
+                            }
                         </TouchableOpacity>
                     )
                 }

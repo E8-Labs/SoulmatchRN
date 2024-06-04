@@ -36,15 +36,16 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
     const [like, setLike] = useState(false);
     const [loadImage, setLoadImage] = useState(false)
     const [loadImage2, setLoadImage2] = useState(false)
+    const [loadImage3, setLoadImage3] = useState(false)
     const [currentIndex, setCurrentIndex] = useState(0);
     const [openModal, setOpenModal] = useState(false);
     const [LikeIndicator, setLikeIndicator] = useState(false);
     const [rejecIndicator, setRejectIndicator] = useState(false);
     const [questions, setQuestions] = useState([]);
 
-    console.log("data from prev screen", currentIndex)
+    console.log("data from prev screen", data)
     console.log("current index", currentIndex)
-    console.log("data length", data.length)
+    // console.log("data length", data[currentIndex])
 
     const logoutUser = async () => {
         try {
@@ -89,8 +90,6 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                     }
                 }
             }
-
-
 
         } catch (error) {
             console.log('error findng in get questions', error)
@@ -154,7 +153,8 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                     let json = await result.json()
                     if (json.status === true) {
                         console.log('profile liked', json.data)
-                        if (json.match === true) {
+                        console.log('Liked:', data[currentIndex].id);
+                        if (typeof json.match !== "undefined" && json.match === true) {
                             let data = {
                                 navigate: 'GotMatch',
                                 user: data[currentIndex]
@@ -174,7 +174,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
 
 
 
-        console.log('Liked:', data[currentIndex].id);
+
 
     };
 
@@ -293,17 +293,30 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
 
                                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 / 430 * width }}>
                                     <TouchableOpacity onPress={() => {
-                                        let data = {
-                                            navigate: 'LikesList'
-                                        }
-                                        onMenuClick(data)
+                                        console.log('user on manu click is', currentIndex)
+                                        console.log(data.length)
+                                        // return
+                                       let routeData = {
+                                        navigate: 'GotMatch',
+                                        user: data[currentIndex]
+                                    }
+                                    onMenuClick(routeData)
+                                        // onMenuClick(data)
                                     }}>
                                         <Image source={require('../../assets/images/profileLike.png')}
                                             style={styles.image}
                                         />
                                     </TouchableOpacity>
 
-                                    <TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => {
+
+                                            let data = {
+                                                navigate: 'Notifications'
+                                            }
+                                            onMenuClick(data)
+                                        }}
+                                    >
                                         <Image source={require('../../assets/images/bell.png')}
                                             style={styles.image}
                                         />
@@ -505,8 +518,8 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                                                     />
 
                                                                     {
-                                                                        !loadImage2 ? (
-                                                                            <ActivityIndicator size={'small'} color={colors.blueColor} style = {{position:'absolute',bottom:100,left:150}}/>
+                                                                        loadImage2 ? (
+                                                                            <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 150 }} />
                                                                         ) : <></>
                                                                     }
                                                                 </>
@@ -553,9 +566,21 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                                         </Text>
                                                         {
                                                             item.answerImage || item.answerVideo ? (<>
-                                                                <Image source={{ uri: item.answerImage ? item.answerImage : item.videoThumbnail }}
+                                                                <Image
+                                                                    source={{ uri: item.answerImage ? item.answerImage : item.videoThumbnail }}
                                                                     style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
+                                                                    onLoadEnd={() => {
+                                                                        setLoadImage3(false)
+                                                                    }}
+                                                                    placeholder={blurhash}
+                                                                    contentFit="cover"
+                                                                    transition={1000}
                                                                 />
+                                                                {
+                                                                    loadImage3 ? (
+                                                                        <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 150 }} />
+                                                                    ) : <></>
+                                                                }
                                                                 <TouchableOpacity style={{
                                                                     alignSelf: 'flex-end', position: 'absolute', bottom: 26, right: 40 / 430 * width, backgroundColor: '#fff',
                                                                     borderRadius: 30,

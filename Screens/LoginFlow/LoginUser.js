@@ -76,7 +76,7 @@ export default function LoginUser(props) {
                     if (json.message === 'Logged in') {
                         let data = json.data.user
 
-
+                        
                         if (data.profile_completion === 1) {
                             console.log('profile_completion_comment', data.profile_completion_comment)
                             props.navigation.navigate('UploadIntroVideo')
@@ -229,7 +229,7 @@ export default function LoginUser(props) {
                 }
             }
             //Call the api here
-            signInSocial({ name: `${credential.fullName.givenName} ${credential.fullName.familyName}`, email: credential.email, provider_name: "apple", provider_id: credential.user })
+            socialLogin({ name: `${credential.fullName.givenName} ${credential.fullName.familyName}`, email: credential.email, provider_name: "apple", provider_id: credential.user })
 
             console.log("Apple credentials ", credential)
         } catch (e) {

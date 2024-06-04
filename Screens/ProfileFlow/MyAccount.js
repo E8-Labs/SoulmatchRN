@@ -5,53 +5,38 @@ import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import { useFocusEffect } from '@react-navigation/native';
+import { getProfile } from '../../Services/ProfileServices/GetProfile';
 
 const { height, width } = Dimensions.get('window')
 
 export default function MyAccount({ navigation }) {
-  const [user, setUser] = useState(null)
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(null);
+    const [user, setUser] = useState(null)
 
   useFocusEffect(
     React.useCallback(() => {
       console.log("Use Focus Effect")
-      getProfile()
+      fetchProfile()
     }, [])
   );
 
-    useEffect(() => {
-        getProfile()
-    }, [])
-
-    const getProfile = async () => {
-
-        const data = Settings.get('USER')
-        try {
-            if (data) {
-                let d = JSON.parse(data)
-                const result = await fetch(ApisPath.ApiGetProfile, {
-                    method: 'post',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + d.token
-                    }
-                })
-
-                if (result) {
-                    let json = await result.json()
-                    if (json.status === true) {
-                        console.log('user profile is', json.data)
-                        setUser(json.data)
-                    }
-                    else {
-                        console.log('json message is', json.message)
-                    }
-                }
+    // useEffect(() => {
+        const fetchProfile = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const data = await getProfile();
+                setUser(data);
+                setMedia(data.media)
+            } catch (err) {
+                setError(err);
+            } finally {
+                setLoading(false);
             }
-        } catch (error) {
-            console.log('error finding in get profile', error)
         }
-
-    }
+        
+    // }, []);
 
     // const user = route.params.user
     // console.log('user from prev screen is', user)

@@ -79,6 +79,8 @@ const AddAge = ({ navigation, route }) => {
                     </Text>
                 </View>
                 {/* Code for progressbar */}
+                {
+                    data.from !== "Profile" ? (
                 <View style={{ flexDirection: 'row', marginTop: 40 / 930 * height, justifyContent: 'space-between', display: 'flex', alignItems: 'center' }}>
                     <Image source={require('../../assets/ageicon.png')} style={{ height: 56, width: 56, resizeMode: 'contain' }} />
                     <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
@@ -95,6 +97,8 @@ const AddAge = ({ navigation, route }) => {
                     <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
                     <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
                 </View>
+                    ):null
+                }
 
                 <Text style={{ marginTop: 40 / 930 * height, fontWeight: '500', fontSize: 20 }}>
                     Select your age
@@ -115,13 +119,13 @@ const AddAge = ({ navigation, route }) => {
                 </View>
                 {
                     loading ? (
-                        <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop: 70 / 930 * height }} />
+                        <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop:data.from === "Profile"? 200/930*height: 70 / 930 * height}} />
                     ) : (
 
                         <TouchableOpacity onPress={handleNextClick}
                             style={{
                                 backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width,
-                                display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10, marginTop: 70 / 930 * height
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10, marginTop: data.from === "Profile" ?  200 / 930 * height:70/930*height
                             }}>
                             {
                                 data.from === 'Profile' ? (

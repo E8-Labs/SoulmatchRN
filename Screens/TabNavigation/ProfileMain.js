@@ -4,66 +4,63 @@ import colors from '../../assets/colors/Colors';
 import { Image } from 'expo-image'
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import { useFocusEffect } from '@react-navigation/native';
+import LogoutPopup from '../../Components/LogoutPopup';
+import { getProfile } from '../../Services/ProfileServices/GetProfile';
 
 const { height, width } = Dimensions.get('window');
 const placholder = require('../../assets/images/imagePlaceholder.webp')
-
 
 export default function ProfileMain(props) {
 
   const [user, setUser] = useState(null)
   const [loadImage, setLoadImage] = useState(false)
+  const [showLogoutPopup, setShowLogoutPopup] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
 
   useFocusEffect(
     React.useCallback(() => {
+
       console.log("Use Focus Effect")
-      getProfile()
+      fetchProfile()
+
+
     }, [])
   );
-  useEffect(() => {
-    getProfile()
-  }, [])
-
-  const getProfile = async () => {
-
-    const data = Settings.get('USER')
+  const fetchProfile = async () => {
+    setLoading(true);
+    setError(null);
     try {
-      if (data) {
-        let d = JSON.parse(data)
-        const result = await fetch(ApisPath.ApiGetProfile, {
-          method: 'post',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + d.token
-          }
-        })
-
-        if (result) {
-          let json = await result.json()
-          if (json.status === true) {
-            console.log('user profile is', json.data)
-            setUser(json.data)
-          }
-          else {
-            console.log('json message is', json.message)
-          }
-        }
-      }
-    } catch (error) {
-      console.log('error finding in get profile', error)
+      const data = await getProfile();
+      setUser(data);
+      setMedia(data.media)
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
     }
-
   }
-
   const logoutUser = async () => {
     console.log('trying to logout')
     try {
+      close()
       Settings.set({ USER: null })
       props.navigation.navigate('LoginUser')
     } catch (error) {
       console.log(error)
     }
   }
+
+  const close = (value) => {
+    console.log('logout value is', value)
+    if (value === "Logout") {
+      logoutUser()
+    }
+    setShowLogoutPopup(false)
+
+  }
+
+
   return (
     <SafeAreaView style={{ alignItems: 'center' }}>
       <View style={{ height: height, width: width - 60, alignItems: 'center' }}>
@@ -104,7 +101,8 @@ export default function ProfileMain(props) {
             <View style={{ flexDirection: 'column', gap: 10, alignItems: 'center', }}>
               <TouchableOpacity
                 onPress={() => {
-                  props.navigation.navigate('MyAccount')}}
+                  props.navigation.navigate('MyAccount')
+                }}
               >
                 <View style={styles.mainView}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
@@ -122,7 +120,11 @@ export default function ProfileMain(props) {
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate('Resources')
+                }}
+              >
                 <View style={styles.mainView}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                     <Image source={require('../../assets/images/resources.png')}
@@ -143,7 +145,8 @@ export default function ProfileMain(props) {
                 onPress={() => {
                   props.navigation.navigate('EnhancmentQuestions', {
                     data: {
-                      user: user
+                      user: user,
+                      from: 'Profile'
                     }
 
                   })
@@ -165,7 +168,17 @@ export default function ProfileMain(props) {
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate('GetInterest', {
+                    data: {
+                      user: user,
+                      from: 'Profile'
+                    }
+
+                  })
+                }}
+              >
                 <View style={styles.mainView}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                     <Image source={require('../../assets/images/interest.png')}
@@ -216,7 +229,9 @@ export default function ProfileMain(props) {
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={logoutUser}
+                onPress={() => {
+                  setShowLogoutPopup(true)
+                }}
               >
                 <View style={styles.mainView}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
@@ -233,12 +248,13 @@ export default function ProfileMain(props) {
 
                 </View>
               </TouchableOpacity>
+              <LogoutPopup visible={showLogoutPopup} close={close} />
               <View style={{ height: 40 }}></View>
             </View>
           </ScrollView>
         </View>
-      </View>
-    </SafeAreaView>
+      </View >
+    </SafeAreaView >
   )
 }
 

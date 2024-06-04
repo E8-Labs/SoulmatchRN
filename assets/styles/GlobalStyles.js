@@ -95,6 +95,16 @@ const GlobalStyles = {
         borderWidth: 0.5,
         borderColor: colors.greyText,
         marginTop: 25 / 930 * height
+    },
+    Resourcesbtn: {
+        // backgroundColor: 'red'
+        height: 35 / 930 * height,
+        width: 118 / 430 * width,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 5,
+        borderWidth: 1,
+        backgroundColor: '#6050DC'
     }
 }
 
