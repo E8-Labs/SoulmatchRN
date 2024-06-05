@@ -5,10 +5,11 @@ import customFonts from '../../assets/fonts/Fonts';
 import colors from '../../assets/colors/Colors';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
+import moment from 'moment';
 
 const { height, width } = Dimensions.get('window');
 
-export default function SelectedDateDetails({ navigation,route }) {
+export default function SelectedDateDetails({ navigation, route }) {
 
     const data = route.params.data
 
@@ -67,8 +68,8 @@ export default function SelectedDateDetails({ navigation,route }) {
                                 <Text style={{ fontSize: 12, fontFamily: customFonts.regular, marginTop: 20 / 930 * height }}>
                                     Hours of operation
                                 </Text>
-                                <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, marginTop: 5 / 930 * height }}>{
-                                data.openTime} - {data.closeTime} 
+                                <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, marginTop: 5 / 930 * height }}>
+                                    {moment(data.openTime, "HH:mm:ss").format("h:mm A")} - {moment(data.closeTime, "HH:mm:ss").format("h:mm A")}
                                 </Text>
 
                                 <Text style={{ fontSize: 12, fontFamily: customFonts.regular, marginTop: 20 / 930 * height }}>
@@ -146,7 +147,7 @@ export default function SelectedDateDetails({ navigation,route }) {
                                                 starSize={18}
                                                 color='#FFC403'
                                                 rating={3}
-                                             
+
                                             />
 
                                             <Text style={{ fontSize: 12, fontFamily: customFonts.regular, color: '#666666' }}>2 days ago</Text>
@@ -159,8 +160,8 @@ export default function SelectedDateDetails({ navigation,route }) {
 
                             <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 30 / 930 * height }]}
                                 onPress={() => {
-                                    navigation.navigate("ReserveNightScreen",{
-                                        dateId:data.id
+                                    navigation.navigate("ReserveNightScreen", {
+                                        dateId: data.id
                                     })
                                 }}
                             >

@@ -56,6 +56,7 @@ export default function ReserveNightScreen({ navigation, route }) {
         numberOfGuests: numberofGuest,
         dateUserId: selectedDateProfile.id
       })
+      console.log('body data is', body)
 
       try {
         const result = await fetch(ApisPath.ApiBookDate, {

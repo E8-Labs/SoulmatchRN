@@ -352,7 +352,7 @@ export default function SelectedProfile({ navigation, route }) {
                                     style={styles.viewImage}
                                 />
                                 <Text style={styles.viewText}>
-                                    {user.height_feet * 12 + user.height_inches} cm
+                                    {((user.height_feet * 12 + user.height_inches)*2.54).toFixed(0)} cm
                                 </Text>
                             </View>
                             <View style={styles.viewStyle}>

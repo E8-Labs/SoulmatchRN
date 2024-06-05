@@ -1,6 +1,7 @@
 import {
-    View, Text, Dimensions, Image, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform, StyleSheet,
-    TextInput, Modal, TouchableWithoutFeedback
+    View, Text, Dimensions, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform, StyleSheet,
+    TextInput, Modal, TouchableWithoutFeedback,Keyboard,
+    Settings
 } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import GlobalStyles from '../../assets/styles/GlobalStyles'
@@ -14,7 +15,11 @@ import {
     PusherMember,
     PusherChannel,
     PusherEvent,
-  } from '@pusher/pusher-websocket-react-native';
+} from '@pusher/pusher-websocket-react-native';
+import ApisPath from '../../lib/ApisPath/ApisPath';
+import { Image } from 'expo-image'
+
+import moment from 'moment';
 
 const { height, width } = Dimensions.get('window');
 
@@ -27,89 +32,57 @@ const activeAdd = require('../../assets/images/activeAddIcon.png')
 const add = require('../../assets/images/addIcon.png')
 
 
-export default function ChatScreen(props) {
+export default function ChatScreen({ navigation, route }) {
     let listViewRef;
 
+
+    const chat = route.params.chat
+    // console.log('chat from prev screen is ', chat)
+
+    const [currentUser, setCurrentUser] = useState(null)
     const [openModal, setOpenModal] = useState(false);
     const [openModal3, setOpenModal3] = useState(false);
     const [openModal2, setOpenModal2] = useState(false);
     const [message, setMessage] = useState('');
-    const messages = [
-        {
-            id: 1,
-            message: "Hi there! Just saw that we matched. Excited to chat! ",
-            fromMe: false,
-            time: "12:25"
-        },
-        {
-            id: 2,
-            message: "Hi there! Just saw that we matched. Excited to chat! ",
-            fromMe: true,
-            time: "12:25"
-        },
-        {
-            id: 3,
-            message: "Hi there! Just saw that we matched. Excited to chat! ",
-            fromMe: false,
-            time: "12:25"
-        },
-        {
-            id: 4,
-            message: "Hi there! Just saw that we matched. Excited to chat! ",
-            fromMe: true,
-            time: "12:25"
-        },
-        {
-            id: 5,
-            message: "Hi there! Just saw that we matched. Excited to chat! ",
-            fromMe: false,
-            time: "12:25"
-        },
-        {
-            id: 6,
-            message: "Hi there! Just saw that we matched. Excited to chat! ",
-            fromMe: true,
-            time: "12:25"
-        },
-        {
-            id: 7,
-            message: "Hi there! Just saw that we matched. Excited to chat! ",
-            fromMe: false,
-            time: "12:25"
-        },
-        {
-            id: 8,
-            message: "Hi there! ",
-            fromMe: true,
-            time: "12:25"
-        },
-        {
-            id: 9,
-            message: "hello there! ",
-            fromMe: true,
-            time: "12:25"
-        },
-    ]
+    const [messages, setMessages] = useState([]);
 
     async function SubscribeChatEvents() {
+        let channel = `chat-channel-${chat.id}`;
+        console.log("Subscribing Event ", channel);
         const pusher = Pusher.getInstance();
     
         await pusher.init({
-          apiKey: "404f727e86e2044ed1f4",
-          cluster: "us3"
+            apiKey: "404f727e86e2044ed1f4",
+            cluster: "us3"
         });
     
         await pusher.connect();
         await pusher.subscribe({
-          channelName: `my-channel-${props.route.params.chat.id}`,
-          onEvent: (event) => {
-            console.log(`Event received: ${event}`);
-            let newMessage = event.data;
-            //push this into message list 
-          }
+            channelName: channel,
+            onEvent: (event) => {
+                console.log(`Event received: ${event}`);
+                let newMessage = JSON.parse(event.data);
+                console.log("New message received: ", newMessage);
+    
+                setMessages(prevMessages => {
+                    console.log("Previous messages: ", prevMessages);
+    
+                    // Check if the message already exists
+                    const messageExists = prevMessages.some(item => item.timestamp === newMessage.timestamp);
+    
+                    // If the message exists, update it
+                    if (messageExists) {
+                        return prevMessages.map(item => 
+                            item.timestamp === newMessage.timestamp ? newMessage.message : item
+                        );
+                    } else {
+                        // If the message does not exist, add it to the array
+                        return [...prevMessages, newMessage.message];
+                    }
+                });
+            }
         });
-      }
-
+    }
     const closeModal2 = () => {
         setOpenModal2(false)
     }
@@ -122,13 +95,159 @@ export default function ChatScreen(props) {
     }
 
     useEffect(() => {
-        console.log("Open Modal 3 changed ", openModal3)
-    }, [openModal3])
+        console.log("latest messages array is ", messages)
+    }, [messages])
+
+
     useEffect(() => {
         //call getmessages api
+        getMessages()
+        // createChat()
         SubscribeChatEvents()
     }, [])
 
+    const createChat = async () => {
+        try {
+            const data = Settings.get('USER')
+            if (data) {
+                let d = JSON.parse(data)
+                console.log('user id is', d.user.id)
+
+                const result = await fetch(ApisPath.ApiCreateChat, {
+                    method: 'post',
+                    headers: {
+                        'Authorization': 'Bearer ' + d.token,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId: d.user.id
+                    })
+                })
+                if (result) {
+                    let json = await result.json()
+                    if (json.status === true) {
+                        console.log('created chat data', json.data)
+                    } else {
+                        console.log('json message of create chat is', json.message)
+                    }
+
+                }
+            }
+        } catch (error) {
+            console.log('error finding in create chat ', error)
+        }
+
+    }
+
+    const fromCurrentUser = (message) => {
+        if(currentUser && currentUser.user.id === message.userId){
+            return true
+        }
+        return false
+    }
+
+    const getMessages = async () => {
+        console.log('trying to get messages')
+        const data = Settings.get('USER')
+        try {
+            if (data) {
+                console.log('chat id ', chat.id)
+                let d = JSON.parse(data)
+                setCurrentUser(d)
+                const ApiUrl = `https://plurawlapp.com/soulmatch/api/chat/get_messages?chatId=${chat.id}`
+                console.log(ApiUrl)
+                const result = await fetch(ApisPath.ApiGetMessages + `?chatId=${chat.id}`, {
+                    method: 'get',
+                    headers: {
+                        'Authorization': 'Bearer ' + d.token,
+                        'Content-Type': 'application/json',
+                    }
+                })
+                if (result) {
+                    let json = await result.json()
+                    if (json.status === true) {
+                        console.log('get messages list is', json.data)
+                        let mess = []
+                        setMessages(json.data)
+                        // json.data.forEach(msg => {
+                        //     console.log('id is', msg.userId, d.user.id )
+                        //     if (msg.userId === d.user.id) {
+                        //         console.log('mesaage is', msg + d.user.id)
+                        //         setMessages(prevMesg => [...prevMesg, { message]);
+                        //     }else{
+                        //         setMessages(prevMesg => [...prevMesg, { from: 'freind', message: msg,  }]);
+
+                        //     }
+                        // });
+                        // setMessages(prevMesg => [...prevMesg, ...json.data.map((msg, index) => ({ from: 'friend', message: msg, id: `${chat.id}-${index}` }))]);
+                    } else {
+                        console.log('get message json message is', json.message)
+                    }
+                }
+            }
+        } catch (e) {
+            console.log('error finding in get messages ', e)
+        }
+
+    }
+
+    const sendMessage = async () => {
+        if (!message) {
+            return;
+        }
+    
+        let time = moment().toISOString();
+        const newMessage = { userId: currentUser.user.id, timestamp: time, content: message, id: `${chat.id}-${messages.length}` };
+    
+        setMessages(prevMesg => [...prevMesg, newMessage]);
+    
+        try {
+            console.log('trying to send message');
+            const data = Settings.get('USER');
+            if (data) {
+                let d = JSON.parse(data);
+                let body = JSON.stringify({
+                    chatId: chat.id,
+                    content: message,
+                    timestamp: time
+                });
+                const result = await fetch(ApisPath.ApiSendMessage, {
+                    method: 'post',
+                    headers: {
+                        'Authorization': 'Bearer ' + d.token,
+                        'Content-Type': 'application/json',
+                    },
+                    body: body
+                });
+                if (result) {
+                    let json = await result.json();
+                    if (json.status === true) {
+                        console.log('message sent ', json.data);
+                        setMessage('');
+                    } else {
+                        console.log('message sent json message', json.message);
+                    }
+                }
+            }
+        } catch (e) {
+            console.log('error finding in send message', e);
+        }
+    };
+
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+            Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+            (event) => {
+                setMessages(prevMessages => [...prevMessages, { from: "none", id: `${chat.id}-${messages.length}loading` }]);
+            }
+        );
+        // Remove the listener when component unmounts
+        return () => {
+            keyboardDidShowListener.remove();
+        };
+    }, []);
+
+    
     return (
 
 
@@ -147,7 +266,7 @@ export default function ChatScreen(props) {
                     <View style={{ alignItems: 'center', flexDirection: 'row', width: width - 50 / 430 * width, justifyContent: 'space-between' }}>
                         <View style={{ alignItems: 'center', flexDirection: 'row', gap: 15 / 430 * width }}>
                             <TouchableOpacity onPress={() => {
-                                props.navigation.goBack()
+                                navigation.goBack()
                             }}>
                                 <View style={GlobalStyles.backBtn}>
                                     <Image source={require('../../assets/images/backArrow.png')}
@@ -156,19 +275,19 @@ export default function ChatScreen(props) {
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => {
-                                props.navigation.navigate("ProfileDetail", {
+                                navigation.navigate("ProfileDetail", {
                                     fromScreen: "ChatScreen"
                                 })
                             }}>
                                 <View style={{ alignItems: 'center', flexDirection: 'row', gap: 12 / 430 * width }}>
-                                    <Image source={require('../../assets/images/profileImage.png')}
+                                    <Image source={{ uri: chat.users[0].profile_image }}
                                         style={{ height: 46 / 930 * height, width: 46 / 930 * height, borderRadius: 25 }}
                                     />
 
                                     <Text numberOfLines={1} style={{
                                         fontSize: 20, fontFamily: customFonts.meduim, width: 170 / 430 * width,
                                     }}>
-                                        Sarah Doe
+                                        {chat.users[0].first_name} {chat.users[0].last_name}
                                     </Text>
                                 </View>
                             </TouchableOpacity>
@@ -199,15 +318,15 @@ export default function ChatScreen(props) {
                     console.log("Menu selected is ", menu)
                     closeModal2()
                     setOpenModal3(true)
-                } else if(menu === "Report"){
+                } else if (menu === "Report") {
                     console.log("Menu selected is ", menu)
-                   
-                    props.navigation.navigate('ReportChat')
+
+                    navigation.navigate('ReportChat')
                     closeModal2()
-                } else if(menu === "InviteDate"){
+                } else if (menu === "InviteDate") {
                     console.log("Menu selected is ", menu)
-                   
-                    props.navigation.navigate('InviteDateFromChatScreen')
+
+                    navigation.navigate('InviteDateFromChatScreen')
                     closeModal2()
                 }
             }} />
@@ -254,7 +373,7 @@ export default function ChatScreen(props) {
             {/* <View style={{ alignItems: 'center', height: height * 0.75, }}> */}
 
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                style={{ height: height * 0.87,}}
+                style={{ height: height * 0.87, }}
             >
 
                 <FlatList
@@ -262,16 +381,25 @@ export default function ChatScreen(props) {
                     ref={(ref) => {
                         listViewRef = ref;
                     }}
-                    onContentSizeChange={() => {
-                        if (listViewRef !== null) {
-                            listViewRef._listRef._scrollRef.scrollToEnd({ animated: true })
-                        }
-                    }}
+                   onContentSizeChange={() => {
+                                console.log("Content size changed")
+                                if (listViewRef !== null) {
+                                    listViewRef._listRef._scrollRef.scrollToEnd({ animated: true })
+                                }
+                                setMessages(prevMessages => {
+
+                                    let array = prevMessages.filter((item) => {
+                                        return item.from !== "none"
+                                    })
+
+                                    return array
+                                });
+                            }}
                     data={messages}
                     renderItem={({ item }) => (
                         <>
                             {
-                                item.fromMe ? (
+                                fromCurrentUser(item) ? (
 
                                     <View style={{ alignItems: 'flex-end', marginTop: 10 }}>
 
@@ -290,12 +418,16 @@ export default function ChatScreen(props) {
                                             // width: 207 / 430 * width, backgroundColor: colors.blueColor, marginTop: 15, borderRadius: 18,
                                             // paddingHorizontal: 12, paddingVertical: 8, gap: 3, alignItems: 'flex-start', flexDirection: 'column'
                                         }}>
-                                            <Text style={{ fontSize: 14, fontFamily: customFonts.regular, color: 'white' }}>{item.message}</Text>
+                                            <Text style={{ fontSize: 14, fontFamily: customFonts.regular, color: 'white' }}>
+                                                {item.content}
+                                            </Text>
                                             <View style={styles.rightArrow}>
 
                                             </View>
                                             <View style={styles.rightArrowOverlap}></View>
-                                            <Text style={{ color: 'white', fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', width: 175 / 430 * width }}>{item.time}</Text>
+                                            <Text style={{ color: 'white', fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', width: 175 / 430 * width }}>
+                                                {moment(item.createdAt).format('h:mm')}
+                                            </Text>
                                         </View>
                                     </View>
                                 ) : (
@@ -315,7 +447,9 @@ export default function ChatScreen(props) {
                                             //alignItems:"center",
                                             borderRadius: 20,
                                         }}>
-                                            <Text style={{ fontSize: 14, fontFamily: customFonts.regular }}>{item.message}</Text>
+                                            <Text style={{ fontSize: 14, fontFamily: customFonts.regular }}>
+                                                {item.content ? item.content : item.content}
+                                            </Text>
                                             <View style={styles.leftArrow}>
 
                                             </View>
@@ -324,7 +458,7 @@ export default function ChatScreen(props) {
                                                 fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', width: 175 / 430 * width,
                                                 paddingRight: 10 / 430 * width
                                             }}>
-                                                {item.time}
+                                                {moment(item.createdAt).format('h:mm')}
                                             </Text>
                                         </View>
                                     </View>
@@ -354,7 +488,7 @@ export default function ChatScreen(props) {
                         width: 246 / 430 * width, backgroundColor: '#f5f5f5', paddingVertical: 10, borderRadius: 10,
                         paddingHorizontal: 16,
                     }}>
-                        <TextInput placeholder='Send message....'  value={message}
+                        <TextInput placeholder='Send message....' value={message}
 
                             multiline
                             onChangeText={(item) => {
@@ -368,7 +502,9 @@ export default function ChatScreen(props) {
                         />
                     </TouchableOpacity>
 
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={sendMessage}
+                    >
                         <Image source={message ? activeImage : inactiveImage}
                             style={{ height: 52, width: 52, }}
                         />

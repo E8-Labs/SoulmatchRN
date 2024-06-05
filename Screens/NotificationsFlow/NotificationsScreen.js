@@ -13,6 +13,7 @@ import moment from 'moment';
 const { height, width } = Dimensions.get('window')
 const likeNotImage = require('../../assets/images/likeNotification.png');
 const inviteNotImage = require('../../assets/images/inviteNotification.png');
+const placholder = require('../../assets/images/imagePlaceholder.webp')
 
 export default function NotificationsScreen({ navigation }) {
 
@@ -239,38 +240,42 @@ export default function NotificationsScreen({ navigation }) {
           </TouchableOpacity>
           <Text style={{ fontSize: 24, fontFamily: customFonts.meduim }}>Notifications</Text>
         </View>
-        {
-          sections && sections.length > 0 ? (
-            <SectionList
-              sections={sections}
-              style={{ backgroundColor: 'transparent' }}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                renderItem(item)
-              )}
-              renderSectionHeader={({ section: { title } }) => (
-                // sections.data ? (
-                <View style={{
-                  width: width - 60, flexDirection: 'row', height:30,marginTop: 0, backgroundColor: 'white', alignItems: 'center', gap: 10
-                }}>
-                  <Text style={{ fontSize: 14, color: '#999999' }}>{title}</Text>
-                  <View style={[GlobalStyles.divider, { marginTop: 0 }]}></View>
-                </View>
-                // ):null
+        <View style = {{height:height*0.85}}>
+          {
+            sections && sections.length > 0 ? (
+              <SectionList
+                showsVerticalScrollIndicator = {false}
+                sections={sections}
+                style={{ backgroundColor: 'transparent', }}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                  renderItem(item)
+                )}
+                renderSectionHeader={({ section: { title } }) => (
+                  // sections.data ? (
+                  <View style={{
+                    width: width - 60, flexDirection: 'row', height: 30, marginTop: 0, backgroundColor: 'white', alignItems: 'center', gap: 10
+                  }}>
+                    <Text style={{ fontSize: 14, color: '#999999' }}>{title}</Text>
+                    <View style={[GlobalStyles.divider, { marginTop: 0 }]}></View>
+                  </View>
+                  // ):null
 
-              )}
-              ListEmptyComponent={() => (
-                <View style={{ padding: 10 }}>
-                  <Text>No notifications</Text>
-                </View>
-              )}
-            />
-          ) : (
-            <View style={{ padding: 10 }}>
-              <Text>No notifications</Text>
-            </View>
-          )
-        }
+                )}
+                ListEmptyComponent={() => (
+                  <View style={{ padding: 10 }}>
+                    <Text>No notifications</Text>
+                  </View>
+                )}
+              />
+            ) : (
+              <View style={{ padding: 10 }}>
+                <Text>No notifications</Text>
+              </View>
+            )
+          }
+        </View>
+
 
       </View>
     </SafeAreaView>
