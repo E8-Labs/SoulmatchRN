@@ -40,7 +40,10 @@ export default function MessageMain(props) {
       <MessagesList navigate={(chat) => {
         console.log("User selected ", chat)
         props.navigation.navigate("ChatScreen",{
-          chat:chat
+          data:{
+            chat:chat,
+            from:'message'
+          }
         })
       }}/>
 

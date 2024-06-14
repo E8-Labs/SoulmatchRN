@@ -139,7 +139,7 @@ const AddGender = ({ navigation, route }) => {
 
 
 
-                <View style={{ display: 'flex', height: data.from ===height * 0.66, flexDirection: 'column', justifyContent: 'space-between' }}>
+                <View style={{ display: 'flex', height: data.from === "profile"?height * 0.66:height * 0.78, flexDirection: 'column', justifyContent: 'space-between' }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', display: 'flex', marginTop: 50 / 930 * height }}>
 
 

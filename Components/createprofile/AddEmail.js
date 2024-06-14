@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, TouchableOpacity, Image, Dimensions, TextInput, Settings, ActivityIndicator } from 'react-native';
+import { Text, View, TouchableOpacity, Image, Dimensions, TextInput, Settings, ActivityIndicator,TouchableWithoutFeedback,
+    Keyboard
+ } from 'react-native';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
@@ -127,6 +129,11 @@ const AddEmail = ({ navigation, route }) => {
     }
 
     return (
+        <TouchableWithoutFeedback style={{
+            height: height, alignItems: 'center'
+        }}
+            onPress={Keyboard.dismiss}
+        >
         <View style={{ display: 'flex', alignItems: 'center' }}>
             <View style={{ width: 370 / 430 * width }}>
                 <View style={{ marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
@@ -168,6 +175,7 @@ const AddEmail = ({ navigation, route }) => {
                                 onChangeText={handlesaveemail}
                                 value={saveemail}
                                 autoCapitalize='none'
+                                returnKeyType='done'
                                 autoCorrect={false}
                                 spellCheck={false}
                                 style={{
@@ -228,6 +236,7 @@ const AddEmail = ({ navigation, route }) => {
                 </View>
             </View>
         </View>
+        </TouchableWithoutFeedback>
     )
 }
 

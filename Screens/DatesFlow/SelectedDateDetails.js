@@ -1,11 +1,13 @@
-import { View, Text, SafeAreaView, Dimensions, TouchableOpacity, Image, ScrollView, Linking, Easing } from 'react-native'
-import React from 'react'
+import { View, Text, SafeAreaView, Dimensions, TouchableOpacity, ScrollView, Linking, Easing, ActivityIndicator } from 'react-native'
+import React, { useState } from 'react'
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import customFonts from '../../assets/fonts/Fonts';
 import colors from '../../assets/colors/Colors';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
 import moment from 'moment';
+
+import { Image } from 'expo-image';
 
 const { height, width } = Dimensions.get('window');
 
@@ -14,6 +16,7 @@ export default function SelectedDateDetails({ navigation, route }) {
     const data = route.params.data
 
     console.log('selected date details are ', data)
+    const [loading, setLoading] = useState(false)
 
     return (
         <SafeAreaView>
@@ -34,9 +37,25 @@ export default function SelectedDateDetails({ navigation, route }) {
                 <View style={{ height: height * 0.85 }}>
                     <ScrollView showsVerticalScrollIndicator={false}>
                         <View style={{ alignItems: 'center', width: width - 60 / 430 * width }}>
-                            <Image source={require('../../assets/images/datenight.png')}
-                                style={{ width: width - 60 / 430 * width, borderRadius: 6, marginTop: 32 / 930 * height }}
+                            <Image source={{ uri: data.imageUrl }}
+                                onLoadStart={() => {
+                                    setLoading(true)
+                                }}
+                                onLoadEnd={() => {
+                                    setLoading(false)
+                                }}
+                                style={{
+                                    height: 240 / 930 * height, width: width - 60 / 430 * width, borderRadius: 6, marginTop: 32 / 930 * height,
+                                    resizeMode: 'cover'
+                                }}
                             />
+                            {
+                                loading ? (
+                                    <View style = {{height:150/930*height,marginTop:-150}}>
+                                        <ActivityIndicator color={colors.blueColor} size={'small'} style={{}} />
+                                    </View>
+                                ) : null
+                            }
 
                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 65 / 430 * width, marginTop: 20 / 930 * height }}>
                                 <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 5 }}>
@@ -54,10 +73,10 @@ export default function SelectedDateDetails({ navigation, route }) {
                                 <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 5 }}>
                                     <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Ratings</Text>
                                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }} >
-                                        <Image source={data.imageUrl}
+                                        <Image source={require('../../assets/images/star.png')}
                                             style={{ height: 12, width: 12 }}
                                         />
-                                        <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>$5.0</Text>
+                                        <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>5.0</Text>
 
                                     </View>
 

@@ -297,13 +297,14 @@ export default function MyAccount({ navigation }) {
 const styles = StyleSheet.create({
     mainView: {
         width: width - 60,
-        paddingVertical: 15 / 930 * height,
+        paddingVertical: 10 / 930 * height,
         justifyContent: 'space-between',
         borderWidth: 1,
         borderColor: colors.greyText,
         borderRadius: 10,
-        paddingHorizontal: 17 / 430 * width,
-        flexDirection: 'row'
+        paddingHorizontal: 10 / 430 * width,
+        flexDirection: 'row',
+        alignItems:'center'
     },
     imageStyle: {
         height: 24 / 930 * height,

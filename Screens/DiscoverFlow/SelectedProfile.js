@@ -6,6 +6,7 @@ import {
     ActivityIndicator
 
 } from 'react-native'
+import { Video, ResizeMode, AVPlaybackStatu0s } from 'expo-av';
 import { Image } from 'expo-image'
 import GlobalStyles from '../../assets/styles/GlobalStyles'
 import customFonts from '../../assets/fonts/Fonts'
@@ -14,6 +15,7 @@ import ApisPath from '../../lib/ApisPath/ApisPath'
 import LikesList from '../DiscoverFlow/LikesList';
 import FilterPopup from '../../Components/FilterPopup';
 import DiscoverGotMatch from '../../Components/DiscoverGotMatch';
+import { getDistance } from 'geolib';
 
 const { height, width } = Dimensions.get('window')
 
@@ -29,7 +31,7 @@ const nonBinary = require('../../assets/images/nonBinaryIcon.png');
 export default function SelectedProfile({ navigation, route }) {
 
     const user = route.params.user
-    console.log('user data from prev screen', user)
+    // console.log('user data from prev screen', user)
 
     const [totalInches, setTotalInches] = useState(null)
     const [selected, setSelected] = useState('');
@@ -38,74 +40,49 @@ export default function SelectedProfile({ navigation, route }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [openModal, setOpenModal] = useState(false);
     const [questions, setQuestions] = useState([]);
-
+    const [LocalUser, setLocalUser] = useState([]);
+    const [isPlaying, setIsPlaying] = useState(true);
+    const [duration, setDuration] = useState(0);
+    const videoRef = React.useRef(null);
+    const [video, setVideo] = useState(null);
+    const [loadVideo, setLoadVideo] = useState(false);
+    const [status, setStatus] = React.useState({});
+    const ref = useRef(null);
     // console.log("data from prev screen", data)
 
-    useEffect(() => {
-        // getQuestions()
-    }, [])
-
-    const getQuestions = async () => {
-        try {
-            const data = Settings.get('USER')
-            if (data) {
-                let d = JSON.parse(data)
-
-                const result = await fetch(ApisPath.ApiGetQuestions, {
-                    method: 'get',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + d.token
-                    }
-                })
-                if (result) {
-                    let json = await result.json()
-                    if (json.status === true) {
-                        console.log('enancmennt questions are', json.data)
-                        setQuestions(json.data)
-                    } else {
-                        console.log('json messagw', object)
-
-                    }
-                }
-            }
-
-
-
-        } catch (error) {
-            console.log('error findng in get questions', error)
-        }
+    const formatDuration = (durationMillis) => {
+        const totalSeconds = Math.floor(durationMillis / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     }
 
-    // const fadeAnim = useRef(new Animated.Value(1)).current;
+    const calculateDistance = () => {
+        const data = Settings.get('USER')
+        if (data) {
+            let d = JSON.parse(data)
+            // console.log('user data fro local is', d)
+            // setLocalUser(d)
+           
 
-    // useEffect(() => {
-    //     fadeIn();
-    // }, [currentIndex]);
+            let loaclLat = d.user.lat
+            let localLong = d.user.lang
+            let lat = user.lat
+            let lang = user.lang
 
 
-    // const fadeOut = (callback) => {
-    //     Animated.timing(fadeAnim, {
-    //         toValue: 0,
-    //         duration: 300,
-    //         useNativeDriver: true,
-    //     }).start(callback);
-    // };
+            const distance = getDistance(
+                { latitude: loaclLat, longitude: localLong },
+                { latitude: lat, longitude: lang }
+            );
+            console.log('total distance is', distance)
+            const distanceInMiles = distance / 1000 * 0.621371;
+            return distanceInMiles
+        }
+    }
+    // calculateDistance()
 
-    // const fadeIn = () => {
-    //     Animated.timing(fadeAnim, {
-    //         toValue: 1,
-    //         duration: 300,
-    //         useNativeDriver: true,
-    //     }).start();
-    // };
 
-    // const handleNext = () => {
-    //     fadeOut(() => {
-    //         setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, data.length - 1));
-    //         fadeIn();
-    //     });
-    // };
     const handleLike = async () => {
         console.log('trying to likes profile')
 
@@ -218,18 +195,18 @@ export default function SelectedProfile({ navigation, route }) {
         setOpenModal(false)
     }
 
-    const getGenderIcon = () =>{
-        if(user === null){
-            return 
+    const getGenderIcon = () => {
+        if (user === null) {
+            return
         }
-        if(user.gender === 'Male'){
+        if (user.gender === 'Male') {
             return male
-        } else  if(user.gender === 'Female'){
+        } else if (user.gender === 'Female') {
             return female
-        }else  if(user.gender === 'Non-Binary'){
+        } else if (user.gender === 'Non-Binary') {
             return nonBinary
         }
-        
+
     }
     return (
 
@@ -352,14 +329,14 @@ export default function SelectedProfile({ navigation, route }) {
                                     style={styles.viewImage}
                                 />
                                 <Text style={styles.viewText}>
-                                    {((user.height_feet * 12 + user.height_inches)*2.54).toFixed(0)} cm
+                                    {((user.height_feet * 12 + user.height_inches) * 2.54).toFixed(0)} cm
                                 </Text>
                             </View>
                             <View style={styles.viewStyle}>
                                 <Image source={require('../../assets/images/location.png')}
                                     style={styles.viewImage}
                                 />
-                                <Text style={styles.viewText}>5 miles</Text>
+                                <Text style={styles.viewText}>{calculateDistance()} miles</Text>
                             </View>
                             <View style={styles.viewStyle}>
                                 <Image source={require('../../assets/images/eduCap.png')}
@@ -411,11 +388,50 @@ export default function SelectedProfile({ navigation, route }) {
                                             ) : null
                                         } */}
                                             {
-                                                item.url || item.thumb_url ? (
-                                                    <Image source={{ uri: item.url ? item.url : thumb_url }}
+                                                item.type === "image" ? (
+                                                    <Image source={{ uri: item.url }}
                                                         style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
                                                     />
-                                                ) : null
+                                                ) : (
+                                                    item.type === "video" ? (
+                                                        <>
+                                                            <Video
+                                                                ref={videoRef}
+                                                                source={{
+                                                                    uri: item.url
+                                                                }}
+                                                                style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
+                                                                useNativeControls
+                                                                resizeMode={ResizeMode.COVER}
+                                                                isLooping={true}
+                                                                // shouldPlay={isPlaying}
+                                                                onPlaybackStatusUpdate={status => {
+                                                                    setStatus(() => status)
+                                                                    setIsPlaying(status.isPlaying);
+                                                                }}
+                                                                onLoad={(status) => {
+                                                                    setDuration(status.durationMillis)
+                                                                    setLoadVideo(false)
+                                                                }} // Set duration when video loads
+                                                                onLoadStart={() => {
+                                                                    setLoadVideo(true)
+                                                                }}
+
+                                                            />
+                                                            {!isPlaying && duration > 0 && (
+                                                                <View style={styles.durationContainer}>
+                                                                    <Text style={styles.durationText}>{formatDuration(duration)}</Text>
+                                                                </View>
+                                                            )}
+
+                                                            {
+                                                                loadVideo ? (
+                                                                    <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 180 / 430 * width }} />
+                                                                ) : <></>
+                                                            }
+                                                        </>
+                                                    ) : null
+                                                )
                                             }
 
                                         </View>
@@ -445,7 +461,7 @@ export default function SelectedProfile({ navigation, route }) {
                                             marginTop: 22 / 930 * height,
                                         }}>
                                             <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, color: '#000' }}>
-                                               {item.title}
+                                                {item.title}
                                             </Text>
                                             <Text style={{ fontSize: 16, fontFamily: customFonts.regular, color: '#4D4D4D' }}>
                                                 {item.text}
@@ -475,7 +491,7 @@ export default function SelectedProfile({ navigation, route }) {
                                                             marginTop: 8, marginBottom: 8, width: 345 / 430 * width, backgroundColor: '#F5F5F5',
                                                             borderRadius: 10, paddingVertical: 10, paddingHorizontal: 16, alignItems: 'center'
                                                         }}>
-                                                            <Text style={{ fontSize: 14, fontFamily: customFonts.regular, color: '#000',width: 320 / 430 * width,textAlign:'left' }}>{item.answerText}</Text>
+                                                            <Text style={{ fontSize: 14, fontFamily: customFonts.regular, color: '#000', width: 320 / 430 * width, textAlign: 'left' }}>{item.answerText}</Text>
 
                                                         </View>
                                                         <TouchableOpacity style={{ alignSelf: 'flex-end', }}
@@ -523,7 +539,7 @@ const styles = StyleSheet.create({
     viewImage: {
         height: 20,
         width: 20,
-        resizeMode:'contain'
+        resizeMode: 'contain'
     },
     viewText: {
         fontSize: 16,

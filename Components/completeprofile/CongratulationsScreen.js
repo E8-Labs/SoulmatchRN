@@ -39,7 +39,7 @@ const CongratulationsScreen = ({ navigation }) => {
                         }}
                         
                         >
-                        <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>Next</Text>
+                        <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>Continue</Text>
                     </TouchableOpacity>
                 </View>
             </View>

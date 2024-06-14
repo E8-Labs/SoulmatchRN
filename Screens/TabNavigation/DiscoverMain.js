@@ -7,6 +7,7 @@ import FilterPopup from '../../Components/FilterPopup';
 import DiscoverGotMatch from '../../Components/DiscoverGotMatch';
 import ProfileDetail from '../DiscoverFlow/ProfileDetail';
 import ApisPath from '../../lib/ApisPath/ApisPath';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 const { height, width } = Dimensions.get("window");
@@ -15,9 +16,15 @@ export default function DiscoverMain(props) {
 
   const [openModal, setOpenModal] = useState(false);
   const [discovers, setDiscovers] = useState([]);
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("Use Focus Effect")
+      getDiscover()
+    }, [])
+  );
 
   useEffect(() => {
-    getDiscover()
+    // getDiscover()
   }, [])
 
   const getDiscover = async () => {
@@ -58,7 +65,7 @@ export default function DiscoverMain(props) {
           props.navigation.navigate("LikesList")
         } else if (data.navigate === 'GotMatch') {
           props.navigation.navigate("GotMatch", {
-            data:data
+            data: data
           })
         }
         else if (data.navigate === 'Logout') {

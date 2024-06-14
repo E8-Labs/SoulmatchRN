@@ -1,84 +1,40 @@
-import React, { useRef, useEffect } from 'react';
-import { View, Animated, StyleSheet, Easing } from 'react-native';
-
-const CircleAnimation = () => {
-  const animations = useRef([
-    new Animated.Value(0),
-    new Animated.Value(0),
-    new Animated.Value(0),
-    new Animated.Value(0),
-  ]).current;
-
-  useEffect(() => {
-    const createAnimation = (animation) => {
-      return Animated.loop(
-        Animated.sequence([
-          Animated.timing(animation, {
-            toValue: 1,
-            duration: 2000,
-            easing: Easing.linear,
-            useNativeDriver: true,
-          }),
-          Animated.timing(animation, {
-            toValue: 0,
-            duration: 2000,
-            easing: Easing.linear,
-            useNativeDriver: true,
-          }),
-        ])
-      );
-    };
-
-    const animatedSequences = animations.map((animation) =>
-      createAnimation(animation)
-    );
-
-    animatedSequences.forEach((seq) => seq.start());
-
-    return () => {
-      animatedSequences.forEach((seq) => seq.stop());
-    };
-  }, [animations]);
-
-  const interpolatedAnimations = animations.map((animation, index) => {
-    const inputRange = [0, 1];
-    const outputRange = [index % 2 === 0 ? -100 : 50, index % 2 === 0 ? 50 : -100];
-    return animation.interpolate({ inputRange, outputRange });
-  });
-
+import { useVideoPlayer, VideoView } from 'expo-video';
+import { useEffect, useRef, useState } from 'react';
+import { PixelRatio, StyleSheet, View, Button } from 'react-native';
+import { ResizeMode } from 'expo-av'
+// import VideoPlayer from 'expo-video-player'
+export default function Testfile() {
+  
   return (
-    <View style={styles.container}>
-      {interpolatedAnimations.map((anim, index) => (
-        <Animated.View
-          key={index}
-          style={[
-            styles.circle,
-            {
-              transform: [
-                { translateX: anim },
-                { translateY: anim },
-              ],
-            },
-          ]}
-        />
-      ))}
+    <View style={styles.contentContainer}>
+{/*      
+<VideoPlayer
+  videoProps={{
+    shouldPlay: true,
+    resizeMode: ResizeMode.CONTAIN,
+    // ❗ source is required https://docs.expo.io/versions/latest/sdk/video/#props
+    source: {
+      uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    },
+  }}
+/> */}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  container: {
+  contentContainer: {
     flex: 1,
-    justifyContent: 'center',
+    padding: 10,
     alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 50,
   },
-  circle: {
-    position: 'absolute',
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: '#8A2BE2',
+  video: {
+    width: 350,
+    height: 275,
+  },
+  controlsContainer: {
+    padding: 10,
   },
 });
-
-export default CircleAnimation;

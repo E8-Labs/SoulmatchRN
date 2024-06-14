@@ -67,7 +67,7 @@ export default function ProfileMain(props) {
         <View style={{
           flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 60, alignSelf: 'center',
         }}>
-          <Text style={{ fontSize: 22, }}>Profile</Text>
+          <Text style={{ fontSize: 26,fontWeight:'500' }}>Profile</Text>
           <TouchableOpacity>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
               <Text style={{ color: colors.blueColor, fontSize: 14 }}>Public view</Text>
@@ -88,7 +88,7 @@ export default function ProfileMain(props) {
           style={{ height: 110 / 930 * height, width: 110 / 930 * height, borderRadius: 55, marginTop: 25 / 930 * height }}
         />
         {
-          loadImage && <ActivityIndicator size={'small'} color={colors.blueColor} style={{ marginTop: -115 / 930 * height, height: 110 }} />
+          loadImage && <ActivityIndicator size={'small'} color={colors.blueColor} style={{ marginTop: -110 / 930 * height, height: 110 }} />
         }
 
         <Text style={{ fontSize: 18, marginTop: 10 }}>

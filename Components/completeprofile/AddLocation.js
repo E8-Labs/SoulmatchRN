@@ -141,7 +141,7 @@ const AddLocation = ({ navigation }) => {
                 <View style={{ display: 'flex', height: height * 0.76, flexDirection: 'column', justifyContent: 'space-between' }}>
                     <View style={{ marginTop: 40 / 930 * height }}>
                         <Text style={{ fontSize: 20, fontWeight: '500' }}>
-                            Please add your location
+                        Please share your location
                         </Text>
                         {/* <Text>{location.coords.latitude}</Text>
                         {address && (

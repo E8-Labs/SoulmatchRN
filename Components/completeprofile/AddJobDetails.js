@@ -116,7 +116,7 @@ const AddJobDetails = ({ navigation,route }) => {
                     </View>
                     <View style={{ marginTop: 40 / 930 * height }}>
                         <Text style={{ fontSize: 20, fontWeight: '500' }}>
-                            What do you for work?
+                            What do you do for work?
                         </Text>
                     </View>
 

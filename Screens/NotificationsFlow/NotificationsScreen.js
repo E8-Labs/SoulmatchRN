@@ -254,13 +254,13 @@ export default function NotificationsScreen({ navigation }) {
                 renderSectionHeader={({ section: { title } }) => (
                   // sections.data ? (
                   <View style={{
-                    width: width - 60, flexDirection: 'row', height: 30, marginTop: 0, backgroundColor: 'white', alignItems: 'center', gap: 10
+                    width: width - 40, flexDirection: 'row', height:60, paddingTop: 30/930*height, backgroundColor: '#fff', alignItems: 'center',
+                    gap: 10,
                   }}>
                     <Text style={{ fontSize: 14, color: '#999999' }}>{title}</Text>
                     <View style={[GlobalStyles.divider, { marginTop: 0 }]}></View>
                   </View>
                   // ):null
-
                 )}
                 ListEmptyComponent={() => (
                   <View style={{ padding: 10 }}>
@@ -269,8 +269,8 @@ export default function NotificationsScreen({ navigation }) {
                 )}
               />
             ) : (
-              <View style={{ padding: 10 }}>
-                <Text>No notifications</Text>
+              <View style={{ padding: 10,height:height*0.8,justifyContent:'center' }}>
+                <Text style = {{fontSize:20}}>No notifications</Text>
               </View>
             )
           }

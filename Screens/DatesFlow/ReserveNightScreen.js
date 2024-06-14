@@ -10,7 +10,8 @@ import { getFormatedDate } from "react-native-modern-datepicker";
 import DatePicker from "react-native-modern-datepicker";
 import InviteDatePopup from '../../Components/InviteDatePopup';
 import ApisPath from '../../lib/ApisPath/ApisPath';
-
+import moment from 'moment';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const { height, width } = Dimensions.get('window');
 
@@ -34,13 +35,20 @@ export default function ReserveNightScreen({ navigation, route }) {
   const [openModal, setOpenModal] = useState(false)
   const [selectedDateProfile, setSelectedDateProfile] = useState(null)
 
+  const sourceMoment = moment.unix(1636765200);
+  const sourceDate = sourceMoment.local().toDate();
+  const [date, setDate] = useState(sourceDate);
+
+  const [showPicker, setShowPicker] = useState(false);
+
+
 
   const bookDate = async () => {
 
     if (time === "Select time" || selectedDate === "Select date" || !numberofGuest || !selectedDateProfile) {
       setError("Enter all cridentials")
       return
-     
+
     }
 
     setShowIndicator(true)
@@ -131,6 +139,20 @@ export default function ReserveNightScreen({ navigation, route }) {
     setSelectedDateProfile(user)
     setOpenModal(false)
   }
+
+
+  const formatDate = (dateString) => {
+    return moment(dateString).format("MM-DD-YYYY")
+  };
+  function handleChangeStartDate(event, selectedDate) {
+    const currentDate = selectedDate || date;
+    setDate(currentDate);
+    setOpenTimePicker(false)
+    let formatted = moment(currentDate).format('YYYY/MM/DD');
+    console.log("Formatted date is ", formatDate(currentDate))
+  }
+
+
   return (
     <SafeAreaView>
       <View style={{ alignItems: 'center', height: height - 85 / 930 * height, width: width, flexDirection: 'column', justifyContent: 'space-between' }}>
@@ -169,25 +191,29 @@ export default function ReserveNightScreen({ navigation, route }) {
             </View>
 
           </TouchableOpacity>
-
-
-          <TouchableOpacity style={GlobalStyles.textInput}
-            onPress={handleOnPressTime}
-          >
-            <View style={{
-              flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-
-            }}>
-              <Text style={{ color: '#000', fontSize: 14, fontFamily: customFonts.meduim }}>
-                {time}
+          <TouchableOpacity onPress={() => setShowPicker(true)}>
+            <View style={styles.dateTimePickerContainer}>
+              <Text style={styles.text}>
+                {moment(date).format('LT')}
               </Text>
 
-              <Image source={require('../../assets/images/clock.png')}
-                style={{ height: 24 / 930 * height, width: 24 / 930 * height }}
-              />
-            </View>
+              <Image source={require('../../assets/images/clock.png')} style={styles.clockIcon} />
 
+            </View>
           </TouchableOpacity>
+          {showPicker && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={date}
+              mode={"time"}
+              is24Hour={false}
+              display="default"
+              onChange={handleChangeStartDate}
+              style={styles.dateTimePicker}
+            // width = {400}
+            />
+          )}
+
 
           <View style={{
             flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 50 / 430 * width,
@@ -251,45 +277,8 @@ export default function ReserveNightScreen({ navigation, route }) {
               </TouchableOpacity>
             )
           }
-
-
           <InviteDatePopup visible={openModal} close={closeModal} />
 
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={openDatePicker}
-          >
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <DatePicker
-                  mode="calendar"
-                  // minimumDate={startDate}
-                  selected={startedDate}
-                  onDateChanged={handleChangeDate}
-                  onSelectedChange={(date) => {
-                    setSelectedDate(date)
-                    setError(null)
-
-                  }}
-                  options={{
-                    backgroundColor: "#1c1c1c",
-                    textHeaderColor: "#469ab6",
-                    textDefaultColor: "#FFFFFF",
-                    selectedTextColor: "#FFF",
-                    mainColor: "#469ab6",
-                    textSecondaryColor: "#FFFFFF",
-                    borderColor: "gray",
-                  }}
-                />
-
-                <TouchableOpacity onPress={handleOnPressDate}
-                  style={{ backgroundColor: 'grey', paddingVertical: 10, borderRadius: 20, paddingHorizontal: 15 }}>
-                  <Text style={{ color: "white" }}>Close</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
         </View>
 
         <Modal
@@ -344,7 +333,7 @@ export default function ReserveNightScreen({ navigation, route }) {
 
 
       </View>
-    </SafeAreaView>
+    </SafeAreaView >
 
   )
 }
@@ -371,6 +360,33 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.50,
     shadowRadius: 7,
     elevation: 5,
+  },
+
+  dateTimePickerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: width - 50,
+    borderWidth: 2,
+    borderColor: colors.greyText,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 13,
+  },
+  text: {
+    color: '#000',
+    fontSize: 16,
+  },
+  clockIcon: {
+    height: 24 / 930 * height,
+    width: 24 / 930 * height,
+  },
+  dateTimePicker: {
+    // position: 'absolute',
+    // top: 0,
+    // width: width - 50,
+    backgroundColor: 'transparent',
+    borderRadius: 10,
   },
 
 })

@@ -1,7 +1,8 @@
 import {
     View, Text, Dimensions, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform, StyleSheet,
-    TextInput, Modal, TouchableWithoutFeedback,Keyboard,
-    Settings
+    TextInput, Modal, TouchableWithoutFeedback, Keyboard,
+    Settings,
+    ScrollView
 } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import GlobalStyles from '../../assets/styles/GlobalStyles'
@@ -18,8 +19,12 @@ import {
 } from '@pusher/pusher-websocket-react-native';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import { Image } from 'expo-image'
-
+import * as VideoThumbnails from 'expo-video-thumbnails';
+import * as ImagePicker from 'expo-image-picker';
 import moment from 'moment';
+import { Audio } from 'expo-av';
+
+
 
 const { height, width } = Dimensions.get('window');
 
@@ -36,26 +41,85 @@ export default function ChatScreen({ navigation, route }) {
     let listViewRef;
 
 
-    const chat = route.params.chat
+    const data = route.params.data
+    let chat = data.chat
     // console.log('chat from prev screen is ', chat)
 
     const [currentUser, setCurrentUser] = useState(null)
     const [openModal, setOpenModal] = useState(false);
     const [openModal3, setOpenModal3] = useState(false);
     const [openModal2, setOpenModal2] = useState(false);
+    const [openModal4, setOpenModal4] = useState(false);
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
+    const [thumbnail, setThumnail] = useState(null);
+    const [selectedMedia, setselectedMedia] = useState(null);
+    const [selectedMediaType, setselectedMediaType] = useState(null);
+    const [recording, setRecording] = useState();
+    const [permissionResponse, requestPermission] = Audio.usePermissions();
+    const [openImage, setOpenImage] = useState(null);
+
+    const iceBreakers = [
+        {
+            id: 1,
+            text: "Dream travel destination?"
+        },
+        {
+            id: 2,
+            text: "Favorite weekend getaway?"
+        },
+        {
+            id: 3,
+            text: "Dream dinner Spot?"
+        },
+    ]
+
+
+
+    async function startRecording() {
+        try {
+            if (permissionResponse.status !== 'granted') {
+                console.log('Requesting permission..');
+                await requestPermission();
+            }
+            await Audio.setAudioModeAsync({
+                allowsRecordingIOS: true,
+                playsInSilentModeIOS: true,
+            });
+
+            console.log('Starting recording..');
+            const { recording } = await Audio.Recording.createAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY
+            );
+            setRecording(recording);
+            console.log('Recording started');
+        } catch (err) {
+            console.error('Failed to start recording', err);
+        }
+    }
+
+    async function stopRecording() {
+        console.log('Stopping recording..');
+        setRecording(undefined);
+        await recording.stopAndUnloadAsync();
+        await Audio.setAudioModeAsync(
+            {
+                allowsRecordingIOS: false,
+            }
+        );
+        const uri = recording.getURI();
+        console.log('Recording stopped and stored at', uri);
+    }
 
     async function SubscribeChatEvents() {
         let channel = `chat-channel-${chat.id}`;
         console.log("Subscribing Event ", channel);
         const pusher = Pusher.getInstance();
-    
+
         await pusher.init({
             apiKey: "404f727e86e2044ed1f4",
             cluster: "us3"
         });
-    
+
         await pusher.connect();
         await pusher.subscribe({
             channelName: channel,
@@ -63,16 +127,16 @@ export default function ChatScreen({ navigation, route }) {
                 console.log(`Event received: ${event}`);
                 let newMessage = JSON.parse(event.data);
                 console.log("New message received: ", newMessage);
-    
+
                 setMessages(prevMessages => {
                     console.log("Previous messages: ", prevMessages);
-    
+
                     // Check if the message already exists
                     const messageExists = prevMessages.some(item => item.timestamp === newMessage.timestamp);
-    
+
                     // If the message exists, update it
                     if (messageExists) {
-                        return prevMessages.map(item => 
+                        return prevMessages.map(item =>
                             item.timestamp === newMessage.timestamp ? newMessage.message : item
                         );
                     } else {
@@ -106,41 +170,8 @@ export default function ChatScreen({ navigation, route }) {
         SubscribeChatEvents()
     }, [])
 
-    const createChat = async () => {
-        try {
-            const data = Settings.get('USER')
-            if (data) {
-                let d = JSON.parse(data)
-                console.log('user id is', d.user.id)
-
-                const result = await fetch(ApisPath.ApiCreateChat, {
-                    method: 'post',
-                    headers: {
-                        'Authorization': 'Bearer ' + d.token,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        userId: d.user.id
-                    })
-                })
-                if (result) {
-                    let json = await result.json()
-                    if (json.status === true) {
-                        console.log('created chat data', json.data)
-                    } else {
-                        console.log('json message of create chat is', json.message)
-                    }
-
-                }
-            }
-        } catch (error) {
-            console.log('error finding in create chat ', error)
-        }
-
-    }
-
     const fromCurrentUser = (message) => {
-        if(currentUser && currentUser.user.id === message.userId){
+        if (currentUser && currentUser.user.id === message.userId) {
             return true
         }
         return false
@@ -191,16 +222,16 @@ export default function ChatScreen({ navigation, route }) {
 
     }
 
-    const sendMessage = async () => {
+    const sendMessage = async (message) => {
         if (!message) {
             return;
         }
-    
+
         let time = moment().toISOString();
         const newMessage = { userId: currentUser.user.id, timestamp: time, content: message, id: `${chat.id}-${messages.length}` };
-    
+
         setMessages(prevMesg => [...prevMesg, newMessage]);
-    
+
         try {
             console.log('trying to send message');
             const data = Settings.get('USER');
@@ -234,6 +265,66 @@ export default function ChatScreen({ navigation, route }) {
         }
     };
 
+
+    const sendMedia = async (selectedMedia) => {
+        
+        let time = moment().toISOString();
+        console.log('selected midia is', selectedMedia)
+        const newMessage = { userId: currentUser.user.id, timestamp: time, image_url: selectedMedia.media, thumb_url: selectedMedia.thumbnail, id: `${chat.id}-${messages.length}` };
+
+        setMessages(prevMesg => [...prevMesg, newMessage]);
+
+
+        // return
+        try {
+            const data = Settings.get('USER')
+            if (data) {
+                console.log('trying to send media')
+                let d = JSON.parse(data)
+                const formdata = new FormData()
+
+                formdata.append("chatId", chat.id);
+
+                formdata.append("media", {
+                    name: "media.jpg",
+                    uri: selectedMedia.media,
+                    type: 'image/jpeg',
+                });
+
+                if (selectedMedia.type === "video") {
+
+                    formdata.append("thumbnail", {
+                        name: "thumbnail.jpg",
+                        uri: selectedMedia.thumbnail,
+                        type: 'image/jpeg',
+                    });
+                }
+                console.log('form data is', selectedMedia.thumbnail)
+                const result = await fetch(ApisPath.ApiSenMedia, {
+                    method: 'post',
+                    headers: {
+                        'Authorization': 'Bearer ' + d.token,
+                        'Content-Type': 'multipart/form-data'
+                    },
+                    body: formdata
+                })
+
+                if (result) {
+                    console.log('api called')
+                    let json = await result.json()
+                    if (json.status === true) {
+                        console.log('media send data is', json.data)
+                    } else {
+                        console.log('media send message is', json.message)
+                    }
+                }
+            }
+        } catch (e) {
+            console.log('error finding in send media ', e)
+        }
+    }
+
+
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(
             Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
@@ -247,7 +338,180 @@ export default function ChatScreen({ navigation, route }) {
         };
     }, []);
 
-    
+
+    const pickMedia = async () => {
+        
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            quality: 0.5,
+            videoQuality: ImagePicker.UIImagePickerControllerQualityType.Medium,
+            videoExportPreset: ImagePicker.VideoExportPreset.H264_960x540,
+        });
+
+        if (!result.canceled) {
+            const ImageUrl = result.assets[0].uri;
+            console.log('selected media type', result.assets[0].type)
+            console.log('Image url recieved is', ImageUrl)
+            // setPopup(false)
+            // setPopup2(true)
+            let thumb = await generateThumbnail(ImageUrl)
+            setThumnail(thumb)
+            setselectedMedia(result.assets[0].uri)
+            setselectedMediaType(result.assets[0].type)
+            const selectedMedia = {
+                media: ImageUrl, thumbnail: thumb, type: result.assets[0].type
+            }
+            setOpenModal(false)
+            sendMedia(selectedMedia)
+
+            console.log(result.assets[0].uri);
+        } else {
+            // setPopup(false)
+            setOpenModal(false)
+
+        }
+    }
+
+    const captureMedia = async () => {
+        setOpenModal(false)
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        if (status !== 'granted') {
+            alert('Sorry, we need camera permissions to make this work!');
+            return;
+        }
+
+        let result = await ImagePicker.launchCameraAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 0.5,
+        });
+
+        if (!result.canceled) {
+            const ImageUrl = result.assets[0].uri;
+            // setPopup2(true)
+            let thumb = await generateThumbnail(ImageUrl)
+            setThumnail(thumb)
+            console.log("Thumbnail is")
+            setselectedMedia(result.assets[0].uri)
+            setselectedMediaType(result.assets[0].type)
+
+        }
+    };
+
+    const generateThumbnail = async (url) => {
+        try {
+            const { uri } = await VideoThumbnails.getThumbnailAsync(
+                url,
+                {
+                    time: 15000,
+                }
+            );
+            return uri
+            // setImage(uri);
+        } catch (e) {
+            console.log(e);
+            return null
+
+        }
+    };
+
+    const getMessageType = (item) => {
+        if (item.image_url) {
+            return "image"
+        } else if (item.thumb_url) {
+            return "video"
+        } else if (item.content) {
+            return "text"
+        }
+    }
+
+
+    const renderItem = (item) => {
+        // console.log('item is', item)
+        return (
+            fromCurrentUser(item) ? (
+
+                <View style={{ alignItems: 'flex-end', marginTop: 10 }}>
+
+                    <View style={{
+                        backgroundColor: colors.blueColor, padding: 10, marginLeft: '45%', borderRadius: 5,
+                        marginTop: 5, marginRight: "5%", maxWidth: '50%', alignSelf: 'flex-end', borderRadius: 20,
+
+                        // width: 207 / 430 * width, backgroundColor: colors.blueColor, marginTop: 15, borderRadius: 18,
+                        // paddingHorizontal: 12, paddingVertical: 8, gap: 3, alignItems: 'flex-start', flexDirection: 'column'
+                    }}>
+                        {
+                            getMessageType(item) === 'image' ? (
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setOpenImage( item.image_url )
+                                    }}
+                                >
+                                    <Image source={{ uri: item.image_url }}
+                                        style={{ height: 200, width: 200, resizeMode: 'cover', borderRadius: 20 }}
+                                    />
+                                </TouchableOpacity>
+
+                            ) : (
+                                getMessageType(item) === 'video' ? (
+                                    <Image source={{ uri: item.image_url }}
+                                        style={{ height: 200, width: 200 }}
+                                    />
+                                ) : (
+                                    <Text style={{ fontSize: 14, fontFamily: customFonts.regular, color: 'white' }}>
+                                        {item.content}
+                                    </Text>
+                                )
+                            )
+                        }
+
+                        <View style={styles.rightArrow}>
+
+                        </View>
+                        <View style={styles.rightArrowOverlap}></View>
+
+                        <Text style={{ color: 'white', fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', width: 175 / 430 * width }}>
+                            {moment(item.createdAt).format('h:mm')}
+                        </Text>
+                    </View>
+                </View>
+            ) : (
+
+                <View style={{ alignItems: 'flex-start', width: width - 50, marginTop: 10 }}>
+
+                    <View style={{
+                        backgroundColor: "#F5F5F5", padding: 10, borderRadius: 5, marginTop: 5, marginLeft: "5%",
+                        maxWidth: '50%', alignSelf: 'flex-start', borderRadius: 20,
+                        //maxWidth: 500,
+                        //padding: 14,
+                        //alignItems:"center",
+
+                    }}>
+                        <Text style={{ fontSize: 14, fontFamily: customFonts.regular }}>
+                            {item.content ? item.content : item.content}
+                        </Text>
+                        <View style={styles.leftArrow}>
+
+                        </View>
+                        <View style={styles.leftArrowOverlap}></View>
+                        <Text style={{
+                            fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', width: 175 / 430 * width,
+                            paddingRight: 10 / 430 * width
+                        }}>
+                            {moment(item.createdAt).format('h:mm')}
+                        </Text>
+                    </View>
+                </View>
+            )
+        )
+
+    }
+
+
+
+
     return (
 
 
@@ -266,6 +530,10 @@ export default function ChatScreen({ navigation, route }) {
                     <View style={{ alignItems: 'center', flexDirection: 'row', width: width - 50 / 430 * width, justifyContent: 'space-between' }}>
                         <View style={{ alignItems: 'center', flexDirection: 'row', gap: 15 / 430 * width }}>
                             <TouchableOpacity onPress={() => {
+                                if(data.from === "Match"){
+                                    navigation.pop(2)
+                                    return
+                                }
                                 navigation.goBack()
                             }}>
                                 <View style={GlobalStyles.backBtn}>
@@ -336,7 +604,9 @@ export default function ChatScreen({ navigation, route }) {
                 transparent={true}
                 animationType='slide'
             >
-                <TouchableWithoutFeedback onPress={() => { setOpenModal3(false) }}>
+                <TouchableWithoutFeedback onPress={() => { 
+                    setOpenModal3(false) }}
+                    >
                     <View style={{ height: height, width: width, alignItems: 'center', justifyContent: 'center', backgroundColor: '#00000050' }}>
 
                         <View style={{
@@ -376,99 +646,68 @@ export default function ChatScreen({ navigation, route }) {
                 style={{ height: height * 0.87, }}
             >
 
+                {/* <View style={{ height: height * 0.77, width: width - 50, alignItems: 'center', justifyContent: 'flex-end' }}>
+                    
+
+
+                </View> */}
+
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     ref={(ref) => {
                         listViewRef = ref;
                     }}
-                   onContentSizeChange={() => {
-                                console.log("Content size changed")
-                                if (listViewRef !== null) {
-                                    listViewRef._listRef._scrollRef.scrollToEnd({ animated: true })
-                                }
-                                setMessages(prevMessages => {
+                    onContentSizeChange={() => {
+                        console.log("Content size changed")
+                        if (listViewRef !== null) {
+                            listViewRef._listRef._scrollRef.scrollToEnd({ animated: true })
+                        }
+                        setMessages(prevMessages => {
 
-                                    let array = prevMessages.filter((item) => {
-                                        return item.from !== "none"
-                                    })
+                            let array = prevMessages.filter((item) => {
+                                return item.from !== "none"
+                            })
 
-                                    return array
-                                });
-                            }}
+                            return array
+                        });
+                    }}
                     data={messages}
-                    renderItem={({ item }) => (
-                        <>
-                            {
-                                fromCurrentUser(item) ? (
-
-                                    <View style={{ alignItems: 'flex-end', marginTop: 10 }}>
-
-                                        <View style={{
-                                            backgroundColor: colors.blueColor,
-                                            padding: 10,
-                                            marginLeft: '45%',
-                                            borderRadius: 5,
-
-                                            marginTop: 5,
-                                            marginRight: "5%",
-                                            maxWidth: '50%',
-                                            alignSelf: 'flex-end',
-                                            borderRadius: 20,
-
-                                            // width: 207 / 430 * width, backgroundColor: colors.blueColor, marginTop: 15, borderRadius: 18,
-                                            // paddingHorizontal: 12, paddingVertical: 8, gap: 3, alignItems: 'flex-start', flexDirection: 'column'
-                                        }}>
-                                            <Text style={{ fontSize: 14, fontFamily: customFonts.regular, color: 'white' }}>
-                                                {item.content}
-                                            </Text>
-                                            <View style={styles.rightArrow}>
-
-                                            </View>
-                                            <View style={styles.rightArrowOverlap}></View>
-                                            <Text style={{ color: 'white', fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', width: 175 / 430 * width }}>
-                                                {moment(item.createdAt).format('h:mm')}
-                                            </Text>
-                                        </View>
-                                    </View>
-                                ) : (
-
-                                    <View style={{ alignItems: 'flex-start', width: width - 50, marginTop: 10 }}>
-
-                                        <View style={{
-                                            backgroundColor: "#F5F5F5",
-                                            padding: 10,
-                                            borderRadius: 5,
-                                            marginTop: 5,
-                                            marginLeft: "5%",
-                                            maxWidth: '50%',
-                                            alignSelf: 'flex-start',
-                                            //maxWidth: 500,
-                                            //padding: 14,
-                                            //alignItems:"center",
-                                            borderRadius: 20,
-                                        }}>
-                                            <Text style={{ fontSize: 14, fontFamily: customFonts.regular }}>
-                                                {item.content ? item.content : item.content}
-                                            </Text>
-                                            <View style={styles.leftArrow}>
-
-                                            </View>
-                                            <View style={styles.leftArrowOverlap}></View>
-                                            <Text style={{
-                                                fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', width: 175 / 430 * width,
-                                                paddingRight: 10 / 430 * width
-                                            }}>
-                                                {moment(item.createdAt).format('h:mm')}
-                                            </Text>
-                                        </View>
-                                    </View>
-                                )
-                            }
-
-                        </>
-                    )}
+                    renderItem={({ item }) => (renderItem(item))}
 
                 />
+
+                {
+                    messages.length === 0 ? (
+                        <>
+                            <Text style={{ fontSize: 14, textAlign: 'center' }}>Select an ice breaker</Text>
+
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, width: width - 50, marginTop: 25 / 930 * height }}>
+                                <ScrollView
+                                    horizontal
+                                    showsHorizontalScrollIndicator={false}
+                                >
+                                    {
+                                        iceBreakers.map((item) => (
+                                            <TouchableOpacity onPress={() => {
+                                                sendMessage(item.text)
+                                            }}>
+                                                <View style={{
+                                                    paddingVertical: 12 / 930 * height, paddingHorizontal: 14 / 430 * height, borderWidth: 1, borderRadius: 50,
+                                                    borderColor: colors.greyText, marginLeft: 10
+                                                }}
+                                                >
+                                                    <Text style={{ fontSize: 16, color: colors.blueColor }}>{item.text}</Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                        ))
+                                    }
+                                </ScrollView>
+                            </View>
+
+                        </>
+                    ) : null
+                }
+
 
                 <View style={{
                     flexDirection: 'row', alignItems: 'center', height: 90 / 930 * height, backgroundColor: 'transparent',
@@ -482,7 +721,7 @@ export default function ChatScreen({ navigation, route }) {
                         />
                     </TouchableOpacity>
 
-                    <AddButtonPopup visible={openModal} close={closeModal} />
+                    {/* <AddButtonPopup visible={openModal} close={closeModal} /> */}
 
                     <View style={{
                         width: 246 / 430 * width, backgroundColor: '#f5f5f5', paddingVertical: 10, borderRadius: 10,
@@ -496,20 +735,98 @@ export default function ChatScreen({ navigation, route }) {
                             }}
                         />
                     </View>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={recording ? stopRecording : startRecording}
+                    >
                         <Image source={require('../../assets/images/micIcon.png')}
-                            style={{ height: 24, width: 24 }}
+                            style={{ height: 24, width: 24, tintColor: recording ? colors.blueColor : 'black' }}
                         />
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        onPress={sendMessage}
+                        onPress={() => sendMessage(message)}
                     >
                         <Image source={message ? activeImage : inactiveImage}
                             style={{ height: 52, width: 52, }}
                         />
                     </TouchableOpacity>
+
+                    {/* add buutton popup */}
+
+                    <Modal
+                        visible={openModal}
+                        transparent={true}
+                        animationType='fade'
+                    >
+                        <TouchableWithoutFeedback onPress={() => {
+                            // setOpenModal(false)
+                        }}>
+                            <View style={{ height: height, width: width, }}>
+
+                                <View style={{
+                                    shadowColor: colors.blueColor, shadowOffset: {
+                                        width: 3,
+                                        height: 3
+                                    }, shadowRadius: 10, shadowOpacity: 0.3,
+                                    height: 100 / 930 * height, width: 180 / 430 * width, backgroundColor: 'white', position: 'absolute', bottom: 75, left: 30,
+                                    alignItems: 'center', borderRadius: 10, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 15 / 430 * width,
+                                }}>
+                                    <View style={{ flexDirection: 'column', alignItems: 'center', gap: 10 / 930 * height }}>
+                                        <TouchableOpacity onPress={() => {
+                                            captureMedia()
+                                        }}>
+                                            <Image source={require('../../assets/images/camera.png')}
+                                                style={{ height: 52 / 930 * height, width: 52 / 930 * height, }}
+                                            />
+                                        </TouchableOpacity>
+                                        <Text style={{ fontSize: 14 / 930 * height, fontFamily: customFonts.regular }}>Camera</Text>
+                                    </View>
+                                    <View style={{ flexDirection: 'column', alignItems: 'center', gap: 10 / 930 * height }}>
+                                        <TouchableOpacity onPress={() => {
+                                            pickMedia()
+                                        }}>
+                                            <Image source={require('../../assets/images/gallery.png')}
+                                                style={{ height: 52 / 930 * height, width: 52 / 930 * height, }}
+                                            />
+                                        </TouchableOpacity>
+                                        <Text style={{ fontSize: 14 / 930 * height, fontFamily: customFonts.regular }}>Gallery</Text>
+                                    </View>
+                                </View>
+                            </View>
+                        </TouchableWithoutFeedback>
+
+                    </Modal>
+
+                    {/* open image modal */}
+
+                    <Modal
+                        visible={openImage !== null}
+                        animationType='fade'
+                        transparent={true}
+                    >
+
+                        <View style={{ height: height, width: width,backgroundColor:'#000000',alignItems:'center',justifyContent:'center' }}>
+                            <View style = {{height:height*0.8,justifyContent:'center',alignItems:'center'}}>
+                                <TouchableOpacity 
+                                    style = {{
+                                        backgroundColor:colors.greyText,position:'absolute',top:0,borderRadius:50,height:40,width:40,right:10,
+                                        alignItems:'center',justifyContent:'center'
+                                    }}
+                                onPress={()=>{
+                                    setOpenImage(null)
+                                }} >
+                                   <Image source={require('../../assets/images/close.png')} 
+                                        style = {{height:30,width:30}}
+                                   />
+                                </TouchableOpacity>
+                                <Image source={{uri:openImage}} 
+                                    style = {{height:height*0.5,width:width-30,borderRadius:5}}
+                                />
+                            </View>
+                        </View>
+                    </Modal>
                 </View>
+
 
             </KeyboardAvoidingView>
         </View>

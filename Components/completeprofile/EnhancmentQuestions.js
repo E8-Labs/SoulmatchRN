@@ -38,7 +38,7 @@ const EnhancmentQuestions = ({ navigation, route }) => {
     const [loadImage, setLoadImage] = useState(false)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null);
-
+    const [justifyContent, setJustifyContent] = useState('center')
 
     // questions[0].answer = json.data;
 
@@ -56,35 +56,38 @@ const EnhancmentQuestions = ({ navigation, route }) => {
 
             const userAnswers = data.user.answers;
             let updatedQuestions = []
+            console.log('ansers ara', userAnswers)
 
-                let found  = -1
-                for(let i = 0; i < questions.length; i++){
-                    let item = questions [i];
-                    for(let j = 0; j < userAnswers.length; j++){
-                        let element = userAnswers[j];
+            let found = -1
+            for (let i = 0; i < questions.length; i++) {
+                let item = questions[i];
+                for (let j = 0; j < userAnswers.length; j++) {
+                    let element = userAnswers[j];
 
-                        if(item.id === element.questionId){
-                            updatedQuestions.push(element)
-                        }
-                        else{
-                            updatedQuestions.push(item)
-                        }
+                    if (item.id === element.questionId) {
+                        updatedQuestions.push(element)
+                        console.log('answer found', item.id)
+                    }
+                    else {
+                        updatedQuestions.push(item)
                     }
                 }
-                console.log("Updated questions are ", updatedQuestions)
-                setQuestions(updatedQuestions)
+            }
+            console.log("Updated questions are ", updatedQuestions)
+            setQuestions(updatedQuestions)
+            
 
-        // const mergedData = questions.map(question => {
-        //     return {
-        //         ...questions,
-        //         media: userAnswers.filter(answer => {
-        //             // console.log('testing', answer)
-        //             answer.questionId === question.id
-        //         })
-        //     };
-        // });
-        // setQuestions(mergedData)
-        //    console.log('updated questions data', mergedData)
+            // const mergedData = questions.map(question => {
+            //     return {
+            //         ...questions,
+            //         media: userAnswers.filter(answer => {
+            //             // console.log('testing', answer)
+            //             answer.questionId === question.id
+            //         })
+            //     };
+            // });
+            // setQuestions(mergedData)
+            //    console.log('updated questions data', mergedData)
         }
 
     }, [])
@@ -111,6 +114,7 @@ const EnhancmentQuestions = ({ navigation, route }) => {
 
     const getQuestions = async () => {
         setShowIndicator2(true)
+        console.log('trying to get questions')
         try {
             const data = Settings.get('USER')
             if (data) {
@@ -291,7 +295,7 @@ const EnhancmentQuestions = ({ navigation, route }) => {
                         handleCheckboxclick(item.id)
                         // setMedia(json.data)
 
-                    } else  {
+                    } else {
                         Alert.alert(json.message)
                         console.log('json message is', json.message)
                     }
@@ -334,8 +338,8 @@ const EnhancmentQuestions = ({ navigation, route }) => {
             (question.answerImage !== undefined && question.answerImage !== null) ||
             (question.answerText !== undefined && question.answerText !== null)) {
             answered = true;
-            console.log("here we go",CheckBox)
-            
+            console.log("here we go", CheckBox)
+
             // setCheckBox([...CheckBox,question.id]);
         }
         console.log(`Question ${question.id} has answer ${question.answerImage} ${question.answerVideo} ${question.answerText}`)
@@ -349,7 +353,7 @@ const EnhancmentQuestions = ({ navigation, route }) => {
         // if (CheckBox.includes(itemId)) {
         //     setCheckBox(CheckBox.filter(id => id !== itemId));
         // } else {
-       
+
         // }
     };
 
@@ -373,6 +377,23 @@ const EnhancmentQuestions = ({ navigation, route }) => {
     }
 
 
+    useEffect(() => {
+        console.log("Use Effect")
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+            setJustifyContent("fext-start")
+        });
+
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+            setJustifyContent('center')
+        });
+
+        return () => {
+            keyboardDidShowListener.remove();
+            keyboardDidHideListener.remove();
+        };
+    }, []);
+
+
     return (
         <View style={{ display: 'flex', alignItems: 'center' }}>
             <View style={{ width: 370 / 430 * width }}>
@@ -391,22 +412,27 @@ const EnhancmentQuestions = ({ navigation, route }) => {
                     </Text>
                 </View>
                 {/* Code for progressbar */}
-                <View style={{ flexDirection: 'row', marginTop: 40 / 930 * height, justifyContent: 'space-between', display: 'flex', alignItems: 'center' }}>
-                    <Image source={require('../../assets/questionmark.png')} style={{ height: 56, width: 56, resizeMode: 'contain' }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                </View>
+                {
+                    data.from !== "Profile" ? (
+                        <View style={{ flexDirection: 'row', marginTop: 40 / 930 * height, justifyContent: 'space-between', display: 'flex', alignItems: 'center' }}>
+                            <Image source={require('../../assets/questionmark.png')} style={{ height: 56, width: 56, resizeMode: 'contain' }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                        </View>
+                    ) : null
+                }
+
                 <View style={{ marginTop: 40 / 930 * height }}>
                     <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'flex-end', width: 370 / 430 * width }}>
                         <Text style={{ fontWeight: '500', fontSize: 19 }}>
@@ -426,11 +452,11 @@ const EnhancmentQuestions = ({ navigation, route }) => {
                     {/* Flat list code goes here */}
                     {
                         showIndicator2 ? (
-                            <ActivityIndicator size={'large'} color={colors.blueColor} style={{ height: height * 0.55 }} />
+                            <ActivityIndicator size={'large'} color={colors.blueColor} style={{ height: data.from === "Profile" ? height * 0.67 : height * 0.55 }} />
                         ) : (
                             <FlatList showsVerticalScrollIndicator={false}
                                 keyExtractor={item => item.id}
-                                style={{ height: height * 0.55 }}
+                                style={{ height: data.from === "Profile" ? height * 0.67 : height * 0.55 }}
                                 data={questions}
                                 renderItem={({ item, index }) => (
                                     <View style={{ width: 370 / 430 * width, borderWidth: 1, borderColor: '#E6E6E6', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 30 / 930 * height, borderRadius: 10, padding: 12 }}>
@@ -459,26 +485,26 @@ const EnhancmentQuestions = ({ navigation, route }) => {
                                                 item.answerImage ? (
                                                     <>
                                                         {
-                                                            item.questionId === (index + 1).toString() && (
-                                                                <>
-                                                                    <Image source={{ uri: item.answerImage }}
-                                                                        onLoadStart={() => { setLoadImage(true) }}
-                                                                        onLoadEnd={() => {
-                                                                            setLoadImage(false)
-                                                                        }}
-                                                                        placeholder={blurhash}
-                                                                        contentFit="cover"
-                                                                        transition={1000}
-                                                                        style={{ width: 340 / 430 * width, height: 208 / 930 * width }}
-                                                                    />
+                                                            // item.questionId === (index + 1).toString() && (
+                                                            <>
+                                                                <Image source={{ uri: item.answerImage }}
+                                                                    onLoadStart={() => { setLoadImage(true) }}
+                                                                    onLoadEnd={() => {
+                                                                        setLoadImage(false)
+                                                                    }}
+                                                                    placeholder={blurhash}
+                                                                    contentFit="cover"
+                                                                    transition={1000}
+                                                                    style={{ width: 340 / 430 * width, height: 208 / 930 * width }}
+                                                                />
 
-                                                                    {
-                                                                        loadImage ? (
-                                                                            <ActivityIndicator size={'small'} color={colors.blueColor} style={{ marginTop: -50 }} />
-                                                                        ) : <></>
-                                                                    }
-                                                                </>
-                                                            )
+                                                                {
+                                                                    loadImage ? (
+                                                                        <ActivityIndicator size={'small'} color={colors.blueColor} style={{ marginTop: -50 }} />
+                                                                    ) : <></>
+                                                                }
+                                                            </>
+                                                            // )
                                                         }
 
                                                     </>
@@ -552,12 +578,25 @@ const EnhancmentQuestions = ({ navigation, route }) => {
                     <View style={{ marginTop: 15 / 930 * height }}>
                         <TouchableOpacity
                             onPress={() => {
+                                if( data.from === 'Profile'){
+                                    navigation.goBack()
+                                    return
+                                }
                                 navigation.navigate('AddLocation');
                             }}
                             style={{ backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
-                            <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>
-                                Next
-                            </Text>
+                            {
+                                data.from === 'Profile' ? (
+                                    <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>
+                                        Save
+                                    </Text>
+                                ) : (
+                                    <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>
+                                        Next
+                                    </Text>
+                                )
+                            }
+
                         </TouchableOpacity>
                     </View>
 
@@ -575,10 +614,10 @@ const EnhancmentQuestions = ({ navigation, route }) => {
                 >
 
                     <TouchableWithoutFeedback style={{ height: height, }} onPress={() => Keyboard.dismiss()}>
-                        <View style={{ height: height, gap: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#00000080' }}>
+                        <View style={{ height: height, gap: 20, display: 'flex', alignItems: 'center', justifyContent: justifyContent, backgroundColor: '#00000080' }}>
 
                             {/* Code for uper section of modal */}
-                            <View style={{ height: 320 / 930 * height, width: 380 / 430 * width, backgroundColor: '#ffffff', borderRadius: 10, display: 'flex', alignItems: 'center', padding: 20 }}>
+                            <View style={{ marginTop: 70 / 930 * height, height: 320 / 930 * height, width: 380 / 430 * width, backgroundColor: '#ffffff', borderRadius: 10, display: 'flex', alignItems: 'center', padding: 20 }}>
                                 <View style={{ width: 350 / 430 * width, height: '100%' }}>
                                     <View style={{ width: '100%', height: 73 / 930 * height, justifyContent: 'space-between' }}>
                                         <Text style={{ fontWeight: '500', fontSize: 16 }}>

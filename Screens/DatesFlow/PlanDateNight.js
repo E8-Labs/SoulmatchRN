@@ -2,7 +2,7 @@ import {
     View, Text, SafeAreaView, Dimensions, TouchableOpacity, Image, StyleSheet, Modal, TouchableWithoutFeedback, TextInput,
     ScrollView, Keyboard
 } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import customFonts from '../../assets/fonts/Fonts';
 import colors from '../../assets/colors/Colors';
@@ -28,6 +28,7 @@ export default function PlanDateNigth(props) {
 
     const [openModal, setOpenModal] = useState(false)
     const [selectedCat, setselectedCat] = useState(1);
+    const [modalHeight, setModalHeight] = useState(height * 0.6)
 
 
 
@@ -106,12 +107,32 @@ export default function PlanDateNigth(props) {
         },
     ]
 
+
+    useEffect(() => {
+        console.log("Use Effect")
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+            console.log("Keyboard show")
+            setModalHeight(height * 0.9)
+        });
+
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+            console.log("Keyboard hide")
+            setModalHeight(height * 0.6);
+        });
+
+        return () => {
+            keyboardDidShowListener.remove();
+            keyboardDidHideListener.remove();
+        };
+    }, []);
+
+
     return (
         <SafeAreaView>
             <View style={{ alignItems: 'center', height: height - 85 / 930 * height, width: width, flexDirection: 'column', justifyContent: 'space-between' }}>
                 <View style={{ alignItems: 'center', flexDirection: 'column', gap: 32 / 930 * height }}>
                     <View style={{ width: width - 60 / 430 * width, flexDirection: 'row', alignItems: 'center', gap: 20 / 430 * width }}>
-                        <TouchableOpacity onPress={()=>{
+                        <TouchableOpacity onPress={() => {
                             props.navigation.goBack()
                         }}>
                             <View style={GlobalStyles.backBtn}>
@@ -206,7 +227,7 @@ export default function PlanDateNigth(props) {
 
                 >
                     <Text style={GlobalStyles.btnText}>
-                       Submit
+                        Submit
                     </Text>
                 </TouchableOpacity>
 
@@ -223,13 +244,13 @@ export default function PlanDateNigth(props) {
             >
                 <TouchableWithoutFeedback style={{ height: height }}
                     onPress={() => {
-                        Keyboard.dismiss()   
+                        Keyboard.dismiss()
                     }}
                 >
                     <View style={{ height: height, width: width, backgroundColor: '#00000050', justifyContent: 'flex-end' }}>
                         <View style={{
-                            height: height * 0.6, backgroundColor: 'white', borderRadius: 20, alignItems: 'center',justifyContent:'space-between',
-                            paddingHorizontal: 30 / 430 * height, paddingVertical: 25 / 930 * height,flexDirection:'column'
+                            height: modalHeight, backgroundColor: 'white', borderRadius: 20, alignItems: 'center', justifyContent: 'space-between',
+                            paddingHorizontal: 30 / 430 * height, paddingVertical: 25 / 930 * height, flexDirection: 'column'
                         }}>
                             <View style={{ flexDirection: 'column', alignItems: 'center', }}>
                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 60 }}>
@@ -251,7 +272,7 @@ export default function PlanDateNigth(props) {
                                         Email
                                     </Text>
                                     <TextInput
-                                        style={[GlobalStyles.textInput,{marginTop:5}]}
+                                        style={[GlobalStyles.textInput, { marginTop: 5 }]}
                                         placeholder='Enter city/state'
                                     />
 
@@ -262,19 +283,19 @@ export default function PlanDateNigth(props) {
                                     <TextInput
                                         multiline
                                         placeholder='Text invitation'
-                                        style={[GlobalStyles.textInput, { height: 185 / 930 * height, paddingVertical: 50,marginTop:5}]}
+                                        style={[GlobalStyles.textInput, { height: 185 / 930 * height, paddingVertical: 15, marginTop: 5 }]}
 
                                     />
                                 </View>
-
+                                <TouchableOpacity //onPress={close} 
+                                    style={[GlobalStyles.reqtengularBtn, { marginTop: 20 / 930 * height }]}>
+                                    <Text style={[GlobalStyles.btnText,]}>
+                                        Submit
+                                    </Text>
+                                </TouchableOpacity>
                             </View>
 
-                            <TouchableOpacity //onPress={close} 
-                                style={[GlobalStyles.reqtengularBtn, { marginTop: 0 / 930 * height }]}>
-                                <Text style={[GlobalStyles.btnText,]}>
-                                    Submit
-                                </Text>
-                            </TouchableOpacity>
+
                         </View>
                     </View>
                 </TouchableWithoutFeedback>

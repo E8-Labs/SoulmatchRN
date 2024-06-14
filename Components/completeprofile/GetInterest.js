@@ -57,8 +57,8 @@ const GetInterest = ({ navigation, route }) => {
 
 
 
-    const SelectMinAge = '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,61,62,63,64,65,66,67,68,69,70,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100'.split(',');
-    const SelectMaxAge = '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,61,62,63,64,65,66,67,68,69,70,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100'.split(',');
+    const SelectMinAge = '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90'.split(',');
+    const SelectMaxAge = '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90'.split(',');
 
 
     const handleNext = async () => {
@@ -125,28 +125,33 @@ const GetInterest = ({ navigation, route }) => {
                     </Text>
                 </View>
                 {/* Code for progressbar */}
-                <View style={{ flexDirection: 'row', marginTop: 40 / 930 * height, justifyContent: 'space-between', display: 'flex', alignItems: 'center' }}>
-                    <Image source={require('../../assets/loveicon.png')} style={{ height: 56, width: 56, resizeMode: 'contain' }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                    <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
-                </View>
+                {
+                    data.from !== "Profile" ? (
+                        <View style={{ flexDirection: 'row', marginTop: 40 / 930 * height, justifyContent: 'space-between', display: 'flex', alignItems: 'center' }}>
+                            <Image source={require('../../assets/loveicon.png')} style={{ height: 56, width: 56, resizeMode: 'contain' }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                            <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
+                        </View>
+                    ) : null
+                }
+
 
                 <Text style={{ marginTop: 30 / 930 * height, fontWeight: '500', fontSize: 20 }}>
                     Tell us about your interests
                 </Text>
 
-                <Text style={{ fontWeight: '500', fontSize: 18, color: '#66666690', marginTop: 30 / 930 * height }}>
+                <Text style={{ fontWeight: '500', fontSize: 18, color: colors.greyLightText, marginTop: 30 / 930 * height }}>
                     Interested in
                 </Text>
 
@@ -191,7 +196,7 @@ const GetInterest = ({ navigation, route }) => {
                         </View>
                     </TouchableOpacity> */}
                 </View>
-                <Text style={{ fontWeight: '500', fontSize: 18, color: '#66666690', marginTop: 20 / 930 * height }}>
+                <Text style={{textAlign:'center', fontWeight: '500', fontSize: 18, color:  colors.greyLightText, marginTop: 20 / 930 * height }}>
                     Age range
                 </Text>
 
@@ -209,7 +214,7 @@ const GetInterest = ({ navigation, route }) => {
                                     width={50 / width * 430}
                                     // backgroundColor='#000000'
                                     selectedStyle={{ borderWidth: 2, width: "4", borderRadius: 50, borderColor: colors.blueColor }}
-                                    initialSelectedIndex={MinAge-1}
+                                    initialSelectedIndex={MinAge - 1}
                                     items={SelectMinAge.map(name => ({ label: name, value: '' }))}
                                     onChange={({ item }) => {
                                         setMinAge(item.label)
@@ -229,7 +234,7 @@ const GetInterest = ({ navigation, route }) => {
                                     width={50 / width * 430}
                                     // backgroundColor='#000000'
                                     selectedStyle={{ borderWidth: 2, width: "4", borderRadius: 50, borderColor: colors.blueColor }}
-                                    initialSelectedIndex={MaxAge-1}
+                                    initialSelectedIndex={MaxAge - 1}
                                     items={SelectMaxAge.map(name => ({ label: name, value: '' }))}
                                     onChange={({ item }) => {
                                         setMaxAge(item.label)
@@ -245,12 +250,12 @@ const GetInterest = ({ navigation, route }) => {
 
                 {
                     loading ? (
-                        <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop: 0 / 930 * height }} />
+                        <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop:data.from === "Profile" ? 150 / 930 * height:50 / 930 * height}} />
                     ) : (
                         <TouchableOpacity onPress={handleNext}
                             style={{
                                 backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width,
-                                display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10, marginTop: 0 / 930 * height
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10, marginTop: data.from === "Profile" ? 150 / 930 * height:50 / 930 * height
                             }}>
                             {
                                 data.from === "Profile" ? (

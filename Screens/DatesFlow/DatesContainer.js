@@ -95,6 +95,7 @@ export default function DatesContainer({ navigation }) {
                 <ScrollView style={{}} showsVerticalScrollIndicator={false}>
                     <View style={{ alignItems: 'center' }}>
                         <View style={{ width: width, marginTop: 25, height: 43 / 930 * height }}>
+                            {/* category  */}
                             <FlatList
                                 showsHorizontalScrollIndicator={false}
                                 horizontal
@@ -132,6 +133,8 @@ export default function DatesContainer({ navigation }) {
                             {/* </TouchableOpacity> */}
                         </View>
 
+                        {/* date nights */}
+
                         <FlatList
                             horizontal
                             showsHorizontalScrollIndicator={false}
@@ -151,7 +154,7 @@ export default function DatesContainer({ navigation }) {
                                         marginLeft: 15 / 430 * width, flexDirection: 'column', gap: 10 / 930 * height
                                     }}>
                                         <Image source={{ uri: item.imageUrl }}
-                                            style={{ height: 98 / 930 * height, width: 158 / 430 * width, borderRadius: 10, resizeMode: 'contain' }}
+                                            style={{ height: 98 / 930 * height, width: 158 / 430 * width, borderRadius: 10, resizeMode: 'cover' }}
                                         />
                                         <View style={{ alignItems: 'flex-start', flexDirection: 'column', width: 150 / 430 * width, }}>
                                             <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, }}>{item.name}</Text>
@@ -215,7 +218,7 @@ export default function DatesContainer({ navigation }) {
                                         marginLeft: 15 / 430 * width, flexDirection: 'column', gap: 10 / 930 * height
                                     }}>
                                         <Image source={{ uri: item.imageUrl }}
-                                            style={{ height: 98 / 930 * height, width: 158 / 430 * width, borderRadius: 10, resizeMode: 'contain' }}
+                                            style={{ height: 98 / 930 * height, width: 158 / 430 * width, borderRadius: 10, resizeMode: 'cover' }}
                                         />
                                         <View style={{ alignItems: 'flex-start', flexDirection: 'column', width: 150 / 430 * width, }}>
                                             <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, }}>{item.name}</Text>
@@ -247,9 +250,11 @@ export default function DatesContainer({ navigation }) {
 
 
 
-                        <View style={{ width: width - 60 / 430 * width, alignItems: 'flex-start', marginTop: 22 / 930 * height }}>
+                        <View style={{ width: width - 60 / 430 * width, alignItems: 'flex-start', marginTop: 22 / 930 * height,marginBottom: 22 / 930 * height }}>
                             <Text style={{ fontSize: 18, fontFamily: customFonts.meduim }}>Upcoming Dates</Text>
                         </View>
+
+                        {/* upcoming dates */}
 
                         {
                             upComingDates && upComingDates.length > 0 ? (
@@ -272,7 +277,7 @@ export default function DatesContainer({ navigation }) {
                                                 marginLeft: 15 / 430 * width, flexDirection: 'column', gap: 10 / 930 * height
                                             }}>
                                                 <Image source={{ uri: item.datePlace.imageUrl }}
-                                                    style={{ height: 98 / 930 * height, width: 158 / 430 * width, borderRadius: 10, resizeMode: 'contain' }}
+                                                    style={{ height: 98 / 930 * height, width: 158 / 430 * width, borderRadius: 10, resizeMode: 'cover' }}
                                                 />
                                                 <View style={{ alignItems: 'flex-start', flexDirection: 'column', width: 150 / 430 * width, }}>
                                                     <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, }}>{item.datePlace.name}</Text>

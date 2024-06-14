@@ -14,6 +14,8 @@ import ApisPath from '../../lib/ApisPath/ApisPath'
 import LikesList from '../DiscoverFlow/LikesList';
 import FilterPopup from '../../Components/FilterPopup';
 import DiscoverGotMatch from '../../Components/DiscoverGotMatch';
+import { Video, ResizeMode, AVPlaybackStatu0s } from 'expo-av';
+import { getDistance } from 'geolib';
 
 const { height, width } = Dimensions.get('window')
 
@@ -37,13 +39,20 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
     const [loadImage, setLoadImage] = useState(false)
     const [loadImage2, setLoadImage2] = useState(false)
     const [loadImage3, setLoadImage3] = useState(false)
+    const [loadVideo, setLoadVideo] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [openModal, setOpenModal] = useState(false);
     const [LikeIndicator, setLikeIndicator] = useState(false);
     const [rejecIndicator, setRejectIndicator] = useState(false);
     const [questions, setQuestions] = useState([]);
+    const [isPlaying, setIsPlaying] = useState(true);
+    const [duration, setDuration] = useState(0);
+    const videoRef = React.useRef(null);
+    const [video, setVideo] = useState(null);
+    const [status, setStatus] = React.useState({});
+    const ref = useRef(null);
 
-    console.log("data from prev screen", currentIndex)
+    // console.log("data from prev screen", data[currentIndex].media)
     console.log("current index", currentIndex)
     console.log("data length", data.length)
 
@@ -53,7 +62,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
 
             let routeData = {
                 navigate: 'Logout',
-                user:''
+                user: ''
             }
             onMenuClick(routeData)
 
@@ -155,7 +164,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                     if (json.status === true) {
                         console.log('profile liked', json.data)
                         console.log('Liked:', data[currentIndex].id);
-                        if (typeof json.match !== "undefined" && json.match === true) {
+                        if (typeof json.match !== undefined && json.match === true) {
                             let routeData = {
                                 navigate: 'GotMatch',
                                 user: data[currentIndex]
@@ -260,11 +269,37 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
         }
 
     }
+    const formatDuration = (durationMillis) => {
+        const totalSeconds = Math.floor(durationMillis / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    }
+    const calculateDistance = () => {
+        const userdata = Settings.get('USER')
+        if (userdata) {
+            let d = JSON.parse(userdata)
+
+            // setLocalUser(d)
+            let loaclLat = d.user.lat
+            let localLong = d.user.lang
+            let lat = data[currentIndex] ? data[currentIndex].lat : ''
+            let lang = data[currentIndex] ? data[currentIndex].lang : ''
+            // console.log('user data fro local is', d)
+            // return
+            const distance = getDistance(
+                { latitude: loaclLat, longitude: localLong },
+                { latitude: lat, longitude: lang }
+            );
+            console.log('total distance is', distance)
+            const distanceInMiles = distance / 1000 * 0.621371.toFixed(2);
+            return distanceInMiles
+        }
+    }
 
     return (
 
         <SafeAreaView>
-
             <Animated.View style={{ ...styles.componentContainer, opacity: fadeAnim }}>
                 <View style={{ height: height, alignItems: 'center' }}>
                     {
@@ -294,7 +329,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
 
                                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 / 430 * width }}>
                                     <TouchableOpacity onPress={() => {
-                                          let routeData = {
+                                        let routeData = {
                                             navigate: 'LikesList',
                                             user: ''
                                         }
@@ -309,7 +344,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                         onPress={() => {
 
                                             let routeData = {
-                                                user:'',
+                                                user: '',
                                                 navigate: 'Notifications'
                                             }
                                             onMenuClick(routeData)
@@ -349,7 +384,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                         placeholder={blurhash}
                                         contentFit="cover"
                                         transition={1000}
-                                        style={{ backgroundColor: 'grey', resizeMode: 'cover', minHeight: height * 0.6, width: width - 40, borderRadius: 20, }}
+                                        style={{ backgroundColor: 'grey', minHeight: height * 0.6, width: width - 40, borderRadius: 10, }}
                                     />
                                     {
                                         loadImage ? (
@@ -358,7 +393,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                     }
                                     <View
                                         style={{
-                                            width: '80%', flexDirection: 'row', top: height * 0.51,
+                                            width: '80%', flexDirection: 'row', top: height * 0.52,
                                             justifyContent: 'space-between', position: 'absolute', alignSelf: 'center'
                                         }}>
                                         {
@@ -367,7 +402,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                             ) : (
                                                 <TouchableOpacity
                                                     style={{
-                                                        width: 60, height: 60, backgroundColor: '#fff', elevation: 5, borderRadius: 30,
+                                                        width: 56 / 430 * width, height: 56 / 930 * height, backgroundColor: '#fff', elevation: 5, borderRadius: 30,
                                                         justifyContent: 'center', alignItems: 'center',
                                                     }}
                                                     onPress={() => {
@@ -391,7 +426,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                                     handleReject()
                                                 }}
                                                     style={{
-                                                        width: 60, height: 60, backgroundColor: '#fff', elevation: 5, borderRadius: 30,
+                                                        width: 56 / 430 * width, height: 56 / 930 * height, backgroundColor: '#fff', elevation: 5, borderRadius: 30,
                                                         justifyContent: 'center', alignItems: 'center',
                                                     }}
                                                 >
@@ -452,7 +487,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                             <Image source={require('../../assets/images/location.png')}
                                                 style={styles.viewImage}
                                             />
-                                            <Text style={styles.viewText}>5 miles</Text>
+                                            <Text style={styles.viewText}> miles</Text>
                                         </View>
                                         <View style={styles.viewStyle}>
                                             <Image source={require('../../assets/images/eduCap.png')}
@@ -502,7 +537,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                             ) : null
                                         } */}
                                                         {
-                                                            item.url || item.thumb_url ? (
+                                                            item.type === "image" ? (
                                                                 <>
                                                                     <Image source={{ uri: item.url ? item.url : thumb_url }}
                                                                         onLoadStart={() => { setLoadImage2(true) }}
@@ -522,7 +557,46 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                                                     }
                                                                 </>
 
-                                                            ) : null
+                                                            ) : (
+                                                                item.type === "video" ? (
+                                                                    <>
+                                                                        <Video
+                                                                            ref={videoRef}
+                                                                            source={{
+                                                                                uri: item.url
+                                                                            }}
+                                                                            style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
+                                                                            useNativeControls
+                                                                            resizeMode={ResizeMode.COVER}
+                                                                            isLooping={true}
+                                                                            // shouldPlay={isPlaying}
+                                                                            onPlaybackStatusUpdate={status => {
+                                                                                setStatus(() => status)
+                                                                                setIsPlaying(status.isPlaying);
+                                                                            }}
+                                                                            onLoad={(status) => {
+                                                                                setDuration(status.durationMillis)
+                                                                                setLoadVideo(false)
+                                                                            }} // Set duration when video loads
+                                                                            onLoadStart={() => {
+                                                                                setLoadVideo(true)
+                                                                            }}
+
+                                                                        />
+                                                                        {!isPlaying && duration > 0 && (
+                                                                            <View style={styles.durationContainer}>
+                                                                                <Text style={styles.durationText}>{formatDuration(duration)}</Text>
+                                                                            </View>
+                                                                        )}
+
+                                                                        {
+                                                                            loadVideo ? (
+                                                                                <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 180 / 430 * width }} />
+                                                                            ) : <></>
+                                                                        }
+                                                                    </>
+                                                                ) : ''
+                                                            )
                                                         }
 
                                                     </View>
@@ -680,8 +754,32 @@ const styles = StyleSheet.create({
         height: 28 / 930 * height,
         width: 28 / 930 * height,
         resizeMode: 'contain'
-    }
-})
+    },
+
+    durationContainer: {
+        position: 'absolute',
+        bottom: 30,
+        left: 30 / 430 * width,
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        borderRadius: 5,
+        padding: 5,
+    },
+    durationText: {
+        color: 'white',
+        fontSize: 14,
+    },
+    activityIndicator: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        zIndex: 1,
+    },
+});
 
 
 

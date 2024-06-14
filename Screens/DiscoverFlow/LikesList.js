@@ -89,9 +89,14 @@ export default function LikesList(props) {
         if (result) {
           let json = await result.json()
           if (json.status === true) {
-            console.log('profile liked', json.data)
+            console.log('profile liked', json)
             if(json.match === true){
-              props.navigation.navigate("GotMatch")
+              props.navigation.navigate("GotMatch",{
+                data:{
+                  navigate: 'GotMatch',
+                  user: json.data.from
+                }
+              })
             }
            
           } else {
@@ -213,7 +218,7 @@ export default function LikesList(props) {
                                 />
                                 {
                                   loadImage ? (
-                                    <ActivityIndicator size={'small'} color={colors.blueColor} style={{ marginLeft: -20, }} />
+                                    <ActivityIndicator size={'small'} color={colors.blueColor} style={{ marginLeft: -50/430*width, }} />
                                   ) : <></>
                                 }
                                 <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>

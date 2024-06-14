@@ -1,7 +1,8 @@
 import React from 'react';
 import { useRef, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, Dimensions, TextInput, TouchableWithoutFeedback, Keyboard } from 'react-native'
+import { View, Text, Image, TouchableOpacity, Dimensions, TextInput, TouchableWithoutFeedback, Keyboard, Settings } from 'react-native'
 import GlobalStyles from '../../assets/styles/GlobalStyles';
+import ApisPath from '../../lib/ApisPath/ApisPath';
 const ProfileEmailVerification = ({ navigation, route }) => {
 
     const { height, width } = Dimensions.get('window');
@@ -126,6 +127,35 @@ const ProfileEmailVerification = ({ navigation, route }) => {
         navigation.navigate('CreatePassword', {
             user: user
         });
+    }
+
+    const verifyEmail =async () =>{
+        try{
+            const data = Settings.get('USER')
+            if(data){
+                let d = JSON.parse(data)
+                let body = JSON.stringify({
+                    email:user.email,
+                    code:code
+                })
+                const result = await fetch(ApisPath.ApiVerifyEmail,{
+                    method:'post',
+                    headers:{
+                        'Content-Type': 'application/json'
+                    },
+                    body:body
+                })
+                if(result){
+                    let json = await result.json()
+
+                    if(json.status === true){
+                        console.log('object', object)
+                    }
+                }
+            }
+        } catch (e) {
+            console.log('error finding in verify email', e)
+        }
     }
 
     return (

@@ -20,8 +20,12 @@
       "bundleIdentifier": "com.e8labs.soulmatch",
       "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {
+        "UIBackgroundModes": [
+          "audio"
+        ],
         "buildNumber": "41.0",
         "NSLocationWhenInUseUsageDescription": "This app uses your location to find you nearby matches.",
+        "NSMicrophoneUsageDescription": "Let Soulmatch access microphone to record voice messages.",
         "CFBundleURLTypes": [
           {
             "CFBundleURLSchemes": [
@@ -30,18 +34,31 @@
           },
           {
             "CFBundleURLSchemes": [
+              "http://192.168.10.18:8081"
+            ]
+          },
+          {
+            "CFBundleURLSchemes": [
               "com.googleusercontent.apps.532960006063-0lrmd4ktecke70t7ncjr2v7vapt230h6"
             ]
           },
-         { "CFBundleURLTypes": [
-            {
-              "CFBundleURLSchemes": ["fb753527366987241"]
-            }
-          ],
-          "FacebookAppID": "753527366987241",
-          "FacebookDisplayName": "SoulMatch",
-          "LSApplicationQueriesSchemes": ["fbapi", "fb-messenger-api", "fbauth2", "fbshareextension"]
-        }
+          {
+            "CFBundleURLTypes": [
+              {
+                "CFBundleURLSchemes": [
+                  "fb753527366987241"
+                ]
+              }
+            ],
+            "FacebookAppID": "753527366987241",
+            "FacebookDisplayName": "SoulMatch",
+            "LSApplicationQueriesSchemes": [
+              "fbapi",
+              "fb-messenger-api",
+              "fbauth2",
+              "fbshareextension"
+            ]
+          }
         ]
       }
     },
@@ -71,11 +88,12 @@
       ],
       [
         "@react-native-google-signin/google-signin",
-        
         {
           "iosUrlScheme": "com.googleusercontent.apps.532960006063-0lrmd4ktecke70t7ncjr2v7vapt230h6"
         }
-      ]
+      ],
+      "expo-av"
+     
     ],
     "extra": {
       "eas": {

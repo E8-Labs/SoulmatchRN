@@ -1,6 +1,6 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect ,useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Dimensions ,Platform,Settings} from 'react-native';
 
 
 
@@ -76,6 +76,14 @@ import NotificationsScreen from './Screens/NotificationsFlow/NotificationsScreen
 
 // SplashScreen.preventAutoHideAsync();
 
+
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
+import ApisPath from './lib/ApisPath/ApisPath';
+import colors from './assets/colors/Colors';
+
+
 const { screenHeight, screenWidth } = Dimensions.get('window');
 const Stack = createNativeStackNavigator();
 
@@ -100,6 +108,117 @@ export default function App() {
 
   // })
 
+
+  const [expoPushToken, setExpoPushToken] = useState('');
+
+  useEffect(()=>{
+    getNotificationPermission()
+  },[])
+  const updateProfile = async (token) => {
+    console.log('trying to update profile', token)
+    const data = Settings.get("USER")
+    try {
+        if (data) {
+            let d = JSON.parse(data)
+            let body = JSON.stringify({
+                fcm_token: token
+            })
+            console.log('boddy is ', body)
+            // return
+
+            const result = await fetch(ApisPath.ApiUpdateProfile, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + d.token
+                },
+                body: body
+            })
+            if (result) {
+                let json = await result.json()
+                if (json.status === true) {
+                    // console.log('updated profile data is', json.data)
+                    d.user=json.data
+                    Settings.set({
+                        USER:JSON.stringify(d)
+                    })
+                    // navigation.navigate("CongratulationsScreen")
+                } else {
+                    console.log('json message is', json.message)
+                }
+            }
+        }
+
+    } catch (error) {
+        console.log('error finding in update profile', error)
+    }
+}
+
+
+  const getNotificationPermission = () => {
+
+    console.log('enter in function')
+    registerForPushNotificationsAsync().then(
+        (token) => {
+            if (token) {
+                setExpoPushToken(token)
+            }
+            console.log('token', token)
+            updateProfile(token)
+        }
+    );
+}
+
+
+async function registerForPushNotificationsAsync() {
+    let token;
+
+    if (Platform.OS === 'android') {
+        await Notifications.setNotificationChannelAsync('default', {
+            name: 'default',
+            importance: Notifications.AndroidImportance.MAX,
+            vibrationPattern: [0, 250, 250, 250],
+            lightColor: '#FF231F7C',
+        });
+    }
+
+    if (Device.isDevice) {
+        const { status: existingStatus } = await Notifications.getPermissionsAsync();
+        let finalStatus = existingStatus;
+        if (existingStatus !== 'granted') {
+            const { status } = await Notifications.requestPermissionsAsync();
+            finalStatus = status;
+        }
+        if (finalStatus !== 'granted') {
+            alert('Failed to get push token for  notification!');
+            return;
+        }
+        // Learn more about projectId:
+        // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
+        // EAS projectId is used here.
+        try {
+            const projectId =
+                Constants?.expoConfig?.extra?.eas?.projectId ??
+                Constants?.easConfig?.projectId;
+            if (!projectId) {
+                throw new Error('Project ID not found');
+            }
+            token = (
+                await Notifications.getExpoPushTokenAsync({
+                    projectId,
+                })
+            ).data;
+            console.log(token);
+        } catch (e) {
+            token = `${e}`;
+        }
+    } else {
+        alert('Must use physical device for  Notifications');
+    }
+
+    return token;
+}
+
   async function TestPusher() {
     const pusher = Pusher.getInstance();
 
@@ -116,6 +235,9 @@ export default function App() {
       }
     });
   }
+
+
+
   useEffect(() => {
     // useCallback(()=>{
       //  TestPusher()

@@ -29,6 +29,7 @@ export default function AccountDetails({ navigation, route }) {
     const [showIndicator, setShowIndicator] = useState(false);
     const [showIndicator2, setShowIndicator2] = useState(false);
     const [image, setImage] = useState(user.profile_image);
+    const [loadImage, setLoadImage] = useState(false);
 
     useEffect(() => {
         // console.log("Use Effect")
@@ -196,10 +197,10 @@ export default function AccountDetails({ navigation, route }) {
                 </View>
                 {
                     showIndicator ? (
-                        <View  style={{ 
-                            height: 140 / 930 * height, width: 140 / 930 * height,borderWidth:1,borderColor:colors.blueColor,borderRadius:70 ,
-                            alignItems:'center',justifyContent:'center'
-                            }}>
+                        <View style={{
+                            height: 140 / 930 * height, width: 140 / 930 * height, borderWidth: 1, borderColor: colors.blueColor, borderRadius: 70,
+                            alignItems: 'center', justifyContent: 'center'
+                        }}>
                             <ActivityIndicator size={'small'} color={colors.blueColor} style={{ marginTop: 0 / 930 * height }} />
                         </View>
                     ) : (
@@ -209,10 +210,23 @@ export default function AccountDetails({ navigation, route }) {
                                     style={{ height: 140 / 930 * height, width: 140 / 930 * height, resizeMode: 'cover', borderRadius: 70 }}
                                 />
                                 <Image source={require('../../assets/images/edit.png')}
+                                    onLoadStart={() => {
+                                        setLoadImage(true)
+                                    }}
+                                    onLoadEnd={() => {
+                                        setLoadImage(false)
+                                    }}
                                     style={{
-                                        height: 28 / 930 * height, width: 28 / 930 * height, resizeMode: 'contain', position: 'absolute', bottom: 8, right: 2
+                                        height: 28 / 930 * height, width: 28 / 930 * height, resizeMode: 'contain', position: 'absolute', bottom: 10, right: 5
                                     }}
                                 />
+                                {
+                                    loadImage ? (
+                                        <View style = {{ marginTop: -80/930*height, height: 100 / 930 * height, }}>
+                                            <ActivityIndicator size={'small'} color={colors.blueColor} style={{}} />
+                                        </View>
+                                    ) : null
+                                }
                             </View>
                         </TouchableOpacity>
                     )

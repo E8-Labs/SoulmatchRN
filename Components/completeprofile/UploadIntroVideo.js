@@ -56,9 +56,10 @@ const UploadIntroVideo = ({ navigation }) => {
     const captureVideo = async () => {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
         if (status !== 'granted') {
-            alert('Sorry, we need camera permissions to make this work!');
+            alert('Please allow Soulmatch camera access to complite profile');
             return;
-        }
+        } 
+        
 
         let result = await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Videos,
