@@ -16,7 +16,7 @@ import FilterPopup from '../../Components/FilterPopup';
 import DiscoverGotMatch from '../../Components/DiscoverGotMatch';
 import { Video, ResizeMode, AVPlaybackStatu0s } from 'expo-av';
 import { getDistance } from 'geolib';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const { height, width } = Dimensions.get('window')
 
 const blurhash =
@@ -58,7 +58,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
 
     const logoutUser = async () => {
         try {
-            Settings.set({ USER: null })
+            AsyncStorage.removeItem("USER")
 
             let routeData = {
                 navigate: 'Logout',
@@ -78,7 +78,8 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
 
     const getQuestions = async () => {
         try {
-            const data = Settings.get('USER')
+            const data =await AsyncStorage.getItem("USER")
+
             if (data) {
                 let d = JSON.parse(data)
 
@@ -139,7 +140,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
         setLikeIndicator(true)
         console.log('trying to likes profile')
 
-        const user = Settings.get("USER")
+        const user = await AsyncStorage.getItem("USER")
         try {
             if (user) {
                 let d = JSON.parse(user)
@@ -192,7 +193,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
         setRejectIndicator(true)
         console.log('trying to likes profile')
 
-        const user = Settings.get("USER")
+        const user = await AsyncStorage.getItem("USER")
         try {
             if (user) {
                 let d = JSON.parse(user)
@@ -275,8 +276,9 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
         const seconds = totalSeconds % 60;
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     }
-    const calculateDistance = () => {
-        const userdata = Settings.get('USER')
+    const calculateDistance =async () => {
+        const userdata =await AsyncStorage.getItem("USER")
+
         if (userdata) {
             let d = JSON.parse(userdata)
 

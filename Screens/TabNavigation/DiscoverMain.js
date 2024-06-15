@@ -8,7 +8,7 @@ import DiscoverGotMatch from '../../Components/DiscoverGotMatch';
 import ProfileDetail from '../DiscoverFlow/ProfileDetail';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import { useFocusEffect } from '@react-navigation/native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { height, width } = Dimensions.get("window");
 
@@ -29,7 +29,7 @@ export default function DiscoverMain(props) {
 
   const getDiscover = async () => {
     console.log('getting discover users')
-    const data = Settings.get("USER")
+    const data = await AsyncStorage.getItem("USER")
     try {
       if (data) {
         let d = JSON.parse(data)

@@ -1,0 +1,16 @@
+const BasePath = "https://plurawlapp.com/soulmatch/"
+
+const Apis = {
+    DashboardDetails: `${BasePath}api/admin/dashboard`,
+    AdminDates: `${BasePath}api/admin/dates/get_date_places`,
+    GetCategories: `${BasePath}api/admin/dates/get_categories`,
+    // DeleteDate: `${BasePath}api/admin/dates/delete_category`,
+    GetAdminUsers: `${BasePath}api/admin/users`,
+    AddDatePlace: `${BasePath}api/admin/dates/add_date_place`,
+    UpdateDatePlace: `${BasePath}api/admin/dates/add_date_place`,
+    SuspendUser: `${BasePath}api/admin/suspend_user`,
+    DeleteUser: `${BasePath}api/admin/delete_user`,
+    DeleteDate: `${BasePath}api/admin/dates/delete_date_place`
+}
+
+export default Apis;

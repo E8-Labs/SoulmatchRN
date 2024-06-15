@@ -16,7 +16,7 @@ import LikesList from '../DiscoverFlow/LikesList';
 import FilterPopup from '../../Components/FilterPopup';
 import DiscoverGotMatch from '../../Components/DiscoverGotMatch';
 import { getDistance } from 'geolib';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const { height, width } = Dimensions.get('window')
 
 const blurhash =
@@ -45,6 +45,11 @@ export default function SelectedProfile({ navigation, route }) {
     const [duration, setDuration] = useState(0);
     const videoRef = React.useRef(null);
     const [video, setVideo] = useState(null);
+    const [loadVideo2, setLoadVideo2] = useState(false);
+    const [status2, setStatus2] = React.useState({});
+    const [isPlaying2, setIsPlaying2] = useState(true);
+    const [duration2, setDuration2] = useState(0);
+    const videoRef2 = React.useRef(null);
     const [loadVideo, setLoadVideo] = useState(false);
     const [status, setStatus] = React.useState({});
     const ref = useRef(null);
@@ -57,8 +62,9 @@ export default function SelectedProfile({ navigation, route }) {
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     }
 
-    const calculateDistance = () => {
-        const data = Settings.get('USER')
+    const calculateDistance =async () => {
+        const data =await AsyncStorage.getItem("USER")
+
         if (data) {
             let d = JSON.parse(data)
             // console.log('user data fro local is', d)
@@ -86,7 +92,7 @@ export default function SelectedProfile({ navigation, route }) {
     const handleLike = async () => {
         console.log('trying to likes profile')
 
-        const User = Settings.get("USER")
+        const User = await AsyncStorage.getItem("USER")
         try {
             if (User) {
                 let d = JSON.parse(User)
@@ -132,7 +138,7 @@ export default function SelectedProfile({ navigation, route }) {
     const handleReject = async () => {
         console.log('trying to likes profile')
 
-        const User = Settings.get("USER")
+        const User = await AsyncStorage.getItem("USER")
         try {
             if (User) {
                 let d = JSON.parse(User)
@@ -467,9 +473,9 @@ export default function SelectedProfile({ navigation, route }) {
                                                 {item.text}
                                             </Text>
                                             {
-                                                item.answerImage || item.answerVideo ? (
+                                                item.answerImage ? (
                                                     <>
-                                                        <Image source={{ uri: item.answerImage ? item.answerImage : item.videoThumbnail }}
+                                                        <Image source={{ uri: item.answerImage  }}
                                                             style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
                                                         />
                                                         <TouchableOpacity style={{
@@ -485,8 +491,46 @@ export default function SelectedProfile({ navigation, route }) {
                                                             </View>
                                                         </TouchableOpacity>
                                                     </>
-                                                ) : (
-                                                    <>
+                                                ) : ( 
+                                                        item.answerVideo? (
+                                                            <>
+                                                            <Video
+                                                                ref={videoRef2}
+                                                                source={{
+                                                                    uri: item.url
+                                                                }}
+                                                                style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
+                                                                useNativeControls
+                                                                resizeMode={ResizeMode.COVER}
+                                                                isLooping={true}
+                                                                // shouldPlay={isPlaying}
+                                                                onPlaybackStatusUpdate={status => {
+                                                                    setStatus2(() => status)
+                                                                    setIsPlaying2(status.isPlaying);
+                                                                }}
+                                                                onLoad={(status) => {
+                                                                    setDuration2(status.durationMillis)
+                                                                    setLoadVideo2(false)
+                                                                }} // Set duration when video loads
+                                                                onLoadStart={() => {
+                                                                    setLoadVideo2(true)
+                                                                }}
+
+                                                            />
+                                                            {!isPlaying2 && duration2 > 0 && (
+                                                                <View style={styles.durationContainer}>
+                                                                    <Text style={styles.durationText}>{formatDuration(duration2)}</Text>
+                                                                </View>
+                                                            )}
+
+                                                            {
+                                                                loadVideo2 ? (
+                                                                    <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 180 / 430 * width }} />
+                                                                ) : <></>
+                                                            }
+                                                        </>
+                                                        ):(
+                                                            <>
                                                         <View style={{
                                                             marginTop: 8, marginBottom: 8, width: 345 / 430 * width, backgroundColor: '#F5F5F5',
                                                             borderRadius: 10, paddingVertical: 10, paddingHorizontal: 16, alignItems: 'center'
@@ -504,7 +548,10 @@ export default function SelectedProfile({ navigation, route }) {
                                                             </View>
                                                         </TouchableOpacity>
                                                     </>
+                                                        )
+                                                    
                                                 )
+                                        
                                             }
 
                                         </View>

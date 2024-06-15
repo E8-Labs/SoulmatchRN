@@ -14,7 +14,7 @@ import { UpdateProfile } from '../../Services/ProfileServices/UpdateProfile';
 const { height, width } = Dimensions.get('window');
 
 
-const AddJobDetails = ({ navigation,route }) => {
+const AddJobDetails = ({ navigation, route }) => {
 
     const data = route.params.data
 
@@ -23,14 +23,15 @@ const AddJobDetails = ({ navigation,route }) => {
     const [error, setError] = useState(null)
     const [showIndicator, setShowIndicator] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [btnPosition, setBtnPosition] = useState(data.from === "Profile" ? height * 0.78 : height * 0.7)
 
 
-    useEffect(()=>{
-        if(data.from === 'Profile'){
+    useEffect(() => {
+        if (data.from === 'Profile') {
             setCompany(data.user.company)
             setJobTitle(data.user.job_title)
         }
-    },[])
+    }, [])
 
     // const user = route.params.user
     // user.jobTitle = jobTitle,
@@ -48,21 +49,21 @@ const AddJobDetails = ({ navigation,route }) => {
 
             setLoading(true)
             let body = JSON.stringify({
-                job_title:jobTitle,
-                company:company
+                job_title: jobTitle,
+                company: company
             })
 
             try {
                 await UpdateProfile(body);
-                if(data.from === 'Profile'){
+                if (data.from === 'Profile') {
                     navigation.goBack()
-                } else{
-                navigation.navigate('GetInterest',{
-                    data:{
-                        from:'JobDetails',
-                        user:''
-                    }
-                });
+                } else {
+                    navigation.navigate('GetInterest', {
+                        data: {
+                            from: 'JobDetails',
+                            user: ''
+                        }
+                    });
                 }
 
             } catch (error) {
@@ -75,6 +76,28 @@ const AddJobDetails = ({ navigation,route }) => {
 
 
     }
+    useEffect(() => {
+        // console.log("Use Effect")
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+            if (data.from === 'Profile') {
+                setBtnPosition(height * 0.5);
+            } else {
+                setBtnPosition(height * 0.37);
+
+            }
+        });
+
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+            //   console.log("Keyboard hide")
+            if (data.from === 'Profile') {
+                setBtnPosition(height * 0.78);
+            } else {
+                setBtnPosition(height * 0.7);
+
+            }
+        });
+    })
+
 
     return (
         // <KeyboardAvoidingView
@@ -98,7 +121,12 @@ const AddJobDetails = ({ navigation,route }) => {
                         </Text>
                     </View>
                     {/* Code for progressbar */}
-                    <View style={{ flexDirection: 'row', marginTop: 40 / 930 * height, justifyContent: 'space-between', display: 'flex', alignItems: 'center' }}>
+                    {
+                        data.from !== "Profile" ?(
+
+                        
+                    
+                    <View style={{ flexDirection: 'row', marginTop: 20 / 930 * height, justifyContent: 'space-between', display: 'flex', alignItems: 'center' }}>
                         <Image source={require('../../assets/workicon.png')} style={{ height: 56, width: 56, resizeMode: 'contain' }} />
                         <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
                         <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
@@ -114,13 +142,15 @@ const AddJobDetails = ({ navigation,route }) => {
                         <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
                         <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
                     </View>
-                    <View style={{ marginTop: 40 / 930 * height }}>
+                        ):null
+                        }
+                    <View style={{ marginTop: 20 / 930 * height }}>
                         <Text style={{ fontSize: 20, fontWeight: '500' }}>
                             What do you do for work?
                         </Text>
                     </View>
 
-                    <View style={{ display: 'flex', height: height * 0.65, flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <View style={{ display: 'flex', height: btnPosition, flexDirection: 'column', justifyContent: 'space-between' }}>
                         <View style={{ marginTop: 50 / 930 * height }}>
                             <Text style={{ fontWeight: '500', fontSize: 16, color: '#333333' }}>
                                 Job title
@@ -137,7 +167,8 @@ const AddJobDetails = ({ navigation,route }) => {
                                 // color: '#999999',
                                 fontWeight: '500',
                             }}
-                            value={jobTitle}
+                                spellCheck={false}
+                                value={jobTitle}
                                 onChangeText={(item) => {
                                     setError(null)
                                     setJobTitle(item)
@@ -158,7 +189,8 @@ const AddJobDetails = ({ navigation,route }) => {
                                     marginTop: 10 / 930 * height,
                                     // color: '#999999',
                                     fontWeight: '500',
-                                }}
+                                }} autoCorrect={false} autoComplete='none'
+                                spellCheck={false}
                                 value={company}
                                 onChangeText={(item) => {
                                     setError(null)
@@ -170,26 +202,26 @@ const AddJobDetails = ({ navigation,route }) => {
                             }
                         </View>
                         <View style={{ display: 'flex', justifyContent: 'flex-end', width: width - 50 }}>
-                        {
-                            loading ? (
-                                <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop: 70 / 930 * height }} />
-                            ) : (
-                                <TouchableOpacity onPress={handleNext}
-                                    style={{
-                                        backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width,
-                                        display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10, marginTop: 70 / 930 * height
-                                    }}>
+                            {
+                                loading ? (
+                                    <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop: 70 / 930 * height }} />
+                                ) : (
+                                    <TouchableOpacity onPress={handleNext}
+                                        style={{
+                                            backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width,
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10, marginTop: 70 / 930 * height
+                                        }}>
                                         {
-                                            data.from === 'Profile'?(
+                                            data.from === 'Profile' ? (
                                                 <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>Save</Text>
-                                            ):(
+                                            ) : (
                                                 <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>Next</Text>
                                             )
                                         }
-                                   
-                                </TouchableOpacity>
-                            )
-                        }
+
+                                    </TouchableOpacity>
+                                )
+                            }
 
                         </View>
                     </View>

@@ -4,6 +4,7 @@ import * as Location from 'expo-location';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AddLocation = ({ navigation }) => {
     const { height, width } = Dimensions.get('window')
@@ -51,7 +52,7 @@ const AddLocation = ({ navigation }) => {
 
     const updateProfile = async (userLocation) => {
         console.log('trying to update profile')
-        const data = Settings.get("USER")
+        const data = await AsyncStorage.getItem("USER")
         try {
             if (data) {
                 let d = JSON.parse(data)
@@ -79,9 +80,8 @@ const AddLocation = ({ navigation }) => {
                     if (json.status === true) {
                         console.log('profile udated', json.data)
                         d.user = json.data
-                        Settings.set({
-                            USER:JSON.stringify(d)
-                        })
+                                   AsyncStorage.setItem("userLocation", JSON.stringify({d}))
+
                         navigation.navigate('AllowNotification')
                     } else {
                         console.log('json message is', json.message)

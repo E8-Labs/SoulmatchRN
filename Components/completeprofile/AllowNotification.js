@@ -5,6 +5,7 @@ import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -20,7 +21,7 @@ const AllowNotification = ({ navigation }) => {
 
     const updateProfile = async (token) => {
         console.log('trying to update profile', token)
-        const data = Settings.get("USER")
+        const data = await AsyncStorage.getItem("USER")
         try {
             if (data) {
                 let d = JSON.parse(data)
@@ -43,9 +44,8 @@ const AllowNotification = ({ navigation }) => {
                     if (json.status === true) {
                         console.log('updated profile data is', json.data)
                         d.user=json.data
-                        Settings.set({
-                            USER:JSON.stringify(d)
-                        })
+                                   AsyncStorage.setItem("userLocation", JSON.stringify({d}))
+
                         navigation.navigate("CongratulationsScreen")
                     } else {
                         console.log('json message is', json.message)

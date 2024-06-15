@@ -36,7 +36,8 @@ export default function ChangePassword({ navigation, route }) {
         }
         try {
             setLoading(true)
-            const data = Settings.get('USER')
+            const data =await AsyncStorage.getItem("USER")
+
             if (data) {
                 let d = JSON.parse(data)
                 let body = JSON.stringify({

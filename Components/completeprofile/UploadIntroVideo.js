@@ -4,6 +4,7 @@ import * as VideoThumbnails from 'expo-video-thumbnails';
 import * as ImagePicker from 'expo-image-picker';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import colors from '../../assets/colors/Colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const UploadIntroVideo = ({ navigation }) => {
     const { height, width } = Dimensions.get('window');
@@ -96,7 +97,7 @@ const UploadIntroVideo = ({ navigation }) => {
         setShowIndicator(true)
         try {
             console.log('trying to upload video ', formdata)
-            const data = Settings.get("USER")
+            const data = await AsyncStorage.getItem("USER")
             if (data) {
                 let d = JSON.parse(data)
                 const result = await fetch(ApisPath.ApiUploadIntroVideo, {
@@ -116,9 +117,8 @@ const UploadIntroVideo = ({ navigation }) => {
                     if (json.status === true) {
                         console.log('video uploaded',json.data)
                         d.user = json.data
-                        Settings.set({
-                            USER:JSON.stringify(d)
-                        })
+                                   AsyncStorage.setItem("userLocation", JSON.stringify({d}))
+
                         navigation.navigate('UploadMedia',{
                             data:{
                                 from:'IntroVideo'

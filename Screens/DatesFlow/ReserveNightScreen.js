@@ -12,7 +12,7 @@ import InviteDatePopup from '../../Components/InviteDatePopup';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const { height, width } = Dimensions.get('window');
 
 
@@ -52,7 +52,8 @@ export default function ReserveNightScreen({ navigation, route }) {
     }
 
     setShowIndicator(true)
-    const data = Settings.get("USER")
+
+    const data = await AsyncStorage.getItem("USER")
 
     if (data) {
       let d = JSON.parse(data)
@@ -257,7 +258,7 @@ export default function ReserveNightScreen({ navigation, route }) {
                 />
                 {
                   loadImage ? (
-                    <ActivityIndicator style={{ position: 'absolute', bottom: 130, left: 150 }} size={'large'} color={colors.blueColor} />
+                    <ActivityIndicator style={{ position: 'absolute', bottom: 160, left: 150 }} size={'large'} color={colors.blueColor} />
                   ) : null
                 }
 

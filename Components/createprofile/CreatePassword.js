@@ -1,9 +1,11 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { Dimensions, Text, View, Image, TouchableOpacity, TextInput, Settings, ActivityIndicator, TouchableWithoutFeedback, Keyboard, } from 'react-native'
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const CreatePassword = ({ navigation, route }) => {
 
     //verification getting from previous screen
@@ -16,6 +18,7 @@ const CreatePassword = ({ navigation, route }) => {
     //code for focus color change for input1
     const [passwordInput, setPasswordInput] = useState(false)
     const [showIndicator, setShowIndicator] = useState(false)
+    const [btnPosition, setBtnPosition] = useState(height*0.40);
 
     const passwordFocus = () => {
         setPasswordInput(true);
@@ -80,7 +83,7 @@ const CreatePassword = ({ navigation, route }) => {
 
     const registerUser = async () => {
         setShowIndicator(true)
-        const data = Settings.get("USER")
+        const data = await AsyncStorage.getItem("USER")
         try {
             console.log('trying to register')
             // if (data) {
@@ -114,7 +117,8 @@ const CreatePassword = ({ navigation, route }) => {
                 let json = await result.json()
                 if (json.status === true) {
                     console.log('user registered and user data is', json.data)
-                    Settings.set({ USER: JSON.stringify(json.data) })
+                                AsyncStorage.setItem("USER",JSON.stringify(json.data))
+
                     navigation.navigate('CongratsScreen');
                 } else {
                     console.log(' json message is', json.message)
@@ -142,7 +146,24 @@ const CreatePassword = ({ navigation, route }) => {
     }
 
 
-
+   
+    useEffect(() => {
+        // console.log("Use Effect")
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+        //   console.log("Keyboard show")
+          setBtnPosition(height * 0.1);
+        });
+    
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+        //   console.log("Keyboard hide")
+        setBtnPosition(height * 0.40);
+        });
+    
+        return () => {
+          keyboardDidShowListener.remove();
+          keyboardDidHideListener.remove();
+        };
+      }, []);
 
     return (
         <TouchableWithoutFeedback 
@@ -166,14 +187,14 @@ const CreatePassword = ({ navigation, route }) => {
                         </Text>
                     </View>
                     {/* Code for progressbar */}
-                    <View style={{ flexDirection: 'row', marginTop: 40 / 930 * height, justifyContent: 'space-between', display: 'flex', alignItems: 'center' }}>
+                    <View style={{ flexDirection: 'row', marginTop: 20 / 930 * height, justifyContent: 'space-between', display: 'flex', alignItems: 'center' }}>
                         <Image source={require('../../assets/password.png')} style={{ height: 56, width: 56, resizeMode: 'contain' }} />
                         <View style={{ height: 4 / 930 * height, width: 68 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
                         <View style={{ height: 4 / 930 * height, width: 68 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
                         <View style={{ height: 4 / 930 * height, width: 68 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
                         <View style={{ height: 4 / 930 * height, width: 68 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
                     </View>
-                    <View style={{ marginTop: 40 / 930 * height }}>
+                    <View style={{ marginTop: 20 / 930 * height }}>
                         <Text style={{ fontWeight: '500', fontSize: 20 }}>
                             Please create password
                         </Text>
@@ -217,7 +238,7 @@ const CreatePassword = ({ navigation, route }) => {
                             <Image source={showPassword2 ? eye : showeye} style={{ height: 24 / 930 * height, width: 24 / 430 * width, paddingRight: 21 }} />
                         </TouchableOpacity>
                     </View>
-                    <View style={{ display: 'flex', height: height * 0.40, flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <View style={{ display: 'flex', height:btnPosition, flexDirection: 'column', justifyContent: 'space-between' }}>
                         <View>
                             <View>
                                 {emptyPasswordfielderror ? <View>
@@ -239,7 +260,8 @@ const CreatePassword = ({ navigation, route }) => {
                                 showIndicator ? (
                                     <ActivityIndicator size={'large'} color={colors.blueColor} />
                                 ) : (
-                                    <TouchableOpacity onPress={handleNextClick} style={{ backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
+                                    <TouchableOpacity onPress={handleNextClick} 
+                                    style={{ backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
                                         <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>
                                             Next
                                         </Text>

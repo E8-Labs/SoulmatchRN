@@ -6,7 +6,7 @@ import GlobalStyles from '../../assets/styles/GlobalStyles'
 import colors from '../../assets/colors/Colors';
 import { Image } from 'expo-image';
 import ApisPath from '../../lib/ApisPath/ApisPath';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const { height, width } = Dimensions.get('window')
 
 export default function DatesContainer({ navigation }) {
@@ -55,7 +55,7 @@ export default function DatesContainer({ navigation }) {
 
     const getDates = async () => {
         console.log('trying to get dates')
-        const data = Settings.get("USER")
+        const data = await AsyncStorage.getItem("USER")
         try {
             if (data) {
                 let d = JSON.parse(data)

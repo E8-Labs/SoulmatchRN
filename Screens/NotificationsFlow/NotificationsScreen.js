@@ -32,7 +32,8 @@ export default function NotificationsScreen({ navigation }) {
   const getNotifications = async () => {
     console.log('trying to get notifications')
     setLoading(true)
-    const data = Settings.get('USER')
+    const data =await AsyncStorage.getItem("USER")
+
     try {
       if (data) {
         let d = JSON.parse(data)

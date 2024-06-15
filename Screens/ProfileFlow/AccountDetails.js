@@ -8,7 +8,7 @@ import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
 import customFonts from '../../assets/fonts/Fonts';
 import ApisPath from '../../lib/ApisPath/ApisPath';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 
 
@@ -86,7 +86,7 @@ export default function AccountDetails({ navigation, route }) {
 
 
         try {
-            const data = Settings.get("USER")
+            const data = await AsyncStorage.getItem("USER")
 
             if (data) {
                 let d = JSON.parse(data)
@@ -109,9 +109,8 @@ export default function AccountDetails({ navigation, route }) {
 
                         console.log('user profile', json.data)
                         d.user = json.data
-                        Settings.set({
-                            USER: JSON.stringify(d)
-                        })
+                                  AsyncStorage.setItem("USER",JSON.stringify(d))
+
                         navigation.goBack()
                     }
                     else {
@@ -139,7 +138,7 @@ export default function AccountDetails({ navigation, route }) {
 
 
         try {
-            const data = Settings.get("USER")
+            const data = await AsyncStorage.getItem("USER")
 
             if (data) {
                 let d = JSON.parse(data)
@@ -162,9 +161,8 @@ export default function AccountDetails({ navigation, route }) {
 
                         console.log('user profile', json.data)
                         d.user = json.data
-                        Settings.set({
-                            USER: JSON.stringify(d)
-                        })
+                                  AsyncStorage.setItem("USER",JSON.stringify(d))
+
                         navigation.goBack()
                     }
                     else {

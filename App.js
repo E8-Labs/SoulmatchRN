@@ -1,7 +1,7 @@
 import { useCallback, useEffect ,useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Dimensions ,Platform,Settings} from 'react-native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 import RegisterUser from './Screens/LoginFlow/RegisterUser';
@@ -70,11 +70,6 @@ import ChangeIntroVideo from './Screens/ProfileFlow/ChangeIntroVideo';
 import Resources from './Components/Resources/Resources';
 import SelectedResourceDetails from './Components/Resources/SelectedResourceDetails';
 import NotificationsScreen from './Screens/NotificationsFlow/NotificationsScreen';
-// import { NavigationContainer } from "@react-navigation/native";
-// import { createNativeStackNavigator } from "@react-navigation/native-stack";
-// import * as SplashScreen from 'expo-splash-screen';
-
-// SplashScreen.preventAutoHideAsync();
 
 
 import * as Device from 'expo-device';
@@ -97,6 +92,20 @@ import {
 } from '@pusher/pusher-websocket-react-native';
 
 
+import AdminTabBarContainer from './Screens/Admin/adminflow/TabBar/AdminTabBarContainer';
+import AddDate from './Screens/Admin/ui/AdminDatesflow/AddDate';
+import DateDetails from './Screens/Admin/ui/AdminDatesflow/DateDetails';
+import AdminAccountDetails from './Screens/Admin/ui/ProfileDetails/AdminAccountDetails';
+import AdminChangePassword from './Screens/Admin/ui/ProfileDetails/AdminChangePassword';
+import FlaggedUsers from './Screens/Admin/ui/userDetails/FlaggedUsers';
+import UserProfileDetails from './Screens/Admin/ui/userDetails/UserProfileDetails';
+import AddressPicker from './Screens/Admin/ui/Addresspicker/AddressPicker';
+import FlaggedUSerDetails from './Screens/Admin/ui/userDetails/FlaggedUSerDetails';
+// import TestDatePicker from './Screens/Admin/ui/test/TestDatePicker';
+// import TestAddDate from './Screens/Admin/ui/test/TestAddDate';
+import AdminNotifications from './Screens/Admin/ui/Dashboarddetails/AdminNotifications';
+
+
 
 export default function App() {
 
@@ -116,7 +125,7 @@ export default function App() {
   },[])
   const updateProfile = async (token) => {
     console.log('trying to update profile', token)
-    const data = Settings.get("USER")
+    const data = await AsyncStorage.getItem("USER")
     try {
         if (data) {
             let d = JSON.parse(data)
@@ -139,9 +148,8 @@ export default function App() {
                 if (json.status === true) {
                     // console.log('updated profile data is', json.data)
                     d.user=json.data
-                    Settings.set({
-                        USER:JSON.stringify(d)
-                    })
+                               AsyncStorage.setItem("USER",JSON.stringify(d))
+
                     // navigation.navigate("CongratulationsScreen")
                 } else {
                     console.log('json message is', json.message)
@@ -327,7 +335,21 @@ async function registerForPushNotificationsAsync() {
           <Stack.Screen name='SelectedResourceDetails' component={SelectedResourceDetails} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='NotificationsScreen' component={NotificationsScreen} options={{ gestureEnabled: false, headerShown: false }} />
 
-          <Stack.Screen name='Testfile' component={Testfile} options={{ gestureEnabled: false, headerShown: false }} />
+          {/* <Stack.Screen name='Testfile' component={Testfile} options={{ gestureEnabled: false, headerShown: false }} /> */}
+
+
+          <Stack.Screen name='AdminTabBarContainer' component={AdminTabBarContainer} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='AddNewDate' component={AddDate} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='DateDetails' component={DateDetails} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='AdminAccountDetails' component={AdminAccountDetails} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='AdminChangePassword' component={AdminChangePassword} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='FlaggedUsers' component={FlaggedUsers} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='UserProfileDetails' component={UserProfileDetails} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='AddressPicker' component={AddressPicker} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='FlaggedUserDetails' component={FlaggedUSerDetails} options={{ gestureEnabled: false, headerShown: false }} />
+          {/* <Stack.Screen name='DatePicker' component={TestDatePicker} options={{ gestureEnabled: false, headerShown: false }} /> */}
+          {/* <Stack.Screen name='TestAddDate' component={TestAddDate} options={{ gestureEnabled: false, headerShown: false }} /> */}
+          <Stack.Screen name='AdminNotifications' component={AdminNotifications} options={{ gestureEnabled: false, headerShown: false }} />
 
         </Stack.Navigator>
       </NavigationContainer>

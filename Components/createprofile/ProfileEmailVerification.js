@@ -1,8 +1,10 @@
 import React from 'react';
-import { useRef, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, Dimensions, TextInput, TouchableWithoutFeedback, Keyboard, Settings } from 'react-native'
+import { useRef, useState,useEffect } from 'react';
+import { View, Text, Image, TouchableOpacity, Dimensions, TextInput, TouchableWithoutFeedback, Keyboard, Settings, ActivityIndicator } from 'react-native'
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import ApisPath from '../../lib/ApisPath/ApisPath';
+import { err } from 'react-native-svg';
+import colors from '../../assets/colors/Colors';
 const ProfileEmailVerification = ({ navigation, route }) => {
 
     const { height, width } = Dimensions.get('window');
@@ -12,6 +14,9 @@ const ProfileEmailVerification = ({ navigation, route }) => {
     const [Code2, setCode2] = useState('');
     const [Code3, setCode3] = useState('');
     const [Code4, setCode4] = useState('');
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [btnPosition, setBtnPosition] = useState(height*0.58);
 
     const code = Code1 + Code2 + Code3 + Code4
     console.log('code', code)
@@ -123,44 +128,71 @@ const ProfileEmailVerification = ({ navigation, route }) => {
 
     //code to pass data to Next Screen
 
-    const handleContinueClick = () => {
-        navigation.navigate('CreatePassword', {
-            user: user
-        });
-    }
+   
 
-    const verifyEmail =async () =>{
-        try{
-            const data = Settings.get('USER')
-            if(data){
-                let d = JSON.parse(data)
+    const verifyEmail = async () => {
+        if (code.length < 4) {
+            setError("Enter verify code")
+
+        } else {
+            try {
+                console.log('trying to verify email')
+                setLoading(true)
                 let body = JSON.stringify({
-                    email:user.email,
-                    code:code
+                    email: user.email,
+                    code: code
                 })
-                const result = await fetch(ApisPath.ApiVerifyEmail,{
-                    method:'post',
-                    headers:{
+                const result = await fetch(ApisPath.ApiVerifyEmail, {
+                    method: 'post',
+                    headers: {
                         'Content-Type': 'application/json'
                     },
-                    body:body
+                    body: body
                 })
-                if(result){
+                // console.log('result is', result)
+                if (result) {
+                    setLoading(false)
                     let json = await result.json()
 
-                    if(json.status === true){
-                        console.log('object', object)
+                    if (json.status === true) {
+                        navigation.navigate('CreatePassword', {
+                                user: user
+                            })
+                        console.log('email verified ', json)
+                    } else {
+                        console.log('email verify message is', json.message)
                     }
+
                 }
+            } catch (e) {
+                console.log('error finding in verify email', e)
             }
-        } catch (e) {
-            console.log('error finding in verify email', e)
         }
     }
 
+    
+  useEffect(() => {
+    // console.log("Use Effect")
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+    //   console.log("Keyboard show")
+      setBtnPosition(height * 0.3);
+    });
+
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+    //   console.log("Keyboard hide")
+    setBtnPosition(height * 0.58);
+    });
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+    
+
     return (
-        <TouchableWithoutFeedback  style={{ display: 'flex', alignItems: 'center', height: height }} onPress={Keyboard.dismiss} >
-            <View style={{ display: 'flex', alignItems: 'center' }}>
+        <TouchableWithoutFeedback style={{ display: 'flex', alignItems: 'center', height: height }} onPress={Keyboard.dismiss} >
+            <View style={{ display: 'flex', alignItems: 'center'}}>
                 <View style={{ width: 370 / 430 * width }}>
                     <View style={{ marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
                         <TouchableOpacity onPress={() => {
@@ -193,16 +225,19 @@ const ProfileEmailVerification = ({ navigation, route }) => {
                         </Text>
                     </View>
                     {/* Code for Input Verification Code */}
-                    <View style={{ display: 'flex', height: height * 0.55, flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <View style={{ display: 'flex', height:btnPosition, flexDirection: 'column', justifyContent: 'space-between' }}>
                         <View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 40 / 930 * height }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 / 930 * height }}>
                                 <TextInput keyboardType='numeric'
                                     onFocus={handlefocusInput1}
                                     maxLength={1}
                                     autoFocus={true}
                                     ref={inputref1}
-                                    onChangeText={(text) =>
+                                    onChangeText={(text) => {
                                         handleBordercolor1(text, setCode1, inputref2)
+
+                                        setError(null)
+                                    }
                                     }
                                     style={{
                                         width: 78 / 430 * width,
@@ -222,8 +257,10 @@ const ProfileEmailVerification = ({ navigation, route }) => {
                                     maxLength={1}
                                     ref={inputref2}
                                     onFocus={handlefocusInput2}
-                                    onChangeText={(text) =>
+                                    onChangeText={(text) => {
                                         handleBordercolor2(text, setCode2, inputref3)
+                                        setError(null)
+                                    }
                                     }
                                     style={{
                                         width: 78 / 430 * width,
@@ -243,8 +280,10 @@ const ProfileEmailVerification = ({ navigation, route }) => {
                                     onFocus={handlefocusInput3}
                                     maxLength={1}
                                     ref={inputref3}
-                                    onChangeText={(text) =>
+                                    onChangeText={(text) => {
                                         handleBordercolor3(text, setCode3, inputref4)
+                                        setError(null)
+                                    }
                                     }
                                     style={{
                                         width: 78 / 430 * width,
@@ -264,8 +303,10 @@ const ProfileEmailVerification = ({ navigation, route }) => {
                                     onFocus={handlefocusInput4}
                                     maxLength={1}
                                     ref={inputref4}
-                                    onChangeText={(text) =>
+                                    onChangeText={(text) => {
                                         handleBordercolor4(text, setCode4)
+                                        setError(null)
+                                    }
                                     }
                                     style={{
                                         width: 78 / 430 * width,
@@ -283,7 +324,7 @@ const ProfileEmailVerification = ({ navigation, route }) => {
                                     }} />
                             </View>
 
-                            <View style={{ flexDirection: 'row', display: 'flex', justifyContent: 'center', marginTop: 60 / 930 * height }}>
+                            <View style={{ flexDirection: 'row', display: 'flex', justifyContent: 'center', marginTop: 40 / 930 * height }}>
                                 <Text style={{ textAlign: 'center', fontSize: 14, fontWeight: '400', color: '#666666' }}>
                                     If you didn't recieve a code?
                                 </Text>
@@ -294,12 +335,24 @@ const ProfileEmailVerification = ({ navigation, route }) => {
                                 </TouchableOpacity>
                             </View>
                         </View>
-                        <View style={{ display: 'flex', justifyContent: 'flex-start', marginTop: -50}}>
-                            <TouchableOpacity onPress={handleContinueClick} style={{ backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
-                                <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>
-                                    Next
-                                </Text>
-                            </TouchableOpacity>
+                        <View style={{ display: 'flex', justifyContent: 'flex-start', marginTop: -50, alignItems: 'center', gap: 20 }}>
+                            {
+                                error && <Text style={GlobalStyles.errorText}>{error}</Text>
+                            }
+                            {
+                                loading ? (
+                                    <ActivityIndicator size={'large'} color={colors.blueColor} />
+                                ) : (
+                                    <TouchableOpacity onPress={verifyEmail} style={{ backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}
+
+                                    >
+                                        <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>
+                                            Next
+                                        </Text>
+                                    </TouchableOpacity>
+                                )
+                            }
+
                         </View>
                     </View>
                 </View>

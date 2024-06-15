@@ -1,9 +1,10 @@
 import { Settings } from "react-native"
 import ApisPath from "../../lib/ApisPath/ApisPath"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const UpdateProfile = async (body) => {
     console.log('trying to update profile')
-    const data = Settings.get("USER")
+    const data = await AsyncStorage.getItem("USER")
     try {
         if (data) {
             let d = JSON.parse(data)
@@ -26,9 +27,8 @@ export const UpdateProfile = async (body) => {
                 if (json.status === true) {
                     console.log('profile udated', json.data)
                     d.user = json.data
-                    Settings.set({
-                        USER:JSON.stringify(d)
-                    })
+                               AsyncStorage.setItem("USER",JSON.stringify(d))
+
                     // navigation.navigate('AllowNotification')
                 } else {
                     console.log('json message is', json.message)

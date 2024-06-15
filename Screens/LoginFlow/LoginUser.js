@@ -7,6 +7,7 @@ import GlobalStyles from '../../assets/styles/GlobalStyles'
 import colors from '../../assets/colors/Colors';
 import customFonts from '../../assets/fonts/Fonts';
 import ApisPath from '../../lib/ApisPath/ApisPath';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import * as AppleAuthentication from 'expo-apple-authentication';
 
@@ -65,18 +66,14 @@ export default function LoginUser(props) {
                 let json = await result.json();
                 console.log(json)
                 if (json.status == true) {
-                    Settings.set(
-                        {
-                            USER:
-                                JSON.stringify(json.data)
-                        }
-                    )
+                    AsyncStorage.setItem("USER", JSON.stringify(json.data))
+
                     console.log("Stored user data in local is ", json.data)
 
                     if (json.message === 'Logged in') {
                         let data = json.data.user
 
-                        
+
                         if (data.profile_completion === 1) {
                             console.log('profile_completion_comment', data.profile_completion_comment)
                             props.navigation.navigate('UploadIntroVideo')
@@ -219,11 +216,11 @@ export default function LoginUser(props) {
 
             if (credential.email !== null) {
                 //save credentials here
-                Settings.set({ applelogin: JSON.stringify(credential) })
+                AsyncStorage.setItem("applelogin", JSON.stringify(credential))
             }
             else {
                 //get credentials here
-                let cr = Settings.get("applelogin")
+                await AsyncStorage.getItem("applelogin")
                 if (cr) {
                     credential = JSON.parse(cr)
                 }
@@ -328,11 +325,17 @@ export default function LoginUser(props) {
                         let json = await result.json();
                         if (json.status === true) {
                             //check if the user role admin then navigate to admin flow
-                            console.log('User logged in ', json.data)
-                            Settings.set({ USER: JSON.stringify(json.data) })
+                            console.log('User logged in ', json.data.user.role)
+                            AsyncStorage.setItem("USER", JSON.stringify(json.data))
 
+                            // AsyncStorage.setItem("USER", JSON.stringify(json.data))
                             // check profile complition
                             let data = json.data.user
+
+                            if (data.role === "admin") {
+                                props.navigation.navigate("AdminTabBarContainer")
+                                return
+                            }
 
                             if (data.profile_completion === 1) {
                                 console.log('profile_completion_comment', data.profile_completion_comment)

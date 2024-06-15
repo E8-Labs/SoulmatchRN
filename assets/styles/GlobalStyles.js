@@ -105,6 +105,19 @@ const GlobalStyles = {
         borderRadius: 5,
         borderWidth: 1,
         backgroundColor: '#6050DC'
+    }, SuspendDelBtn: {
+        height: 40 / 930 * height,
+        width: 175 / 430 * width,
+        borderWidth: 1,
+        borderColor: '#000000',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 10
+    },
+    SuspendDelBText: {
+        fontWeight: '500',
+        fontSize: 14,
+        fontFamily: customFonts.medium
     }
 }
 

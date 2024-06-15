@@ -2,7 +2,8 @@ import {
     View, Text, Dimensions, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform, StyleSheet,
     TextInput, Modal, TouchableWithoutFeedback, Keyboard,
     Settings,
-    ScrollView
+    ScrollView,
+    ActivityIndicator
 } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import GlobalStyles from '../../assets/styles/GlobalStyles'
@@ -23,7 +24,7 @@ import * as VideoThumbnails from 'expo-video-thumbnails';
 import * as ImagePicker from 'expo-image-picker';
 import moment from 'moment';
 import { Audio } from 'expo-av';
-
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 const { height, width } = Dimensions.get('window');
@@ -58,6 +59,7 @@ export default function ChatScreen({ navigation, route }) {
     const [recording, setRecording] = useState();
     const [permissionResponse, requestPermission] = Audio.usePermissions();
     const [openImage, setOpenImage] = useState(null);
+    const [loadImage, setLoadImage] = useState(false);
 
     const iceBreakers = [
         {
@@ -179,7 +181,8 @@ export default function ChatScreen({ navigation, route }) {
 
     const getMessages = async () => {
         console.log('trying to get messages')
-        const data = Settings.get('USER')
+        const data =await AsyncStorage.getItem("USER")
+
         try {
             if (data) {
                 console.log('chat id ', chat.id)
@@ -231,10 +234,11 @@ export default function ChatScreen({ navigation, route }) {
         const newMessage = { userId: currentUser.user.id, timestamp: time, content: message, id: `${chat.id}-${messages.length}` };
 
         setMessages(prevMesg => [...prevMesg, newMessage]);
-
+        setMessage('');
         try {
             console.log('trying to send message');
-            const data = Settings.get('USER');
+            const data =await AsyncStorage.getItem("USER")
+;
             if (data) {
                 let d = JSON.parse(data);
                 let body = JSON.stringify({
@@ -254,7 +258,7 @@ export default function ChatScreen({ navigation, route }) {
                     let json = await result.json();
                     if (json.status === true) {
                         console.log('message sent ', json.data);
-                        setMessage('');
+                       
                     } else {
                         console.log('message sent json message', json.message);
                     }
@@ -277,7 +281,8 @@ export default function ChatScreen({ navigation, route }) {
 
         // return
         try {
-            const data = Settings.get('USER')
+            const data =await AsyncStorage.getItem("USER")
+
             if (data) {
                 console.log('trying to send media')
                 let d = JSON.parse(data)
@@ -451,7 +456,21 @@ export default function ChatScreen({ navigation, route }) {
                                 >
                                     <Image source={{ uri: item.image_url }}
                                         style={{ height: 200, width: 200, resizeMode: 'cover', borderRadius: 20 }}
+                                        onLoadStart={()=>{
+                                            setLoadImage(true)
+                                        }}
+                                        onLoadEnd={()=>{
+                                            setLoadImage(false)
+                                        }}
                                     />
+                                    {/* {
+                                        loadImage?(
+                                            <View>
+                                                <ActivityIndicator size={'small'} color={colors.blueColor} 
+                                                style = {{marginTop:-100/930*height}}/>
+                                            </View>
+                                        ):null
+                                    } */}
                                 </TouchableOpacity>
 
                             ) : (

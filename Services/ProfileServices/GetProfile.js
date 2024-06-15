@@ -1,9 +1,10 @@
 import { Settings } from "react-native"
 import ApisPath from "../../lib/ApisPath/ApisPath"
-
+import AsyncStorage from "@react-native-async-storage/async-storage"
 export const getProfile = async () => {
   console.log('try to get profile')
-    const data = Settings.get('USER')
+    const data =await AsyncStorage.getItem("USER")
+
     try {
       if (data) {
         let d = JSON.parse(data)

@@ -1,18 +1,23 @@
 import React, { useEffect } from "react";
 import { View, Text, Dimensions, Image, Settings } from "react-native";
 import GlobalStyles from "../../assets/styles/GlobalStyles";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SplashMainScreen = (props) => {
     const { height, width } = Dimensions.get('window')
 
-    useEffect(() => {
 
-        const user = Settings.get("USER")
+    const checkUserDetails = async()=>{
+        const user = await AsyncStorage.getItem("USER")
         if (user) {
             let d = JSON.parse(user)
             console.log('user data available',d)
             let data = d.user
             // return
+            if(data.role === 'admin'){
+                props.navigation.navigate("AdminTabBarContainer")
+                return
+            }
 
             if (data.profile_completion === 1) {
                 console.log('profile_completion_comment is ', data)
@@ -136,6 +141,10 @@ const SplashMainScreen = (props) => {
 
             props.navigation.navigate('SlideContainer')
         }
+    }
+    useEffect(() => {
+
+        checkUserDetails()
 
     })
 

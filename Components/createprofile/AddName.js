@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { Dimensions, Image, Text, TouchableOpacity, View, TextInput, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 const AddName = ({ navigation, route }) => {
@@ -11,6 +11,7 @@ const AddName = ({ navigation, route }) => {
     //code for focused input
 
     const [focusInput1, setFocusInput1] = useState(false);
+    const [marginTop, setMarginTop] = useState(0);
 
     const handleInputfocus1 = () => {
         setFocusInput1(true)
@@ -60,14 +61,26 @@ const AddName = ({ navigation, route }) => {
                 }
             });
         }
-        // else if (saveText1 !== saveText2) {
-        //     // console.log('Passwords entered are not same')
-        //     // navigation.navigate('Uploadprofileemail')
-        // } else if (saveText1 === saveText2) {
-        //     //navigation.navigate('Uploadprofileemail')
-        //     console.log('Passwords entered are same')
-        // }
+       
     }
+
+  useEffect(() => {
+    // console.log("Use Effect")
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+    //   console.log("Keyboard show")
+      setMarginTop(height * 0.19);
+    });
+
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+    //   console.log("Keyboard hide")
+      setMarginTop(height * 0.45);
+    });
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
     return (
         <TouchableWithoutFeedback style={{
@@ -75,7 +88,7 @@ const AddName = ({ navigation, route }) => {
         }}
             onPress={Keyboard.dismiss}
         >
-            <View style={{ display: 'flex', alignItems: 'center' }}>
+            <View style={{ display: 'flex', alignItems: 'center', }}>
                 <View style={{ width: 370 / 430 * width }}>
                     <View style={{ marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
                         <TouchableOpacity onPress={() => {
@@ -129,7 +142,7 @@ const AddName = ({ navigation, route }) => {
                             Last name
                         </Text>
                         {/* Adjusting code for next button */}
-                        <View style={{ display: 'flex', height: height * 0.45, flexDirection: 'column', justifyContent: 'space-between' }}>
+                        <View style={{ display: 'flex', height: marginTop, flexDirection: 'column', justifyContent: 'space-between' }}>
                             <View>
                                 <TextInput placeholder='Enter last name'
                                     autoCorrect={false} spellCheck={false}

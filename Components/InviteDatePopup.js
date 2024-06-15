@@ -6,7 +6,7 @@ import customFonts from '../assets/fonts/Fonts';
 import GlobalStyles from '../assets/styles/GlobalStyles';
 import ApisPath from '../lib/ApisPath/ApisPath';
 import colors from '../assets/colors/Colors';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const placholder = require('../assets/images/imagePlaceholder.webp')
 
 const { height, width } = Dimensions.get('window');
@@ -25,7 +25,8 @@ export default function InviteDatePopup({ visible, close }) {
 
     const getMyMatches = async () => {
         console.log('getting my matches')
-        const data = Settings.get('USER')
+        const data =await AsyncStorage.getItem("USER")
+
         try {
             if (data) {
                 let d = JSON.parse(data)

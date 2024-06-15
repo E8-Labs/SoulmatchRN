@@ -12,7 +12,7 @@ import { Image } from 'expo-image';
 import colors from '../../assets/colors/Colors';
 import { getProfile } from '../../Services/ProfileServices/GetProfile';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const blurhash =
     '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
@@ -116,7 +116,8 @@ const EnhancmentQuestions = ({ navigation, route }) => {
         setShowIndicator2(true)
         console.log('trying to get questions')
         try {
-            const data = Settings.get('USER')
+            const data =await AsyncStorage.getItem("USER")
+
             if (data) {
                 let d = JSON.parse(data)
 
@@ -269,7 +270,7 @@ const EnhancmentQuestions = ({ navigation, route }) => {
         try {
 
             // return
-            const data = Settings.get("USER")
+            const data = await AsyncStorage.getItem("USER")
             // console.log("Data of usr is ", data)
             if (data) {
                 let d = JSON.parse(data)

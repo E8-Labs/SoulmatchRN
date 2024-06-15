@@ -5,6 +5,7 @@ import { Text, View, TouchableOpacity, Image, Dimensions, TextInput, Settings, A
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AddEmail = ({ navigation, route }) => {
 
@@ -16,6 +17,7 @@ const AddEmail = ({ navigation, route }) => {
     const [emailError, setEmailError] = useState(false)
     const [emailExists, setEmailExists] = useState(false);
     const [emailNotExists, setEmailNotExists] = useState(false);
+    const [btnPosition,setBtnPosition] = useState(height*0.58)
     const timerRef = useRef(null);
     //getting data from previous screen
     const user = route.params.user;
@@ -86,7 +88,7 @@ const AddEmail = ({ navigation, route }) => {
     const handleNextClick = async () => {
         try {
             setIndicator(true)
-            let data = Settings.get("USER")
+            let data = await AsyncStorage.getItem("USER")
             // if (data) {
             //     let d = JSON.parse(data)
             //     console.log('user data from local ', d)
@@ -128,6 +130,25 @@ const AddEmail = ({ navigation, route }) => {
 
     }
 
+
+  useEffect(() => {
+    // console.log("Use Effect")
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+    //   console.log("Keyboard show")
+      setBtnPosition(height * 0.3);
+    });
+
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+    //   console.log("Keyboard hide")
+    setBtnPosition(height * 0.58);
+    });
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
     return (
         <TouchableWithoutFeedback style={{
             height: height, alignItems: 'center'
@@ -168,7 +189,7 @@ const AddEmail = ({ navigation, route }) => {
                 {/*<Text>
                     {username.FirstName}
     </Text>*/}
-                <View style={{ display: 'flex', height: height * 0.58, flexDirection: 'column', justifyContent: 'space-between' }}>
+                <View style={{ display: 'flex', height: btnPosition, flexDirection: 'column', justifyContent: 'space-between' }}>
                     <View>
                         <View>
                             <TextInput placeholder='Enter email' keyboardType='email-address' onFocus={handleEmailfocus}

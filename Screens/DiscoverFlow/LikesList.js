@@ -6,7 +6,7 @@ import GlobalStyles from '../../assets/styles/GlobalStyles'
 import customFonts from '../../assets/fonts/Fonts'
 import colors from '../../assets/colors/Colors'
 import ApisPath from '../../lib/ApisPath/ApisPath'
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const { height, width } = Dimensions.get('window')
 
 const placholder = require('../../assets/images/imagePlaceholder.webp')
@@ -29,7 +29,8 @@ export default function LikesList(props) {
 
 
   const getProfiles = async () => {
-    const data = Settings.get('USER')
+    const data =await AsyncStorage.getItem("USER")
+
     setShowIndicator(true)
     try {
       console.log('trying to get profiles who likes me')
@@ -67,7 +68,7 @@ export default function LikesList(props) {
   const likeUserProfile = async (item) => {
     console.log('trying to likes profile')
 
-    const user = Settings.get("USER")
+    const user = await AsyncStorage.getItem("USER")
     try {
       if (user) {
         let d = JSON.parse(user)
@@ -116,7 +117,7 @@ export default function LikesList(props) {
   const disLikeUserProofile = async (item) => {
     console.log('trying to dislikes profile')
 
-    const user = Settings.get("USER")
+    const user = await AsyncStorage.getItem("USER")
     try {
         if (user) {
             let d = JSON.parse(user)

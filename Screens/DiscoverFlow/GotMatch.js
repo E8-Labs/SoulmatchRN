@@ -4,7 +4,7 @@ import GlobalStyles from '../../assets/styles/GlobalStyles'
 import customFonts from '../../assets/fonts/Fonts'
 import ApisPath from '../../lib/ApisPath/ApisPath'
 import colors from '../../assets/colors/Colors'
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const { height, width } = Dimensions.get('window')
 
 export default function GotMatch({ navigation, route }) {
@@ -18,7 +18,7 @@ export default function GotMatch({ navigation, route }) {
   const createChat = async () => {
     setLoading(true)
     try {
-      const userdata = Settings.get("USER")
+      const userdata = await AsyncStorage.getItem("USER")
       if (userdata) {
         let d = JSON.parse(userdata)
         let body = JSON.stringify({

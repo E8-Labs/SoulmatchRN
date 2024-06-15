@@ -11,6 +11,7 @@ import customFonts from '../../assets/fonts/Fonts';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import { Image } from 'expo-image';
 import { getProfile } from '../../Services/ProfileServices/GetProfile';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const blurhash =
     '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
@@ -180,7 +181,7 @@ const UploadMedia = ({ navigation, route }) => {
 
         try {
             console.log('trying to upload video', formdata)
-            const data = Settings.get("USER")
+            const data = await AsyncStorage.getItem("USER")
             if (data) {
                 let d = JSON.parse(data)
                 // console.log('user data from local', d)
@@ -240,7 +241,8 @@ const UploadMedia = ({ navigation, route }) => {
 
     const deleteMedia = async (media, type) => {
         setShowIndicator2(true)
-        const data = Settings.get('USER')
+        const data =await AsyncStorage.getItem("USER")
+
         try {
             console.log(`deleting media ${media} of type ${type}`)
 
@@ -263,9 +265,8 @@ const UploadMedia = ({ navigation, route }) => {
                     if (json.status === true) {
                         setMedia(json.data)
                         d.user = json.data
-                        Settings.set({
-                            USER: JSON.stringify(d)
-                        })
+                                  AsyncStorage.setItem("USER",JSON.stringify(d))
+
                         console.log('media deleted', json.data)
                     } else {
                         console.log('json message', json.message)
@@ -416,7 +417,7 @@ const UploadMedia = ({ navigation, route }) => {
                                 return
                             }
 
-                            if (media) {
+                            if (media.length > 0) {
                                 navigation.navigate('AddZodiac', {
                                     data: {
                                         user: '',

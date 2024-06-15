@@ -245,7 +245,7 @@ const GetInterest = ({ navigation, route }) => {
                     </View>
                 </View>
                 {
-                    error ? <Text style={[GlobalStyles.errorText, { textAlign: 'center', marginBottom: 20 }]}>{error}</Text> : ''
+                    error ? <Text style={[GlobalStyles.errorText, { textAlign: 'center', marginBottom: 0 }]}>{error}</Text> : ''
                 }
 
                 {

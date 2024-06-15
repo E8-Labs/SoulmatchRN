@@ -13,6 +13,7 @@ const AddSchool = ({ navigation, route }) => {
     const [error, setError] = useState(null)
     const [school, setSchool] = useState(null)
     const [loading, setLoading] = useState(false)
+    const [btnPosition,setBtnPosition] = useState(data.from === "Profile" ? height*0.78:height*0.67)
 
     useEffect(() => {
         if (data.from === 'Profile') {
@@ -48,6 +49,37 @@ const AddSchool = ({ navigation, route }) => {
         //     user: user
         // })
     }
+
+    useEffect(() => {
+        // console.log("Use Effect")
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+            if(data.from === 'Profile'){
+                setBtnPosition(height *0.47);
+            }else{
+                setBtnPosition(height *0.37);
+
+            }
+        });
+    
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+        //   console.log("Keyboard hide")
+        if(data.from === 'Profile'){
+            setBtnPosition(height *0.78);
+        }else{
+            setBtnPosition(height *0.67);
+
+        }
+        });
+    
+        return () => {
+          keyboardDidShowListener.remove();
+          keyboardDidHideListener.remove();
+        };
+      }, []);
+
+      const getBtnPosition = () =>{
+
+      }
 
     return (
         // <KeyboardAvoidingView
@@ -98,7 +130,7 @@ const AddSchool = ({ navigation, route }) => {
                             What school did you attend
                         </Text>
                     </View>
-                    <View style={{ display: 'flex', height:data.from === "profile"?height * 0.66:height * 0.78, flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <View style={{ display: 'flex', height:btnPosition, flexDirection: 'column', justifyContent: 'space-between' }}>
                         <View style={{ marginTop: 50 / 930 * height }}>
                             <Text style={{ fontWeight: '500', fontSize: 16, color: '#333333' }}>
                                 School name

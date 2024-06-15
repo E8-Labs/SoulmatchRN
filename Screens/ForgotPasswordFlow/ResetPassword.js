@@ -40,7 +40,7 @@ export default function ResetPassword({ navigation, route }) {
                         code: user.code,
                         password: password
                     })
-                    // const data = Settings.get("USER")
+                    // const data = await AsyncStorage.getItem("USER")
                     // if (data) {
                         // let d = JSON.parse(data)
                         const result = await fetch(ApisPath.ApiResetPassword, {

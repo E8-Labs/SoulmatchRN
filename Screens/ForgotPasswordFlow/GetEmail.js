@@ -34,7 +34,8 @@ export default function GetEmail(props) {
                 setShowIndicator(true)
                 try {
                     console.log('sending reset code')
-                    const data = Settings.get('USER')
+                    const data =await AsyncStorage.getItem("USER")
+
                     // if (data) {
                     //     let d = JSON.parse(data)
                         let body = JSON.stringify({ email: email })

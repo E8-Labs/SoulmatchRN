@@ -8,7 +8,7 @@ import ApisPath from '../../lib/ApisPath/ApisPath';
 import { useEffect } from 'react';
 import moment from 'moment';
 import { useFocusEffect } from '@react-navigation/native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const { height, width } = Dimensions.get('window');
 const profile = require('../../assets/images/profileImage.png')
 
@@ -27,7 +27,8 @@ useFocusEffect(
 
     const getMessagesList = async () => {
         setShowIndicator(true)
-        const data = Settings.get('USER')
+        const data =await AsyncStorage.getItem("USER")
+
         try {
             console.log('trying to get messages list')
             if (data) {

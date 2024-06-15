@@ -13,7 +13,7 @@ import customFonts from '../../assets/fonts/Fonts';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { Video, ResizeMode, AVPlaybackStatu0s } from 'expo-av';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const { height, width } = Dimensions.get('window')
@@ -148,7 +148,7 @@ export default function ChangeIntroVideo({ navigation, route }) {
             // console.log('trying to upload video ', introVideo.video)
             // console.log('trying to upload video ', introVideo.thumbnail)
             // return
-            const data = Settings.get("USER")
+            const data = await AsyncStorage.getItem("USER")
             if (data) {
                 let d = JSON.parse(data)
                 console.log('user data is', d.user.id)
@@ -171,9 +171,8 @@ export default function ChangeIntroVideo({ navigation, route }) {
                         console.log('video uploaded')
                         setVideo(json.data.intro_video)
                         d.user = json.data
-                        Settings.set({
-                            USER: JSON.stringify(d)
-                        })
+                                  AsyncStorage.setItem("USER",JSON.stringify(d))
+
                         // navigation.navigate('UploadMedia')
                     } else {
                         console.log('json message is', json.message)
@@ -210,7 +209,7 @@ export default function ChangeIntroVideo({ navigation, route }) {
             console.log('trying to delete video ', video)
             // console.log('trying to upload video ', introVideo.thumbnail)
             // return
-            const data = Settings.get("USER")
+            const data = await AsyncStorage.getItem("USER")
             if (data) {
                 let d = JSON.parse(data)
                 console.log('user data is', d.user.id)
@@ -234,9 +233,8 @@ export default function ChangeIntroVideo({ navigation, route }) {
                         setVideo(null)
                         setDuration(0)
                         d.user = json.data
-                        Settings.set({
-                            USER: JSON.stringify(d)
-                        })
+                                  AsyncStorage.setItem("USER",JSON.stringify(d))
+
                         // navigation.navigate('UploadMedia')
                     } else {
                         console.log('json message is', json.message)
@@ -338,8 +336,8 @@ export default function ChangeIntroVideo({ navigation, route }) {
 
             {
                 video && video ? (
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 30, width: width - 60 }}>
-
+                    <View style={{ alignItems: 'center', justifyContent: 'space-between', marginTop: 50, width: width - 60 }}>
+{/* 
                         {
                             showIndicator2 ? (
                                 <ActivityIndicator color={colors.blueColor} size={'large'} style={{ width: 170 / 430 * width, }} />
@@ -351,16 +349,14 @@ export default function ChangeIntroVideo({ navigation, route }) {
                                     <Text style={{ fontSize: 16 }}>Remove</Text>
                                 </TouchableOpacity>
                             )
-                        }
+                        } */}
 
                         <TouchableOpacity
                             onPress={() => {
                                 setPopup(true)
                             }}
-                            style={{
-                                height: 48 / 930 * height, width: 170 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.blueColor
-                            }}>
-                            <Text style={{ fontSize: 16, color: 'white' }}>Edit</Text>
+                            style={GlobalStyles.reqtengularBtn}>
+                            <Text style={GlobalStyles.btnText}>Edit</Text>
                         </TouchableOpacity>
                     </View>
 

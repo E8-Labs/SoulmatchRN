@@ -6,7 +6,7 @@ import ApisPath from '../../lib/ApisPath/ApisPath';
 import { useFocusEffect } from '@react-navigation/native';
 import LogoutPopup from '../../Components/LogoutPopup';
 import { getProfile } from '../../Services/ProfileServices/GetProfile';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const { height, width } = Dimensions.get('window');
 const placholder = require('../../assets/images/imagePlaceholder.webp')
 
@@ -44,7 +44,7 @@ export default function ProfileMain(props) {
     console.log('trying to logout')
     try {
       close()
-      Settings.set({ USER: null })
+      await AsyncStorage.removeItem("USER")
       props.navigation.navigate('LoginUser')
     } catch (error) {
       console.log(error)
@@ -67,7 +67,7 @@ export default function ProfileMain(props) {
         <View style={{
           flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 60, alignSelf: 'center',
         }}>
-          <Text style={{ fontSize: 26,fontWeight:'500' }}>Profile</Text>
+          <Text style={{ fontSize: 26, fontWeight: '500' }}>Profile</Text>
           <TouchableOpacity>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
               <Text style={{ color: colors.blueColor, fontSize: 14 }}>Public view</Text>
