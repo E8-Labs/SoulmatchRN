@@ -39,7 +39,8 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
     const [loadImage, setLoadImage] = useState(false)
     const [loadImage2, setLoadImage2] = useState(false)
     const [loadImage3, setLoadImage3] = useState(false)
-    const [loadVideo, setLoadVideo] = useState(false);
+    const [loadImage4, setLoadImage4] = useState(false)
+    const [loadImage5, setLoadImage5] = useState(false)
     const [currentIndex, setCurrentIndex] = useState(0);
     const [openModal, setOpenModal] = useState(false);
     const [LikeIndicator, setLikeIndicator] = useState(false);
@@ -78,7 +79,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
 
     const getQuestions = async () => {
         try {
-            const data =await AsyncStorage.getItem("USER")
+            const data = await AsyncStorage.getItem("USER")
 
             if (data) {
                 let d = JSON.parse(data)
@@ -224,6 +225,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                 }
             }
         } catch (error) {
+            setRejectIndicator(false)
             console.log('error finding in like profile', error)
         }
 
@@ -270,14 +272,9 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
         }
 
     }
-    const formatDuration = (durationMillis) => {
-        const totalSeconds = Math.floor(durationMillis / 1000);
-        const minutes = Math.floor(totalSeconds / 60);
-        const seconds = totalSeconds % 60;
-        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-    }
-    const calculateDistance =async () => {
-        const userdata =await AsyncStorage.getItem("USER")
+
+    const calculateDistance = async () => {
+        const userdata = await AsyncStorage.getItem("USER")
 
         if (userdata) {
             let d = JSON.parse(userdata)
@@ -541,7 +538,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                                         {
                                                             item.type === "image" ? (
                                                                 <>
-                                                                    <Image source={{ uri: item.url ? item.url : thumb_url }}
+                                                                    <Image source={{ uri: item.url }}
                                                                         onLoadStart={() => { setLoadImage2(true) }}
                                                                         onLoadEnd={() => {
                                                                             setLoadImage2(false)
@@ -562,38 +559,33 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                                             ) : (
                                                                 item.type === "video" ? (
                                                                     <>
-                                                                        <Video
-                                                                            ref={videoRef}
-                                                                            source={{
-                                                                                uri: item.url
+                                                                        <TouchableOpacity
+                                                                            onPress={() => {
+                                                                                let routeData = {
+                                                                                    navigate: 'VideoPlayer',
+                                                                                    url: item.url
+                                                                                }
+                                                                                onMenuClick(routeData)
                                                                             }}
-                                                                            style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
-                                                                            useNativeControls
-                                                                            resizeMode={ResizeMode.COVER}
-                                                                            isLooping={true}
-                                                                            // shouldPlay={isPlaying}
-                                                                            onPlaybackStatusUpdate={status => {
-                                                                                setStatus(() => status)
-                                                                                setIsPlaying(status.isPlaying);
-                                                                            }}
-                                                                            onLoad={(status) => {
-                                                                                setDuration(status.durationMillis)
-                                                                                setLoadVideo(false)
-                                                                            }} // Set duration when video loads
-                                                                            onLoadStart={() => {
-                                                                                setLoadVideo(true)
-                                                                            }}
-
-                                                                        />
-                                                                        {!isPlaying && duration > 0 && (
-                                                                            <View style={styles.durationContainer}>
-                                                                                <Text style={styles.durationText}>{formatDuration(duration)}</Text>
-                                                                            </View>
-                                                                        )}
+                                                                        >
+                                                                            <Image source={{ uri: item.thumb_url }}
+                                                                                onLoadStart={() => { setLoadImage4(true) }}
+                                                                                onLoadEnd={() => {
+                                                                                    setLoadImage4(false)
+                                                                                }}
+                                                                                placeholder={blurhash}
+                                                                                contentFit="cover"
+                                                                                transition={1000}
+                                                                                style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
+                                                                            />
+                                                                            <Image source={require('../../assets/images/playIcon.png')}
+                                                                                style={{ height: 50, width: 50, position: 'absolute', bottom: 100 / 930 * height, left: 150 / 430 * width }}
+                                                                            />
+                                                                        </TouchableOpacity>
 
                                                                         {
-                                                                            loadVideo ? (
-                                                                                <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 180 / 430 * width }} />
+                                                                            loadImage4 ? (
+                                                                                <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 120, left: 160 }} />
                                                                             ) : <></>
                                                                         }
                                                                     </>
@@ -639,9 +631,9 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                                             {item.text}
                                                         </Text>
                                                         {
-                                                            item.answerImage || item.answerVideo ? (<>
+                                                            item.answerImage ? (<>
                                                                 <Image
-                                                                    source={{ uri: item.answerImage ? item.answerImage : item.videoThumbnail }}
+                                                                    source={{ uri: item.answerImage }}
                                                                     style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
                                                                     onLoadEnd={() => {
                                                                         setLoadImage3(false)
@@ -650,6 +642,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                                                     contentFit="cover"
                                                                     transition={1000}
                                                                 />
+
                                                                 {
                                                                     loadImage3 ? (
                                                                         <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 150 }} />
@@ -669,27 +662,65 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                                                 </TouchableOpacity>
                                                             </>
                                                             ) : (
-                                                                <>
-                                                                    <View style={{
-                                                                        marginTop: 8, marginBottom: 8, width: 345 / 430 * width, backgroundColor: '#F5F5F5',
-                                                                        borderRadius: 10, paddingVertical: 10, paddingHorizontal: 16, alignItems: 'center'
-                                                                    }}>
-                                                                        <Text style={{ fontSize: 14, fontFamily: customFonts.regular, color: '#000', textAlign: 'left', width: 320 / 430 * width, }}>
-                                                                            {item.answerText}
-                                                                        </Text>
+                                                                item.answerVideo ? (
+                                                                    <>
+                                                                        <TouchableOpacity
+                                                                            onPress={()=>{
+                                                                                let routeData = {
+                                                                                    navigate: 'VideoPlayer',
+                                                                                    url:item.answerVideo
+                                                                                }
+                                                                                onMenuClick(routeData)
+                                                                    
+                                                                            }}
+                                                                        >
+                                                                            <Image source={{ uri: item.videoThumbnail }}
+                                                                                style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
+                                                                                onLoadEnd={() => {
+                                                                                    setLoadImage5(false)
+                                                                                }} onLoadStart={() => { setLoadImage5(true) }}
+                                                                                placeholder={blurhash}
+                                                                                contentFit="cover"
+                                                                                transition={1000}
+                                                                            />
+                                                                             <Image source={require('../../assets/images/playIcon.png')}
+                                                                                style={{ height: 50, width: 50, position: 'absolute', bottom: 100 / 930 * height, left: 150 / 430 * width }}
+                                                                            />
+                                                                        </TouchableOpacity>
+                                                                        {
+                                                                            loadImage5 ? (
+                                                                                <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 120, left: 160 }} />
+                                                                            ) : <></>
+                                                                        }
+                                                                    </>
 
-                                                                    </View>
-                                                                    <TouchableOpacity style={{ alignSelf: 'flex-end', }}
-                                                                        onPress={() => {
-                                                                            handleOnpress(item)
-                                                                        }}
-                                                                    >
-                                                                        <View style={GlobalStyles.likeBtn}>
-                                                                            <Image source={selected.includes(item.id) ? likeImage : unlikeImage} style={GlobalStyles.likeBtnImage} />
+                                                                ) : (
+                                                                    <>
+
+                                                                        <View style={{
+                                                                            marginTop: 8, marginBottom: 8, width: 345 / 430 * width, backgroundColor: '#F5F5F5',
+                                                                            borderRadius: 10, paddingVertical: 10, paddingHorizontal: 16, alignItems: 'center'
+                                                                        }}>
+                                                                            <Text style={{ fontSize: 14, fontFamily: customFonts.regular, color: '#000', textAlign: 'left', width: 320 / 430 * width, }}>
+                                                                                {item.answerText}
+                                                                            </Text>
+
                                                                         </View>
-                                                                    </TouchableOpacity>
-                                                                </>
+                                                                        <TouchableOpacity style={{ alignSelf: 'flex-end', }}
+                                                                            onPress={() => {
+                                                                                handleOnpress(item)
+                                                                            }}
+                                                                        >
+                                                                            <View style={GlobalStyles.likeBtn}>
+                                                                                <Image source={selected.includes(item.id) ? likeImage : unlikeImage} style={GlobalStyles.likeBtnImage} />
+                                                                            </View>
+                                                                        </TouchableOpacity>
+                                                                    </>
+                                                                )
                                                             )
+                                                            // (  
+                                                            //    
+                                                            // )
                                                         }
 
                                                     </View>

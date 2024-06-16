@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const GOOGLE_PLACES_API_KEY = 'AIzaSyAvhNXgMGSYcFIHLkRmZkDta_U7yWdgQQI'; // never save your real api key in a snack!
 
-const AddressPicker = ({ navigation }) => {
+const AddressPicker = ({ navigation,route }) => {
     // const handlePlaceSelect = async (data, details) => {
     //     try {
     //         const placeDetailsResponse = await fetch(
@@ -110,12 +110,16 @@ const AddressPicker = ({ navigation }) => {
                 }
             });
 
-            AsyncStorage.setItem("userLocation", JSON.stringify({cityName: city, stateName: state, latitude: lat, longitude: lon}))
-            console.log('Latitude:', lat);
-            console.log('Longitude:', lon);
-            console.log('City:', city);
-            console.log('State:', state);
+           
+
+            let address = {
+                lat:lat,
+                lang:lon,
+                city:city,
+                state:state
+            }
             // console.warn('Values are selected');
+            route.params.PickAddress(address)
             navigation.pop()
         } catch (error) {
             console.error('Error fetching place details:', error);

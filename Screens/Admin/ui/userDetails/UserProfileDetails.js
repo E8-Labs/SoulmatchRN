@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Dimensions, Image, ScrollView, StyleSheet, Modal, Text, TouchableOpacity, View, FlatList,ActivityIndicator } from 'react-native'
+import { Dimensions, Image, ScrollView, StyleSheet, Modal, Text, TouchableOpacity, View, FlatList, ActivityIndicator } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import customFonts from '../../../../assets/fonts/Fonts';
 import colors from '../RangeSlider/Colors';
@@ -124,8 +124,8 @@ const UserProfileDetails = ({ navigation, route }) => {
             //add api link here
             const data = await AsyncStorage.getItem("USER")
             if (data) {
-                let d = JSON.parse(data) 
-                let AuthToken  = d.token           
+                let d = JSON.parse(data)
+                let AuthToken = d.token
                 console.log("Id going in is", ProfileData.id);
                 const response = await fetch(ApiUrl, {
                     'method': 'post',
@@ -181,7 +181,7 @@ const UserProfileDetails = ({ navigation, route }) => {
 
     //test code for video thumnail
 
-   
+
 
     return (
         <SafeAreaView>
@@ -319,72 +319,72 @@ const UserProfileDetails = ({ navigation, route }) => {
                                                         item.caption ?
                                                             <Text style={{ fontWeight: '400', fontSize: 16, fontFamily: customFonts.medium }}>
                                                                 {item.caption}
-                                                            </Text> :""
-                                                    
+                                                            </Text> : ""
+
                                                     }
                                                 </Text>
                                                 {
-                                                            item.type === "image" ? (
-                                                                <>
-                                                                    <Image source={{ uri: item.url ? item.url : thumb_url }}
-                                                                        onLoadStart={() => { setLoadImage(true) }}
-                                                                        onLoadEnd={() => {
-                                                                            setLoadImage(false)
-                                                                        }}
-                                                                        placeholder={blurhash}
-                                                                        contentFit="cover"
-                                                                        transition={1000}
-                                                                        style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
-                                                                    />
+                                                    item.type === "image" ? (
+                                                        <>
+                                                            <Image source={{ uri: item.url ? item.url : thumb_url }}
+                                                                onLoadStart={() => { setLoadImage(true) }}
+                                                                onLoadEnd={() => {
+                                                                    setLoadImage(false)
+                                                                }}
+                                                                placeholder={blurhash}
+                                                                contentFit="cover"
+                                                                transition={1000}
+                                                                style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
+                                                            />
 
-                                                                    {
-                                                                        loadImage ? (
-                                                                            <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 150 }} />
-                                                                        ) : <></>
-                                                                    }
-                                                                </>
+                                                            {
+                                                                loadImage ? (
+                                                                    <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 150 }} />
+                                                                ) : <></>
+                                                            }
+                                                        </>
 
-                                                            ) : (
-                                                                item.type === "video" ? (
-                                                                    <>
-                                                                        <Video
-                                                                            ref={videoRef}
-                                                                            source={{
-                                                                                uri: item.url
-                                                                            }}
-                                                                            style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
-                                                                            useNativeControls
-                                                                            resizeMode={ResizeMode.COVER}
-                                                                            isLooping={true}
-                                                                            // shouldPlay={isPlaying}
-                                                                            onPlaybackStatusUpdate={status => {
-                                                                                setStatus(() => status)
-                                                                                setIsPlaying(status.isPlaying);
-                                                                            }}
-                                                                            onLoad={(status) => {
-                                                                                setDuration(status.durationMillis)
-                                                                                setLoadVideo(false)
-                                                                            }} // Set duration when video loads
-                                                                            onLoadStart={() => {
-                                                                                setLoadVideo(true)
-                                                                            }}
+                                                    ) : (
+                                                        item.type === "video" ? (
+                                                            <>
+                                                                <Video
+                                                                    ref={videoRef}
+                                                                    source={{
+                                                                        uri: item.url
+                                                                    }}
+                                                                    style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
+                                                                    useNativeControls
+                                                                    resizeMode={ResizeMode.COVER}
+                                                                    isLooping={true}
+                                                                    // shouldPlay={isPlaying}
+                                                                    onPlaybackStatusUpdate={status => {
+                                                                        setStatus(() => status)
+                                                                        setIsPlaying(status.isPlaying);
+                                                                    }}
+                                                                    onLoad={(status) => {
+                                                                        setDuration(status.durationMillis)
+                                                                        setLoadVideo(false)
+                                                                    }} // Set duration when video loads
+                                                                    onLoadStart={() => {
+                                                                        setLoadVideo(true)
+                                                                    }}
 
-                                                                        />
-                                                                        {!isPlaying && duration > 0 && (
-                                                                            <View style={styles.durationContainer}>
-                                                                                <Text style={styles.durationText}>{formatDuration(duration)}</Text>
-                                                                            </View>
-                                                                        )}
+                                                                />
+                                                                {!isPlaying && duration > 0 && (
+                                                                    <View style={styles.durationContainer}>
+                                                                        <Text style={styles.durationText}>{formatDuration(duration)}</Text>
+                                                                    </View>
+                                                                )}
 
-                                                                        {
-                                                                            loadVideo ? (
-                                                                                <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 180 / 430 * width }} />
-                                                                            ) : <></>
-                                                                        }
-                                                                    </>
-                                                                ) : ''
-                                                            )
-                                                        }
+                                                                {
+                                                                    loadVideo ? (
+                                                                        <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 180 / 430 * width }} />
+                                                                    ) : <></>
+                                                                }
+                                                            </>
+                                                        ) : ''
+                                                    )
+                                                }
                                             </View>
                                         </View>
                                     )}
@@ -408,7 +408,19 @@ const UserProfileDetails = ({ navigation, route }) => {
                                                 <Text style={{ fontWeight: '400', fontSize: 16, fontFamily: customFonts.regular }}>
                                                     {item.text}
                                                 </Text>
-                                                {item.answerText ? <Text>{item.answerText}</Text> : ''}
+                                                {item.answerText ? (
+                                                    <View style={{
+                                                        marginTop: 8, marginBottom: 8, width: 345 / 430 * width, backgroundColor: '#F5F5F5',
+                                                        borderRadius: 10, paddingVertical: 10, paddingHorizontal: 16, alignItems: 'center'
+                                                    }}>
+                                                        <Text style={{ fontSize: 14, fontFamily: customFonts.regular, color: '#000', textAlign: 'left', width: 320 / 430 * width, }}>
+                                                            {item.answerText}
+                                                        </Text>
+
+                                                    </View>
+                                                )
+
+                                                    : ''}
                                                 {item.answerImage ? <Image source={{ uri: item.answerImage }} style={{ height: 234 / 930 * height, width: 334 / 430 * width, borderRadius: 10, marginTop: 5 }} /> : ''}
                                                 {item.answerVideo ?
                                                     <Video
@@ -468,7 +480,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                             <View style={{ height: 0.1, borderWidth: 0.2, borderColor: '#E6E6E6', width: width, marginTop: 20 / 930 * height }}></View>
 
                             <View style={{ marginTop: 25 }}>
-                                <Image source={ProfileData.profile_image ?{ uri: ProfileData.profile_image }:placholder} style={{ height: 250, width: 250, resizeMode: 'cover', borderRadius: 10 }} />
+                                <Image source={ProfileData.profile_image ? { uri: ProfileData.profile_image } : placholder} style={{ height: 250, width: 250, resizeMode: 'cover', borderRadius: 10 }} />
                             </View>
 
                             <Text style={{ fontWeight: '500', padding: 10, fontFamily: customFonts.medium, fontSize: 16, color: '#4D4D4D', marginTop: 15, textAlign: 'center' }}>
@@ -517,7 +529,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                             <View style={{ height: 0.1, borderWidth: 0.2, borderColor: '#E6E6E6', width: width, marginTop: 20 / 930 * height }}></View>
 
                             <View style={{ marginTop: 25 }}>
-                                <Image source={ProfileData.profile_image ?{ uri: ProfileData.profile_image }:placholder} style={{ height: 250, width: 250, resizeMode: 'cover', borderRadius: 10 }} />
+                                <Image source={ProfileData.profile_image ? { uri: ProfileData.profile_image } : placholder} style={{ height: 250, width: 250, resizeMode: 'cover', borderRadius: 10 }} />
                             </View>
 
                             <Text style={{ fontWeight: '500', padding: 10, fontFamily: customFonts.medium, fontSize: 16, color: '#4D4D4D', marginTop: 15, textAlign: 'center' }}>

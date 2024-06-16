@@ -181,7 +181,7 @@ export default function ChatScreen({ navigation, route }) {
 
     const getMessages = async () => {
         console.log('trying to get messages')
-        const data =await AsyncStorage.getItem("USER")
+        const data = await AsyncStorage.getItem("USER")
 
         try {
             if (data) {
@@ -237,8 +237,8 @@ export default function ChatScreen({ navigation, route }) {
         setMessage('');
         try {
             console.log('trying to send message');
-            const data =await AsyncStorage.getItem("USER")
-;
+            const data = await AsyncStorage.getItem("USER")
+                ;
             if (data) {
                 let d = JSON.parse(data);
                 let body = JSON.stringify({
@@ -258,7 +258,7 @@ export default function ChatScreen({ navigation, route }) {
                     let json = await result.json();
                     if (json.status === true) {
                         console.log('message sent ', json.data);
-                       
+
                     } else {
                         console.log('message sent json message', json.message);
                     }
@@ -271,7 +271,7 @@ export default function ChatScreen({ navigation, route }) {
 
 
     const sendMedia = async (selectedMedia) => {
-        
+
         let time = moment().toISOString();
         console.log('selected midia is', selectedMedia)
         const newMessage = { userId: currentUser.user.id, timestamp: time, image_url: selectedMedia.media, thumb_url: selectedMedia.thumbnail, id: `${chat.id}-${messages.length}` };
@@ -281,7 +281,7 @@ export default function ChatScreen({ navigation, route }) {
 
         // return
         try {
-            const data =await AsyncStorage.getItem("USER")
+            const data = await AsyncStorage.getItem("USER")
 
             if (data) {
                 console.log('trying to send media')
@@ -289,11 +289,11 @@ export default function ChatScreen({ navigation, route }) {
                 const formdata = new FormData()
 
                 formdata.append("chatId", chat.id);
-
+                formdata.append("timestamp", time)
                 formdata.append("media", {
                     name: "media.jpg",
                     uri: selectedMedia.media,
-                    type: 'image/jpeg',
+                    type: selectedMedia.type === "video" ? "video" : 'image/jpeg',
                 });
 
                 if (selectedMedia.type === "video") {
@@ -304,7 +304,7 @@ export default function ChatScreen({ navigation, route }) {
                         type: 'image/jpeg',
                     });
                 }
-                console.log('form data is', selectedMedia.thumbnail)
+                // console.log('form data is', selectedMedia.thumbnail)
                 const result = await fetch(ApisPath.ApiSenMedia, {
                     method: 'post',
                     headers: {
@@ -345,7 +345,7 @@ export default function ChatScreen({ navigation, route }) {
 
 
     const pickMedia = async () => {
-        
+
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
@@ -423,10 +423,10 @@ export default function ChatScreen({ navigation, route }) {
     };
 
     const getMessageType = (item) => {
-        if (item.image_url) {
-            return "image"
-        } else if (item.thumb_url) {
+        if (item.thumb_url) {
             return "video"
+        } else if (item.image_url) {
+            return "image"
         } else if (item.content) {
             return "text"
         }
@@ -435,35 +435,104 @@ export default function ChatScreen({ navigation, route }) {
 
     const renderItem = (item) => {
         // console.log('item is', item)
-        return (
-            fromCurrentUser(item) ? (
+        if (fromCurrentUser(item)) {
+            if (getMessageType(item) === "text") {
+                return (
+                    <View style={{ alignItems: 'flex-end', marginTop: 10 }}>
 
-                <View style={{ alignItems: 'flex-end', marginTop: 10 }}>
+                        <View style={{
+                            backgroundColor: colors.blueColor, padding: 10, marginLeft: '45%', borderRadius: 5,
+                            marginTop: 5, marginRight: "5%", maxWidth: '50%', alignSelf: 'flex-end', borderRadius: 20,
 
-                    <View style={{
-                        backgroundColor: colors.blueColor, padding: 10, marginLeft: '45%', borderRadius: 5,
-                        marginTop: 5, marginRight: "5%", maxWidth: '50%', alignSelf: 'flex-end', borderRadius: 20,
+                            // width: 207 / 430 * width, backgroundColor: colors.blueColor, marginTop: 15, borderRadius: 18,
+                            // paddingHorizontal: 12, paddingVertical: 8, gap: 3, alignItems: 'flex-start', flexDirection: 'column'
+                        }}>
+                            <Text style={{ fontSize: 14, fontFamily: customFonts.regular, color: 'white' }}>
+                                {item.content}
+                            </Text>
+                            <View style={styles.rightArrow}></View>
+                            <View style={styles.rightArrowOverlap}></View>
+                            <Text style={{
+                                fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', width: 175 / 430 * width,
+                                paddingRight: 10 / 430 * width, color: 'white'
+                            }}>
+                                {moment(item.createdAt).format('h:mm')}
+                            </Text>
+                        </View>
 
-                        // width: 207 / 430 * width, backgroundColor: colors.blueColor, marginTop: 15, borderRadius: 18,
-                        // paddingHorizontal: 12, paddingVertical: 8, gap: 3, alignItems: 'flex-start', flexDirection: 'column'
-                    }}>
-                        {
-                            getMessageType(item) === 'image' ? (
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        setOpenImage( item.image_url )
+                    </View>
+                )
+            }
+            else if (getMessageType(item) === "video") {
+                console.log("This is video message")
+                return (
+                    <View style={{ alignItems: 'flex-end', marginTop: 10 }}>
+
+                        <View style={{
+                            backgroundColor: colors.transparent, padding: 10, marginLeft: '45%', borderRadius: 5,
+                            marginTop: 5, marginRight: "5%", maxWidth: '50%', alignSelf: 'flex-end', borderRadius: 20,
+
+                            // width: 207 / 430 * width, backgroundColor: colors.blueColor, marginTop: 15, borderRadius: 18,
+                            // paddingHorizontal: 12, paddingVertical: 8, gap: 3, alignItems: 'flex-start', flexDirection: 'column'
+                        }}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    navigation.navigate("VideoPlayer", {
+                                        data: {
+                                            url: item.image_url
+                                        }
+                                    })
+                                }}
+                            >
+                                <Image source={{ uri: item.thumb_url }}
+                                    style={{ height: 200, width: 200, backgroundColor: colors.transparent,borderRadius:10 }}
+                                />
+                                <Image source={require('../../assets/images/playIcon.png')}
+                                    style={{ height: 50, width: 50, position: 'absolute', bottom: 80 / 930 * height, left: 80 / 430 * width }}
+                                />
+                            </TouchableOpacity>
+
+                            {/* <View style={styles.rightArrow}></View>
+                            <View style={styles.rightArrowOverlap}></View> */}
+                            <Text style={{
+                                fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', width: 175 / 430 * width,
+                                paddingRight: 10 / 430 * width
+                            }}>
+                                {moment(item.createdAt).format('h:mm')}
+                            </Text>
+
+                        </View>
+
+                    </View>
+                )
+            }
+            else if (getMessageType(item) === "image") {
+                return (
+                    <View style={{ alignItems: 'flex-end', marginTop: 10 }}>
+
+                        <View style={{
+                            backgroundColor: colors.transparent, padding: 10, marginLeft: '45%', borderRadius: 5,
+                            marginTop: 5, marginRight: "5%", maxWidth: '50%', alignSelf: 'flex-end', borderRadius: 20,
+
+                            // width: 207 / 430 * width, backgroundColor: colors.blueColor, marginTop: 15, borderRadius: 18,
+                            // paddingHorizontal: 12, paddingVertical: 8, gap: 3, alignItems: 'flex-start', flexDirection: 'column'
+                        }}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setOpenImage(item.image_url)
+                                }}
+                            >
+                                <Image source={{ uri: item.image_url }}
+                                    style={{ height: 200, width: 200, resizeMode: 'cover', borderRadius: 20 }}
+                                    onLoadStart={() => {
+                                        setLoadImage(true)
                                     }}
-                                >
-                                    <Image source={{ uri: item.image_url }}
-                                        style={{ height: 200, width: 200, resizeMode: 'cover', borderRadius: 20 }}
-                                        onLoadStart={()=>{
-                                            setLoadImage(true)
-                                        }}
-                                        onLoadEnd={()=>{
-                                            setLoadImage(false)
-                                        }}
-                                    />
-                                    {/* {
+                                    onLoadEnd={() => {
+                                        setLoadImage(false)
+                                    }}
+                                />
+
+                                {/* {
                                         loadImage?(
                                             <View>
                                                 <ActivityIndicator size={'small'} color={colors.blueColor} 
@@ -471,36 +540,28 @@ export default function ChatScreen({ navigation, route }) {
                                             </View>
                                         ):null
                                     } */}
-                                </TouchableOpacity>
-
-                            ) : (
-                                getMessageType(item) === 'video' ? (
-                                    <Image source={{ uri: item.image_url }}
-                                        style={{ height: 200, width: 200 }}
-                                    />
-                                ) : (
-                                    <Text style={{ fontSize: 14, fontFamily: customFonts.regular, color: 'white' }}>
-                                        {item.content}
-                                    </Text>
-                                )
-                            )
-                        }
-
-                        <View style={styles.rightArrow}>
-
+                            </TouchableOpacity>
+                            {/* <View style={styles.rightArrow}></View>
+                            <View style={styles.rightArrowOverlap}></View> */}
+                            <Text style={{
+                                fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', width: 175 / 430 * width,
+                                paddingRight: 10 / 430 * width
+                            }}>
+                                {moment(item.createdAt).format('h:mm')}
+                            </Text>
                         </View>
-                        <View style={styles.rightArrowOverlap}></View>
 
-                        <Text style={{ color: 'white', fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', width: 175 / 430 * width }}>
-                            {moment(item.createdAt).format('h:mm')}
-                        </Text>
                     </View>
-                </View>
-            ) : (
+                )
+            }
+        }
+        else {
 
-                <View style={{ alignItems: 'flex-start', width: width - 50, marginTop: 10 }}>
+            if (getMessageType(item) === "text") {
+                return (
+                    <View style={{ alignItems: 'flex-start', width: width - 50, marginTop: 10 }}>
 
-                    <View style={{
+                     <View style={{
                         backgroundColor: "#F5F5F5", padding: 10, borderRadius: 5, marginTop: 5, marginLeft: "5%",
                         maxWidth: '50%', alignSelf: 'flex-start', borderRadius: 20,
                         //maxWidth: 500,
@@ -508,24 +569,140 @@ export default function ChatScreen({ navigation, route }) {
                         //alignItems:"center",
 
                     }}>
-                        <Text style={{ fontSize: 14, fontFamily: customFonts.regular }}>
-                            {item.content ? item.content : item.content}
-                        </Text>
-                        <View style={styles.leftArrow}>
+                            <Text style={{ fontSize: 14, fontFamily: customFonts.regular, }}>
+                                {item.content}
+                            </Text>
+                            <View style={styles.leftArrow}></View>
+                            <View style={styles.leftArrowOverlap}></View>
+                            <Text style={{
+                                fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', width: 175 / 430 * width,
+                                paddingRight: 10 / 430 * width, color: 'black'
+                            }}>
+                                {moment(item.createdAt).format('h:mm')}
+                            </Text>
+                        </View>
+
+                    </View>
+                )
+            } else if (getMessageType(item) === "video") {
+                console.log("This is video message")
+                return (
+                    <View style={{ alignItems: 'flex-start', width: width - 50, marginTop: 10 }}>
+
+                             <View style={{
+                                backgroundColor:colors.transparent, padding: 10, borderRadius: 5, marginTop: 5, marginLeft: "5%",
+                                maxWidth: '50%', alignSelf: 'flex-start', borderRadius: 20,
+                                //maxWidth: 500,
+                                //padding: 14,
+                                //alignItems:"center",
+        
+                            }}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    navigation.navigate("VideoPlayer", {
+                                        data: {
+                                            url: item.image_url
+                                        }
+                                    })
+                                }}
+                            >
+                                <Image source={{ uri: item.thumb_url }}
+                                    style={{ height: 200, width: 200, backgroundColor: colors.transparent }}
+                                />
+                                <Image source={require('../../assets/images/playIcon.png')}
+                                    style={{ height: 50, width: 50, position: 'absolute', bottom: 80 / 930 * height, left: 50 / 430 * width }}
+                                />
+                            </TouchableOpacity>
+
+                            {/* <View style={styles.rightArrow}></View>
+                            <View style={styles.rightArrowOverlap}></View> */}
+                            <Text style={{
+                                fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', width: 175 / 430 * width,
+                                paddingRight: 10 / 430 * width
+                            }}>
+                                {moment(item.createdAt).format('h:mm')}
+                            </Text>
 
                         </View>
-                        <View style={styles.leftArrowOverlap}></View>
-                        <Text style={{
-                            fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', width: 175 / 430 * width,
-                            paddingRight: 10 / 430 * width
-                        }}>
-                            {moment(item.createdAt).format('h:mm')}
-                        </Text>
-                    </View>
-                </View>
-            )
-        )
 
+                    </View>
+                )
+            } else if (getMessageType(item) === "image") {
+                return (
+                    <View style={{ alignItems: 'flex-start', width: width - 50, marginTop: 10 }}>
+
+                             <View style={{
+                                backgroundColor: colors.transparent, padding: 10, borderRadius: 5, marginTop: 5, marginLeft: "5%",
+                                maxWidth: '50%', alignSelf: 'flex-start', borderRadius: 20,
+                                //maxWidth: 500,
+                                //padding: 14,
+                                //alignItems:"center",
+        
+                            }}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setOpenImage(item.image_url)
+                                }}
+                            >
+                                <Image source={{ uri: item.image_url }}
+                                    style={{ height: 200, width: 200, resizeMode: 'cover', borderRadius: 20 }}
+                                    onLoadStart={() => {
+                                        setLoadImage(true)
+                                    }}
+                                    onLoadEnd={() => {
+                                        setLoadImage(false)
+                                    }}
+                                />
+
+                                {/* {
+                                        loadImage?(
+                                            <View>
+                                                <ActivityIndicator size={'small'} color={colors.blueColor} 
+                                                style = {{marginTop:-100/930*height}}/>
+                                            </View>
+                                        ):null
+                                    } */}
+                            </TouchableOpacity>
+                            {/* <View style={styles.rightArrow}></View>
+                            <View style={styles.rightArrowOverlap}></View> */}
+                            <Text style={{
+                                fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', width: 175 / 430 * width,
+                                paddingRight: 10 / 430 * width
+                            }}>
+                                {moment(item.createdAt).format('h:mm')}
+                            </Text>
+                        </View>
+
+                    </View>
+                )
+            }
+
+            // return (
+            //     <View style={{ alignItems: 'flex-start', width: width - 50, marginTop: 10 }}>
+
+            //         <View style={{
+            //             backgroundColor: "#F5F5F5", padding: 10, borderRadius: 5, marginTop: 5, marginLeft: "5%",
+            //             maxWidth: '50%', alignSelf: 'flex-start', borderRadius: 20,
+            //             //maxWidth: 500,
+            //             //padding: 14,
+            //             //alignItems:"center",
+
+            //         }}>
+            //             <Text style={{ fontSize: 14, fontFamily: customFonts.regular }}>
+            //                 {item.content ? item.content : item.content}
+            //             </Text>
+            //             <View style={styles.leftArrow}></View>
+            //             <View style={styles.leftArrowOverlap}></View>
+            //             <Text style={{
+            //                 fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', width: 175 / 430 * width,
+            //                 paddingRight: 10 / 430 * width
+            //             }}>
+            //                 {moment(item.createdAt).format('h:mm')}
+            //             </Text>
+            //         </View>
+            //     </View>
+            // )
+        }
     }
 
 
@@ -549,7 +726,7 @@ export default function ChatScreen({ navigation, route }) {
                     <View style={{ alignItems: 'center', flexDirection: 'row', width: width - 50 / 430 * width, justifyContent: 'space-between' }}>
                         <View style={{ alignItems: 'center', flexDirection: 'row', gap: 15 / 430 * width }}>
                             <TouchableOpacity onPress={() => {
-                                if(data.from === "Match"){
+                                if (data.from === "Match") {
                                     navigation.pop(2)
                                     return
                                 }
@@ -623,9 +800,10 @@ export default function ChatScreen({ navigation, route }) {
                 transparent={true}
                 animationType='slide'
             >
-                <TouchableWithoutFeedback onPress={() => { 
-                    setOpenModal3(false) }}
-                    >
+                <TouchableWithoutFeedback onPress={() => {
+                    setOpenModal3(false)
+                }}
+                >
                     <View style={{ height: height, width: width, alignItems: 'center', justifyContent: 'center', backgroundColor: '#00000050' }}>
 
                         <View style={{
@@ -778,7 +956,7 @@ export default function ChatScreen({ navigation, route }) {
                         animationType='fade'
                     >
                         <TouchableWithoutFeedback onPress={() => {
-                            // setOpenModal(false)
+                            setOpenModal(false)
                         }}>
                             <View style={{ height: height, width: width, }}>
 
@@ -824,22 +1002,22 @@ export default function ChatScreen({ navigation, route }) {
                         transparent={true}
                     >
 
-                        <View style={{ height: height, width: width,backgroundColor:'#000000',alignItems:'center',justifyContent:'center' }}>
-                            <View style = {{height:height*0.8,justifyContent:'center',alignItems:'center'}}>
-                                <TouchableOpacity 
-                                    style = {{
-                                        backgroundColor:colors.greyText,position:'absolute',top:0,borderRadius:50,height:40,width:40,right:10,
-                                        alignItems:'center',justifyContent:'center'
+                        <View style={{ height: height, width: width, backgroundColor: '#000000', alignItems: 'center', justifyContent: 'center' }}>
+                            <View style={{ height: height * 0.8, justifyContent: 'center', alignItems: 'center' }}>
+                                <TouchableOpacity
+                                    style={{
+                                        backgroundColor: 'grey', position: 'absolute', top: 0, borderRadius: 50, height: 40, width: 40, right: 10,
+                                        alignItems: 'center', justifyContent: 'center'
                                     }}
-                                onPress={()=>{
-                                    setOpenImage(null)
-                                }} >
-                                   <Image source={require('../../assets/images/close.png')} 
-                                        style = {{height:30,width:30}}
-                                   />
+                                    onPress={() => {
+                                        setOpenImage(null)
+                                    }} >
+                                    <Image source={require('../../assets/images/close.png')}
+                                        style={{ height: 30, width: 30 }}
+                                    />
                                 </TouchableOpacity>
-                                <Image source={{uri:openImage}} 
-                                    style = {{height:height*0.5,width:width-30,borderRadius:5}}
+                                <Image source={{ uri: openImage }}
+                                    style={{ height: height * 0.5, width: width - 30, borderRadius: 5 }}
                                 />
                             </View>
                         </View>

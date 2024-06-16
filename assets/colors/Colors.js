@@ -3,7 +3,8 @@ const colors = {
     greyText:"#E6E6E6",
     greyLightText:"#666666",
     lightColor:'#D5D0F6',
-    unreadColor:'#333333'
+    unreadColor:'#333333',
+    transparent: 'transparent'
 }
 
 export default colors

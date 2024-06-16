@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import customFonts from '../../../../assets/fonts/Fonts'
-import { View, KeyboardAvoidingView, Modal, TouchableOpacity, TouchableWithoutFeedback, Platform, StyleSheet, Text, Keyboard, Dimensions, StatusBar, Image, ScrollView, ActivityIndicator, SafeAreaView } from 'react-native'
+import { View, KeyboardAvoidingView, Modal, TouchableOpacity, TouchableWithoutFeedback, Platform, StyleSheet, Text, Keyboard, Dimensions, StatusBar,  ScrollView, ActivityIndicator, SafeAreaView } from 'react-native'
 import Apis from "../../apis/Apis"
+import { Image } from 'expo-image'
 import { AnimatedCircularProgress } from 'react-native-circular-progress'
 import colors from '../RangeSlider/Colors'
 import AsyncStorage from '@react-native-async-storage/async-storage'

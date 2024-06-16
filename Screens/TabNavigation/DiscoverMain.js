@@ -75,6 +75,10 @@ export default function DiscoverMain(props) {
           props.navigation.navigate("NotificationsScreen", {
 
           })
+        } else if (data.navigate === 'VideoPlayer') {
+          props.navigation.navigate("VideoPlayer", {
+              data:data
+          })  
         }
       }}
       />

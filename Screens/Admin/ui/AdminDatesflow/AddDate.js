@@ -67,6 +67,7 @@ const AddDate = ({ navigation, route }) => {
     const [Loading, setLoading] = useState(false);
     const [DateOpenTime, setDateOpenTime] = useState('');
     const [date, setDate] = useState(new Date());
+    const [date2, setDate2] = useState(new Date());
     const [mode, setMode] = useState('time');
     const [show, setShow] = useState(false);
     const [openTime, setOpenTime] = useState(null);
@@ -98,7 +99,7 @@ const AddDate = ({ navigation, route }) => {
     }, [])
 
     useEffect(() => {
-        setSelOpenTime(DateData.openTime)
+        // setSelOpenTime(DateData.openTime)
         console.log("Value of open time :", SelOpenTime);
     }, [SelOpenTime])
 
@@ -221,8 +222,10 @@ const AddDate = ({ navigation, route }) => {
             alert('You did not select any image.');
         }
     }
-
+    3
     const handleSaveButton = async () => {
+        console.warn("Selected open time is ", SelOpenTime);
+        // return 
         try {
             setLoading(true);
             const AuthToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoyNSwiZmlyc3RfbmFtZSI6ImFkbWluIiwibGFzdF9uYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQHNvdWxtYXRjaC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRmazNoTEN6MGlObGNNdjd4RVV3U2ouOWZtdms2SFNIRi4wdG5SWS5YWGl0MllTLkhsbUhBQyIsInByb2ZpbGVfaW1hZ2UiOiIiLCJpbnRyb192aWRlbyI6bnVsbCwiaW50cm9fdGh1bWJuYWlsX3VybCI6bnVsbCwiY29tcGFueSI6bnVsbCwiam9iX3RpdGxlIjpudWxsLCJhZ2UiOm51bGwsImhlaWdodF9pbmNoZXMiOm51bGwsImhlaWdodF9mZWV0IjpudWxsLCJ6b2RpYWMiOm51bGwsInNjaG9vbCI6bnVsbCwiY2l0eSI6bnVsbCwic3RhdGUiOm51bGwsImxhdCI6bnVsbCwibGFuZyI6bnVsbCwiZ2VuZGVyIjpudWxsLCJmY21fdG9rZW4iOm51bGwsImRldmljZV9pZCI6IiIsInByb3ZpZGVyX2lkIjoiIiwicHJvdmlkZXJfbmFtZSI6IkVtYWlsIiwicm9sZSI6ImFkbWluIiwic3RhdHVzIjpudWxsLCJlbmNfa2V5IjpudWxsLCJlbmNfaXYiOm51bGwsImRvYiI6bnVsbCwicG9pbnRzIjowLCJpbnRlcmVzdGVkX2dlbmRlciI6bnVsbCwiaW50ZXJlc3RlZF9taW5fYWdlIjpudWxsLCJpbnRlcmVzdGVkX21heF9hZ2UiOm51bGwsImNyZWF0ZWRBdCI6IjIwMjQtMDUtMjhUMDY6NDg6NTEuMDAwWiIsInVwZGF0ZWRBdCI6IjIwMjQtMDUtMjhUMDY6NTA6MDQuMDAwWiJ9LCJpYXQiOjE3MTY4NzkwNzUsImV4cCI6MTc0ODQxNTA3NX0.WdN1uRySZaxW2BzDJSWt3b97puD51PViXu6fL-sJQIs";
@@ -335,42 +338,25 @@ const AddDate = ({ navigation, route }) => {
     }, []);
 
     //test code for Address Picker
+    const pickAddress = (address) => {
+        console.log('address is ', address)
+        setCityName(address.city)
+        setStateName(address.state)
+    }
 
     const handlePickAddress = () => {
         // console.warn("hello");
-        navigation.navigate('AddressPicker')
+        navigation.navigate('AddressPicker', {
+            PickAddress: pickAddress
+        })
     }
 
     //test code for address
 
-    useEffect(() => {
-        const getData = async () => {
-            try {
-                const storedCityName = await AsyncStorage.getItem('userLocation');
-                if (storedCityName !== null) {
-                    // Stored city name exists, parse it and set it in your component state
-                    const AsyncData = JSON.parse(storedCityName);
-                    console.log(`location is `, AsyncData)
-                    setCityName(AsyncData.cityName)
-                    setlatitude(AsyncData.latitude)
-                    setlongitude(AsyncData.longitude)
-                    setStateName(AsyncData.stateName)
-                } else {
-                    console.log('No city name stored yet.');
-                }
-            } catch (error) {
-                console.error('Error retrieving data:', error);
-            }
-        };
-
-        getData(); // Call the getData function when the component mounts
-
-    }, []);
-
-    console.log('Value of latitude is from asyn storage is :', latitude);
-    console.log('Value of longitude from async storage is :', longitude);
-    console.log('Value of city from async storage is :', CityName);
-    console.log("Value of state is :", StateName);
+    // console.log('Value of latitude is from asyn storage is :', latitude);
+    // console.log('Value of longitude from async storage is :', longitude);
+    // console.log('Value of city from async storage is :', CityName);
+    // console.log("Value of state is :", StateName);
 
     //Code for time picker
 
@@ -424,6 +410,7 @@ const AddDate = ({ navigation, route }) => {
         hours = hours % 12;
         hours = hours ? hours : 12; // the hour '0' should be '12'
         minutes = minutes < 10 ? '0' + minutes : minutes;
+        console.log(`Open time is ${hours}:${minutes} ${ampm}`)
         return `${hours}:${minutes} ${ampm}`;
     };
 
@@ -433,38 +420,78 @@ const AddDate = ({ navigation, route }) => {
     //test code for updating date place
 
     const handleUpdate = async () => {
-        // console.warn("Update working");
-        try {
-            const formData = new FormData();
-            formData.append("categoryId", Category);
-            formData.append("minBudget", MinBudget);
-            formData.append("maxBudget", MaxBudget);
-            formData.append("openTime", SelOpenTime);
-            formData.append("closeTime", SelCloseTime);
-            //add long address here
-            formData.append("address", CityName);
-            formData.append("latitude", latitude);
-            formData.append("longitude", longitude);
-            formData.append("description", Description);
-            formData.append("name", BusinessName);
-            formData.append("image", {
-                name: "imageName",
-                uri: image,
-                type: 'image/jpeg'
-            });
 
-            const response = await fetch(Apis.UpdateDatePlace, {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': 'Bearer ' + AuthToken
-                },
-                body: formData
-            })
-        } catch (error) {
-            console.error("Error occured is: ", error);
+        const data = await AsyncStorage.getItem("USER")
+        if (data) {
+            let d = JSON.parse(data)
+            let AuthToken = d.token
+
+
+            try {
+                console.log('trying to update date')
+                const formData = new FormData();
+                formData.append("categoryId", Category);
+                formData.append("minBudget", MinBudget);
+                formData.append("maxBudget", MaxBudget);
+                formData.append("openTime", SelOpenTime);
+                formData.append("closeTime", SelCloseTime);
+                //add long address here
+                formData.append("address", CityName);
+                formData.append("latitude", latitude);
+                formData.append("longitude", longitude);
+                formData.append("description", Description);
+                formData.append("name", BusinessName);
+                formData.append("image", {
+                    name: "imageName",
+                    uri: image,
+                    type: 'image/jpeg'
+                });
+
+                const response = await fetch(Apis.UpdateDatePlace, {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': 'Bearer ' + AuthToken
+                    },
+                    body: formData
+                })
+                if(response){
+                    console.log('api called')
+                    let json = await response.json()
+                    if(json.status === true){
+                        console.log('date updated ', json.data)
+                    }else{
+                        console.log('json message is', json.message)
+                    }
+                }
+
+            } catch (error) {
+                console.error("Error occured is: ", error);
+            }
         }
     }
+
+    const handleOpen = (event, selectedDate) => {
+        const date = new Date()
+        const currentDate = selectedDate || date;
+        setOpenTime(currentDate);
+        setError(null);
+        setDate(currentDate)
+        let time = formatTime(currentDate)
+        console.log('Open Time:', time);
+        setSelOpenTime(time);
+    }
+    const handleClose = (event, selectedDate) => {
+        const date = new Date()
+        const currentDate = selectedDate || date;
+        setCloseTime(currentDate);
+        setError(null);
+        setDate2(currentDate)
+        let time = formatTime(currentDate)
+        console.log('Open Time:', time);
+        setSelCloseTime(time);
+    }
+
 
     return (
         <View style={{ display: 'flex', alignItems: 'center', height: height * 0.95, marginTop: marginTop }}>
@@ -594,11 +621,11 @@ const AddDate = ({ navigation, route }) => {
                             Budget
                         </Text>
 
-                        <Text>
+                        {/* <Text>
                             {
                                 MaxBudget ? MaxBudget : <Text>No</Text>
                             }
-                        </Text>
+                        </Text> */}
                         {/*<Budget style={{ marginTop: 15 }} onBudgetChange={handleBudgetChange} />*/}
 
                         < Dropdown
@@ -630,35 +657,50 @@ const AddDate = ({ navigation, route }) => {
                         <Text style={styles.Dropdownlabel}>
                             Hours of operation
                         </Text>
-                        <Text>
-                            {DateOpenTime}
-                        </Text>
+
 
                         <View>
-                            {show && (
-                                <DateTimePicker
-                                    testID="dateTimePicker"
-                                    value={date}
-                                    mode={mode}
-                                    is24Hour={false}
-                                    display="default"
-                                    onChange={onChange}
-                                />
-                            )}
+                            {/* 
+                            <DateTimePicker
+                                testID="dateTimePicker"
+                                value={date}
+                                mode={mode}
+                                is24Hour={false}
+                                display="default"
+                                onChange={onChange}
+                            /> */}
+
                         </View>
 
-                        <View>
-                            {error && <Text style={styles.ErrorText}>{error}</Text>}
-                        </View>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: 300 / 430 * width, alignSelf: 'center' }}>
+                                    <View style={{ alignItems: 'center', flexDirection: 'column', gap: 10, marginTop: 20 }}>
+                                        <Text style={{ fontSize: 16 }}>Open Time</Text>
+                                        <DateTimePicker
+                                            testID="dateTimePicker"
+                                            value={date}
+                                            mode={mode}
+                                            is24Hour={false}
+                                            display="default"
+                                            onChange={handleOpen}
+                                        />
+                                    </View>
 
-                        {
-                            routeData.from === "AdminDates" ? (
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <TouchableOpacity onPress={showOpenTimepicker} style={{ width: 177 / 430 * width }}>
+                                    <View style={{ alignItems: 'center', flexDirection: 'column', gap: 10, marginTop: 20 }}>
+                                        <Text style={{ fontSize: 16 }}>Close Time</Text>
+                                        <DateTimePicker
+                                            testID="dateTimePicker"
+                                            value={date2}
+                                            mode={mode}
+                                            is24Hour={false}
+                                            display="default"
+                                            onChange={handleClose}
+                                        />
+                                    </View>
+
+                                    {/* <TouchableOpacity onPress={showOpenTimepicker} style={{ width: 177 / 430 * width }}>
                                         <View style={styles.timePicker}>
                                             <Text style={styles.OperationTime}>
-                                                {/*openTime ? <Text>{SelOpenTime}</Text> : <Text>Open</Text>*/}
-                                                {/* Remove selopentime */}
+                                               
                                                 {openTime ? formatTime(openTime) : 'Open'}
                                             </Text>
                                             <Image source={require('../../../../assets/Images3/clock.png')} style={styles.clockIcon} />
@@ -671,29 +713,12 @@ const AddDate = ({ navigation, route }) => {
                                             </Text>
                                             <Image source={require('../../../../assets/Images3/clock.png')} style={styles.clockIcon} />
                                         </View>
-                                    </TouchableOpacity>
+                                    </TouchableOpacity> */}
                                 </View>
-                            ) : (
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <TouchableOpacity onPress={showOpenTimepicker} style={{ width: 177 / 430 * width }}>
-                                        <View style={styles.timePicker}>
-                                            <Text style={styles.OperationTime}>
-                                                {SelOpenTime ? <Text>{SelOpenTime}</Text> : <Text>Open</Text>}
-                                            </Text>
-                                            <Image source={require('../../../../assets/Images3/clock.png')} style={styles.clockIcon} />
-                                        </View>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={showCloseTimepicker} style={{ width: 177 / 430 * width }}>
-                                        <View style={styles.timePicker}>
-                                            <Text style={styles.OperationTime}>
-                                                {closeTime ? formatTime(closeTime) : 'Close'}
-                                            </Text>
-                                            <Image source={require('../../../../assets/Images3/clock.png')} style={styles.clockIcon} />
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                            )
-                        }
+                          
+                        <View>
+                            {error && <Text style={styles.ErrorText}>{error}</Text>}
+                        </View>
 
                         <Text style={styles.Dropdownlabel}>
                             Address

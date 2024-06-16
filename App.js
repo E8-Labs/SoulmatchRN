@@ -104,6 +104,7 @@ import FlaggedUSerDetails from './Screens/Admin/ui/userDetails/FlaggedUSerDetail
 // import TestDatePicker from './Screens/Admin/ui/test/TestDatePicker';
 // import TestAddDate from './Screens/Admin/ui/test/TestAddDate';
 import AdminNotifications from './Screens/Admin/ui/Dashboarddetails/AdminNotifications';
+import VideoPlayer from './Components/VideoPlayer';
 
 
 
@@ -329,6 +330,7 @@ async function registerForPushNotificationsAsync() {
           <Stack.Screen name='AccountDetails' component={AccountDetails} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='ChangePassword' component={ChangePassword} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='ChangeIntroVideo' component={ChangeIntroVideo} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='VideoPlayer' component={VideoPlayer} options={{ gestureEnabled: false, headerShown: false }} />
 
 
           <Stack.Screen name='Resources' component={Resources} options={{ gestureEnabled: false, headerShown: false }} />
