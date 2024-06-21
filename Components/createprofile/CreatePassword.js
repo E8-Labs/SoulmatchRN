@@ -18,7 +18,7 @@ const CreatePassword = ({ navigation, route }) => {
     //code for focus color change for input1
     const [passwordInput, setPasswordInput] = useState(false)
     const [showIndicator, setShowIndicator] = useState(false)
-    const [btnPosition, setBtnPosition] = useState(height*0.40);
+    const [btnPosition, setBtnPosition] = useState(height*0.44);
 
     const passwordFocus = () => {
         setPasswordInput(true);
@@ -156,7 +156,7 @@ const CreatePassword = ({ navigation, route }) => {
     
         const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
         //   console.log("Keyboard hide")
-        setBtnPosition(height * 0.40);
+        setBtnPosition(height * 0.44);
         });
     
         return () => {

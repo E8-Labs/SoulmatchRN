@@ -43,6 +43,9 @@ const AddHeight = ({ navigation, route }) => {
             height_inches: HeightInch
         })
 
+        console.log('body is ', body)
+        // return
+
         try {
             await UpdateProfile(body);
             if (data.from === 'Profile') {
@@ -141,7 +144,7 @@ const AddHeight = ({ navigation, route }) => {
                                 width={50 / width * 430}
                                 // backgroundColor='#000000'
                                 selectedStyle={{ borderWidth: 2, width: "4", borderRadius: 50, borderColor: colors.blueColor }}
-                                initialSelectedIndex={HeightInch}
+                                // initialSelectedIndex={HeightInch}
                                 items={SelectHeightInch.map(name => ({ label: name, value: '' }))}
                                 onChange={({ item }) =>{
                                      setHeightInch(item.label)

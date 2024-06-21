@@ -14,11 +14,14 @@ import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const { height, width } = Dimensions.get('window');
+const placholder = require('../../assets/images/imagePlaceholder.webp')
 
 
 export default function ReserveNightScreen({ navigation, route }) {
 
   const dateId = route.params.dateId
+  const sourceMoment = moment.unix(1636765200);
+  const sourceDate = sourceMoment.local().toDate();
   console.log('selected date id is', dateId)
 
   const [numberofGuest, setNumberofGuest] = useState(2)
@@ -28,24 +31,20 @@ export default function ReserveNightScreen({ navigation, route }) {
   const [selectedDate, setSelectedDate] = useState("Select date");
   const [loadImage, setloadImage] = useState(false)
   const [showIndicator, setShowIndicator] = useState(false)
-  const [time, setTime] = useState("Select time");
+  const [time, setTime] = useState(sourceDate);
   const [error, setError] = useState(null);
 
 
   const [openModal, setOpenModal] = useState(false)
   const [selectedDateProfile, setSelectedDateProfile] = useState(null)
-
-  const sourceMoment = moment.unix(1636765200);
-  const sourceDate = sourceMoment.local().toDate();
   const [date, setDate] = useState(sourceDate);
-
   const [showPicker, setShowPicker] = useState(false);
 
 
 
   const bookDate = async () => {
 
-    if (time === "Select time" || selectedDate === "Select date" || !numberofGuest || !selectedDateProfile) {
+    if ( !numberofGuest || !selectedDateProfile) {
       setError("Enter all cridentials")
       return
 
@@ -60,13 +59,13 @@ export default function ReserveNightScreen({ navigation, route }) {
 
       let body = JSON.stringify({
         datePlaceId: dateId,
-        date: selectedDate,
+        date: date,
         time: time,
         numberOfGuests: numberofGuest,
         dateUserId: selectedDateProfile.id
       })
       console.log('body data is', body)
-
+// return
       try {
         const result = await fetch(ApisPath.ApiBookDate, {
           method: 'post',
@@ -175,37 +174,34 @@ export default function ReserveNightScreen({ navigation, route }) {
           </View>
 
 
-          <TouchableOpacity style={GlobalStyles.textInput}
-            onPress={handleOnPressDate}
-          >
-            <View style={{
-              flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+          <View style={styles.dateTimePickerContainer}>
 
-            }}>
-              <Text style={{ color: '#000', fontSize: 14, fontFamily: customFonts.meduim }}>
-                {selectedDate}
-              </Text>
+            <Text style={{ color: '#000', fontSize: 18, fontFamily: customFonts.meduim }}>
+              Select date
+            </Text>
 
-              <Image source={require('../../assets/images/calender.png')}
-                style={{ height: 24 / 930 * height, width: 24 / 930 * height }}
-              />
-            </View>
-
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setShowPicker(true)}>
-            <View style={styles.dateTimePickerContainer}>
-              <Text style={styles.text}>
-                {moment(date).format('LT')}
-              </Text>
-
-              <Image source={require('../../assets/images/clock.png')} style={styles.clockIcon} />
-
-            </View>
-          </TouchableOpacity>
-          {showPicker && (
             <DateTimePicker
               testID="dateTimePicker"
               value={date}
+              mode={'date'}
+              is24Hour={false}
+              display="default"
+              onChange={handleChangeStartDate}
+              style={styles.dateTimePicker}
+            // width = {400}
+            />
+
+          </View>
+
+
+
+          <View style={styles.dateTimePickerContainer}>
+            <Text style={styles.text}>
+              Select time
+            </Text>
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={time}
               mode={"time"}
               is24Hour={false}
               display="default"
@@ -213,9 +209,8 @@ export default function ReserveNightScreen({ navigation, route }) {
               style={styles.dateTimePicker}
             // width = {400}
             />
-          )}
 
-
+          </View>
           <View style={{
             flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 50 / 430 * width,
 
@@ -247,7 +242,8 @@ export default function ReserveNightScreen({ navigation, route }) {
           {
             selectedDateProfile ? (
               <>
-                <Image source={selectedDateProfile && { uri: selectedDateProfile.profile_image }} style={{
+                <Image source={selectedDateProfile&&selectedDateProfile.profile_image ? { uri: selectedDateProfile.profile_image }:placholder} 
+                style={{
                   height: 370 / 930 * height, width: 370 / 430 * width, resizeMode: 'cover', borderRadius: 10, borderWidth: 1
 
                 }}
@@ -258,7 +254,7 @@ export default function ReserveNightScreen({ navigation, route }) {
                 />
                 {
                   loadImage ? (
-                    <ActivityIndicator style={{ position: 'absolute', bottom: 160, left: 150 }} size={'large'} color={colors.blueColor} />
+                    <ActivityIndicator style={{ position: 'absolute', bottom: 160, left: 180 }} size={'large'} color={colors.blueColor} />
                   ) : null
                 }
 
@@ -282,36 +278,7 @@ export default function ReserveNightScreen({ navigation, route }) {
 
         </View>
 
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={openTimePicker}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-
-              <DatePicker
-                mode="time"
-                minuteInterval={1}
-                onTimeChange={selectedTime => {
-                  setError(null)
-                  setTime(selectedTime)
-                  setOpenTimePicker(!openTimePicker)
-                  console.log('selected time is', selectedTime)
-                }}
-                options={{
-                  backgroundColor: "#1c1c1c",
-                  textHeaderColor: "#469ab6",
-                  textDefaultColor: "#FFFFFF",
-                  selectedTextColor: "#FFF",
-                  mainColor: "#469ab6",
-                  textSecondaryColor: "#FFFFFF",
-                  borderColor: "gray",
-                }}
-              />
-            </View>
-          </View>
-        </Modal>
+      
         {
           error && <Text style={GlobalStyles.errorText}>{error}</Text>
         }
@@ -372,11 +339,11 @@ const styles = StyleSheet.create({
     borderColor: colors.greyText,
     borderRadius: 10,
     paddingHorizontal: 10,
-    paddingVertical: 13,
+    paddingVertical: 5,
   },
   text: {
     color: '#000',
-    fontSize: 16,
+    fontSize: 18,
   },
   clockIcon: {
     height: 24 / 930 * height,

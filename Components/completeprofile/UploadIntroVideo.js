@@ -51,6 +51,14 @@ const UploadIntroVideo = ({ navigation }) => {
         }
     }
     const handlePopup = () => {
+        if (video) {
+            navigation.navigate("VideoPlayer", {
+                data: {
+                    url: video
+                }
+            })
+            return
+        }
         setError(null)
         setPopup(true)
     }
@@ -59,8 +67,8 @@ const UploadIntroVideo = ({ navigation }) => {
         if (status !== 'granted') {
             alert('Please allow Soulmatch camera access to complite profile');
             return;
-        } 
-        
+        }
+
 
         let result = await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Videos,
@@ -115,13 +123,13 @@ const UploadIntroVideo = ({ navigation }) => {
                     let json = await result.json();
                     console.log('json ', json)
                     if (json.status === true) {
-                        console.log('video uploaded',json.data)
+                        console.log('video uploaded', json.data)
                         d.user = json.data
-                                   AsyncStorage.setItem("userLocation", JSON.stringify({d}))
+                        AsyncStorage.setItem("userLocation", JSON.stringify({ d }))
 
-                        navigation.navigate('UploadMedia',{
-                            data:{
-                                from:'IntroVideo'
+                        navigation.navigate('UploadMedia', {
+                            data: {
+                                from: 'IntroVideo'
                             }
                         })
                     } else {
@@ -171,7 +179,12 @@ const UploadIntroVideo = ({ navigation }) => {
                             <TouchableOpacity onPress={() => handlePopup()}>
                                 {
                                     video ? (
-                                        <Image source={{ uri: image }} style={{ height: 149, width: 149, resizeMode: 'cover', borderRadius: 80 }} />
+                                        <>
+                                            <Image source={{ uri: image }} style={{ height: 149, width: 149, resizeMode: 'cover', borderRadius: 80 }} />
+                                            <Image source={require('../../assets/images/playIcon.png')}
+                                                style={{ height: 50, width: 50, position: 'absolute', bottom: 50 / 930 * height, left: 50 / 430 * width }}
+                                            />
+                                        </>
                                     ) : (
                                         <View style={{ alignItems: 'center' }}>
                                             <Image source={require('../../assets/uploadvideoicon22.png')} style={{ height: 149, width: 149, resizeMode: 'contain' }} />
@@ -201,7 +214,7 @@ const UploadIntroVideo = ({ navigation }) => {
                             }
                             {
                                 showIndicator ? (
-                                    <ActivityIndicator size={'large'}  color={colors.blueColor}/>
+                                    <ActivityIndicator size={'large'} color={colors.blueColor} />
                                 ) : (
                                     <TouchableOpacity
                                         onPress={uploadVideo}

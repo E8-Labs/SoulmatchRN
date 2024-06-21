@@ -36,6 +36,7 @@ const Profile = ({ navigation }) => {
     const logoutUser =async () =>{
         try{
             await AsyncStorage.removeItem("USER")
+            await AsyncStorage.removeItem("UserAnswers")
             console.log('logout successfully')
             navigation.navigate("LoginUser")
         } catch(e){

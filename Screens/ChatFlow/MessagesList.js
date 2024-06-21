@@ -18,11 +18,15 @@ export default function MessagesList({ navigate }) {
     const [loadImage, setLoadImage] = useState(false)
     const [showIndicator, setShowIndicator] = useState(false)
     const [user, setUser] = useState(false)
-useFocusEffect(
-    useCallback(()=>{
-        getMessagesList()
-    },[])
-)
+// useFocusEffect(
+//     useCallback(()=>{
+//         getMessagesList()
+//     },[])
+// )
+
+useEffect(()=>{
+    getMessagesList()
+},[])
 
 
     const getMessagesList = async () => {

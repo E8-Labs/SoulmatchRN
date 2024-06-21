@@ -22,7 +22,7 @@ const EnhancmentQuestions = ({ navigation, route }) => {
     const { height, width } = Dimensions.get('window');
 
     const data = route.params.data
-    console.log('data from prev screen is', data)
+    console.log('data from prev screen is', data.user.answers)
 
     const [sIndex, setSIndex] = useState(null);
     const [CheckBox, setCheckBox] = useState([]);
@@ -133,10 +133,19 @@ const EnhancmentQuestions = ({ navigation, route }) => {
                     if (json.status === true) {
                         setShowIndicator2(false)
                         console.log('enancmennt questions are', json.data)
+                        let ans = await AsyncStorage.getItem("UserAnswers")
+                        if(ans){
+                            let userAnswers = JSON.parse(ans)
+                            console.log('user answers from local are ', userAnswers)
+                            updateQuestionMedia(json.data, userAnswers.updatedQuestions);
+                        }else{
+                            console.log('user answers are not found')
+                            updateQuestionMedia(json.data,d.user.answers);
+                        }
                         // setQuestions(json.data)
-                        updateQuestionMedia(json.data, d.user.answers);
+                        
                     } else {
-                        console.log('json messagw', object)
+                        console.log('json message', json.message)
                     }
                 }
             }
@@ -293,7 +302,7 @@ const EnhancmentQuestions = ({ navigation, route }) => {
                     if (json.status === true) {
                         console.log('media uploaded', json.data)
                         updateQuestionMedia(questions, json.data);
-                        handleCheckboxclick(item.id)
+                        // handleCheckboxclick(item.id)
                         // setMedia(json.data)
 
                     } else {
@@ -311,7 +320,7 @@ const EnhancmentQuestions = ({ navigation, route }) => {
         let updatedQuestions = []
         let questionIds = []
 
-        let found = -1
+        // let found = -1
         for (let i = 0; i < dbQuestions.length; i++) {
             let item = dbQuestions[i];
             let found = false;
@@ -330,6 +339,7 @@ const EnhancmentQuestions = ({ navigation, route }) => {
         }
         console.log("Updated questions are ", updatedQuestions)
         setQuestions(updatedQuestions)
+        AsyncStorage.setItem("UserAnswers",JSON.stringify({updatedQuestions}))
 
     };
 

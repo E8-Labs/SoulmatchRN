@@ -16,7 +16,7 @@ const ProfileEmailVerification = ({ navigation, route }) => {
     const [Code4, setCode4] = useState('');
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [btnPosition, setBtnPosition] = useState(height*0.58);
+    const [btnPosition, setBtnPosition] = useState(height*0.61);
 
     const code = Code1 + Code2 + Code3 + Code4
     console.log('code', code)
@@ -161,6 +161,7 @@ const ProfileEmailVerification = ({ navigation, route }) => {
                         console.log('email verified ', json)
                     } else {
                         console.log('email verify message is', json.message)
+                        setError(json.message)
                     }
 
                 }
@@ -180,7 +181,7 @@ const ProfileEmailVerification = ({ navigation, route }) => {
 
     const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
     //   console.log("Keyboard hide")
-    setBtnPosition(height * 0.58);
+    setBtnPosition(height * 0.61);
     });
 
     return () => {

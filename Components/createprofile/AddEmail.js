@@ -17,7 +17,7 @@ const AddEmail = ({ navigation, route }) => {
     const [emailError, setEmailError] = useState(false)
     const [emailExists, setEmailExists] = useState(false);
     const [emailNotExists, setEmailNotExists] = useState(false);
-    const [btnPosition,setBtnPosition] = useState(height*0.58)
+    const [btnPosition,setBtnPosition] = useState(height*0.61)
     const timerRef = useRef(null);
     //getting data from previous screen
     const user = route.params.user;
@@ -140,7 +140,7 @@ const AddEmail = ({ navigation, route }) => {
 
     const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
     //   console.log("Keyboard hide")
-    setBtnPosition(height * 0.58);
+    setBtnPosition(height * 0.61);
     });
 
     return () => {

@@ -16,6 +16,9 @@ import { Video, ResizeMode, AVPlaybackStatu0s } from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
+const blurhash =
+    '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
+
 const { height, width } = Dimensions.get('window')
 
 export default function ChangeIntroVideo({ navigation, route }) {
@@ -28,8 +31,8 @@ export default function ChangeIntroVideo({ navigation, route }) {
 
 
     // useEffect(() => {
-        let videoSource = user.intro_video
-        let thumbnail = user.intro_video_thumbnail
+    let videoSource = user.intro_video
+    let thumbnail = user.intro_video_thumbnail
     //     setIntroVideo(videoSource)
     // }, [videoSource])
     // console.log('intro video ', user.intro_video_thumbnail)
@@ -96,8 +99,8 @@ export default function ChangeIntroVideo({ navigation, route }) {
             setVideo(ImageUrl)
             const thumbnail = await generateThumbnail(ImageUrl)
             // console.log(result.assets[0].uri);
-            const introVideo = { video: ImageUrl, thumbnail: thumbnail }
-            uploadVideo(introVideo)
+            // const introVideo = { video: ImageUrl, thumbnail: thumbnail }
+            // uploadVideo(introVideo)
         } else {
             setPopup(false)
             alert('You did not select any video.');
@@ -123,27 +126,27 @@ export default function ChangeIntroVideo({ navigation, route }) {
             setPopup(false)
             const thumbnail = await generateThumbnail(ImageUrl)
             // console.log(result.assets[0].uri);
-            const introVideo = { video: ImageUrl, thumbnail: thumbnail }
-            uploadVideo(introVideo)
+            // const introVideo = { video: ImageUrl, thumbnail: thumbnail }
+            // uploadVideo(introVideo)
         }
     };
 
-    const uploadVideo = async (introVideo) => {
+    const uploadVideo = async () => {
 
         const formdata = new FormData()
         formdata.append(
             "media", {
             name: "imageName",
-            uri: introVideo.video,
+            uri: video,
             type: 'video/mp4'
         });
         formdata.append("thumbnail", {
             name: "thumbnail.jpg",
-            uri: introVideo.thumbnail,
+            uri: image,
             type: 'image/jpeg',
         });
 
-        setShowIndicator(true)
+        setShowIndicator2(true)
         try {
             // console.log('trying to upload video ', introVideo.video)
             // console.log('trying to upload video ', introVideo.thumbnail)
@@ -163,7 +166,7 @@ export default function ChangeIntroVideo({ navigation, route }) {
                 // return
                 if (result) {
                     console.log('api called')
-                    setShowIndicator(false)
+                    setShowIndicator2(false)
                     console.log(result)
                     let json = await result.json();
                     console.log('json ', json)
@@ -171,8 +174,8 @@ export default function ChangeIntroVideo({ navigation, route }) {
                         console.log('video uploaded')
                         setVideo(json.data.intro_video)
                         d.user = json.data
-                                  AsyncStorage.setItem("USER",JSON.stringify(d))
-
+                        AsyncStorage.setItem("USER", JSON.stringify(d))
+                        navigation.goBack()
                         // navigation.navigate('UploadMedia')
                     } else {
                         console.log('json message is', json.message)
@@ -233,7 +236,7 @@ export default function ChangeIntroVideo({ navigation, route }) {
                         setVideo(null)
                         setDuration(0)
                         d.user = json.data
-                                  AsyncStorage.setItem("USER",JSON.stringify(d))
+                        AsyncStorage.setItem("USER", JSON.stringify(d))
 
                         // navigation.navigate('UploadMedia')
                     } else {
@@ -253,6 +256,7 @@ export default function ChangeIntroVideo({ navigation, route }) {
         <View style={{ height: height, width: width, alignItems: 'center', }}>
             <View style={{ justifyContent: 'space-between', width: width - 60, marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
                 <TouchableOpacity onPress={() => {
+
                     navigation.goBack()
                 }}>
                     <View style={GlobalStyles.backBtn}>
@@ -264,14 +268,21 @@ export default function ChangeIntroVideo({ navigation, route }) {
                 <Text style={{ fontWeight: '500', fontSize: 24, }}>
                     Intro video
                 </Text>
+                {
+                    showIndicator2 ? (
+                        <ActivityIndicator size={'small'} color={colors.blueColor} />
+                    ) : (
+                        <TouchableOpacity
+                            onPress={() => {
+                                uploadVideo()
+                            }}
+                        >
+                            <Text style={{ color: colors.blueColor, fontSize: 18 }}>Save</Text>
+                        </TouchableOpacity>
+                    )
+                }
 
-                <TouchableOpacity
-                    onPress={() => {
-                        navigation.goBack()
-                    }}
-                >
-                    <Text style={{ color: colors.blueColor, fontSize: 18 }}>Save</Text>
-                </TouchableOpacity>
+
             </View>
             {/* <TouchableOpacity onPress={togglePlayback}> */}
             {
@@ -279,29 +290,40 @@ export default function ChangeIntroVideo({ navigation, route }) {
                     <ActivityIndicator size={'large'} color={colors.blueColor} style={{ height: 300 }} />
                 ) : (
                     video && video ? (
-                        <Video
-                            ref={videoRef}
-                            style={{ height: 370 / 930 * height, width: width - 60, marginTop: 33 / 930 * height, borderRadius: 4 }}
-                            source={{
-                                uri: video
-                            }}
-                            useNativeControls
-                            resizeMode={ResizeMode.COVER}
-                            isLooping={true}
-                            // shouldPlay={isPlaying}
-                            onPlaybackStatusUpdate={status => {
-                                setStatus(() => status)
-                                setIsPlaying(status.isPlaying);
-                            }}
-                            onLoad={(status) => {
-                                setDuration(status.durationMillis)
-                                setLoadVideo(false)
-                            }} // Set duration when video loads
-                            onLoadStart={() => {
-                                setLoadVideo(true)
-                            }}
+                        <>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    navigation.navigate('VideoPlayer', {
+                                        data: {
+                                            url: video
+                                        }
+                                    })
+                                }}
+                            >
+                                <Image source={{ uri: image }}
+                                    onLoadStart={() => { setLoadVideo(true) }}
+                                    onLoadEnd={() => {
+                                        setLoadVideo(false)
+                                    }}
+                                    placeholder={blurhash}
+                                    contentFit="cover"
+                                    transition={1000}
+                                    style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 60 }}
+                                />
+                                <Image source={require('../../assets/images/playIcon.png')}
+                                    style={{ height: 50, width: 50, position: 'absolute', bottom: 90 / 930 * height, left: 150 / 430 * width }}
+                                />
+                            </TouchableOpacity>
 
-                        />
+
+                            {
+                                loadVideo ? (
+                                    <ActivityIndicator size={'large'} color={colors.blueColor} style={{ height:250 ,marginTop:-250}} />
+                                ) : <></>
+                            }
+
+                        </>
+
                     ) : (
                         <View style={{ height: 370 / 930 * height, width: width - 60, marginTop: 100 }}>
                             <TouchableOpacity
@@ -323,21 +345,11 @@ export default function ChangeIntroVideo({ navigation, route }) {
             }
             {/* </TouchableOpacity> */}
 
-            {!isPlaying && duration > 0 && (
-                <View style={styles.durationContainer}>
-                    <Text style={styles.durationText}>{formatDuration(duration)}</Text>
-                </View>
-            )}
-            {loadVideo && (
-                <View style={{ marginTop: -200, height: 200 }}>
-                    <ActivityIndicator size="large" color={colors.blueColor} />
-                </View>
-            )}
 
             {
                 video && video ? (
                     <View style={{ alignItems: 'center', justifyContent: 'space-between', marginTop: 50, width: width - 60 }}>
-{/* 
+                        {/* 
                         {
                             showIndicator2 ? (
                                 <ActivityIndicator color={colors.blueColor} size={'large'} style={{ width: 170 / 430 * width, }} />

@@ -60,6 +60,8 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
     const logoutUser = async () => {
         try {
             AsyncStorage.removeItem("USER")
+            AsyncStorage.removeItem("UserAnswers")
+            
 
             let routeData = {
                 navigate: 'Logout',
@@ -319,7 +321,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                         ) : (
                             <View style={{ flexDirection: 'row', marginBottom: 20 / 930 * height, width: width - 40, justifyContent: 'space-between' }}>
                                 {
-                                    currentIndex !== data.length - 1 ? (
+                                    currentIndex !== data.length ? (
                                         <Text style={{ fontSize: 24, fontFamily: customFonts.meduim }}>
                                             {data[currentIndex] ? data[currentIndex].first_name : ''} {data[currentIndex] ? data[currentIndex].last_name : ''}
                                         </Text>
@@ -369,7 +371,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                         )
                     }
                     {
-                        currentIndex !== data.length - 1 ? (
+                        currentIndex !== data.length ? (
 
                             <View style={{ height: fromScreen === "Main" ? height * 0.755 : height * 0.85 }} >
 

@@ -495,8 +495,8 @@ export default function ChatScreen({ navigation, route }) {
                             {/* <View style={styles.rightArrow}></View>
                             <View style={styles.rightArrowOverlap}></View> */}
                             <Text style={{
-                                fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', width: 175 / 430 * width,
-                                paddingRight: 10 / 430 * width
+                                fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', 
+                                marginTop: 10 / 430 * width
                             }}>
                                 {moment(item.createdAt).format('h:mm')}
                             </Text>
@@ -544,8 +544,8 @@ export default function ChatScreen({ navigation, route }) {
                             {/* <View style={styles.rightArrow}></View>
                             <View style={styles.rightArrowOverlap}></View> */}
                             <Text style={{
-                                fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', width: 175 / 430 * width,
-                                paddingRight: 10 / 430 * width
+                                fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', 
+                                paddingTop: 10 / 430 * width
                             }}>
                                 {moment(item.createdAt).format('h:mm')}
                             </Text>
@@ -556,6 +556,8 @@ export default function ChatScreen({ navigation, route }) {
             }
         }
         else {
+
+            // message from freind
 
             if (getMessageType(item) === "text") {
                 return (
@@ -617,8 +619,8 @@ export default function ChatScreen({ navigation, route }) {
                             {/* <View style={styles.rightArrow}></View>
                             <View style={styles.rightArrowOverlap}></View> */}
                             <Text style={{
-                                fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', width: 175 / 430 * width,
-                                paddingRight: 10 / 430 * width
+                                fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', 
+                                paddingTop: 10 / 430 * width
                             }}>
                                 {moment(item.createdAt).format('h:mm')}
                             </Text>
@@ -666,8 +668,8 @@ export default function ChatScreen({ navigation, route }) {
                             {/* <View style={styles.rightArrow}></View>
                             <View style={styles.rightArrowOverlap}></View> */}
                             <Text style={{
-                                fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right', width: 175 / 430 * width,
-                                paddingRight: 10 / 430 * width
+                                fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right',
+                                paddingTop: 10 / 430 * width,width:200,paddingRight:5
                             }}>
                                 {moment(item.createdAt).format('h:mm')}
                             </Text>
