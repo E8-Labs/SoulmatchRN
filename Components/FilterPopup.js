@@ -5,27 +5,38 @@ import {
 
 }
     from 'react-native'
-import React, { useState ,useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import customFonts from '../assets/fonts/Fonts';
 import GlobalStyles from '../assets/styles/GlobalStyles';
 import colors from '../assets/colors/Colors';
 // import RangeSlider from 'react-native-range-slider'
 // import RangeSlider, { Slider } from 'react-native-range-slider-expo';
 import RangeSlider from './createprofile/RangeSlider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 const { height, width } = Dimensions.get('window');
 
 const selectedImage = require('../assets/images/selectedCircle.png');
 const unselectedImage = require('../assets/images/unselectedCircle.png');
 
-export default function FilterPopup({ visible, close }) {
+export default function FilterPopup({ visible, close, addressPicker }) {
 
     const [selected, setselected] = useState('');
+    const [error, setError] = useState(null);
     const [startHeight, setStartHeight] = useState(36)
     const [endHeight, setEndHeight] = useState(96)
     const [startAgeRange, setStartAgeRange] = useState(10)
     const [endAgeRange, setEndAgeRange] = useState(40)
-    const [marginTop,setMarginTop] = useState(0)
-    const [modalHeight,setModalHeight] = useState(height*0.8)
+    const [state, setState] = useState(null)
+    const [city, setCity] = useState(null)
+    const [marginTop, setMarginTop] = useState(0)
+    const [modalHeight, setModalHeight] = useState(height * 0.8)
+    const [address, setAddress] = useState('');
+
+    const UserAddress = {
+        cityN: city,
+        stateN: state
+    }
 
     const genders = [
         {
@@ -41,6 +52,34 @@ export default function FilterPopup({ visible, close }) {
             name: 'Non-Binary'
         },
     ]
+
+    useFocusEffect(
+        React.useCallback(() => {
+            getLocalTempFilters()
+        }, [])
+    )
+
+
+    const getLocalTempFilters = async () => {
+        const tmpFltr = await AsyncStorage.getItem("TempFilters")
+        if (tmpFltr) {
+            let tempFilter = JSON.parse(tmpFltr)
+            console.log('temp filters from local are', tempFilter)
+            setCity(tempFilter.city)
+            setState(tempFilter.state)
+            // setAddress(tempFilter.city,tempFilter.state)
+            setAddress({
+                city:tempFilter.city,
+                state:tempFilter.state
+            })
+            setStartAgeRange(tempFilter.min_age)
+            setEndAgeRange(tempFilter.max_age)
+            setStartHeight(tempFilter.min_height)
+            setEndHeight(tempFilter.max_height)
+            setselected({ name: tempFilter.gender })
+
+        }
+    }
 
     function getHeightStringFromValue(value, start = true) {
 
@@ -58,27 +97,48 @@ export default function FilterPopup({ visible, close }) {
         // return ""
     }
 
+    const applyFilters = async () => {
 
-  useEffect(() => {
-    console.log("Use Effect")
-    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-      console.log("Keyboard show")
-      setMarginTop(-150);
-      setModalHeight(height)
-    });
+        if (!selected) {
+            setError("Enter all cridentials")
+            return
+        }
 
-    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-      console.log("Keyboard hide")
-      setMarginTop(0);
-      setModalHeight(height*0.8)
+        const filters = {
+            min_age: startAgeRange,
+            max_age: endAgeRange,
+            min_height: startHeight,
+            max_height: endHeight,
+            gender: selected.name,
+            state: state,
+            city:city
+        }
+        close(filters)
+        // AsyncStorage.setItem("FilterDiscovers",JSON.stringify(filters))
 
-    });
+    }
 
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
+
+    useEffect(() => {
+        console.log("Use Effect")
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+            console.log("Keyboard show")
+            setMarginTop(-150);
+            setModalHeight(height)
+        });
+
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+            console.log("Keyboard hide")
+            setMarginTop(0);
+            setModalHeight(height * 0.8)
+
+        });
+
+        return () => {
+            keyboardDidShowListener.remove();
+            keyboardDidHideListener.remove();
+        };
+    }, []);
     return (
         <SafeAreaView>
 
@@ -96,9 +156,9 @@ export default function FilterPopup({ visible, close }) {
                             // console.log('pressed')
                         }}
                     >
-                        <View style={{marginTop:0, height: height, width: width, backgroundColor: '#00000050', justifyContent: 'flex-end' }}>
-                            <View style={{ height: modalHeight, backgroundColor: 'white', borderRadius: 20, alignItems: 'center', paddingHorizontal: 30 / 430 * height, paddingVertical: 25 / 930 * height ,}}>
-                                <View style={{marginTop:marginTop, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 60 }}>
+                        <View style={{ marginTop: 0, height: height, width: width, backgroundColor: '#00000050', justifyContent: 'flex-end' }}>
+                            <View style={{ height: modalHeight, backgroundColor: 'white', borderRadius: 20, alignItems: 'center', paddingHorizontal: 30 / 430 * height, paddingVertical: 25 / 930 * height, }}>
+                                <View style={{ marginTop: marginTop, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 60 }}>
                                     <Text style={{ fontSize: 20, fontFamily: customFonts.meduim }}> Filter</Text>
 
                                     <TouchableOpacity onPress={close}>
@@ -124,8 +184,8 @@ export default function FilterPopup({ visible, close }) {
                                 </View>
 
                                 {/* add range picker here */}
-                                <RangeSlider heightSlider={false} start={10} end={40} rangeStartUpdated={(value) => {
-                                    console.log('start age', value)
+                                <RangeSlider heightSlider={false} start={startAgeRange?startAgeRange:10} end={endAgeRange?endAgeRange:40} rangeStartUpdated={(value) => {
+                                    // console.log('start age', value)
                                     setStartAgeRange(value)
                                 }} rangeEndUpdated={(value) => {
                                     setEndAgeRange(value)
@@ -151,7 +211,7 @@ export default function FilterPopup({ visible, close }) {
                                 {/* add range picker here */}
 
 
-                                <RangeSlider start={36} end={96} heightSlider={true} rangeStartUpdated={(value) => {
+                                <RangeSlider start={startHeight?startHeight:36} end={endHeight?endHeight:96} heightSlider={true} rangeStartUpdated={(value) => {
                                     // console.log('star height', value)
                                     setStartHeight(value)
                                 }} rangeEndUpdated={(value) => {
@@ -175,11 +235,12 @@ export default function FilterPopup({ visible, close }) {
                                             <TouchableOpacity key={item.id} style={{ marginTop: 22, alignSelf: 'flex-start', }}
                                                 onPress={() => {
                                                     setselected(item)
+                                                    setError(null)
                                                 }}
                                             >
                                                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, }}>
 
-                                                    <Image source={selected.id === item.id ? selectedImage : unselectedImage}
+                                                    <Image source={selected.name === item.name ? selectedImage : unselectedImage}
                                                         style={{ height: 24 / 930 * height, width: 24 / 930 * height }}
                                                     />
 
@@ -202,11 +263,33 @@ export default function FilterPopup({ visible, close }) {
                                                 <Text style={{ fontSize: 16, fontFamily: customFonts.semibold }}>
                                                     City/State
                                                 </Text>
-                                                <TextInput
-                                                    style={GlobalStyles.textInput}
-                                                    placeholder='Enter city/state'
-                                                />
+                                                <TouchableOpacity style={GlobalStyles.textInput}
+                                                    onPress={() => {
+                                                        AsyncStorage.setItem("TempFilters", JSON.stringify({
+                                                            min_age: startAgeRange,
+                                                            max_age: endAgeRange,
+                                                            min_height: startHeight,
+                                                            max_height: endHeight,
+                                                            gender: selected.name
+                                                        }))
+                                                        addressPicker()
+                                                    }}
+                                                >
+                                                    <Text style={{ color: 'grey', fontSize: 14 }}>
+                                                        {/* {city ? (city) : 'Enter city/state'} {state ? (state) : ''} */}
+                                                        {/* {address ? (address.city,address.state):''} */}
+                                                        {UserAddress ?
+                                                            <Text style={{ color: 'grey', fontSize: 14 }}>
+                                                                {address.city}/{address.state}
+                                                            </Text>
+                                                            : ''}
+                                                    </Text>
+                                                </TouchableOpacity>
+
                                             </View>
+                                            {
+                                                error && <Text style={GlobalStyles.errorText}>{error}</Text>
+                                            }
                                             <View style={{ width: width - 60, flexDirection: 'row', marginTop: 30 / 930 * height, justifyContent: 'space-between' }}>
                                                 <TouchableOpacity onPress={close} style={{
                                                     width: 173 / 430 * width, height: 48 / 930 * height, borderWidth: 2, borderColor: "#000", borderRadius: 10,
@@ -216,7 +299,7 @@ export default function FilterPopup({ visible, close }) {
                                                         Reset
                                                     </Text>
                                                 </TouchableOpacity>
-                                                <TouchableOpacity onPress={close} style={{
+                                                <TouchableOpacity onPress={applyFilters} style={{
                                                     width: 173 / 430 * width, height: 48 / 930 * height, backgroundColor: colors.blueColor, borderRadius: 10,
                                                     alignItems: 'center', justifyContent: 'center'
                                                 }}>

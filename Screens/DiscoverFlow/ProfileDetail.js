@@ -53,6 +53,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
     const [status, setStatus] = React.useState({});
     const ref = useRef(null);
 
+
     // console.log("data from prev screen", data[currentIndex].media)
     console.log("current index", currentIndex)
     console.log("data length", data.length)
@@ -61,7 +62,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
         try {
             AsyncStorage.removeItem("USER")
             AsyncStorage.removeItem("UserAnswers")
-            
+
 
             let routeData = {
                 navigate: 'Logout',
@@ -257,7 +258,8 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
         return `${Math.round(heightFeet)}'${Math.round(heightInches)}"`
     };
 
-    const closeModal = () => {
+    const closeModal = (filters) => {
+        console.log('filter data is', filters)
         setOpenModal(false)
     }
 
@@ -297,6 +299,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
             return distanceInMiles
         }
     }
+
 
     return (
 
@@ -363,7 +366,35 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                             style={styles.image}
                                         />
                                     </TouchableOpacity>
-                                    <FilterPopup visible={openModal} close={closeModal} />
+                                    <FilterPopup visible={openModal} close={closeModal} addressPicker={async () => {
+                                        closeModal()
+                                        let tempFltr = await AsyncStorage.getItem("TempFilters")
+                                        if (tempFltr) {
+                                            let tempFilter = JSON.parse(tempFltr)
+
+                                            // console.log('temp filters are ', tempFilter)
+                                            let routeData = {
+                                                navigate: 'AddressPicker',
+                                                PickAddress: (address) => {
+                                                    console.log("Address Picked Profie Detail screen", address)
+                                                    
+                                                    // console.log('temp filters after updating address', data)
+                                                    AsyncStorage.setItem("TempFilters", JSON.stringify({ 
+                                                        city: address.city,
+                                                        state: address.state,
+                                                        min_age: tempFilter.min_age,
+                                                        max_age: tempFilter.max_age,
+                                                        min_height: tempFilter.min_height,
+                                                        max_height: tempFilter.max_height,
+                                                        gender: tempFilter.gender
+                                                     }))
+                                                    setOpenModal(true)
+                                                }
+                                            }
+                                            navigation.navigate("AddressPicker", routeData)
+                                        }
+                                        // onMenuClick(routeData)
+                                    }} />
 
 
                                 </View>
@@ -667,13 +698,13 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                                                 item.answerVideo ? (
                                                                     <>
                                                                         <TouchableOpacity
-                                                                            onPress={()=>{
+                                                                            onPress={() => {
                                                                                 let routeData = {
                                                                                     navigate: 'VideoPlayer',
-                                                                                    url:item.answerVideo
+                                                                                    url: item.answerVideo
                                                                                 }
                                                                                 onMenuClick(routeData)
-                                                                    
+
                                                                             }}
                                                                         >
                                                                             <Image source={{ uri: item.videoThumbnail }}
@@ -685,7 +716,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                                                                 contentFit="cover"
                                                                                 transition={1000}
                                                                             />
-                                                                             <Image source={require('../../assets/images/playIcon.png')}
+                                                                            <Image source={require('../../assets/images/playIcon.png')}
                                                                                 style={{ height: 50, width: 50, position: 'absolute', bottom: 100 / 930 * height, left: 150 / 430 * width }}
                                                                             />
                                                                         </TouchableOpacity>

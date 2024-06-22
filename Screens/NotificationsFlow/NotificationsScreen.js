@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, SafeAreaView, Dimensions, Settings, FlatL
 import React, { useEffect, useState } from 'react';
 import { Image } from 'expo-image';
 import ApisPath from '../../lib/ApisPath/ApisPath';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import customFonts from '../../assets/fonts/Fonts';
 import colors from '../../assets/colors/Colors';

@@ -15,7 +15,10 @@ const { height, width } = Dimensions.get("window");
 export default function DiscoverMain(props) {
 
   const [openModal, setOpenModal] = useState(false);
-  const [discovers, setDiscovers] = useState([]);
+  const [discovers, setDiscovers] = useState([]);   
+  const [CityName, setCityName] = useState('');
+  const [StateName, setStateName] = useState('');
+
   useFocusEffect(
     React.useCallback(() => {
       console.log("Use Focus Effect")
@@ -57,10 +60,17 @@ export default function DiscoverMain(props) {
 
   }
 
+
+  const pickAddress = (address) => {
+    console.log('address is ', address)
+    setCityName(address.city)
+    setStateName(address.state)
+}
+
   return (
     <View style={{ flex: 1, alignItems: 'center', backgroundColor: 'transparent' }}>
 
-      <ProfileDetail data={discovers} fromScreen={'Main'} onMenuClick={(data) => {
+      <ProfileDetail navigation={props.navigation} data={discovers} fromScreen={'Main'} onMenuClick={(data) => {
         if (data.navigate === 'LikesList') {
           props.navigation.navigate("LikesList")
         } else if (data.navigate === 'GotMatch') {
@@ -79,6 +89,10 @@ export default function DiscoverMain(props) {
           props.navigation.navigate("VideoPlayer", {
               data:data
           })  
+        }else if (data.navigate === 'AddressPicker') {
+          props.navigation.navigate('AddressPicker', {
+            PickAddress: pickAddress
+        })
         }
       }}
       />
