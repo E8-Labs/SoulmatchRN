@@ -3,7 +3,8 @@ import {
     View, Text, Dimensions, TouchableOpacity, FlatList, ScrollView, StyleSheet,
     SafeAreaView, Animated,
     Settings,
-    ActivityIndicator
+    ActivityIndicator,
+    Modal
 
 } from 'react-native'
 import { Image } from 'expo-image'
@@ -29,7 +30,7 @@ const male = require('../../assets/images/maleIcon.png');
 const female = require('../../assets/images/femaleIcon.png');
 const nonBinary = require('../../assets/images/nonBinaryIcon.png');
 
-export default function ProfileDetail({ navigation, fromScreen, data, onMenuClick }) {
+export default function ProfileDetail({ navigation, fromScreen, data, onMenuClick, filtersData }) {
 
     // const fromScreen = route.params.fromScreen
 
@@ -258,8 +259,11 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
         return `${Math.round(heightFeet)}'${Math.round(heightInches)}"`
     };
 
-    const closeModal = (filters) => {
-        console.log('filter data is', filters)
+    const closeModal = (data) => {
+        if (data) {
+            console.log('filter data is', data)
+            filtersData(data)
+        }
         setOpenModal(false)
     }
 
@@ -366,35 +370,43 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                             style={styles.image}
                                         />
                                     </TouchableOpacity>
-                                    <FilterPopup visible={openModal} close={closeModal} addressPicker={async () => {
-                                        closeModal()
-                                        let tempFltr = await AsyncStorage.getItem("TempFilters")
-                                        if (tempFltr) {
-                                            let tempFilter = JSON.parse(tempFltr)
+                                    <Modal
+                                        visible={openModal}
+                                        transparent={true}
+                                        animationType='slide'
+                                    >
+                                        <FilterPopup  close={closeModal} addressPicker={async () => {
+                                            closeModal()
+                                            let tempFltr = await AsyncStorage.getItem("TempFilters")
+                                            if (tempFltr) {
+                                                let tempFilter = JSON.parse(tempFltr)
 
-                                            // console.log('temp filters are ', tempFilter)
-                                            let routeData = {
-                                                navigate: 'AddressPicker',
-                                                PickAddress: (address) => {
-                                                    console.log("Address Picked Profie Detail screen", address)
-                                                    
-                                                    // console.log('temp filters after updating address', data)
-                                                    AsyncStorage.setItem("TempFilters", JSON.stringify({ 
-                                                        city: address.city,
-                                                        state: address.state,
-                                                        min_age: tempFilter.min_age,
-                                                        max_age: tempFilter.max_age,
-                                                        min_height: tempFilter.min_height,
-                                                        max_height: tempFilter.max_height,
-                                                        gender: tempFilter.gender
-                                                     }))
-                                                    setOpenModal(true)
+                                                // console.log('temp filters are ', tempFilter)
+                                                let routeData = {
+                                                    navigate: 'AddressPicker',
+                                                    PickAddress: (address) => {
+                                                        console.log("Address Picked Profie Detail screen", address)
+
+                                                        // console.log('temp filters after updating address', data)
+                                                        AsyncStorage.setItem("TempFilters", JSON.stringify({
+                                                            city: address.city,
+                                                            state: address.state,
+                                                            min_age: tempFilter.min_age,
+                                                            max_age: tempFilter.max_age,
+                                                            min_height: tempFilter.min_height,
+                                                            max_height: tempFilter.max_height,
+                                                            gender: tempFilter.gender
+                                                        }))
+                                                        setOpenModal(true)
+                                                    }
                                                 }
+                                                navigation.navigate("AddressPicker", routeData)
                                             }
-                                            navigation.navigate("AddressPicker", routeData)
-                                        }
-                                        // onMenuClick(routeData)
-                                    }} />
+                                            // onMenuClick(routeData)
+                                        }} />
+
+                                    </Modal>
+
 
 
                                 </View>
@@ -671,6 +683,9 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                                                     onLoadEnd={() => {
                                                                         setLoadImage3(false)
                                                                     }}
+                                                                    onLoadStart={()=>{
+                                                                        setLoadImage3(true)
+                                                                    }}
                                                                     placeholder={blurhash}
                                                                     contentFit="cover"
                                                                     transition={1000}
@@ -678,7 +693,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
 
                                                                 {
                                                                     loadImage3 ? (
-                                                                        <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 150 }} />
+                                                                        <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 180/430*width }} />
                                                                     ) : <></>
                                                                 }
                                                                 <TouchableOpacity style={{
@@ -739,7 +754,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                                                             </Text>
 
                                                                         </View>
-                                                                        <TouchableOpacity style={{ alignSelf: 'flex-end', }}
+                                                                        <TouchableOpacity style={{ alignSelf: 'flex-end',marginRight:20/430*width }}
                                                                             onPress={() => {
                                                                                 handleOnpress(item)
                                                                             }}
@@ -772,9 +787,9 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                             </View>
                         ) : (
                             <>
-                                <TouchableOpacity onPress={() => logoutUser()}>
+                                {/* <TouchableOpacity onPress={() => logoutUser()}>
                                     <Text style={{ color: colors.blueColor, fontSize: 20, marginLeft: 20 }}>Log out</Text>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
 
                                 <View style={{ height: height * 0.8, width: width, alignItems: 'center', justifyContent: 'center' }}>
 

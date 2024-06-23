@@ -15,7 +15,7 @@ import GetEmail from './Screens/ForgotPasswordFlow/GetEmail'; 4
 import ResetPassword from './Screens/ForgotPasswordFlow/ResetPassword'
 import EmailVerification from './Screens/ForgotPasswordFlow/EmailVerification';
 import SuccessfullyPasswordChanged from './Screens/ForgotPasswordFlow/SuccessfullyPasswordChanged';
-// import { useFonts } from 'expo-font';
+import { useFonts } from 'expo-font';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabBarContainer from './Screens/TabNavigation/TabBarContainer';
@@ -110,13 +110,13 @@ import VideoPlayer from './Components/VideoPlayer';
 
 export default function App() {
 
-  // const [fontsLoaded, fontError] = useFonts({
-  //   "PoppinsRegular": require('./assets/fonts/Poppins/Poppins-Regular.ttf'),
-  //   "PoppinsBold": require('./assets/fonts/Poppins/Poppins-Bold.ttf'),
-  //   "PoppinsMedium": require('./assets/fonts/Poppins/Poppins-Medium.ttf'),
-  //   "PoppinsSemiBold": require('./assets/fonts/Poppins/Poppins-SemiBold.ttf'),
+  const [fontsLoaded, fontError] = useFonts({
+    "PoppinsRegular": require('./assets/fonts/Poppins/Poppins-Regular.ttf'),
+    "PoppinsBold": require('./assets/fonts/Poppins/Poppins-Bold.ttf'),
+    "PoppinsMedium": require('./assets/fonts/Poppins/Poppins-Medium.ttf'),
+    "PoppinsSemiBold": require('./assets/fonts/Poppins/Poppins-SemiBold.ttf'),
 
-  // })
+  })
 
 
   const [expoPushToken, setExpoPushToken] = useState('');
@@ -222,7 +222,7 @@ async function registerForPushNotificationsAsync() {
             token = `${e}`;
         }
     } else {
-        alert('Must use physical device for  Notifications');
+        // alert('Must use physical device for  Notifications');
     }
 
     return token;
@@ -253,15 +253,15 @@ async function registerForPushNotificationsAsync() {
     // })
   })
 
-  // useEffect(() => {
-  //   if (fontsLoaded || fontError) {
-  //     console.log("Loading fonts ", fontsLoaded)
-  //     console.log("Font error ", fontError)
-  //   }
-  // }, [fontsLoaded, fontError])
+  useEffect(() => {
+    if (fontsLoaded || fontError) {
+      console.log("Loading fonts ", fontsLoaded)
+      console.log("Font error ", fontError)
+    }
+  }, [fontsLoaded, fontError])
 
 
-  if (false) {//(!fontsLoaded && !fontError) {
+  if (!fontsLoaded && !fontError) {
     return (
 
       <View>
@@ -275,7 +275,7 @@ async function registerForPushNotificationsAsync() {
       <NavigationContainer>
         <Stack.Navigator initialRouteName="SplashMainScreen" screenOptions={{ headerShown: false }}>
           <Stack.Screen name="SplashMainScreen" component={SplashMainScreen} options={{ gestureEnabled: false }} />
-          <Stack.Screen name="SlideContainer" component={SlideContainer} />
+          <Stack.Screen name="SlideContainer" component={SlideContainer} options={{ gestureEnabled: false, headerShown: false }}/>
           <Stack.Screen name="RegisterUser" component={RegisterUser} options={{ gestureEnabled: false }} />
           <Stack.Screen name="LoginUser" component={LoginUser} options={{ gestureEnabled: false }} />
           <Stack.Screen name="GetEmail" component={GetEmail} options={{ gestureEnabled: false }} />

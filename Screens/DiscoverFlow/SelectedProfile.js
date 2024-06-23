@@ -544,7 +544,7 @@ export default function SelectedProfile({ navigation, route }) {
                                                                 <Text style={{ fontSize: 14, fontFamily: customFonts.regular, color: '#000', width: 320 / 430 * width, textAlign: 'left' }}>{item.answerText}</Text>
 
                                                             </View>
-                                                            <TouchableOpacity style={{ alignSelf: 'flex-end', }}
+                                                            <TouchableOpacity style={{ alignSelf: 'flex-end', marginRight:20/430*width}}
                                                                 onPress={() => {
                                                                     handleOnpress(item)
                                                                 }}

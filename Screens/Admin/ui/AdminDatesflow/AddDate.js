@@ -144,11 +144,11 @@ const AddDate = ({ navigation, route }) => {
     const BudgetAmount = [
         {
             value: '1',
-            lable: '$10 - $20 = $',
+            lable: '$0 - $20 = $',
         },
         {
             value: '2',
-            lable: '$30 - $50 = $$',
+            lable: '$20 - $50 = $$',
         },
         {
             value: '3',
@@ -157,7 +157,7 @@ const AddDate = ({ navigation, route }) => {
 
         {
             value: '4',
-            lable: '$100 + $100000000 = $$$$',
+            lable: '$80+ = $$$$',
         }
     ]
 

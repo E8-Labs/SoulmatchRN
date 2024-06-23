@@ -4,6 +4,7 @@ import GlobalStyles from '../../assets/styles/GlobalStyles'
 import colors from '../../assets/colors/Colors';
 import customFonts from '../../assets/fonts/Fonts';
 import ApisPath from '../../lib/ApisPath/ApisPath';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const { height, width } = Dimensions.get("window");
@@ -105,7 +106,10 @@ export default function GetEmail(props) {
                             <Text style={{ fontSize: 16, fontWeight: '500', marginTop: 20, fontFamily: customFonts.meduim }}>Email</Text>
 
                             <TextInput
-                                placeholder='Enter Email'
+                                placeholder='Email address'
+                                autoFocus={true}
+                                autoCapitalize='none'
+                                autoCorrect={false} spellCheck={false}
                                 onFocus={() => {
                                     setEmailFocused(true)
 

@@ -8,7 +8,7 @@ import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
 import customFonts from '../../assets/fonts/Fonts';
 import ApisPath from '../../lib/ApisPath/ApisPath';
-import { err } from 'react-native-svg';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ChangePassword({ navigation, route }) {
     const { height, width } = Dimensions.get('window')
@@ -60,6 +60,7 @@ export default function ChangePassword({ navigation, route }) {
                         console.log('password changed ')
                         navigation.goBack()
                     }else{
+                        setError(json.message)
                         console.log('json message is ', json.message)
                     }
                 }

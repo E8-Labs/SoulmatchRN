@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, PanResponder, Text, StyleSheet } from 'react-native';
 import colors from '../../assets/colors/Colors';
 const thumbWidth = 25
@@ -7,8 +7,14 @@ const RangeSlider = ({ width = 300, start = 20, end = 80, minValue = 0, maxValue
   const [activeThumb, setActiveThumb] = useState(null);
   const sliderWidth = useRef(width).current;
 
-  
-  
+
+
+  useEffect(() => {
+    setRange({ start: start, end: end })
+    console.log("Height Slider ", heightSlider)
+    console.log("Start ", end)
+    console.log("Start range  ", range.end)
+  }, [start, end])
   const createPanResponder = (isStart) => {
     return PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -20,7 +26,7 @@ const RangeSlider = ({ width = 300, start = 20, end = 80, minValue = 0, maxValue
           if (newPosition > range.end - minDistanceBetweenSlider) newPosition = range.end - minDistanceBetweenSlider;
           setRange((prev) => ({ ...prev, start: newPosition }));
           rangeStartUpdated(newPosition)
-          
+
         } else {
           if (newPosition < range.start + minDistanceBetweenSlider) newPosition = range.start + minDistanceBetweenSlider;
           setRange((prev) => ({ ...prev, end: newPosition }));
@@ -34,12 +40,12 @@ const RangeSlider = ({ width = 300, start = 20, end = 80, minValue = 0, maxValue
   const endPanResponder = createPanResponder(false);
 
 
-  function getHeightStringFromValue(value, start = true){
+  function getHeightStringFromValue(value, start = true) {
 
     //for height min height should be 3 fee = 36 inches & max height should be 8 fee = 96 inches
     // 96 - 36 = 60 / 100 = 0.6 
-    let addon = 36
-    let inches  = parseInt(0.6 * value + addon);
+    let addon = 0
+    let inches = parseInt(0.96 * value + addon);
 
     let heightFeet = parseInt(inches / 12);
     let heightInches = parseInt(inches % 12);
@@ -62,7 +68,7 @@ const RangeSlider = ({ width = 300, start = 20, end = 80, minValue = 0, maxValue
         ]}
       />
       <View
-        style={[styles.thumb, { left: `${range.start - (thumbWidth / 4)}%`}]}
+        style={[styles.thumb, { left: `${range.start - (thumbWidth / 4)}%` }]}
         {...startPanResponder.panHandlers}
       />
       <Text style={[styles.label, { left: `${range.start}%` }]}>{heightSlider ? getHeightStringFromValue(range.start) : Math.round(range.start)}</Text>
@@ -80,11 +86,11 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: 'center',
     position: 'relative',
-    
+
     // overflow: 'hidden'
   },
   track: {
-  
+
     position: 'absolute',
     width: '100%',
     height: 10,
@@ -98,12 +104,12 @@ const styles = StyleSheet.create({
     top: 10, // Aligning with the main track
   },
   thumb: {
-    
+
     position: 'absolute',
     width: thumbWidth,
     height: thumbWidth,
     borderRadius: thumbWidth / 2,
-    backgroundColor:colors.greyText,
+    backgroundColor: colors.greyText,
     borderWidth: 5,
     borderColor: colors.blueColor,
     top: 3, // Correctly overlapping over the track
@@ -111,7 +117,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   label: {
-    
+
     position: 'absolute',
     top: 30, // Positioning labels below the thumbs
     color: 'black'

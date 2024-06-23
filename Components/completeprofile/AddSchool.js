@@ -99,7 +99,7 @@ const AddSchool = ({ navigation, route }) => {
                             </View>
                         </TouchableOpacity>
                         <Text style={{ fontWeight: '500', fontSize: 24, marginLeft: 20 / 430 * width }}>
-                            Complete your profile
+                        {data.from === "Profile"? "School": "Complete your profile"}
                         </Text>
                     </View>
                     {/* Code for progressbar */}

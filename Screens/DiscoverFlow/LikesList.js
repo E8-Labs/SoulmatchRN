@@ -95,7 +95,7 @@ export default function LikesList(props) {
               props.navigation.navigate("GotMatch",{
                 data:{
                   navigate: 'GotMatch',
-                  user: json.data.from
+                  user: json.data
                 }
               })
             }

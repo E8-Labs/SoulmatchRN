@@ -390,13 +390,13 @@ export default function LoginUser(props) {
         <SafeAreaView>
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                style={{ flex: 1, flexDirection: 'column', }}>
+                style={{ flex: 1, flexDirection: 'column', alignItems:'center',width:width}}>
                 <TouchableWithoutFeedback style={GlobalStyles.container} onPress={Keyboard.dismiss}>
-                    <View style={[{ flexDirection: 'column', height: height, marginTop: 20 / 930 * height }]}>
-                        <View style={{ justifyContent: 'space-between', height: height * 0.8, }}>
-                            <View style={{ alignItems: 'center', justifyContent: 'center', }}>
-                                <View style={{ width: width - 40, marginTop: 0, alignSelf: 'center' }}>
-                                    <Text style={{ fontSize: 28, fontFamily: customFonts.semibold }}>
+                    <View style={[{ flexDirection: 'column', height: height, marginTop: 20 / 930 * height,alignItems:'center',width:width }]}>
+                        <View style={{ justifyContent: 'space-between', height: height * 0.8,alignItems:'center' }}>
+                            <View style={{ alignItems: 'center',}}>
+                                <View style={{ width: width-40 , marginTop: 0,alignSelf:'center',marginLeft:20/430*width}}>
+                                    <Text style={{ fontSize: 28, fontFamily: customFonts.semibold ,}}>
                                         Welcome back!
                                     </Text>
 
@@ -452,7 +452,7 @@ export default function LoginUser(props) {
                                     </View>
                                     <Text style={GlobalStyles.errorText}>{error}</Text>
 
-                                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10 }}>
+                                    <View style={{width:width-70, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10 }}>
 
                                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                                             <TouchableOpacity

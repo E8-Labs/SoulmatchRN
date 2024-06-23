@@ -180,7 +180,11 @@ export default function SelectedDateDetails({ navigation, route }) {
                             <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 30 / 930 * height }]}
                                 onPress={() => {
                                     navigation.navigate("ReserveNightScreen", {
-                                        dateId: data.id
+                                        data:{
+                                            date:data,
+                                            from:"DateScreen",
+                                            userId:''
+                                        }
                                     })
                                 }}
                             >

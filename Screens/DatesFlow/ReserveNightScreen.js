@@ -2,7 +2,7 @@ import {
   View, Text, SafeAreaView, Dimensions, TouchableOpacity, Image, StyleSheet, Modal, ActivityIndicator,
   Settings
 } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import customFonts from '../../assets/fonts/Fonts';
 import colors from '../../assets/colors/Colors';
@@ -19,16 +19,15 @@ const placholder = require('../../assets/images/imagePlaceholder.webp')
 
 export default function ReserveNightScreen({ navigation, route }) {
 
-  const dateId = route.params.dateId
+  const data = route.params.data
   const sourceMoment = moment.unix(1636765200);
   const sourceDate = sourceMoment.local().toDate();
-  console.log('selected date id is', dateId)
+  console.log('selected date is', data)
 
   const [numberofGuest, setNumberofGuest] = useState(2)
   const [startedDate, setStartedDate] = useState('')
   const [openDatePicker, setOpenDatePicker] = useState('')
   const [openTimePicker, setOpenTimePicker] = useState('')
-  const [selectedDate, setSelectedDate] = useState("Select date");
   const [loadImage, setloadImage] = useState(false)
   const [showIndicator, setShowIndicator] = useState(false)
   const [time, setTime] = useState(sourceDate);
@@ -41,10 +40,23 @@ export default function ReserveNightScreen({ navigation, route }) {
   const [showPicker, setShowPicker] = useState(false);
 
 
+  useEffect(()=>{
+    const updateData = () =>{
+      console.log('user id is', data.date.id)
+      setNumberofGuest(2)
+      setSelectedDateProfile({id:data.userId})
+    }
+
+    if(data.from === "ChatScreen"){
+      updateData()
+      
+    }
+  },[])
+
 
   const bookDate = async () => {
 
-    if ( !numberofGuest || !selectedDateProfile) {
+    if (!numberofGuest || !selectedDateProfile) {
       setError("Enter all cridentials")
       return
 
@@ -52,20 +64,20 @@ export default function ReserveNightScreen({ navigation, route }) {
 
     setShowIndicator(true)
 
-    const data = await AsyncStorage.getItem("USER")
+    const userData = await AsyncStorage.getItem("USER")
 
-    if (data) {
-      let d = JSON.parse(data)
+    if (userData) {
+      let d = JSON.parse(userData)
 
       let body = JSON.stringify({
-        datePlaceId: dateId,
+        datePlaceId: data.date.id,
         date: date,
         time: time,
         numberOfGuests: numberofGuest,
         dateUserId: selectedDateProfile.id
       })
       console.log('body data is', body)
-// return
+      // return
       try {
         const result = await fetch(ApisPath.ApiBookDate, {
           method: 'post',
@@ -80,6 +92,10 @@ export default function ReserveNightScreen({ navigation, route }) {
           let json = await result.json()
           if (json.status === true) {
             console.log('book date data', json.data)
+            if(data.from === "ChatScreen"){
+              navigation.pop(2)
+              return
+            }
             navigation.navigate('TabBarContainer')
           } else {
             console.log('json message is', json.message)
@@ -169,10 +185,17 @@ export default function ReserveNightScreen({ navigation, route }) {
                 />
               </View>
             </TouchableOpacity>
-            <Text style={{ fontSize: 24, fontFamily: customFonts.meduim }}>Reserve a date night</Text>
+            <Text style={{ fontSize: 24, fontFamily: customFonts.meduim }}>{data.from === 'ChatScreen' ? "Select date & time" : "Reserve a date night"}</Text>
 
           </View>
+          {
+            data.from === "ChatScreen" ? (
 
+              <Text style={{ color: '#000', fontSize: 14, fontFamily: customFonts.meduim, textAlign: 'left', width: width - 50 / 430 * width }}>
+                Please select date and time
+              </Text>
+            ) : ''
+          }
 
           <View style={styles.dateTimePickerContainer}>
 
@@ -211,74 +234,81 @@ export default function ReserveNightScreen({ navigation, route }) {
             />
 
           </View>
-          <View style={{
-            flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 50 / 430 * width,
-
-          }}>
-            <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>Number of guests:</Text>
-            <View style={{
-              width: 200 / 430 * width, alignItems: 'center', justifyContent: 'center', paddingVertical: 12 / 930 * height, borderRadius: 10,
-              paddingHorizontal: 16 / 430 * width, flexDirection: 'row', justifyContent: 'space-between', borderColor: colors.greyText, borderWidth: 1
-            }}>
-              <TouchableOpacity
-                onPress={increment}
-              >
-                <Image source={require('../../assets/images/addcircle.png')}
-                  style={{ height: 24 / 930 * height, width: 24 / 930 * height }}
-                />
-              </TouchableOpacity>
-              <Text style={{ fontSize: 14, fontFamily: customFonts.meduim }}>
-                {numberofGuest}
-              </Text>
-              <TouchableOpacity
-                onPress={decrement}>
-                <Image source={require('../../assets/images/minuscircle.png')}
-                  style={{ height: 24 / 930 * height, width: 24 / 930 * height }}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-
           {
-            selectedDateProfile ? (
+            data.from !== "ChatScreen" ? (
               <>
-                <Image source={selectedDateProfile&&selectedDateProfile.profile_image ? { uri: selectedDateProfile.profile_image }:placholder} 
-                style={{
-                  height: 370 / 930 * height, width: 370 / 430 * width, resizeMode: 'cover', borderRadius: 10, borderWidth: 1
+                <View style={{
+                  flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 50 / 430 * width,
 
-                }}
-                  onLoadStart={() => { setloadImage(true) }}
-                  onLoadEnd={() => {
-                    setloadImage(false)
-                  }}
-                />
+                }}>
+                  <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>Number of guests:</Text>
+                  <View style={{
+                    width: 200 / 430 * width, alignItems: 'center', justifyContent: 'center', paddingVertical: 12 / 930 * height, borderRadius: 10,
+                    paddingHorizontal: 16 / 430 * width, flexDirection: 'row', justifyContent: 'space-between', borderColor: colors.greyText, borderWidth: 1
+                  }}>
+                    <TouchableOpacity
+                      onPress={increment}
+                    >
+                      <Image source={require('../../assets/images/addcircle.png')}
+                        style={{ height: 24 / 930 * height, width: 24 / 930 * height }}
+                      />
+                    </TouchableOpacity>
+                    <Text style={{ fontSize: 14, fontFamily: customFonts.meduim }}>
+                      {numberofGuest}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={decrement}>
+                      <Image source={require('../../assets/images/minuscircle.png')}
+                        style={{ height: 24 / 930 * height, width: 24 / 930 * height }}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+
                 {
-                  loadImage ? (
-                    <ActivityIndicator style={{ position: 'absolute', bottom: 160, left: 180 }} size={'large'} color={colors.blueColor} />
-                  ) : null
+                  selectedDateProfile ? (
+                    <>
+                      <Image source={selectedDateProfile && selectedDateProfile.profile_image ? { uri: selectedDateProfile.profile_image } : placholder}
+                        style={{
+                          height: 370 / 930 * height, width: 370 / 430 * width, resizeMode: 'cover', borderRadius: 10, borderWidth: 1
+
+                        }}
+                        onLoadStart={() => { setloadImage(true) }}
+                        onLoadEnd={() => {
+                          setloadImage(false)
+                        }}
+                      />
+                      {
+                        loadImage ? (
+                          <ActivityIndicator style={{ position: 'absolute', bottom: 160, left: 180 }} size={'large'} color={colors.blueColor} />
+                        ) : null
+                      }
+
+                    </>
+
+
+                  ) : (
+                    <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { backgroundColor: 'transparent', borderWidth: 2 }]}
+                      onPress={() => {
+                        setOpenModal(true)
+                        setError(null)
+                      }}
+                    >
+                      <Text style={[GlobalStyles.btnText, { color: '#000' }]}>
+                        Invite your date
+                      </Text>
+                    </TouchableOpacity>
+                  )
                 }
-
               </>
-
-
-            ) : (
-              <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { backgroundColor: 'transparent', borderWidth: 2 }]}
-                onPress={() => {
-                  setOpenModal(true)
-                  setError(null)
-                }}
-              >
-                <Text style={[GlobalStyles.btnText, { color: '#000' }]}>
-                  Invite your date
-                </Text>
-              </TouchableOpacity>
-            )
+            ) : ''
           }
+
           <InviteDatePopup visible={openModal} close={closeModal} />
 
         </View>
 
-      
+
         {
           error && <Text style={GlobalStyles.errorText}>{error}</Text>
         }
@@ -290,7 +320,7 @@ export default function ReserveNightScreen({ navigation, route }) {
               onPress={bookDate}
             >
               <Text style={GlobalStyles.btnText}>
-                Reserve a date night
+                {data.from ==='ChatScreen'?"Invite":"Reserve a date night"}
               </Text>
             </TouchableOpacity>
           )

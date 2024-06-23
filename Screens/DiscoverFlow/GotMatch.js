@@ -37,6 +37,7 @@ export default function GotMatch({ navigation, route }) {
         if (result) {
           setLoading(false)
           let json = await result.json();
+          console.log('lson is ', json)
 
           if (json.status === true) {
             console.log('chat created', json.data)

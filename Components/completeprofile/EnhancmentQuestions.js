@@ -419,7 +419,7 @@ const EnhancmentQuestions = ({ navigation, route }) => {
                         </View>
                     </TouchableOpacity>
                     <Text style={{ fontWeight: '500', fontSize: 24, marginLeft: 20 / 430 * width }}>
-                        Complete your profile
+                        {data.from === "Profile"? "Profile Enhancement...": "Complete your profile"}
                     </Text>
                 </View>
                 {/* Code for progressbar */}
@@ -450,7 +450,7 @@ const EnhancmentQuestions = ({ navigation, route }) => {
                             Profile Enhancement Questions
                         </Text>
                         <Text style={{ fontWeight: '500', fontSize: 11, color: '#999999', paddingBottom: 3 / 930 * height, marginLeft: 4 / 430 * width }}>
-                            (Optional)
+                            {/* (Optional) */}
                         </Text>
                     </View>
                     <Text style={{ fontWeight: '500', fontSize: 14, color: '#666666', paddingBottom: 3 / 930 * height, marginTop: 20 / 930 * height }}>
@@ -593,7 +593,11 @@ const EnhancmentQuestions = ({ navigation, route }) => {
                                     navigation.goBack()
                                     return
                                 }
-                                navigation.navigate('AddLocation');
+                                navigation.navigate('AddLocation',{
+                                    data:{
+                                        from:'Questions'
+                                    }
+                                });
                             }}
                             style={{ backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
                             {

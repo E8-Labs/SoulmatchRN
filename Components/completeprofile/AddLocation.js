@@ -81,7 +81,9 @@ const AddLocation = ({ navigation }) => {
                         console.log('profile udated', json.data)
                         d.user = json.data
                                    AsyncStorage.setItem("userLocation", JSON.stringify({d}))
-
+                        if(data.from === "Splash"){
+                            navigation.navigate('TabBarContainer')
+                        }
                         navigation.navigate('AllowNotification')
                     } else {
                         console.log('json message is', json.message)

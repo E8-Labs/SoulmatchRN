@@ -120,7 +120,11 @@ const SplashMainScreen = (props) => {
                 // if last condition runs then profile complition comment will 11
 
                 console.log('profile_completion_comment', data.profile_completion_comment)
-                props.navigation.navigate("AddLocation")
+                props.navigation.navigate("AddLocation",{
+                    data:{
+                        from:"Splash"
+                    }
+                })
             }
 
             else if (data.profile_completion === 11) {

@@ -1,67 +1,101 @@
-import { View, Text, Dimensions, Image, TouchableOpacity, SafeAreaView, TextInput, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, Dimensions,  TouchableOpacity, SafeAreaView, TextInput, ScrollView,ActivityIndicator } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { Image } from 'expo-image'
 import customFonts from '../../assets/fonts/Fonts'
 import GlobalStyles from '../../assets/styles/GlobalStyles'
 import colors from '../../assets/colors/Colors'
 import DatesFilterPopup from '../../Components/DatesFilterPopup'
-
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import ApisPath from '../../lib/ApisPath/ApisPath'
 const dateImage = require('../../assets/images/datenight.png')
 const { height, width } = Dimensions.get('window')
 
-export default function InviteDateFromChatScreen(props) {
-    const[openModal,setOpenModal] = useState(false)
-    const dateIdeas = [ 
-        {
-            id: 1,
-            image: dateImage,
-            name: "Fancy Bistro",
-            budget: 25,
-            rating: 5.0,
-            category: 'Dinner'
-        },
-        {
-            id: 2,
-            image: dateImage,
-            name: "Fancy Bistro",
-            budget: 25,
-            rating: 5.0,
-            category: 'Dinner'
-        },
-        {
-            id: 3,
-            image: dateImage,
-            name: "Fancy Bistro",
-            budget: 25,
-            rating: 5.0,
-            category: 'Dinner'
-        },
-        {
-            id: 4,
-            image: dateImage,
-            name: "Fancy Bistro",
-            budget: 25,
-            rating: 5.0,
-            category: 'Dinner'
-        },
-        {
-            id: 5,
-            image: dateImage,
-            name: "Fancy Bistro",
-            budget: 25,
-            rating: 5.0,
-            category: 'Dinner'
-        },
-    ]
-    const closeModal = () =>{
+export default function InviteDateFromChatScreen({navigation,route}) {
+
+    const data = route.params.data
+    console.log('user id from chat screen is', data)
+    const [openModal, setOpenModal] = useState(false)
+    const [selectedDate, setSelectedDate] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [date, setDate] = useState(false)
+    const [error, setError] = useState(null)
+    useEffect(() => {
+        getDates()
+
+    }, [])
+
+    const getDates = async () => {
+        console.log('trying to get dates')
+        setLoading(true)
+        const data = await AsyncStorage.getItem("USER")
+        try {
+            if (data) {
+                let d = JSON.parse(data)
+               
+
+                const result = await fetch(ApisPath.ApiGetDates+"?allPlaces=true", {
+                    method: 'get',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + d.token
+                    }
+                })
+                // console.log('result', result)
+                if (result) {
+                    setLoading(false)
+                    let json = await result.json()
+                    if (json.status === true) {
+                        console.log('get dates are', json.data)
+                        setDate(json.data)
+
+                    }
+                    else {
+                        console.log('json message is', json.message)
+                    }
+                }
+            }
+        } catch (error) {
+            console.log('error finding in get dates', error)
+        }
+
+    }
+
+    const getBudget = (item) =>{
+        console.log('max budget is', item.maxBudget)
+        if(item.minBudget === 0 && item.maxBudget === 20){
+            return "$"
+        } else if(item.minBudget === 20 && item.maxBudget === 50){
+            return "$$"
+        }else if(item.minBudget === 50 && item.maxBudget === 80){
+            return "$$$"
+        }else if(item.minBudget > 80){
+            return "$$$$"
+        }
+    }
+    const handleContinue = () =>{
+        if(!selectedDate){
+            setError("Select a date")
+            return
+        }
+        console.log('selected date is', selectedDate)
+        navigation.navigate("ReserveNightScreen",{
+            data:{
+                date:selectedDate,
+                from:'ChatScreen',
+                userId:data.userId
+            }
+        })
+    }
+    const closeModal = () => {
         setOpenModal(false)
     }
     return (
         <SafeAreaView>
             <View style={{ height: height, width: width, alignItems: 'center' }}>
-                <View style={{ width: width - 60 / 430 * width, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                <View style={{ width: width - 60 / 430 * width, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
                         <TouchableOpacity onPress={() => {
-                            props.navigation.goBack()
+                            navigation.goBack()
                         }}>
                             <View style={GlobalStyles.backBtn}>
                                 <Image source={require('../../assets/images/backArrow.png')}
@@ -81,10 +115,10 @@ export default function InviteDateFromChatScreen(props) {
                         />
                     </TouchableOpacity>
 
-                  
 
-                </View> 
-                 <DatesFilterPopup visible={openModal} close={closeModal} />
+
+                </View>
+                <DatesFilterPopup visible={openModal} close={closeModal} />
                 <View style={{
                     width: width - 60 / 430 * width, backgroundColor: colors.greyText, paddingHorizontal: 16 / 930 * height, paddingVertical: 16 / 430 * width,
                     marginTop: 30 / 930 * height, borderRadius: 10
@@ -94,7 +128,7 @@ export default function InviteDateFromChatScreen(props) {
                             style={{ height: 24 / 930 * height, width: 24 / 430 * width }}
                         />
                         <TextInput placeholder='Search'
-                            style={{ fontSize: 14, fontFamily: customFonts.meduim,width: 300 / 430 * width }}
+                            style={{ fontSize: 14, fontFamily: customFonts.meduim, width: 300 / 430 * width }}
                         />
 
                     </View>
@@ -103,56 +137,70 @@ export default function InviteDateFromChatScreen(props) {
                 <View style={{ flexDirection: 'column', alignItems: 'flex-start', width: width - 60 / 430 * width, marginTop: 30 / 930 * height }}>
                     <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>Date ideas </Text>
                     <ScrollView style={{ height: height * 0.6, width: width }} showsVerticalScrollIndicator={false}>
-                        <View style={{gap: 8, flexDirection: 'row', width: width - 40 / 430 * width, alignItems: 'center', flexWrap: 'wrap', marginTop: 20 }}>
+                        {
+                            loading ? (
+                                <ActivityIndicator size={'large'} color={colors.blueColor} style={{height:height*0.5,width:width-60}} />
+                            ) : (
 
-                            {
-                                dateIdeas.map((item) => (
-                                    <TouchableOpacity key={item.id} 
-                                        onPress={()=>{
-                                            props.navigation.navigate('SelectedDateDetails')
-                                        }}
-                                    >
-                                        <View style={{
-                                            alignItems: 'center', padding: 12, borderWidth: 1, borderColor: colors.greyText, borderRadius: 10,
-                                            marginLeft: 0 / 430 * width, flexDirection: 'column', gap: 10 / 930 * height
-                                        }}>
-                                            <Image source={item.image}
-                                                style={{ height: 98 / 930 * height, width: 158 / 430 * width, borderRadius: 10, resizeMode: 'contain' }}
-                                            />
-                                            <View style={{ alignItems: 'flex-start', flexDirection: 'column', width: 150 / 430 * width, }}>
-                                                <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, }}>{item.name}</Text>
-                                            </View>
+                                <View style={{ gap: 8, flexDirection: 'row', width: width - 40 / 430 * width, alignItems: 'center', flexWrap: 'wrap', marginTop: 20 }}>
 
-                                            <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
-                                                <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Budget</Text>
-                                                <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{item.budget}$</Text>
-                                            </View>
-                                            <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
-                                                <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Ratings</Text>
-                                                <View style={{ flexDirection: 'row', gap: 4, alignItems: 'center' }}>
-                                                    <Image source={require('../../assets/images/star.png')}
-                                                        style={{ height: 12 / 930 * height, width: 12 / 930 * height }}
+                                    {
+                                        date&&date.map((item) => (
+                                            <TouchableOpacity key={item.id}
+                                                onPress={() => {
+                                                   setSelectedDate(item)
+                                                   setError(null)
+                                                }}
+                                            >
+                                                <View style={{
+                                                    alignItems: 'center', padding: 12, borderWidth: 1, borderColor:selectedDate.id === item.id?colors.blueColor: colors.greyText, borderRadius: 10,
+                                                    marginLeft: 0 / 430 * width, flexDirection: 'column', gap: 10 / 930 * height
+                                                }}>
+                                                    <Image source={{uri:item.imageUrl}}
+                                                        style={{ height: 98 / 930 * height, width: 158 / 430 * width, borderRadius: 10, resizeMode: 'cover' }}
                                                     />
-                                                    <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{item.rating}</Text>
+                                                    <View style={{ alignItems: 'flex-start', flexDirection: 'column', width: 150 / 430 * width, }}>
+                                                        <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, }}>{item.name}</Text>
+                                                    </View>
+
+                                                    <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
+                                                        <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Budget</Text>
+                                                        <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{getBudget(item)}</Text>
+                                                    </View>
+                                                    <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
+                                                        <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Ratings</Text>
+                                                        <View style={{ flexDirection: 'row', gap: 4, alignItems: 'center' }}>
+                                                            <Image source={require('../../assets/images/star.png')}
+                                                                style={{ height: 12 / 930 * height, width: 12 / 930 * height }}
+                                                            />
+                                                            <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{item.rating}</Text>
+                                                        </View>
+
+                                                    </View>
+                                                    <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
+                                                        <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Category</Text>
+                                                        <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{item.category}</Text>
+                                                    </View>
+
                                                 </View>
+                                            </TouchableOpacity>
 
-                                            </View>
-                                            <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
-                                                <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Category</Text>
-                                                <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{item.category}</Text>
-                                            </View>
+                                        ))
+                                    }
 
-                                        </View>
-                                    </TouchableOpacity>
-
-                                ))
-                            }
-
-                        </View>
+                                </View>
+                            )}
                     </ScrollView>
                 </View>
-                <TouchableOpacity style ={[GlobalStyles.reqtengularBtn,{marginTop:30/930*height}]}>
-                    <Text style ={GlobalStyles.btnText}>Continue</Text>
+                {
+                    error&&<Text style = {GlobalStyles.errorText}>{error}</Text>
+                }
+                <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 30 / 930 * height }]}
+                    onPress={()=>{
+                       handleContinue()
+                    }}
+                >
+                    <Text style={GlobalStyles.btnText}>Continue</Text>
                 </TouchableOpacity>
 
             </View>

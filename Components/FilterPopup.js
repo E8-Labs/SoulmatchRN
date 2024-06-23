@@ -23,20 +23,20 @@ export default function FilterPopup({ visible, close, addressPicker }) {
 
     const [selected, setselected] = useState('');
     const [error, setError] = useState(null);
-    const [startHeight, setStartHeight] = useState(36)
-    const [endHeight, setEndHeight] = useState(96)
-    const [startAgeRange, setStartAgeRange] = useState(10)
-    const [endAgeRange, setEndAgeRange] = useState(40)
+    const [startHeight, setStartHeight] = useState(0)
+    const [endHeight, setEndHeight] = useState(100)
+    const [startAgeRange, setStartAgeRange] = useState(0)
+    const [endAgeRange, setEndAgeRange] = useState(100)
     const [state, setState] = useState(null)
     const [city, setCity] = useState(null)
     const [marginTop, setMarginTop] = useState(0)
     const [modalHeight, setModalHeight] = useState(height * 0.8)
     const [address, setAddress] = useState('');
 
-    const UserAddress = {
-        cityN: city,
-        stateN: state
-    }
+    // const UserAddress = {
+    //     cityN: city,
+    //     stateN: state
+    // }
 
     const genders = [
         {
@@ -74,8 +74,36 @@ export default function FilterPopup({ visible, close, addressPicker }) {
             })
             setStartAgeRange(tempFilter.min_age)
             setEndAgeRange(tempFilter.max_age)
-            setStartHeight(tempFilter.min_height)
-            setEndHeight(tempFilter.max_height)
+            setStartHeight(tempFilter.min_height )
+            setEndHeight(tempFilter.max_height )
+
+            console.log("Temp filter Min", tempFilter.min_height)
+            console.log("Temp filter Max", tempFilter.max_height)
+            setselected({ name: tempFilter.gender })
+
+        }
+    }
+
+    const getLocalDiscoverFilters = async () => {
+        const tmpFltr = await AsyncStorage.getItem("FilterDiscovers")
+        // console.log("Filters Discover ", tmpFltr)
+        if (tmpFltr) {
+            let tempFilter = JSON.parse(tmpFltr)
+            console.log('discover filters from local are', tempFilter)
+            setCity(tempFilter.city)
+            setState(tempFilter.state)
+            // setAddress(tempFilter.city,tempFilter.state)
+            setAddress({
+                city:tempFilter.city,
+                state:tempFilter.state
+            })
+            setStartAgeRange(tempFilter.minAge)
+            setEndAgeRange(tempFilter.maxAge)
+            setStartHeight(tempFilter.minHeight )
+            setEndHeight(tempFilter.maxHeight )
+
+            console.log("Temp filter Min", tempFilter.minHeight)
+            console.log("Temp filter Max", tempFilter.maxHeight)
             setselected({ name: tempFilter.gender })
 
         }
@@ -85,9 +113,9 @@ export default function FilterPopup({ visible, close, addressPicker }) {
 
         //for height min height should be 3 fee = 36 inches & max height should be 8 fee = 96 inches
         // 96 - 36 = 60 / 100 = 0.6 
-        let addon = 36
+        let addon = 0
 
-        let inches = parseInt(0.6 * value + addon);
+        let inches = parseInt(0.96 * value + addon);
 
         let heightFeet = parseInt(inches / 12);
         let heightInches = parseInt(inches % 12);
@@ -105,22 +133,39 @@ export default function FilterPopup({ visible, close, addressPicker }) {
         }
 
         const filters = {
-            min_age: startAgeRange,
-            max_age: endAgeRange,
-            min_height: startHeight,
-            max_height: endHeight,
+            minAge: startAgeRange,
+            maxAge: endAgeRange,
+            minHeight: startHeight * .96,
+            maxHeight: endHeight * .96,
             gender: selected.name,
             state: state,
             city:city
         }
-        close(filters)
-        // AsyncStorage.setItem("FilterDiscovers",JSON.stringify(filters))
+        AsyncStorage.setItem("FilterDiscovers",JSON.stringify(filters))
+        let getDiscover = true
+        close({filters,getDiscover})
+        
 
+    }
+
+    const resetFilters = async() =>{
+        setStartAgeRange(0)
+        setEndAgeRange(100)
+        setStartHeight(0)
+        setEndHeight(100)
+        setselected('')
+        setCity('')
+        setState('')
+        setAddress(null)
+
+        await AsyncStorage.removeItem("TempFilters")
+        await AsyncStorage.removeItem("FilterDiscovers")
     }
 
 
     useEffect(() => {
         console.log("Use Effect")
+        getLocalDiscoverFilters()
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
             console.log("Keyboard show")
             setMarginTop(-150);
@@ -140,15 +185,15 @@ export default function FilterPopup({ visible, close, addressPicker }) {
         };
     }, []);
     return (
-        <SafeAreaView>
+        // <SafeAreaView>
 
             <View>
-                <Modal
+                {/* <Modal
                     visible={visible}
                     transparent={true}
                     animationType='slide'
 
-                >
+                > */}
                     <TouchableWithoutFeedback
                         style={{ height: height, width: width }}
                         onPress={() => {
@@ -179,12 +224,12 @@ export default function FilterPopup({ visible, close, addressPicker }) {
                                         Age range
                                     </Text>
                                     <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>
-                                        {startAgeRange.toFixed(0)} - {endAgeRange.toFixed(0)}
+                                        {startAgeRange ? parseInt(startAgeRange) : 0} - {endAgeRange ? parseInt(endAgeRange) : 100}
                                     </Text>
                                 </View>
 
                                 {/* add range picker here */}
-                                <RangeSlider heightSlider={false} start={startAgeRange?startAgeRange:10} end={endAgeRange?endAgeRange:40} rangeStartUpdated={(value) => {
+                                <RangeSlider heightSlider={false} start={startAgeRange?startAgeRange:0} end={endAgeRange?endAgeRange:100} rangeStartUpdated={(value) => {
                                     // console.log('start age', value)
                                     setStartAgeRange(value)
                                 }} rangeEndUpdated={(value) => {
@@ -211,11 +256,13 @@ export default function FilterPopup({ visible, close, addressPicker }) {
                                 {/* add range picker here */}
 
 
-                                <RangeSlider start={startHeight?startHeight:36} end={endHeight?endHeight:96} heightSlider={true} rangeStartUpdated={(value) => {
-                                    // console.log('star height', value)
-                                    setStartHeight(value)
+                                <RangeSlider start={startHeight?startHeight:0} end={endHeight?endHeight:100} heightSlider={true} rangeStartUpdated={(value) => {
+                                    console.log('star height', value * .96)
+                                    setStartHeight(value )
                                 }} rangeEndUpdated={(value) => {
-                                    setEndHeight(value)
+                                    console.log('star height', value * .96)
+
+                                    setEndHeight(value )
 
                                 }} />
 
@@ -268,8 +315,8 @@ export default function FilterPopup({ visible, close, addressPicker }) {
                                                         AsyncStorage.setItem("TempFilters", JSON.stringify({
                                                             min_age: startAgeRange,
                                                             max_age: endAgeRange,
-                                                            min_height: startHeight,
-                                                            max_height: endHeight,
+                                                            min_height: startHeight * .96,
+                                                            max_height: endHeight * .96,
                                                             gender: selected.name
                                                         }))
                                                         addressPicker()
@@ -278,11 +325,11 @@ export default function FilterPopup({ visible, close, addressPicker }) {
                                                     <Text style={{ color: 'grey', fontSize: 14 }}>
                                                         {/* {city ? (city) : 'Enter city/state'} {state ? (state) : ''} */}
                                                         {/* {address ? (address.city,address.state):''} */}
-                                                        {UserAddress ?
+                                                        {address ?
                                                             <Text style={{ color: 'grey', fontSize: 14 }}>
                                                                 {address.city}/{address.state}
                                                             </Text>
-                                                            : ''}
+                                                            : "Enter city/state"}
                                                     </Text>
                                                 </TouchableOpacity>
 
@@ -291,7 +338,7 @@ export default function FilterPopup({ visible, close, addressPicker }) {
                                                 error && <Text style={GlobalStyles.errorText}>{error}</Text>
                                             }
                                             <View style={{ width: width - 60, flexDirection: 'row', marginTop: 30 / 930 * height, justifyContent: 'space-between' }}>
-                                                <TouchableOpacity onPress={close} style={{
+                                                <TouchableOpacity onPress={resetFilters} style={{
                                                     width: 173 / 430 * width, height: 48 / 930 * height, borderWidth: 2, borderColor: "#000", borderRadius: 10,
                                                     alignItems: 'center', justifyContent: 'center'
                                                 }}>
@@ -315,9 +362,9 @@ export default function FilterPopup({ visible, close, addressPicker }) {
                             </View>
                         </View>
                     </TouchableWithoutFeedback>
-                </Modal>
+                {/* </Modal> */}
             </View>
-        </SafeAreaView >
+        // </SafeAreaView >
 
     )
 }

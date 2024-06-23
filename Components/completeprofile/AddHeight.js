@@ -21,7 +21,8 @@ const AddHeight = ({ navigation, route }) => {
     useEffect(() => {
         if (data.from === 'Profile') {
             setHeightFeet(data.user.height_feet)
-            setHeightInch(data.user.height_inches)
+            let inches = data.user.height_inches%12
+            setHeightInch(inches)
         }
     }, [])
 
@@ -32,8 +33,8 @@ const AddHeight = ({ navigation, route }) => {
 
     //code for picker
 
-    const SelectHeightFeet = '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90'.split(',');
-    const SelectHeightInch = '0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90'.split(',');
+    const SelectHeightFeet = '1,2,3,4,5,6,7,8'.split(',');
+    const SelectHeightInch = '0,1,2,3,4,5,6,7,8,9,10,11'.split(',');
 
     const handleNextClick = async () => {
 
@@ -87,7 +88,7 @@ const AddHeight = ({ navigation, route }) => {
                         </View>
                     </TouchableOpacity>
                     <Text style={{ fontWeight: '500', fontSize: 24, marginLeft: 20 / 430 * width }}>
-                        Complete your profile
+                    {data.from === "Profile"? "Height": "Complete your profile"}
                     </Text>
                 </View>
                 {/* Code for progressbar */}
@@ -144,7 +145,7 @@ const AddHeight = ({ navigation, route }) => {
                                 width={50 / width * 430}
                                 // backgroundColor='#000000'
                                 selectedStyle={{ borderWidth: 2, width: "4", borderRadius: 50, borderColor: colors.blueColor }}
-                                // initialSelectedIndex={HeightInch}
+                                initialSelectedIndex={HeightInch}
                                 items={SelectHeightInch.map(name => ({ label: name, value: '' }))}
                                 onChange={({ item }) =>{
                                      setHeightInch(item.label)

@@ -1,33 +1,40 @@
 import {
     View, Text, SafeAreaView, Dimensions, TouchableOpacity, Image, StyleSheet, Modal, TouchableWithoutFeedback, TextInput,
-    ScrollView, Keyboard
+    ScrollView, Keyboard,
+    ActivityIndicator
 } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import customFonts from '../../assets/fonts/Fonts';
 import colors from '../../assets/colors/Colors';
 import { getFormatedDate } from "react-native-modern-datepicker";
-import DatePicker from "react-native-modern-datepicker";
+import DateTimePicker from '@react-native-community/datetimepicker'
 import InviteDatePopup from '../../Components/InviteDatePopup';
-
+import moment from 'moment';
+import fonts from 'fonts';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ApisPath from '../../lib/ApisPath/ApisPath';
 
 const { height, width } = Dimensions.get('window');
 const selectedImage = require('../../assets/images/selected.png');
 const unselectedImage = require('../../assets/images/unSelected.png');
 
 export default function PlanDateNigth(props) {
+    const sourceMoment = moment.unix(1636765200);
+    const sourceDate = sourceMoment.local().toDate();
+
 
     const [numberofGuest, setNumberofGuest] = useState(2)
-    const [startedDate, setStartedDate] = useState('')
     const [openDatePicker, setOpenDatePicker] = useState('')
     const [openTimePicker, setOpenTimePicker] = useState('')
-    const [selectedDate, setSelectedDate] = useState("Select date");
-    const [selectedTime, setSelectedTime] = useState("Select time");
-    const [time, setTime] = useState("Select time");
-    const [selected, setSelected] = useState(null);
-
+    const [email, setEmail] = useState(null)
+    const [description, setDescription] = useState(null)
+    const [error, setError] = useState(null)
+    const [error2, setError2] = useState(null)
+    const [time, setTime] = useState(sourceDate);
+    const [date, setDate] = useState(sourceDate);
     const [openModal, setOpenModal] = useState(false)
-    const [selectedCat, setselectedCat] = useState(1);
+    const [loading,setLoading] = useState(false)
     const [modalHeight, setModalHeight] = useState(height * 0.6)
 
 
@@ -72,40 +79,75 @@ export default function PlanDateNigth(props) {
         // setStartedDate(propDate);
         setOpenTimePicker(!openTimePicker)
     }
+    const formatDate = (dateString) => {
+        return moment(dateString).format("MM-DD-YYYY")
+    };
+    function handleChangeStartDate(event, selectedDate) {
+        const currentDate = selectedDate || date;
+        setDate(currentDate);
+        setOpenTimePicker(false)
+        let formatted = moment(currentDate).format('YYYY/MM/DD');
+        console.log("Formatted date is ", formatDate(currentDate))
+    }
 
-    const genders = [
-        {
-            id: 1,
-            name: '$'
-        },
-        {
-            id: 2,
-            name: '$$'
-        },
-        {
-            id: 3,
-            name: "$$$"
-        },
-        {
-            id: 4,
-            name: "$$$$"
-        },
-    ]
+    const handleSubmit = async () => {
 
-    const category = [
-        {
-            id: 1,
-            name: 'All'
-        },
-        {
-            id: 2,
-            name: "Culinary Adventure"
-        },
-        {
-            id: 3,
-            name: "Outdoor Escapades"
-        },
-    ]
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const validEmail = emailRegex.test(email);
+        if (!email || !description) {
+            setError("Enter all cridentials")
+            return
+        }
+
+        if (!validEmail) {
+            setError("Enter valid email")
+            return
+        }
+        setOpenModal(false)
+    };
+
+    const inviteDate = async () => {
+        if(!email || !description ){
+            setError2("Enter all cridentials")
+            return
+        }
+        try {
+            setLoading(true)
+            const data = await AsyncStorage.getItem("USER")
+            if(data){
+                let d = JSON.parse(data)
+                let body = JSON.stringify({
+                    email:email,
+                    description:description,
+                    time:time,
+                    date:date,
+                    guests:numberofGuest
+                })
+                console.log('body is', body)
+                const result = await fetch(ApisPath.ApiInviteDateViaEmail,{
+                    method:'post',
+                    headers:{
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + d.token
+                    },
+                    body:body
+                })
+                if(result){
+                    setLoading(false)
+                    let json = await result.json()
+                    if(json.status === true){
+                        console.log('invite sent via email ')
+                        props.navigation.goBack()
+                    }else{
+                        console.log('invite daye via email message is', json.message)
+                    }
+                }
+            }
+
+        } catch (e) {
+            console.log('error finding in invite date via email', e)
+        }
+    }
 
 
     useEffect(() => {
@@ -146,43 +188,43 @@ export default function PlanDateNigth(props) {
                     </View>
 
 
-                    <TouchableOpacity style={GlobalStyles.textInput}
-                        onPress={handleOnPressDate}
-                    >
-                        <View style={{
-                            flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+                    <View style={styles.dateTimePickerContainer}>
 
-                        }}>
-                            <Text style={{ color: '#000', fontSize: 14, fontFamily: customFonts.meduim }}>
-                                {selectedDate}
-                            </Text>
+                        <Text style={{ color: '#000', fontSize: 18, fontFamily: customFonts.meduim }}>
+                            Select date
+                        </Text>
 
-                            <Image source={require('../../assets/images/calender.png')}
-                                style={{ height: 24 / 930 * height, width: 24 / 930 * height }}
-                            />
-                        </View>
+                        <DateTimePicker
+                            testID="dateTimePicker"
+                            value={date}
+                            mode={'date'}
+                            is24Hour={false}
+                            display="default"
+                            onChange={handleChangeStartDate}
+                            style={styles.dateTimePicker}
+                        // width = {400}
+                        />
 
-                    </TouchableOpacity>
+                    </View>
 
 
-                    <TouchableOpacity style={GlobalStyles.textInput}
-                        onPress={handleOnPressTime}
-                    >
-                        <View style={{
-                            flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
 
-                        }}>
-                            <Text style={{ color: '#000', fontSize: 14, fontFamily: customFonts.meduim }}>
-                                {time}
-                            </Text>
+                    <View style={styles.dateTimePickerContainer}>
+                        <Text style={styles.text}>
+                            Select time
+                        </Text>
+                        <DateTimePicker
+                            testID="dateTimePicker"
+                            value={time}
+                            mode={"time"}
+                            is24Hour={false}
+                            display="default"
+                            onChange={handleChangeStartDate}
+                            style={styles.dateTimePicker}
+                        // width = {400}
+                        />
 
-                            <Image source={require('../../assets/images/clock.png')}
-                                style={{ height: 24 / 930 * height, width: 24 / 930 * height }}
-                            />
-                        </View>
-
-                    </TouchableOpacity>
-
+                    </View>
                     <View style={{
                         flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 50 / 430 * width,
 
@@ -210,26 +252,44 @@ export default function PlanDateNigth(props) {
                             </TouchableOpacity>
                         </View>
                     </View>
+                    {
+                        error2 ? <Text style = {GlobalStyles.errorText}> {error}</Text>:''
+                    }
 
+                    {
+                        email ? (
+                            <View style={{ width: width - 40, flexDirection: 'row', alignItems: 'center', gap: 20 }}>
+                                <Text style={{ fontSize: 16 }}> Invite date :</Text>
+                                <Text style={{ fontSize: 16 }}>{email}</Text>
+                            </View>
+                        ) : (
+                            <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { backgroundColor: 'transparent', borderWidth: 2 }]}
+                                onPress={() => {
+                                    setOpenModal(true)
+                                }}
+                            >
+                                <Text style={[GlobalStyles.btnText, { color: '#000' }]}>
+                                    Invite your date
+                                </Text>
+                            </TouchableOpacity>
+                        )}
 
-                    <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { backgroundColor: 'transparent', borderWidth: 2 }]}
-                        onPress={() => {
-                            setOpenModal(true)
-                        }}
-                    >
-                        <Text style={[GlobalStyles.btnText, { color: '#000' }]}>
-                            Invite your date
-                        </Text>
-                    </TouchableOpacity>
                 </View>
-
-                <TouchableOpacity style={GlobalStyles.reqtengularBtn}
-
+                {
+                    loading ?(
+                        <ActivityIndicator size = {'large'} color={colors.blueColor} />
+                    ):(
+                         <TouchableOpacity style={GlobalStyles.reqtengularBtn}
+                    onPress={inviteDate}
                 >
                     <Text style={GlobalStyles.btnText}>
                         Submit
                     </Text>
                 </TouchableOpacity>
+                    )
+                }
+
+               
 
 
 
@@ -258,6 +318,8 @@ export default function PlanDateNigth(props) {
 
                                     <TouchableOpacity onPress={() => {
                                         setOpenModal(false)
+                                        setEmail(null)
+                                        setDescription(null)
                                     }}>
                                         <Image source={require('../../assets/images/close.png')}
                                             style={GlobalStyles.backBtnImage}
@@ -272,8 +334,15 @@ export default function PlanDateNigth(props) {
                                         Email
                                     </Text>
                                     <TextInput
+                                        autoCapitalize='none'
+                                        autoCorrect={false} spellCheck={false}
                                         style={[GlobalStyles.textInput, { marginTop: 5 }]}
-                                        placeholder='Enter city/state'
+                                        placeholder='Enter email'
+                                        value={email}
+                                        onChangeText={(text) => {
+                                            setError(null)
+                                            setEmail(text)
+                                        }}
                                     />
 
                                     <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, marginTop: 20 / 930 * height }}>
@@ -283,11 +352,20 @@ export default function PlanDateNigth(props) {
                                     <TextInput
                                         multiline
                                         placeholder='Text invitation'
+                                        value={description}
+                                        onChangeText={(text) => {
+                                            setDescription(text)
+                                            setError(null)
+                                        }}
                                         style={[GlobalStyles.textInput, { height: 185 / 930 * height, paddingVertical: 15, marginTop: 5 }]}
 
                                     />
                                 </View>
-                                <TouchableOpacity //onPress={close} 
+                                {
+                                    error && <Text style={GlobalStyles.errorText}> {error}</Text>
+
+                                }
+                                <TouchableOpacity onPress={handleSubmit}
                                     style={[GlobalStyles.reqtengularBtn, { marginTop: 20 / 930 * height }]}>
                                     <Text style={[GlobalStyles.btnText,]}>
                                         Submit
@@ -301,73 +379,7 @@ export default function PlanDateNigth(props) {
                 </TouchableWithoutFeedback>
             </Modal>
 
-            {/* Select date popup */}
 
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={openDatePicker}
-            >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <DatePicker
-                            mode="calendar"
-                            // minimumDate={startDate}
-                            selected={startedDate}
-                            onDateChanged={handleChangeDate}
-                            onSelectedChange={(date) => {
-                                setSelectedDate(date)
-
-                            }}
-                            options={{
-                                backgroundColor: "#1c1c1c",
-                                textHeaderColor: "#469ab6",
-                                textDefaultColor: "#FFFFFF",
-                                selectedTextColor: "#FFF",
-                                mainColor: "#469ab6",
-                                textSecondaryColor: "#FFFFFF",
-                                borderColor: "gray",
-                            }}
-                        />
-
-                        <TouchableOpacity onPress={handleOnPressDate}
-                            style={{ backgroundColor: 'grey', paddingVertical: 10, borderRadius: 20, paddingHorizontal: 15 }}>
-                            <Text style={{ color: "white" }}>Close</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
-            {/* Select time popup */}
-
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={openTimePicker}
-            >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-
-                        <DatePicker
-                            mode="time"
-                            minuteInterval={1}
-                            onTimeChange={selectedTime => {
-                                setTime(selectedTime)
-                                setOpenTimePicker(!openTimePicker)
-                                console.log('selected time is', selectedTime)
-                            }}
-                            options={{
-                                backgroundColor: "#1c1c1c",
-                                textHeaderColor: "#469ab6",
-                                textDefaultColor: "#FFFFFF",
-                                selectedTextColor: "#FFF",
-                                mainColor: "#469ab6",
-                                textSecondaryColor: "#FFFFFF",
-                                borderColor: "gray",
-                            }}
-                        />
-                    </View>
-                </View>
-            </Modal>
         </SafeAreaView>
 
     )
@@ -395,6 +407,31 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.50,
         shadowRadius: 7,
         elevation: 5,
+    }, dateTimePickerContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: width - 50,
+        borderWidth: 2,
+        borderColor: colors.greyText,
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+    },
+    text: {
+        color: '#000',
+        fontSize: 18,
+    },
+    clockIcon: {
+        height: 24 / 930 * height,
+        width: 24 / 930 * height,
+    },
+    dateTimePicker: {
+        // position: 'absolute',
+        // top: 0,
+        // width: width - 50,
+        backgroundColor: 'transparent',
+        borderRadius: 10,
     },
 
 })

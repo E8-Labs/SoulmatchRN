@@ -44,7 +44,8 @@
     "react-native-screens": "~3.29.0",
     "react-native-star-rating-widget": "^1.7.3",
     "react-native-svg": "15.2.0",
-    "react-native-wheel-picker-expo": "^0.5.4"
+    "react-native-wheel-picker-expo": "^0.5.4",
+    "expo-font": "~12.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

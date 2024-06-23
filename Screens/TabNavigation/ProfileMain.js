@@ -45,6 +45,10 @@ export default function ProfileMain(props) {
     try {
       close()
       await AsyncStorage.removeItem("USER")
+      await AsyncStorage.removeItem("FilterDiscovers")
+      await AsyncStorage.removeItem("TempFilters")
+      await AsyncStorage.removeItem("UserAnswers")
+      
       props.navigation.navigate('LoginUser')
     } catch (error) {
       console.log(error)
@@ -185,7 +189,7 @@ export default function ProfileMain(props) {
                       style={styles.imageStyle}
                     />
                     <Text style={styles.text}>
-                      Interest
+                      Interests
                     </Text>
                   </View>
                   <Image source={require('../../assets/images/farwordArrowIcon.png')}

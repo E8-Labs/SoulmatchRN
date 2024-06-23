@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, TouchableOpacity,  Dimensions, FlatList, SafeAreaView, ScrollView, Settings } from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions, FlatList, SafeAreaView, ScrollView, Settings, ActivityIndicator } from 'react-native';
 import customFonts from '../../assets/fonts/Fonts'
 import { useFocusEffect } from '@react-navigation/native';
 import GlobalStyles from '../../assets/styles/GlobalStyles'
@@ -11,56 +11,96 @@ const { height, width } = Dimensions.get('window')
 
 export default function DatesContainer({ navigation }) {
 
-    const [selectedCategory, setSelectedCategory] = useState(1)
+    const [selectedCategory, setSelectedCategory] = useState(-1)
     const [dateNights, setDateNights] = useState([])
     const [recommendedDates, SetRecommendedDates] = useState([])
     const [upComingDates, setUpComingDates] = useState([])
+    const [categories, setCategories] = useState([])
+    const [loading, setLoading] = useState(false)
 
-    const categories = [
-        {
-            id: 1,
-            name: "All"
-        },
-        {
-            id: 2,
-            name: "Culinary Adventure"
-        },
-        {
-            id: 3,
-            name: "Outdoor Escapades"
-        },
-        {
-            id: 4,
-            name: "Cultural Experiences"
-        },
-        {
-            id: 5,
-            name: "Relaxation Retreats"
-        },
-        {
-            id: 6,
-            name: "Fun & Games"
-        },
-
-    ]
-    useFocusEffect(
-        React.useCallback(() => {
-            console.log("Use Focus Effect")
-            getDates()
-        }, [])
-    );
+    
+    // ]
+    // useFocusEffect(
+    //     React.useCallback(() => {
+    //         console.log("Use Focus Effect")
+    //         getDates()
+    //     }, [])
+    // );
     useEffect(() => {
         getDates()
+        getDateCategories()
     }, [])
+    useEffect(() => {
+        getDates()
+    }, [selectedCategory])
+
+
+
+    const getDateCategories = async () => {
+        try {
+            console.log("trying to get date category")
+            const data = await AsyncStorage.getItem('USER')
+            if (data) {
+                let d = JSON.parse(data)
+                let AuthToken = d.token
+
+                const result = await fetch(ApisPath.ApiGetDateCategories, {
+                    'method': 'get',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + AuthToken
+                    }
+                });
+                if (result) {
+                    const json = await result.json();
+                    if (json.status === true) {
+                        console.log('date categories are ', json.data)
+                        let allCats = [{
+                            id: -1,
+                            name: "All"
+                        }]
+                        let merged = [...allCats, ...json.data]
+                        setCategories(merged)
+
+                    } else {
+                        console.log('date catogries message', json.message)
+                    }
+                    // setApiCategories(DATA.data.name);
+                    // const apiData = DATA.data;
+                    // const transformedData = apiData.map(item => ({
+                    //     value: item.id,
+                    //     label: item.name
+                    // }));
+
+                    // // Set the transformed data to ApiCategories
+                    // setApiCategories(transformedData);
+                    // // console.log('Resposne from api is', DATA.data)
+                }
+            }
+        } catch (e) {
+            console.log('error finding in date catogories ', e)
+        }
+
+    }
 
     const getDates = async () => {
         console.log('trying to get dates')
+        setLoading(true)
         const data = await AsyncStorage.getItem("USER")
         try {
             if (data) {
                 let d = JSON.parse(data)
+                let apiUrl = null
+                if (selectedCategory !== -1) {
+                    // console.log('object', object)
+                    apiUrl = ApisPath.ApiGetDates + `?category=${selectedCategory}`
+                    console.log('api url is', apiUrl)
+                    // return
+                } else {
+                    apiUrl = ApisPath.ApiGetDates
+                }
 
-                const result = await fetch(ApisPath.ApiGetDates, {
+                const result = await fetch(apiUrl, {
                     method: 'get',
                     headers: {
                         'Content-Type': 'application/json',
@@ -69,10 +109,10 @@ export default function DatesContainer({ navigation }) {
                 })
                 // console.log('result', result)
                 if (result) {
-
+                    setLoading(false)
                     let json = await result.json()
                     if (json.status === true) {
-                        console.log('dates are', json.data)
+                        console.log('get dates are', json.data)
                         setDateNights(json.data.dateNights)
                         SetRecommendedDates(json.data.recommended)
                         setUpComingDates(json.data.upcoming)
@@ -87,12 +127,25 @@ export default function DatesContainer({ navigation }) {
         }
 
     }
+    const getBudget = (item) =>{
+        console.log('max budget is', item.maxBudget)
+        if(item.minBudget ===0 && item.axBudget === 20){
+            return "$"
+        } else if(item.minBudget === 20 && item.maxBudget === 50){
+            return "$$"
+        }else if(item.minBudget === 50 && item.maxBudget === 80){
+            return "$$$"
+        }else if(item.minBudget > 80){
+            return "$$$$"
+        }
+    }
 
     return (
 
         <SafeAreaView style={{ alignItems: 'center' }}>
             <View style={{ alignItems: 'center', height: height * 0.76 }}>
                 <ScrollView style={{}} showsVerticalScrollIndicator={false}>
+
                     <View style={{ alignItems: 'center' }}>
                         <View style={{ width: width, marginTop: 25, height: 43 / 930 * height }}>
                             {/* category  */}
@@ -100,6 +153,7 @@ export default function DatesContainer({ navigation }) {
                                 showsHorizontalScrollIndicator={false}
                                 horizontal
                                 data={categories}
+                                keyExtractor={(item) => item.id.toString()}
                                 renderItem={({ item }) => (
                                     <View style={{ alignItems: 'center', marginLeft: 8 }}>
                                         <TouchableOpacity onPress={() => {
@@ -120,213 +174,243 @@ export default function DatesContainer({ navigation }) {
                                 )}
                             />
                         </View>
+                        {
+                            loading ? (
+                                <ActivityIndicator size={'large'} color={colors.blueColor} style={{ height: height * 0.8, alignSelf: 'center' }} />
+                            ) : (
 
-                        <View style={{
-                            width: width - 60 / 430 * width, flexDirection: 'row', flexDirection: 'row', alignItems: 'center',
-                            justifyContent: 'space-between', marginTop: 24 / 930 * height, marginBottom: 20 / 930 * height
-                        }}>
-                            <Text style={{ fontSize: 18, fontFamily: customFonts.meduim }}>Date nights</Text>
-                            {/* <TouchableOpacity> */}
-                                <Image source={require('../../assets/images/farwordArrowIcon.png')}
-                                    style={GlobalStyles.backBtnImage}
-                                />
-                            {/* </TouchableOpacity> */}
-                        </View>
-
-                        {/* date nights */}
-
-                        <FlatList
-                            horizontal
-                            showsHorizontalScrollIndicator={false}
-                            data={dateNights && dateNights}
-                            renderItem={({ item }) => (
-
-
-
-                                <TouchableOpacity onPress={() => {
-                                    navigation.navigate('SelectedDateDetails',{
-                                        data:item
-                                    })
-
-                                }}>
+                                <>
                                     <View style={{
-                                        alignItems: 'center', padding: 12, borderWidth: 1, borderColor: colors.greyText, borderRadius: 10,
-                                        marginLeft: 15 / 430 * width, flexDirection: 'column', gap: 10 / 930 * height
+                                        width: width - 60 / 430 * width, flexDirection: 'row', flexDirection: 'row', alignItems: 'center',
+                                        justifyContent: 'space-between', marginTop: 24 / 930 * height, marginBottom: 20 / 930 * height
                                     }}>
-                                        <Image source={{ uri: item.imageUrl }}
-                                            style={{ height: 98 / 930 * height, width: 158 / 430 * width, borderRadius: 10, resizeMode: 'cover' }}
+                                        <Text style={{ fontSize: 18, fontFamily: customFonts.meduim }}>Date nights</Text>
+                                        {/* <TouchableOpacity> */}
+                                        <Image source={require('../../assets/images/farwordArrowIcon.png')}
+                                            style={GlobalStyles.backBtnImage}
                                         />
-                                        <View style={{ alignItems: 'flex-start', flexDirection: 'column', width: 150 / 430 * width, }}>
-                                            <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, }}>{item.name}</Text>
-                                        </View>
-
-                                        <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
-                                            <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Budget</Text>
-                                            <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{item.maxBudget}$</Text>
-                                        </View>
-                                        <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
-                                            <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Ratings</Text>
-                                            <View style={{ flexDirection: 'row', gap: 4, alignItems: 'center' }}>
-                                                <Image source={require('../../assets/images/star.png')}
-                                                    style={{ height: 12 / 930 * height, width: 12 / 930 * height }}
-                                                />
-                                                <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{item.rating}</Text>
-                                            </View>
-
-                                        </View>
-                                        <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
-                                            <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Category</Text>
-                                            <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{item.Category.name}</Text>
-                                        </View>
-
+                                        {/* </TouchableOpacity> */}
                                     </View>
-                                </TouchableOpacity>
-                            )}
-                        />
-                        {/* 
+
+                                    {/* date nights */}
+                                    {
+                                        dateNights && dateNights.length > 0 ? (
+
+                                            <FlatList
+                                                horizontal
+                                                style={{ width: width }}
+                                                showsHorizontalScrollIndicator={false}
+                                                data={dateNights && dateNights}
+                                                renderItem={({ item }) => (
+
+
+                                                    <TouchableOpacity onPress={() => {
+                                                        navigation.navigate('SelectedDateDetails', {
+                                                            data: item
+                                                        })
+
+                                                    }}
+                                                        style={{ alignSelf: 'flex-start', }}
+                                                    >
+                                                        <View style={{
+                                                            alignItems: 'center', padding: 12, borderWidth: 1, borderColor: colors.greyText, borderRadius: 10,
+                                                            marginLeft: 15 / 430 * width, flexDirection: 'column', gap: 10 / 930 * height
+                                                        }}>
+                                                            <Image source={{ uri: item.imageUrl }}
+                                                                style={{ height: 98 / 930 * height, width: 158 / 430 * width, borderRadius: 10, resizeMode: 'cover' }}
+                                                            />
+                                                            <View style={{ alignItems: 'flex-start', flexDirection: 'column', width: 150 / 430 * width, }}>
+                                                                <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, }}>{item.name}</Text>
+                                                            </View>
+
+                                                            <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
+                                                                <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Budget</Text>
+                                                                <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{getBudget(item)}</Text>
+                                                            </View>
+                                                            <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
+                                                                <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Ratings</Text>
+                                                                <View style={{ flexDirection: 'row', gap: 4, alignItems: 'center' }}>
+                                                                    <Image source={require('../../assets/images/star.png')}
+                                                                        style={{ height: 12 / 930 * height, width: 12 / 930 * height }}
+                                                                    />
+                                                                    <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{item.rating}</Text>
+                                                                </View>
+
+                                                            </View>
+                                                            <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
+                                                                <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Category</Text>
+                                                                <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{item.Category.name}</Text>
+                                                            </View>
+
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                )}
+                                            />
+                                        ) : (
+                                            <Text style={{ fontSize: 18 }}>No dates</Text>
+                                        )
+                                    }
+                                    {/* 
                         <DateNightsList navigate={(item) => {
                             console.log('selected date night details are', item)
                             navigation.navigate("SelectedDateDetails")
                         }} /> */}
 
 
-                        <View style={{
-                            width: width - 60 / 430 * width, flexDirection: 'row', flexDirection: 'row', alignItems: 'center',
-                            justifyContent: 'space-between', marginTop: 24 / 930 * height, marginBottom: 20 / 930 * height
-                        }}>
-                            <Text style={{ fontSize: 18, fontFamily: customFonts.meduim }}>Recommended</Text>
-                            {/* <TouchableOpacity> */}
-                                <Image source={require('../../assets/images/farwordArrowIcon.png')}
-                                    style={GlobalStyles.backBtnImage}
-                                />
-
-                            {/* </TouchableOpacity> */}
-                        </View>
-
-                        <FlatList
-                            horizontal
-                            showsHorizontalScrollIndicator={false}
-                            data={recommendedDates && recommendedDates}
-                            renderItem={({ item }) => (
-                                <TouchableOpacity onPress = {()=>{
-                                    navigation.navigate('SelectedDateDetails',{
-                                        data:item
-                                    })
-                                }}>
                                     <View style={{
-                                        alignItems: 'center', padding: 12, borderWidth: 1, borderColor: colors.greyText, borderRadius: 10,
-                                        marginLeft: 15 / 430 * width, flexDirection: 'column', gap: 10 / 930 * height
+                                        width: width - 60 / 430 * width, flexDirection: 'row', flexDirection: 'row', alignItems: 'center',
+                                        justifyContent: 'space-between', marginTop: 24 / 930 * height, marginBottom: 20 / 930 * height
                                     }}>
-                                        <Image source={{ uri: item.imageUrl }}
-                                            style={{ height: 98 / 930 * height, width: 158 / 430 * width, borderRadius: 10, resizeMode: 'cover' }}
+                                        <Text style={{ fontSize: 18, fontFamily: customFonts.meduim }}>Recommended</Text>
+                                        {/* <TouchableOpacity> */}
+                                        <Image source={require('../../assets/images/farwordArrowIcon.png')}
+                                            style={GlobalStyles.backBtnImage}
                                         />
-                                        <View style={{ alignItems: 'flex-start', flexDirection: 'column', width: 150 / 430 * width, }}>
-                                            <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, }}>{item.name}</Text>
-                                        </View>
 
-                                        <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
-                                            <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Budget</Text>
-                                            <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{item.maxBudget}$</Text>
-                                        </View>
-                                        <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
-                                            <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Ratings</Text>
-                                            <View style={{ flexDirection: 'row', gap: 4, alignItems: 'center' }}>
-                                                <Image source={require('../../assets/images/star.png')}
-                                                    style={{ height: 12 / 930 * height, width: 12 / 930 * height }}
-                                                />
-                                                <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{item.rating}</Text>
-                                            </View>
-
-                                        </View>
-                                        <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
-                                            <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Category</Text>
-                                            <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{item.Category.name}</Text>
-                                        </View>
-
+                                        {/* </TouchableOpacity> */}
                                     </View>
-                                </TouchableOpacity>
-                            )}
-                        />
+                                    {
+                                        recommendedDates && recommendedDates.length > 0 ? (
+
+                                            <FlatList
+                                                style={{ width: width }}
+                                                horizontal
+                                                showsHorizontalScrollIndicator={false}
+                                                data={recommendedDates && recommendedDates}
+                                                renderItem={({ item }) => (
+                                                    <TouchableOpacity onPress={() => {
+                                                        navigation.navigate('SelectedDateDetails', {
+                                                            data: item
+                                                        })
+                                                    }}
+                                                        style={{ alignItems: 'flex-start' }}
+
+                                                    >
+                                                        <View style={{
+                                                            alignItems: 'center', padding: 12, borderWidth: 1, borderColor: colors.greyText, borderRadius: 10,
+                                                            marginLeft: 15 / 430 * width, flexDirection: 'column', gap: 10 / 930 * height
+                                                        }}>
+                                                            <Image source={{ uri: item.imageUrl }}
+                                                                style={{ height: 98 / 930 * height, width: 158 / 430 * width, borderRadius: 10, resizeMode: 'cover' }}
+                                                            />
+                                                            <View style={{ alignItems: 'flex-start', flexDirection: 'column', width: 150 / 430 * width, }}>
+                                                                <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, }}>{item.name}</Text>
+                                                            </View>
+
+                                                            <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
+                                                                <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Budget</Text>
+                                                                <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{item.maxBudget}$</Text>
+                                                            </View>
+                                                            <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
+                                                                <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Ratings</Text>
+                                                                <View style={{ flexDirection: 'row', gap: 4, alignItems: 'center' }}>
+                                                                    <Image source={require('../../assets/images/star.png')}
+                                                                        style={{ height: 12 / 930 * height, width: 12 / 930 * height }}
+                                                                    />
+                                                                    <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{item.rating}</Text>
+                                                                </View>
+
+                                                            </View>
+                                                            <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
+                                                                <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Category</Text>
+                                                                <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{item.Category.name}</Text>
+                                                            </View>
+
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                )}
+                                            />
+                                        ) : (
+                                            <Text style={{ fontSize: 18 }}>No dates</Text>
+                                        )
+                                    }
 
 
 
-                        <View style={{ width: width - 60 / 430 * width, alignItems: 'flex-start', marginTop: 22 / 930 * height,marginBottom: 22 / 930 * height }}>
-                            <Text style={{ fontSize: 18, fontFamily: customFonts.meduim }}>Upcoming Dates</Text>
-                        </View>
+                                    <View style={{ width: width - 60 / 430 * width, alignItems: 'flex-start', marginTop: 22 / 930 * height, marginBottom: 22 / 930 * height }}>
+                                        <Text style={{ fontSize: 18, fontFamily: customFonts.meduim }}>Upcoming Dates</Text>
+                                    </View>
 
-                        {/* upcoming dates */}
+                                    {/* upcoming dates */}
 
-                        {
-                            upComingDates && upComingDates.length > 0 ? (
+                                    {
+                                        upComingDates && upComingDates.length > 0 ? (
 
-                                <FlatList
-                                style = {{marginBottom:30}}
-                                    horizontal
-                                    showsHorizontalScrollIndicator={false}
-                                    data={upComingDates && upComingDates}
-                                    renderItem={({ item }) => (
-                                        // <TouchableOpacity 
-                                        //     onPress = {()=>{
-                                        //         navigation.navigate('SelectedDateDetails',{
-                                        //             data:item
-                                        //         })            
-                                        //     }}
-                                        // >
-                                            <View style={{
-                                                alignItems: 'center', padding: 12, borderWidth: 1, borderColor: colors.greyText, borderRadius: 10,
-                                                marginLeft: 15 / 430 * width, flexDirection: 'column', gap: 10 / 930 * height
-                                            }}>
-                                                <Image source={{ uri: item.datePlace.imageUrl }}
-                                                    style={{ height: 98 / 930 * height, width: 158 / 430 * width, borderRadius: 10, resizeMode: 'cover' }}
+                                            <FlatList
+                                                style={{ marginBottom: 30, width: width }}
+                                                horizontal
+                                                showsHorizontalScrollIndicator={false}
+                                                data={upComingDates && upComingDates}
+                                                renderItem={({ item }) => (
+                                                    // <TouchableOpacity 
+                                                    //     onPress = {()=>{
+                                                    //         navigation.navigate('SelectedDateDetails',{
+                                                    //             data:item
+                                                    //         })            
+                                                    //     }}
+                                                    // >
+                                                    <View style={{
+                                                        alignItems: 'flex-start', padding: 12, borderWidth: 1, borderColor: colors.greyText, borderRadius: 10,
+                                                        marginLeft: 15 / 430 * width, flexDirection: 'column', gap: 10 / 930 * height
+                                                    }}>
+                                                        <Image source={{ uri: item.datePlace.imageUrl }}
+                                                            style={{ height: 98 / 930 * height, width: 158 / 430 * width, borderRadius: 10, resizeMode: 'cover' }}
+                                                        />
+                                                        <View style={{ alignItems: 'flex-start', flexDirection: 'column', width: 150 / 430 * width, }}>
+                                                            <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, }}>{item.datePlace.name}</Text>
+                                                        </View>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, alignSelf: 'flex-start' }}>
+                                                            <Image source={{ uri: item.dateUser.profile_image }}
+                                                                style={{
+                                                                    height: 40 / 930 * height, width: 40 / 930 * height, borderRadius: 20, resizeMode: 'cover'
+                                                                }}
+                                                            />
+                                                            <Text style={{ fontSize: 18, color: '' }}>{item.dateUser.first_name}</Text>
+                                                        </View>
+
+
+                                                    </View>
+                                                    // </TouchableOpacity>
+                                                )}
+                                            />
+
+                                        ) : (
+                                            <>
+
+                                                <Image source={require('../../assets/images/activeDates.png')}
+                                                    style={{ height: 80 / 930 * height, width: 80 / 930 * height, marginTop: 30 / 930 * height }}
                                                 />
-                                                <View style={{ alignItems: 'flex-start', flexDirection: 'column', width: 150 / 430 * width, }}>
-                                                    <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, }}>{item.datePlace.name}</Text>
-                                                </View>
-                                                <View style = {{flexDirection:'row',alignItems:'center',gap:10,alignSelf:'flex-start'}}> 
-                                                    <Image source={{uri:item.dateUser.profile_image}} 
-                                                        style = {{
-                                                            height:40/930*height,width:40/930*height,borderRadius:20,resizeMode:'cover'
-                                                        }}
-                                                    />
-                                                    <Text style = {{fontSize:18,color:''}}>{item.dateUser.first_name}</Text>
-                                                </View>
 
+                                                <Text style=
+                                                    {{
+                                                        width: 268 / 430 * width, color: "#666666", fontSize: 16, fontFamily: customFonts.regular, textAlign: 'center', marginTop: 18 / 930 * height
+                                                    }}>
+                                                    You don't have any upcoming dates planned
+                                                </Text>
 
-                                            </View>
-                                        // </TouchableOpacity>
-                                    )}
-                                />
+                                                <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 40 / 930 * height, marginBottom: 50 }]}
+                                                    onPress={() => {
+                                                        navigation.navigate("PlanDateNight")
+                                                    }}
+                                                >
+                                                    <Text style={GlobalStyles.btnText}>
+                                                        Plan a date night
+                                                    </Text>
+                                                </TouchableOpacity>
 
-                            ) : (
-                                <>
-
-                                    <Image source={require('../../assets/images/activeDates.png')}
-                                        style={{ height: 80 / 930 * height, width: 80 / 930 * height, marginTop: 30 / 930 * height }}
-                                    />
-
-                                    <Text style=
-                                        {{
-                                            width: 268 / 430 * width, color: "#666666", fontSize: 16, fontFamily: customFonts.regular, textAlign: 'center', marginTop: 18 / 930 * height
-                                        }}>
-                                        You don't have any upcoming dates planned
-                                    </Text>
-
-                                    <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 40 / 930 * height, marginBottom: 50 }]}
-                                        onPress={() => {
-                                            navigation.navigate("PlanDateNight")
-                                        }}
-                                    >
-                                        <Text style={GlobalStyles.btnText}>
-                                            Plan a date night
-                                        </Text>
-                                    </TouchableOpacity>
-
+                                            </>
+                                        )
+                                    }
                                 </>
-                            )
-                        }
+                            )}
+
+
+
 
 
                     </View>
+
+
                 </ScrollView>
             </View>
         </SafeAreaView>

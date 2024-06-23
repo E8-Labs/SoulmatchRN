@@ -9,6 +9,9 @@ import { useEffect } from 'react';
 import moment from 'moment';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const placholder = require('../../assets/images/imagePlaceholder.webp')
+
 const { height, width } = Dimensions.get('window');
 const profile = require('../../assets/images/profileImage.png')
 
@@ -50,7 +53,7 @@ useEffect(()=>{
                     setShowIndicator(false)
                     let json = await result.json()
                     if (json.status === true) {
-                        console.log('get messages list is', json.data)
+                        console.log('get messages list is', json.data[0].users[1])
                         setMesssageList(json.data)
 
                     } else {
@@ -87,7 +90,7 @@ useEffect(()=>{
                                         }} >
                                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 60, alignSelf: 'center', paddingTop: 20, }}>
                                                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                                                    <Image source={{ uri: item.users[0].profile_image }}
+                                                    <Image source={item.users[0]?{ uri: item.users[0].profile_image }:placholder}
                                                         onLoadStart={() => {
                                                             setLoadImage(true)
                                                         }}
@@ -111,7 +114,7 @@ useEffect(()=>{
 
                                                     <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 3 }}>
                                                         <Text style={{ fontSize: 14, fontFamily: customFonts.meduim, color: item.unread ? "#000" : colors.unreadColor }}>
-                                                            {item.users[0].first_name} {item.users[0].last_name}
+                                                            {item.users[0]&&item.users[0].first_name} {item.users[0]&&item.users[0].last_name}
                                                         </Text>
                                                         <Text numberOfLines={1} lineBreakMode='tail' style={{
                                                             fontSize: 12, fontFamily: customFonts.regular, width: 230 / 430 * width, color: item.unread ? "#000" : colors.unreadColor
