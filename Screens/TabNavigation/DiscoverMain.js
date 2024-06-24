@@ -101,6 +101,10 @@ export default function DiscoverMain(props) {
               getDiscover()
             }
           }}
+          LastProfileSwiped={()=>{
+            setDiscovers([])
+            getDiscover()
+          }}
 
             onMenuClick={(data) => {
               if (data.navigate === 'LikesList') {

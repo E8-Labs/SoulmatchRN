@@ -30,7 +30,7 @@ const male = require('../../assets/images/maleIcon.png');
 const female = require('../../assets/images/femaleIcon.png');
 const nonBinary = require('../../assets/images/nonBinaryIcon.png');
 
-export default function ProfileDetail({ navigation, fromScreen, data, onMenuClick, filtersData }) {
+export default function ProfileDetail({ navigation, fromScreen, data, onMenuClick, filtersData, LastProfileSwiped }) {
 
     // const fromScreen = route.params.fromScreen
 
@@ -136,10 +136,16 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
     };
 
     const handleNext = () => {
-        fadeOut(() => {
-            setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, data.length - 1));
-            fadeIn();
-        });
+        if(currentIndex === data.length - 1){
+            LastProfileSwiped()
+        }
+        else{
+            fadeOut(() => {
+                setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, data.length - 1));
+                fadeIn();
+            });
+        }
+        
     };
     const handleLike = async () => {
         setLikeIndicator(true)
@@ -168,7 +174,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                     setLikeIndicator(false)
                     let json = await result.json()
                     if (json.status === true) {
-                        console.log('profile liked', json.data)
+                        console.log('profile liked', json)
                         console.log('Liked:', data[currentIndex].id);
                         if (typeof json.match !== undefined && json.match === true) {
                             let routeData = {
