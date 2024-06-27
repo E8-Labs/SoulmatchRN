@@ -77,7 +77,15 @@
     },
     "plugins": [
       [
-        "expo-font"
+        "expo-font",
+      {
+        "fonts": [
+          "node_modules/@expo-google-fonts/inter/Poppins_400Regular.ttf",
+          "node_modules/@expo-google-fonts/inter/Poppins_500Medium.ttf",
+          "node_modules/@expo-google-fonts/inter/Poppins_700Bold.ttf",
+          "node_modules/@expo-google-fonts/inter/Poppins_600SemiBold.ttf"
+        ]
+      }
        
       ],
       "expo-apple-authentication",
@@ -96,8 +104,8 @@
           "iosUrlScheme": "com.googleusercontent.apps.532960006063-0lrmd4ktecke70t7ncjr2v7vapt230h6"
         }
       ],
-      "expo-av",
-      "expo-font"
+      "expo-av"
+      
     ],
     "extra": {
       "eas": {

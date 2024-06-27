@@ -1,6 +1,6 @@
-import { useCallback, useEffect ,useState} from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Dimensions ,Platform,Settings} from 'react-native';
+import { StyleSheet, Text, View, Dimensions, Platform, Settings } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -15,7 +15,7 @@ import GetEmail from './Screens/ForgotPasswordFlow/GetEmail'; 4
 import ResetPassword from './Screens/ForgotPasswordFlow/ResetPassword'
 import EmailVerification from './Screens/ForgotPasswordFlow/EmailVerification';
 import SuccessfullyPasswordChanged from './Screens/ForgotPasswordFlow/SuccessfullyPasswordChanged';
-import { useFonts } from 'expo-font';
+// import { useFonts } from 'expo-font';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabBarContainer from './Screens/TabNavigation/TabBarContainer';
@@ -77,6 +77,7 @@ import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import ApisPath from './lib/ApisPath/ApisPath';
 import colors from './assets/colors/Colors';
+// import { useFonts, Poppins_400Regular as PoppinsRegular, Poppins_500Medium, Poppins_700Bold as PoppinsBold } from '@expo-google-fonts/poppins';
 
 
 const { screenHeight, screenWidth } = Dimensions.get('window');
@@ -107,161 +108,138 @@ import AdminNotifications from './Screens/Admin/ui/Dashboarddetails/AdminNotific
 import VideoPlayer from './Components/VideoPlayer';
 
 
+import { useFonts, Poppins_400Regular as PoppinsRegular, Poppins_500Medium as PoppinsMedium, Poppins_700Bold as PoppinsBold, Poppins_600SemiBold as PoppinsSemiBold } from '@expo-google-fonts/poppins';
 
 export default function App() {
+  // console.log("Font path log")
+  // console.log(require('./assets/fonts/Poppins-Bold.ttf'));
+  // console.log('Font Path Log End')
 
-  const [fontsLoaded, fontError] = useFonts({
-    "PoppinsRegular": require('./assets/fonts/Poppins/Poppins-Regular.ttf'),
-    "PoppinsBold": require('./assets/fonts/Poppins/Poppins-Bold.ttf'),
-    "PoppinsMedium": require('./assets/fonts/Poppins/Poppins-Medium.ttf'),
-    "PoppinsSemiBold": require('./assets/fonts/Poppins/Poppins-SemiBold.ttf'),
+  let [fontsLoaded] = useFonts({
+    PoppinsRegular,
+    PoppinsMedium,
+    PoppinsBold,
+    PoppinsSemiBold
+  });
 
-  })
+  
 
 
   const [expoPushToken, setExpoPushToken] = useState('');
 
-  useEffect(()=>{
+  useEffect(() => {
     getNotificationPermission()
-  },[])
+  }, [])
   const updateProfile = async (token) => {
     console.log('trying to update profile', token)
     const data = await AsyncStorage.getItem("USER")
     try {
-        if (data) {
-            let d = JSON.parse(data)
-            let body = JSON.stringify({
-                fcm_token: token
-            })
-            console.log('boddy is ', body)
-            // return
+      if (data) {
+        let d = JSON.parse(data)
+        let body = JSON.stringify({
+          fcm_token: token
+        })
+        console.log('boddy is ', body)
+        // return
 
-            const result = await fetch(ApisPath.ApiUpdateProfile, {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + d.token
-                },
-                body: body
-            })
-            if (result) {
-                let json = await result.json()
-                if (json.status === true) {
-                    // console.log('updated profile data is', json.data)
-                    d.user=json.data
-                               AsyncStorage.setItem("USER",JSON.stringify(d))
+        const result = await fetch(ApisPath.ApiUpdateProfile, {
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + d.token
+          },
+          body: body
+        })
+        if (result) {
+          let json = await result.json()
+          if (json.status === true) {
+            // console.log('updated profile data is', json.data)
+            d.user = json.data
+            AsyncStorage.setItem("USER", JSON.stringify(d))
 
-                    // navigation.navigate("CongratulationsScreen")
-                } else {
-                    console.log('json message is', json.message)
-                }
-            }
+            // navigation.navigate("CongratulationsScreen")
+          } else {
+            console.log('json message is', json.message)
+          }
         }
+      }
 
     } catch (error) {
-        console.log('error finding in update profile', error)
+      console.log('error finding in update profile', error)
     }
-}
+  }
 
 
   const getNotificationPermission = () => {
 
     console.log('enter in function')
     registerForPushNotificationsAsync().then(
-        (token) => {
-            if (token) {
-                setExpoPushToken(token)
-            }
-            console.log('token', token)
-            updateProfile(token)
+      (token) => {
+        if (token) {
+          setExpoPushToken(token)
         }
-    );
-}
-
-
-async function registerForPushNotificationsAsync() {
-    let token;
-
-    if (Platform.OS === 'android') {
-        await Notifications.setNotificationChannelAsync('default', {
-            name: 'default',
-            importance: Notifications.AndroidImportance.MAX,
-            vibrationPattern: [0, 250, 250, 250],
-            lightColor: '#FF231F7C',
-        });
-    }
-
-    if (Device.isDevice) {
-        const { status: existingStatus } = await Notifications.getPermissionsAsync();
-        let finalStatus = existingStatus;
-        if (existingStatus !== 'granted') {
-            const { status } = await Notifications.requestPermissionsAsync();
-            finalStatus = status;
-        }
-        if (finalStatus !== 'granted') {
-            alert('Failed to get push token for  notification!');
-            return;
-        }
-        // Learn more about projectId:
-        // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
-        // EAS projectId is used here.
-        try {
-            const projectId =
-                Constants?.expoConfig?.extra?.eas?.projectId ??
-                Constants?.easConfig?.projectId;
-            if (!projectId) {
-                throw new Error('Project ID not found');
-            }
-            token = (
-                await Notifications.getExpoPushTokenAsync({
-                    projectId,
-                })
-            ).data;
-            console.log(token);
-        } catch (e) {
-            token = `${e}`;
-        }
-    } else {
-        // alert('Must use physical device for  Notifications');
-    }
-
-    return token;
-}
-
-  async function TestPusher() {
-    const pusher = Pusher.getInstance();
-
-    await pusher.init({
-      apiKey: "404f727e86e2044ed1f4",
-      cluster: "us3"
-    });
-
-    await pusher.connect();
-    await pusher.subscribe({
-      channelName: "my-channel",
-      onEvent: (event) => {
-        console.log(`Event received: ${event}`);
+        console.log('token', token)
+        updateProfile(token)
       }
-    });
+    );
   }
 
 
+  async function registerForPushNotificationsAsync() {
+    let token;
 
-  useEffect(() => {
-    // useCallback(()=>{
-      //  TestPusher()
-    // })
-  })
-
-  useEffect(() => {
-    if (fontsLoaded || fontError) {
-      console.log("Loading fonts ", fontsLoaded)
-      console.log("Font error ", fontError)
+    if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
     }
-  }, [fontsLoaded, fontError])
+
+    if (Device.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for  notification!');
+        return;
+      }
+      // Learn more about projectId:
+      // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
+      // EAS projectId is used here.
+      try {
+        const projectId =
+          Constants?.expoConfig?.extra?.eas?.projectId ??
+          Constants?.easConfig?.projectId;
+        if (!projectId) {
+          throw new Error('Project ID not found');
+        }
+        token = (
+          await Notifications.getExpoPushTokenAsync({
+            projectId,
+          })
+        ).data;
+        console.log(token);
+      } catch (e) {
+        token = `${e}`;
+      }
+    } else {
+      // alert('Must use physical device for  Notifications');
+    }
+
+    return token;
+  }
+
+ 
 
 
-  if (!fontsLoaded && !fontError) {
+
+
+  if (!fontsLoaded) {
     return (
 
       <View>
@@ -275,7 +253,7 @@ async function registerForPushNotificationsAsync() {
       <NavigationContainer>
         <Stack.Navigator initialRouteName="SplashMainScreen" screenOptions={{ headerShown: false }}>
           <Stack.Screen name="SplashMainScreen" component={SplashMainScreen} options={{ gestureEnabled: false }} />
-          <Stack.Screen name="SlideContainer" component={SlideContainer} options={{ gestureEnabled: false, headerShown: false }}/>
+          <Stack.Screen name="SlideContainer" component={SlideContainer} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name="RegisterUser" component={RegisterUser} options={{ gestureEnabled: false }} />
           <Stack.Screen name="LoginUser" component={LoginUser} options={{ gestureEnabled: false }} />
           <Stack.Screen name="GetEmail" component={GetEmail} options={{ gestureEnabled: false }} />
