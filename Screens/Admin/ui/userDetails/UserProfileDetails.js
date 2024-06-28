@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Dimensions, Image, ScrollView, StyleSheet, Modal, Text, TouchableOpacity, View, FlatList, ActivityIndicator } from 'react-native'
+import { Dimensions, ScrollView, StyleSheet, Modal, Text, TouchableOpacity, View, FlatList, ActivityIndicator } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import customFonts from '../../../../assets/fonts/Fonts';
 import colors from '../RangeSlider/Colors';
@@ -8,6 +8,7 @@ import GlobalStyles from '../../../../assets/styles/GlobalStyles'
 import { Video, ResizeMode } from 'expo-av';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Image } from 'react-native';
 
 
 const placholder = require('../../../../assets/images/imagePlaceholder.webp')
@@ -25,7 +26,7 @@ const UserProfileDetails = ({ navigation, route }) => {
     const [UserMedia, setUserMedia] = useState([]);
     const [QuestionAnswers, setQuestionAnswers] = useState([]);
     const [loadImage, setLoadImage] = useState(false);
-    const [loadVideo, SetLoadVideo] = useState(false);
+    const [loadVideo, setLoadVideo] = useState(false);
     const videoRef = React.useRef(null);
     // const videoSource = .answerVideo;
     const [Status, setStatus] = useState({});
@@ -205,7 +206,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                         </Text>
                     </View>
 
-                    <ScrollView style={{ height: height * 0.88 }} showsVerticalScrollIndicator={false}>
+                    <ScrollView style={{ height: height * 0.85 }} showsVerticalScrollIndicator={false}>
 
                         <View>
                             <Image source={ProfileData.profile_image ? { uri: ProfileData.profile_image } : require('../../../../assets/Images3/imagePlaceholder.webp')} style={{ height: 530 / 930 * height, width: 370 / 430 * width, resizeMode: 'cover', borderRadius: 10, marginTop: 10 }} />
@@ -279,7 +280,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                                     style={styles.viewImage}
                                 />
                                 <Text style={styles.viewText}>
-                                    {ProfileData.job_title}
+                                    {ProfileData.school}
                                 </Text>
                             </View>
 
@@ -289,7 +290,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                                 />
                                 <Text style={styles.viewText}>
                                     <Text style={styles.viewText}>
-                                        at {ProfileData.company}
+                                        {ProfileData.job_title} at {ProfileData.company}
                                     </Text>
                                 </Text>
                             </View>
@@ -347,35 +348,28 @@ const UserProfileDetails = ({ navigation, route }) => {
                                                     ) : (
                                                         item.type === "video" ? (
                                                             <>
-                                                                <Video
-                                                                    ref={videoRef}
-                                                                    source={{
-                                                                        uri: item.url
+                                                                <TouchableOpacity
+                                                                    onPress={() => {
+                                                                        navigation.navigate("VideoPlayer", {
+                                                                            data: {
+                                                                                url: item.url
+                                                                            }
+                                                                        })
                                                                     }}
-                                                                    style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
-                                                                    useNativeControls
-                                                                    resizeMode={ResizeMode.COVER}
-                                                                    isLooping={true}
-                                                                    // shouldPlay={isPlaying}
-                                                                    onPlaybackStatusUpdate={status => {
-                                                                        setStatus(() => status)
-                                                                        setIsPlaying(status.isPlaying);
-                                                                    }}
-                                                                    onLoad={(status) => {
-                                                                        setDuration(status.durationMillis)
-                                                                        setLoadVideo(false)
-                                                                    }} // Set duration when video loads
-                                                                    onLoadStart={() => {
-                                                                        setLoadVideo(true)
-                                                                    }}
-
-                                                                />
-                                                                {!isPlaying && duration > 0 && (
-                                                                    <View style={styles.durationContainer}>
-                                                                        <Text style={styles.durationText}>{formatDuration(duration)}</Text>
-                                                                    </View>
-                                                                )}
-
+                                                                >
+                                                                    <Image source={{ uri: item.videoThumbnail }}
+                                                                        style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
+                                                                        onLoadEnd={() => {
+                                                                            setLoadVideo(false)
+                                                                        }} onLoadStart={() => { setLoadVideo(true) }}
+                                                                        placeholder={blurhash}
+                                                                        contentFit="cover"
+                                                                        transition={1000}
+                                                                    />
+                                                                    <Image source={require('../../../../assets/images/playIcon.png')}
+                                                                        style={{ height: 50, width: 50, position: 'absolute', bottom: 100 / 930 * height, left: 150 / 430 * width }}
+                                                                    />
+                                                                </TouchableOpacity>
                                                                 {
                                                                     loadVideo ? (
                                                                         <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 180 / 430 * width }} />
@@ -395,7 +389,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                                 <Text style={{ fontSize: 20, fontFamily: customFonts.medium }}>Profile statement questions</Text>
                             </View>
 
-                            <View>
+                            <View style = {{marginBottom:20}}>
                                 <FlatList
                                     scrollEnabled={false}
                                     data={QuestionAnswers}

@@ -206,6 +206,7 @@ export default function ReserveNightScreen({ navigation, route }) {
             <DateTimePicker
               testID="dateTimePicker"
               value={date}
+              minimumDate={new Date()}
               mode={'date'}
               is24Hour={false}
               display="default"
@@ -225,6 +226,7 @@ export default function ReserveNightScreen({ navigation, route }) {
             <DateTimePicker
               testID="dateTimePicker"
               value={time}
+              minimumDate={new Date()}
               mode={"time"}
               is24Hour={false}
               display="default"

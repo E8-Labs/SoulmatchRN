@@ -21,14 +21,14 @@ export default function MessagesList({ navigate }) {
     const [loadImage, setLoadImage] = useState(false)
     const [showIndicator, setShowIndicator] = useState(false)
     const [user, setUser] = useState(false)
-// useFocusEffect(
-//     useCallback(()=>{
-//         getMessagesList()
-//     },[])
-// )
+useFocusEffect(
+    useCallback(()=>{
+        getMessagesList()
+    },[])
+)
 
 useEffect(()=>{
-    getMessagesList()
+    // getMessagesList()
 },[])
 
 
@@ -53,7 +53,7 @@ useEffect(()=>{
                     setShowIndicator(false)
                     let json = await result.json()
                     if (json.status === true) {
-                        console.log('get messages list is', json.data[0].users[1])
+                        console.log('get messages list is', json.data)
                         setMesssageList(json.data)
 
                     } else {

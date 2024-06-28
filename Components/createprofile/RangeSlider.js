@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { View, PanResponder, Text, StyleSheet } from 'react-native';
 import colors from '../../assets/colors/Colors';
 const thumbWidth = 25
-const RangeSlider = ({ width = 300, start = 20, end = 80, minValue = 0, maxValue = 100, minDistanceBetweenSlider = 5, heightSlider = false, rangeStartUpdated, rangeEndUpdated }) => {
+const RangeSlider = ({ width = 300, start = 20, end = 80, minValue = 0, maxValue = 100, minDistanceBetweenSlider = 2, heightSlider = false, rangeStartUpdated, rangeEndUpdated }) => {
   const [range, setRange] = useState({ start: start, end: end });
   const [activeThumb, setActiveThumb] = useState(null);
   const sliderWidth = useRef(width).current;
@@ -11,9 +11,9 @@ const RangeSlider = ({ width = 300, start = 20, end = 80, minValue = 0, maxValue
 
   useEffect(() => {
     setRange({ start: start, end: end })
-    console.log("Height Slider ", heightSlider)
+    // console.log("Height Slider ", heightSlider)
     console.log("Start ", end)
-    console.log("Start range  ", range.end)
+    // console.log("Start range  ", range.end)
   }, [start, end])
   const createPanResponder = (isStart) => {
     return PanResponder.create({
@@ -71,12 +71,12 @@ const RangeSlider = ({ width = 300, start = 20, end = 80, minValue = 0, maxValue
         style={[styles.thumb, { left: `${range.start - (thumbWidth / 4)}%` }]}
         {...startPanResponder.panHandlers}
       />
-      <Text style={[styles.label, { left: `${range.start}%` }]}>{heightSlider ? getHeightStringFromValue(range.start) : Math.round(range.start)}</Text>
+      {/* <Text style={[styles.label, { left: `${range.start}%` }]}>{heightSlider ? getHeightStringFromValue(range.start) : Math.round(range.start)}</Text> */}
       <View
         style={[styles.thumb, { left: `${range.end - (thumbWidth / 4)}%` }]}
         {...endPanResponder.panHandlers}
       />
-      <Text style={[styles.label, { left: `${range.end}%` }]}>{heightSlider ? getHeightStringFromValue(range.end, false) : Math.round(range.end)}</Text>
+      {/* <Text style={[styles.label, { left: `${range.end}%` }]}>{heightSlider ? getHeightStringFromValue(range.end, false) : Math.round(range.end)}</Text> */}
     </View>
   );
 };

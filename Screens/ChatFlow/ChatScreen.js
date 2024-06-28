@@ -21,6 +21,8 @@ import {
     PusherEvent,
 } from '@pusher/pusher-websocket-react-native';
 import ApisPath from '../../lib/ApisPath/ApisPath';
+import { Ionicons } from '@expo/vector-icons';
+import VoiceMessagePlayer from '../../Components/VoiceMessagePlayer'
 
 const { height, width } = Dimensions.get('window');
 
@@ -44,12 +46,13 @@ export default function ChatScreen({ navigation, route }) {
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
     const [thumbnail, setThumnail] = useState(null);
-    const [selectedMedia, setselectedMedia] = useState(null);
-    const [selectedMediaType, setselectedMediaType] = useState(null);
+    const [loading, setLoading] = useState(false)
     const [recording, setRecording] = useState();
     const [permissionResponse, requestPermission] = Audio.usePermissions();
     const [openImage, setOpenImage] = useState(null);
     const [loadImage, setLoadImage] = useState(false);
+    const [recordingPopup, setRecordingPopup] = useState(false);
+    // const [selectedMediaType,setselectedMediaType ]= useState(null)
 
     const iceBreakers = [
         {
@@ -71,6 +74,12 @@ export default function ChatScreen({ navigation, route }) {
             if (permissionResponse.status !== 'granted') {
                 await requestPermission();
             }
+            if (recording) {
+                console.warn('Recording is already in progress');
+                return;
+            }
+
+            setRecordingPopup(true);
             await Audio.setAudioModeAsync({
                 allowsRecordingIOS: true,
                 playsInSilentModeIOS: true,
@@ -85,9 +94,18 @@ export default function ChatScreen({ navigation, route }) {
 
     async function stopRecording() {
         setRecording(undefined);
+        setRecordingPopup(false);
+
         await recording.stopAndUnloadAsync();
         await Audio.setAudioModeAsync({ allowsRecordingIOS: false });
         const uri = recording.getURI();
+        console.log("Recorded message ", uri)
+
+        let time = moment().toISOString();
+        let media = {voice: uri}
+        sendMedia(media, true)
+        // const newMessage = { userId: currentUser.user.id, timestamp: time, content: "", voice: uri, id: `${chat.id}-${messages.length}` };
+        // setMessages(prevMesg => [...prevMesg, newMessage]);
     }
 
     const pusherRef = useRef(null);
@@ -237,12 +255,22 @@ export default function ChatScreen({ navigation, route }) {
         }
     };
 
-    const sendMedia = async (selectedMedia) => {
+    const sendMedia = async (selectedMedia, voice = false) => {
         let time = moment().toISOString();
-        const newMessage = {
-            userId: currentUser.user.id, timestamp: time, image_url: selectedMedia.media,
-            thumb_url: selectedMedia.thumbnail, image_width: 200, image_height: 200, id: `${chat.id}-${messages.length}`
-        };
+        let newMessage = {}
+         if(voice){
+            console.log("Sending Voice message")
+            newMessage = {
+                userId: currentUser.user.id, timestamp: time, image_url: null,
+                thumb_url: null, voice: selectedMedia.voice, id: `${chat.id}-${messages.length}`
+            };
+         }
+         else{
+            newMessage = {
+                userId: currentUser.user.id, timestamp: time, image_url: selectedMedia.media,
+                thumb_url: selectedMedia.thumbnail, image_width: 200, image_height: 200, id: `${chat.id}-${messages.length}`
+            };
+         }
 
         setMessages(prevMesg => [...prevMesg, newMessage]);
 
@@ -254,11 +282,20 @@ export default function ChatScreen({ navigation, route }) {
 
                 formdata.append("chatId", chat.id);
                 formdata.append("timestamp", time);
-                formdata.append("media", {
-                    name: "media.jpg",
-                    uri: selectedMedia.media,
-                    type: selectedMedia.type === "video" ? "video" : 'image/jpeg',
-                });
+                if(voice){
+                    formdata.append("media", {
+                        name: "voice.m4a",
+                        uri: selectedMedia.voice,
+                        type: "audio/m4a",
+                    });
+                }
+                else{
+                    formdata.append("media", {
+                        name: "media.jpg",
+                        uri: selectedMedia.media,
+                        type: selectedMedia.type === "video" ? "video" : 'image/jpeg',
+                    });
+                }
 
                 if (selectedMedia.type === "video") {
                     formdata.append("thumbnail", {
@@ -277,14 +314,16 @@ export default function ChatScreen({ navigation, route }) {
                 })
 
                 if (result) {
+                    
                     let json = await result.json();
+                    console.log("Media Message Sent ", json)
                     if (json.status === true) {
                         //console.log('media send data is', json.data);
                     }
                 }
             }
         } catch (e) {
-            //console.log('error finding in send media ', e);
+            console.log('error finding in send media ', e);
         }
     }
 
@@ -301,8 +340,8 @@ export default function ChatScreen({ navigation, route }) {
             const ImageUrl = result.assets[0].uri;
             let thumb = await generateThumbnail(ImageUrl);
             setThumnail(thumb);
-            setselectedMedia(result.assets[0].uri);
-            setselectedMediaType(result.assets[0].type);
+            // setselectedMedia(result.assets[0].uri);
+            // setselectedMediaType(result.assets[0].type);
             const selectedMedia = {
                 media: ImageUrl, thumbnail: thumb, type: result.assets[0].type
             }
@@ -332,8 +371,8 @@ export default function ChatScreen({ navigation, route }) {
             const ImageUrl = result.assets[0].uri;
             let thumb = await generateThumbnail(ImageUrl);
             setThumnail(thumb);
-            setselectedMedia(result.assets[0].uri);
-            setselectedMediaType(result.assets[0].type);
+            // setselectedMedia(result.assets[0].uri);
+            // setselectedMediaType(result.assets[0].type);
             const selectedMedia = {
                 media: ImageUrl, thumbnail: thumb, type: result.assets[0].type
             }
@@ -341,6 +380,43 @@ export default function ChatScreen({ navigation, route }) {
             sendMedia(selectedMedia);
         }
     };
+
+    const blockUser = async () => {
+        const data = await AsyncStorage.getItem("USER")
+        setLoading(true)
+        try {
+            if (data) {
+                let d = JSON.parse(data)
+                let body = JSON.stringify({
+                    blockedUserId: chat.users[0].id,
+                    blockReason: ''
+                })
+                const result = await fetch(ApisPath.ApiBlockUser, {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + d.token
+                    },
+                    body: body
+                })
+
+                if (result) {
+                    setLoading(false)
+                    let json = await result.json()
+                    if (json.status === true) {
+                        console.log('user blocked',)
+                        setOpenModal3(false)
+                        navigation.goBack()
+                    } else {
+                        console.log('block user message is', json.message)
+                    }
+                }
+            }
+        } catch (e) {
+            console.log('error finding in block user', e)
+        }
+
+    }
 
     const generateThumbnail = async (url) => {
         try {
@@ -357,8 +433,12 @@ export default function ChatScreen({ navigation, route }) {
         }
     };
 
+
     const getMessageType = (item) => {
-        if (item.thumb_url) {
+        if (item.voice) {
+            return "voice"
+        }
+        else if (item.thumb_url) {
             return "video"
         } else if (item.image_url) {
             return "image"
@@ -367,13 +447,32 @@ export default function ChatScreen({ navigation, route }) {
         }
     }
 
+    const voiceBubbal = (item) => {
+
+        <View style={[styles.voicecontainer, styles.fromMe]}>
+            <View style={styles.messageContent}>
+                <Text style={styles.messageText}>{item.message}</Text>
+            </View>
+
+        </View>
+
+
+    }
+
     const renderItem = (item) => {
         let imageHeight = 200;
         let imageWidth = width * 0.7;
         if (item.image_width !== null && item.image_height !== null) {
             imageHeight = item.image_height * imageWidth / item.image_width;
         }
+        const type = getMessageType(item)
         if (fromCurrentUser(item)) {
+            if (type === "voice") {
+                console.log('voice uri is', item.timestamp)
+                return (
+                    <VoiceMessagePlayer uri={item.voice} timestamp={item.timestamp} />
+                )
+            }
             if (getMessageType(item) === "text") {
                 return (
                     <View style={{ alignItems: 'flex-end', marginTop: 10 }}>
@@ -653,12 +752,14 @@ export default function ChatScreen({ navigation, route }) {
                     closeModal2();
                     setOpenModal3(true);
                 } else if (menu === "Report") {
-                    navigation.navigate('ReportChat');
+                    navigation.navigate('ReportChat', {
+                        userId: chat.users[0].id
+                    });
                     closeModal2();
                 } else if (menu === "InviteDate") {
-                    navigation.navigate('InviteDateFromChatScreen',{
-                        data:{
-                            userId:chat.users[0].id
+                    navigation.navigate('InviteDateFromChatScreen', {
+                        data: {
+                            userId: chat.users[0].id
                         }
                     });
                     closeModal2();
@@ -677,8 +778,8 @@ export default function ChatScreen({ navigation, route }) {
                             backgroundColor: 'white', justifyContent: 'space-between', gap: 15 / 930 * height,
                             alignItems: 'flex-start', borderRadius: 10, paddingHorizontal: 25, paddingVertical: 25,
                         }}>
-                            <Text style={{ fontSize: 20, fontFamily: customFonts.meduim }}>Block Sarah Doe?</Text>
-                            <Text style={{ fontSize: 14, fontFamily: customFonts.regular }}>Are you sure you want to block Sarah Doe?</Text>
+                            <Text style={{ fontSize: 20, fontFamily: customFonts.meduim }}>Block {chat.users[0].first_name} {chat.users[0].last_name}?</Text>
+                            <Text style={{ fontSize: 14, fontFamily: customFonts.regular }}>Are you sure you want to block {chat.users[0].first_name} {chat.users[0].last_name}?</Text>
                             <View style={{ flexDirection: 'row', alignItems: 'center', width: 320 / 430 * width, justifyContent: 'space-between', alignSelf: 'center', marginTop: 10 }}>
                                 <TouchableOpacity onPress={() => { setOpenModal3(false) }}
                                     style={{
@@ -688,19 +789,29 @@ export default function ChatScreen({ navigation, route }) {
                                 >
                                     <Text style={{ fontSize: 14, fontFamily: customFonts.meduim }}>Cancel</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { setOpenModal3(false) }}
-                                    style={{
-                                        alignItems: 'center', justifyContent: 'center', paddingVertical: 12, paddingHorizontal: 16,
-                                        borderRadius: 10, backgroundColor: '#E01F1F', width: 150 / 430 * width
-                                    }}
-                                >
-                                    <Text style={{ fontSize: 14, fontFamily: customFonts.meduim, color: 'white' }}>Yes, block</Text>
-                                </TouchableOpacity>
+                                {
+                                    loading ? (
+                                        <ActivityIndicator color={colors.blueColor} size={'small'} style={{ width: 150 / 430 * width }} />
+                                    ) : (
+                                        <TouchableOpacity onPress={() => {
+                                            blockUser()
+                                        }}
+                                            style={{
+                                                alignItems: 'center', justifyContent: 'center', paddingVertical: 12, paddingHorizontal: 16,
+                                                borderRadius: 10, backgroundColor: '#E01F1F', width: 150 / 430 * width
+                                            }}
+                                        >
+                                            <Text style={{ fontSize: 14, fontFamily: customFonts.meduim, color: 'white' }}>Yes, block</Text>
+                                        </TouchableOpacity>
+                                    )
+                                }
+
                             </View>
                         </View>
-                    </View>
+                    </View>ß
                 </TouchableWithoutFeedback>
             </Modal>
+
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={{ height: height * 0.87, }}
             >
@@ -788,6 +899,36 @@ export default function ChatScreen({ navigation, route }) {
                             style={{ height: 52, width: 52, }}
                         />
                     </TouchableOpacity>
+
+                    {/* record voice popup */}
+                    <Modal
+                        animationType="fade"
+                        transparent={true}
+                        visible={recordingPopup}
+                        onRequestClose={() => { }}>
+                        <View style={styles.centeredView}>
+                            <View style={styles.modalView}>
+                                <TouchableOpacity style={styles.stopButton} >
+                                    <Image source={require('../../assets/images/recordinAnimations.gif')}
+                                        style={{ height: 50, width: 80 }}
+                                    />
+                                </TouchableOpacity>
+                                <Text style={styles.modalText}>Recording...</Text>
+                                <TouchableOpacity style={{ marginTop: 20 }}
+                                    onPress={() => {
+                                        stopRecording()
+                                    }}
+                                >
+                                    <Image source={require('../../assets/images/micIcon.png')}
+                                        style={{ height: 30, width: 30, tintColor: 'red' }}
+                                    />
+                                </TouchableOpacity>
+                            </View>
+
+                        </View>
+                    </Modal>
+
+
                     <Modal
                         visible={openModal}
                         transparent={true}
@@ -895,5 +1036,58 @@ const styles = StyleSheet.create({
         bottom: -6,
         borderBottomRightRadius: 18,
         left: -20
-    }
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        // width:300
+    },
+    modalView: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 10,
+        padding: 20,
+        alignItems: 'center',
+        elevation: 5,
+        width: 300 / 430 * width,
+        height: 180 / 930 * height
+
+
+    },
+    stopButton: {
+        marginBottom: 20,
+    },
+    modalText: {
+        color: '#333333',
+        textAlign: 'center',
+        fontSize: 16,
+    }, voicecontainer: {
+        maxWidth: '70%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+        paddingHorizontal: 12,
+        paddingVertical: 8,
+        borderRadius: 20,
+    },
+    fromMe: {
+        alignSelf: 'flex-end',
+        backgroundColor: '#007AFF',
+    },
+    messageContent: {
+        flex: 1,
+    },
+    messageText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+    },
+    playButton: {
+        marginLeft: 8,
+        padding: 8,
+        backgroundColor: '#4CD964',
+        borderRadius: 16,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 })

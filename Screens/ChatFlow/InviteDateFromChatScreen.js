@@ -7,6 +7,7 @@ import colors from '../../assets/colors/Colors'
 import DatesFilterPopup from '../../Components/DatesFilterPopup'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import ApisPath from '../../lib/ApisPath/ApisPath'
+import { GetBudget } from '../../Services/dates/GetBudget'
 const dateImage = require('../../assets/images/datenight.png')
 const { height, width } = Dimensions.get('window')
 
@@ -58,19 +59,6 @@ export default function InviteDateFromChatScreen({navigation,route}) {
             console.log('error finding in get dates', error)
         }
 
-    }
-
-    const getBudget = (item) =>{
-        console.log('max budget is', item.maxBudget)
-        if(item.minBudget === 0 && item.maxBudget === 20){
-            return "$"
-        } else if(item.minBudget === 20 && item.maxBudget === 50){
-            return "$$"
-        }else if(item.minBudget === 50 && item.maxBudget === 80){
-            return "$$$"
-        }else if(item.minBudget > 80){
-            return "$$$$"
-        }
     }
     const handleContinue = () =>{
         if(!selectedDate){
@@ -165,7 +153,7 @@ export default function InviteDateFromChatScreen({navigation,route}) {
 
                                                     <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
                                                         <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Budget</Text>
-                                                        <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{getBudget(item)}</Text>
+                                                        <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{GetBudget(item)}</Text>
                                                     </View>
                                                     <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
                                                         <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Ratings</Text>

@@ -1,21 +1,27 @@
 import {
   View, Text, SafeAreaView, Dimensions, TouchableOpacity, Image, KeyboardAvoidingView, Platform,
-  FlatList, TextInput, TouchableWithoutFeedback, Keyboard
+  FlatList, TextInput, TouchableWithoutFeedback, Keyboard,
+  ActivityIndicator
 } from 'react-native'
 import React, { useState, useEffect, useRef } from 'react'
 import GlobalStyles from '../assets/styles/GlobalStyles';
 import customFonts from '../assets/fonts/Fonts';
 import colors from '../assets/colors/Colors';
-
+import ApisPath from '../lib/ApisPath/ApisPath';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const { height, width } = Dimensions.get('window');
 const selectedImage = require('../assets/images/selectedCircle.png');
 const unselectedImage = require('../assets/images/unselectedCircle.png');
 
 
-export default function ReportChat(props) {
+export default function ReportChat({ navigation, route }) {
+
+  const userId = route.params.userId
 
   const [selected, setSelected] = useState('')
   const [marginTop, setmarginTop] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [additionalInfo, setAdditionalInfo] = useState('');
 
   let inputRef = useRef(null)
 
@@ -51,6 +57,51 @@ export default function ReportChat(props) {
     },
   ]
 
+  const reportUser = async () => {
+    const data = await AsyncStorage.getItem("USER")
+    setLoading(true)
+    try {
+      if (data) {
+        let d = JSON.parse(data)
+        let reason = ''
+        if (selected.reason === "Others") {
+          reason = additionalInfo
+        } else {
+          reason = selected.reason
+        }
+        let body = {
+          reportedUserId: userId,
+          reportReason: reason
+        }
+        console.log('body is', body)
+        const result = await fetch(ApisPath.ApiReportUser, {
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + d.token
+          },
+          body: JSON.stringify(body)
+        })
+
+        if (result) {
+          setLoading(false)
+          let json = await result.json()
+          if (json.status === true) {
+            console.log('report sent',)
+            navigation.goBack()
+
+          } else {
+            console.log('report user message is', json.message)
+          }
+        }
+      }
+    } catch (e) {
+      console.log('error finding in block user', e)
+    }
+
+  }
+
+
 
   useEffect(() => {
     console.log("Use Effect")
@@ -74,7 +125,7 @@ export default function ReportChat(props) {
     if (item.id === 7) {
       inputRef.current.focus()
     }
-    setSelected(item.id)
+    setSelected(item)
   }
 
   return (
@@ -84,12 +135,12 @@ export default function ReportChat(props) {
         Keyboard.dismiss()
       }} >
 
-        <View style={{ height: height, width: width, alignItems: 'center',marginTop:marginTop }}>
+        <View style={{ height: height, width: width, alignItems: 'center', marginTop: marginTop }}>
 
           <View style={{ width: width - 60 / 430 * width, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
-              <TouchableOpacity onPress={()=>{
-                props.navigation.goBack()
+              <TouchableOpacity onPress={() => {
+                navigation.goBack()
               }}>
                 <View style={GlobalStyles.backBtn}>
                   <Image source={require('../assets/images/backArrow.png')}
@@ -101,11 +152,18 @@ export default function ReportChat(props) {
               <Text style={{ fontSize: 24, fontFamily: customFonts.meduim }}>Report</Text>
 
             </View>
-            <TouchableOpacity onPress={()=>{
-                props.navigation.goBack()
-              }}>
-              <Text style={{ fontSize: 18, fontFamily: customFonts.meduim, color: colors.blueColor }}>Send</Text>
-            </TouchableOpacity>
+            {
+              loading ? (
+                <ActivityIndicator size={'small'} color={colors.blueColor} />
+              ) : (
+                <TouchableOpacity onPress={() => {
+                  reportUser()
+                }}>
+                  <Text style={{ fontSize: 18, fontFamily: customFonts.meduim, color: colors.blueColor }}>Send</Text>
+                </TouchableOpacity>
+
+              )
+            }
 
           </View>
 
@@ -121,7 +179,7 @@ export default function ReportChat(props) {
                 >
                   <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 6, marginTop: 16 / 930 * height }}>
 
-                    <Image source={selected === item.id ? selectedImage : unselectedImage}
+                    <Image source={selected.id === item.id ? selectedImage : unselectedImage}
                       style={GlobalStyles.backBtnImage}
                     />
 
@@ -138,7 +196,10 @@ export default function ReportChat(props) {
 
             <TextInput placeholder='Additional information'
               ref={inputRef}
-
+              value={additionalInfo}
+              onChangeText={(text) => {
+                setAdditionalInfo(text)
+              }}
               style={{
                 height: 150 / 930 * height, width: width - 60 / 430 * width, borderWidth: 1,
                 borderColor: colors.greyText, borderRadius: 10, paddingVertical: 30 / 930 * height, paddingHorizontal: 16 / 430 * width

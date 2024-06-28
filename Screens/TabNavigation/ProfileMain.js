@@ -72,7 +72,16 @@ export default function ProfileMain(props) {
           flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 60, alignSelf: 'center',
         }}>
           <Text style={{ fontSize: 26, fontWeight: '500' }}>Profile</Text>
-          <TouchableOpacity>
+          <TouchableOpacity 
+            onPress={() =>{
+              props.navigation.navigate("SelectedProfile",{
+                data:{
+                  user:user,
+                  from:"Profile"
+                }
+              })
+            }}
+          >
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
               <Text style={{ color: colors.blueColor, fontSize: 14 }}>Public view</Text>
               <Image source={require('../../assets/images/profileView.png')}
@@ -216,7 +225,11 @@ export default function ProfileMain(props) {
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity>
+              <TouchableOpacity 
+                onPress={()=>{
+                  props.navigation.navigate("SendFeedBack")
+                }}
+              >
                 <View style={styles.mainView}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                     <Image source={require('../../assets/images/feedback.png')}

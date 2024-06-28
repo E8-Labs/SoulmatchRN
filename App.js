@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect ,useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Dimensions, Platform, Settings } from 'react-native';
+import { StyleSheet, Text, View, Dimensions ,Platform,Settings} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -53,7 +53,6 @@ import AddSchool from './Components/completeprofile/AddSchool';
 import AddGender from './Components/completeprofile/AddGender';
 import AddAge from './Components/completeprofile/AddAge';
 import AddName from './Components/createprofile/AddName';
-import EnhancementQuestions from './Components/completeprofile/EnhancmentQuestions';
 import EnhancmentQuestions from './Components/completeprofile/EnhancmentQuestions';
 import AddLocation from './Components/completeprofile/AddLocation';
 import AllowNotification from './Components/completeprofile/AllowNotification';
@@ -77,20 +76,15 @@ import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import ApisPath from './lib/ApisPath/ApisPath';
 import colors from './assets/colors/Colors';
-// import { useFonts, Poppins_400Regular as PoppinsRegular, Poppins_500Medium, Poppins_700Bold as PoppinsBold } from '@expo-google-fonts/poppins';
+
+import { useFonts, Poppins_400Regular as PoppinsRegular, 
+  Poppins_500Medium as PoppinsMedium, Poppins_700Bold as PoppinsBold, Poppins_600SemiBold as PoppinsSemiBold } from '@expo-google-fonts/poppins';
 
 
 const { screenHeight, screenWidth } = Dimensions.get('window');
 const Stack = createNativeStackNavigator();
 
 
-
-import {
-  Pusher,
-  PusherMember,
-  PusherChannel,
-  PusherEvent,
-} from '@pusher/pusher-websocket-react-native';
 
 
 import AdminTabBarContainer from './Screens/Admin/adminflow/TabBar/AdminTabBarContainer';
@@ -106,14 +100,19 @@ import FlaggedUSerDetails from './Screens/Admin/ui/userDetails/FlaggedUSerDetail
 // import TestAddDate from './Screens/Admin/ui/test/TestAddDate';
 import AdminNotifications from './Screens/Admin/ui/Dashboarddetails/AdminNotifications';
 import VideoPlayer from './Components/VideoPlayer';
+import SendFeedBack from './Screens/ProfileFlow/SendFeedBack';
+ 
 
-
-import { useFonts, Poppins_400Regular as PoppinsRegular, Poppins_500Medium as PoppinsMedium, Poppins_700Bold as PoppinsBold, Poppins_600SemiBold as PoppinsSemiBold } from '@expo-google-fonts/poppins';
 
 export default function App() {
-  // console.log("Font path log")
-  // console.log(require('./assets/fonts/Poppins-Bold.ttf'));
-  // console.log('Font Path Log End')
+
+  // const [fontsLoaded, fontError] = useFonts({
+  //   "PoppinsRegular": require('./assets/fonts/Poppins/Poppins-Regular.ttf'),
+  //   "PoppinsBold": require('./assets/fonts/Poppins/Poppins-Bold.ttf'),
+  //   "PoppinsMedium": require('./assets/fonts/Poppins/Poppins-Medium.ttf'),
+  //   "PoppinsSemiBold": require('./assets/fonts/Poppins/Poppins-SemiBold.ttf'),
+
+  // })
 
   let [fontsLoaded] = useFonts({
     PoppinsRegular,
@@ -122,121 +121,126 @@ export default function App() {
     PoppinsSemiBold
   });
 
-  
-
 
   const [expoPushToken, setExpoPushToken] = useState('');
 
-  useEffect(() => {
+  useEffect(()=>{
     getNotificationPermission()
-  }, [])
+  },[])
   const updateProfile = async (token) => {
     console.log('trying to update profile', token)
     const data = await AsyncStorage.getItem("USER")
     try {
-      if (data) {
-        let d = JSON.parse(data)
-        let body = JSON.stringify({
-          fcm_token: token
-        })
-        console.log('boddy is ', body)
-        // return
+        if (data) {
+            let d = JSON.parse(data)
+            let body = JSON.stringify({
+                fcm_token: token
+            })
+            console.log('boddy is ', body)
+            // return
 
-        const result = await fetch(ApisPath.ApiUpdateProfile, {
-          method: 'post',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + d.token
-          },
-          body: body
-        })
-        if (result) {
-          let json = await result.json()
-          if (json.status === true) {
-            // console.log('updated profile data is', json.data)
-            d.user = json.data
-            AsyncStorage.setItem("USER", JSON.stringify(d))
+            const result = await fetch(ApisPath.ApiUpdateProfile, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + d.token
+                },
+                body: body
+            })
+            if (result) {
+                let json = await result.json()
+                if (json.status === true) {
+                    // console.log('updated profile data is', json.data)
+                    d.user=json.data
+                               AsyncStorage.setItem("USER",JSON.stringify(d))
 
-            // navigation.navigate("CongratulationsScreen")
-          } else {
-            console.log('json message is', json.message)
-          }
+                    // navigation.navigate("CongratulationsScreen")
+                } else {
+                    console.log('json message is', json.message)
+                }
+            }
         }
-      }
 
     } catch (error) {
-      console.log('error finding in update profile', error)
+        console.log('error finding in update profile', error)
     }
-  }
+}
 
 
   const getNotificationPermission = () => {
 
     console.log('enter in function')
     registerForPushNotificationsAsync().then(
-      (token) => {
-        if (token) {
-          setExpoPushToken(token)
+        (token) => {
+            if (token) {
+                setExpoPushToken(token)
+            }
+            console.log('token', token)
+            updateProfile(token)
         }
-        console.log('token', token)
-        updateProfile(token)
-      }
     );
-  }
+}
 
 
-  async function registerForPushNotificationsAsync() {
+async function registerForPushNotificationsAsync() {
     let token;
 
     if (Platform.OS === 'android') {
-      await Notifications.setNotificationChannelAsync('default', {
-        name: 'default',
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#FF231F7C',
-      });
+        await Notifications.setNotificationChannelAsync('default', {
+            name: 'default',
+            importance: Notifications.AndroidImportance.MAX,
+            vibrationPattern: [0, 250, 250, 250],
+            lightColor: '#FF231F7C',
+        });
     }
 
     if (Device.isDevice) {
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
-      if (existingStatus !== 'granted') {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
-      }
-      if (finalStatus !== 'granted') {
-        alert('Failed to get push token for  notification!');
-        return;
-      }
-      // Learn more about projectId:
-      // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
-      // EAS projectId is used here.
-      try {
-        const projectId =
-          Constants?.expoConfig?.extra?.eas?.projectId ??
-          Constants?.easConfig?.projectId;
-        if (!projectId) {
-          throw new Error('Project ID not found');
+        const { status: existingStatus } = await Notifications.getPermissionsAsync();
+        let finalStatus = existingStatus;
+        if (existingStatus !== 'granted') {
+            const { status } = await Notifications.requestPermissionsAsync();
+            finalStatus = status;
         }
-        token = (
-          await Notifications.getExpoPushTokenAsync({
-            projectId,
-          })
-        ).data;
-        console.log(token);
-      } catch (e) {
-        token = `${e}`;
-      }
+        if (finalStatus !== 'granted') {
+            alert('Failed to get push token for  notification!');
+            return;
+        } else{
+          // console.log('object', object)
+        }
+        // Learn more about projectId:
+        // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
+        // EAS projectId is used here.
+        try {
+            const projectId =
+                Constants?.expoConfig?.extra?.eas?.projectId ??
+                Constants?.easConfig?.projectId;
+            if (!projectId) {
+                throw new Error('Project ID not found');
+            }
+            token = (
+                await Notifications.getExpoPushTokenAsync({
+                    projectId,
+                })
+            ).data;
+            console.log(token);
+        } catch (e) {
+            token = `${e}`;
+        }
     } else {
-      // alert('Must use physical device for  Notifications');
+        // alert('Must use physical device for  Notifications');
     }
 
     return token;
-  }
-
- 
+}
 
 
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      console.log("Loading fonts ", fontsLoaded)
+      // console.log("Font error ", fontError)
+    }
+  }, [fontsLoaded])
 
 
   if (!fontsLoaded) {
@@ -253,7 +257,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator initialRouteName="SplashMainScreen" screenOptions={{ headerShown: false }}>
           <Stack.Screen name="SplashMainScreen" component={SplashMainScreen} options={{ gestureEnabled: false }} />
-          <Stack.Screen name="SlideContainer" component={SlideContainer} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name="SlideContainer" component={SlideContainer} options={{ gestureEnabled: false, headerShown: false }}/>
           <Stack.Screen name="RegisterUser" component={RegisterUser} options={{ gestureEnabled: false }} />
           <Stack.Screen name="LoginUser" component={LoginUser} options={{ gestureEnabled: false }} />
           <Stack.Screen name="GetEmail" component={GetEmail} options={{ gestureEnabled: false }} />
@@ -309,6 +313,7 @@ export default function App() {
           <Stack.Screen name='ChangePassword' component={ChangePassword} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='ChangeIntroVideo' component={ChangeIntroVideo} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='VideoPlayer' component={VideoPlayer} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='SendFeedBack' component={SendFeedBack} options={{ gestureEnabled: false, headerShown: false }} />
 
 
           <Stack.Screen name='Resources' component={Resources} options={{ gestureEnabled: false, headerShown: false }} />

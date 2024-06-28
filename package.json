@@ -8,6 +8,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo-google-fonts/poppins": "^0.2.0",
     "@pusher/pusher-websocket-react-native": "^1.3.1",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-community/datetimepicker": "^8.1.0",
@@ -21,6 +22,7 @@
     "expo-av": "~14.0.5",
     "expo-constants": "~16.0.1",
     "expo-device": "~6.0.2",
+    "expo-font": "~12.0.7",
     "expo-image": "^1.10.6",
     "expo-image-picker": "^15.0.4",
     "expo-location": "~17.0.1",
@@ -32,6 +34,7 @@
     "fonts": "^0.0.2",
     "geolib": "^3.3.4",
     "moment": "^2.30.1",
+    "node-modules": "^1.0.1",
     "react": "18.2.0",
     "react-native": "0.74.1",
     "react-native-chart-kit": "^6.12.0",
@@ -45,8 +48,7 @@
     "react-native-star-rating-widget": "^1.7.3",
     "react-native-svg": "15.2.0",
     "react-native-wheel-picker-expo": "^0.5.4",
-    "expo-font": "~12.0.7",
-    "@expo-google-fonts/poppins": "^0.2.0"
+    "expo-mail-composer": "~13.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

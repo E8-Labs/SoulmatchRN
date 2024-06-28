@@ -1,14 +1,17 @@
 import React, { useState } from 'react'
-import { View, Text, KeyboardAvoidingView, TouchableOpacity, Image, Platform, Keyboard, TouchableWithoutFeedback, Dimensions } from 'react-native'
+import { View, Text, KeyboardAvoidingView, TouchableOpacity, Image, Platform, Keyboard, TouchableWithoutFeedback, Dimensions, Modal } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import customFonts from '../../../assets/fonts/Fonts'
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import LogoutPopup from '../../../Components/LogoutPopup';
+import GlobalStyles from '../../../assets/styles/GlobalStyles';
 
 const Profile = ({ navigation }) => {
     const { height, width } = Dimensions.get('window')
 
     const [image, setImage] = useState(null);
+    const [openModal, setOpenModal] = useState(false);
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
@@ -33,14 +36,17 @@ const Profile = ({ navigation }) => {
         navigation.navigate('ChangePassword')
     }
 
-    const logoutUser =async () =>{
-        try{
+    const logoutUser = async () => {
+        try {
             await AsyncStorage.removeItem("USER")
             await AsyncStorage.removeItem("UserAnswers")
             console.log('logout successfully')
             navigation.navigate("LoginUser")
-        } catch(e){
+        } catch (e) {
             console.log('finding error in logout user', e)
+        }
+        finally {
+            setOpenModal(false)
         }
     }
 
@@ -98,7 +104,7 @@ const Profile = ({ navigation }) => {
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity style={{ position: 'absolute', bottom: 120 }}
-                        onPress={logoutUser}
+                        onPress={() => setOpenModal(true)}
                     >
                         <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%', justifyContent: 'space-between', borderWidth: 1, padding: 14, borderRadius: 8, borderColor: '#E01F1F50' }}>
                             <View style={{ flexDirection: 'row', gap: 20, width: '100%' }}>
@@ -109,6 +115,65 @@ const Profile = ({ navigation }) => {
                             </View>
                         </View>
                     </TouchableOpacity>
+                </View>
+                <View>
+                    <Modal
+                        visible={openModal}
+                        transparent={true}
+                        animationType='slide'
+                    // onRequestClose={() => setOpenModal(false)}
+                    >
+                        <View style={{
+                            height: height, alignItems: 'center', backgroundColor: '#00000050', justifyContent: 'flex-end', width: width
+                        }}>
+                            <View style={{
+                                height: height * 0.33, backgroundColor: 'white', alignItems: 'center', width: width, borderRadius: 20, alignItems: 'center',
+                                paddingTop: 20
+                            }}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 60 }}>
+                                    <Text style={{ fontSize: 20 }}>Logout</Text>
+                                    <TouchableOpacity onPress={() => setOpenModal(false)}>
+                                        <Image source={require('../../../assets/images/close.png')}
+                                            style={{ height: 24, width: 24 }}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={GlobalStyles.divider}></View>
+
+                                <Text style={{ marginTop: 40 / 930 * height, fontSize: 20 }}>Are you sure you want to logout?</Text>
+
+                                <View style={{
+                                    width: width - 60, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+                                    marginTop: 50
+                                }}>
+                                    <TouchableOpacity style={{
+                                        height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center',
+                                        borderWidth: 2,
+                                    }}
+                                        onPress={() => setOpenModal(false)}
+                                    >
+                                        <Text style={{
+                                            fontSize: 16,
+                                        }}> Cancel</Text>
+                                    </TouchableOpacity>
+
+                                    <TouchableOpacity
+                                        onPress={logoutUser}
+
+                                        style={{
+                                            height: 48 / 930 * height, width: 173 / 430 * width, backgroundColor: 'red', borderRadius: 10, alignItems: 'center', justifyContent: 'center'
+                                        }}
+                                    >
+                                        <Text style={{
+                                            fontSize: 16, color: '#f8edda'
+                                        }}> Yes, logout</Text>
+                                    </TouchableOpacity>
+
+                                </View>
+                            </View>
+
+                        </View>
+                    </Modal>
                 </View>
             </View>
         </View>

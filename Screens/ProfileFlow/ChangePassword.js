@@ -1,5 +1,5 @@
 import {
-    View, Text, TouchableOpacity, Dimensions, StyleSheet, Settings, TextInput, Keyboard, TouchableWithoutFeedback, ActivityIndicator
+    View, Text, TouchableOpacity, Dimensions, StyleSheet, Alert, TextInput, Keyboard, TouchableWithoutFeedback, ActivityIndicator
 
 } from 'react-native'
 import React, { useState, useEffect } from 'react'
@@ -26,17 +26,17 @@ export default function ChangePassword({ navigation, route }) {
 
 
     const changePassword = async () => {
-        if(!currentPass || !newPass||!confirmPass){
+        if (!currentPass || !newPass || !confirmPass) {
             setError("Enter all cridentials")
             return
         }
-        if(confirmPass !== newPass ){
+        if (confirmPass !== newPass) {
             setError("Password must be same")
             return
         }
         try {
             setLoading(true)
-            const data =await AsyncStorage.getItem("USER")
+            const data = await AsyncStorage.getItem("USER")
 
             if (data) {
                 let d = JSON.parse(data)
@@ -53,13 +53,23 @@ export default function ChangePassword({ navigation, route }) {
                     },
                     body: body
                 })
-                if(result){
+                if (result) {
                     setLoading(false)
                     let json = await result.json()
-                    if(json.status === true){
+                    if (json.status === true) {
                         console.log('password changed ')
-                        navigation.goBack()
-                    }else{
+                        Alert.alert(
+                            'Password Changed',
+                            'Your password has been changed',
+                            
+                                [{
+                                    text: 'Go back',
+                                    onPress: () => navigation.goBack(),
+                                }],
+                                { cancelable: true }
+                            )
+                       
+                    } else {
                         setError(json.message)
                         console.log('json message is ', json.message)
                     }
@@ -172,19 +182,19 @@ export default function ChangePassword({ navigation, route }) {
                     </View>
                 </View>
                 {
-                    error && <Text style = {[GlobalStyles.errorText,{marginTop:20,textAlign:'flex-start',width:width-60}]}>{error}</Text>
+                    error && <Text style={[GlobalStyles.errorText, { marginTop: 20, textAlign: 'flex-start', width: width - 60 }]}>{error}</Text>
                 }
-                
+
                 {
                     loading ? (
-                 <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop: 50 / 930 * height }} /> 
-                 ) : (
-                <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 50/ 930 * height }]}
-                onPress={changePassword}
-                >
-                    <Text style={GlobalStyles.btnText}>Save</Text>
-                </TouchableOpacity>
-                 )
+                        <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop: 50 / 930 * height }} />
+                    ) : (
+                        <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 50 / 930 * height }]}
+                            onPress={changePassword}
+                        >
+                            <Text style={GlobalStyles.btnText}>Save</Text>
+                        </TouchableOpacity>
+                    )
                 }
             </View>
         </TouchableWithoutFeedback>

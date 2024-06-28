@@ -196,6 +196,7 @@ export default function PlanDateNigth(props) {
 
                         <DateTimePicker
                             testID="dateTimePicker"
+                            minimumDate={new Date()}
                             value={date}
                             mode={'date'}
                             is24Hour={false}
@@ -216,6 +217,7 @@ export default function PlanDateNigth(props) {
                         <DateTimePicker
                             testID="dateTimePicker"
                             value={time}
+                            minimumDate={new Date()}
                             mode={"time"}
                             is24Hour={false}
                             display="default"

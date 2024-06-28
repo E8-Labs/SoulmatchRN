@@ -174,11 +174,11 @@ const Dashboard = ({ navigation }) => {
                 </View>
                 {
                     Loading ?
-                        <View style={{ marginTop: 60 }}>
-                            <ActivityIndicator size={'small'} color={'#6050Dc'} />
+                        <View style={{ height: height*0.80, alignItems: 'center', justifyContent: 'center' }}>
+                            <ActivityIndicator size={'large'} color={'#6050Dc'} />
                         </View>
                         :
-                        <View style={{ width: width - 50, height: height * 0.73 }}>
+                        <View style={{ width: width - 50, height: height * 0.80 }}>
                             <ScrollView showsVerticalScrollIndicator={false}>
                                 <Text style={{ fontWeight: '500', fontSize: 18, fontFamily: customFonts.medium, marginTop: 20 }}>
                                     Revenue
@@ -522,7 +522,7 @@ const Dashboard = ({ navigation }) => {
                                     Dates
                                 </Text>
 
-                                <View style={{ borderWidth: 1, borderColor: '#E6E6E6', borderRadius: 16, padding: 16, flexDirection: 'row', gap: 8, width: '100%', alignItems: 'center', width: '100%', justifyContent: 'center', marginTop: 10 }}>
+                                <View style={{ borderWidth: 1, borderColor: '#E6E6E6', borderRadius: 16, padding: 16, flexDirection: 'row', gap: 8, width: '100%', alignItems: 'center', width: '100%', justifyContent: '', marginTop: 10 }}>
                                     <View style={{ backgroundColor: '#F3F2FC', height: 46 / 930 * height, width: 46 / 930 * height, borderWidth: 1, alignItems: 'center', justifyContent: 'center', borderRadius: 50 }}>
                                         <Image source={require('../../../assets/Images3/medal-star.png')} style={{ height: 24 / 930 * height, width: 24 / 430 * width }} />
                                     </View>
@@ -537,7 +537,7 @@ const Dashboard = ({ navigation }) => {
                                 </View>
 
                                 <View style={{
-                                    borderWidth: 1, borderColor: '#E6E6E6', borderRadius: 16, flexDirection: 'row', gap: 8, width: '100%', justifyContent: '', marginTop: 10, height: 79 / 930 * height, alignItems: 'center', paddingLeft: 7
+                                    borderWidth: 1, borderColor: '#E6E6E6', borderRadius: 16, flexDirection: 'row', gap: 8, width: '100%', justifyContent: '', marginTop: 10, alignItems: 'center', padding: 16
                                 }}>
                                     <View style={{ backgroundColor: '#F3F2FC', height: 46 / 930 * height, width: 46 / 930 * height, borderWidth: 1, alignItems: 'center', justifyContent: 'center', borderRadius: 50 }}>
                                         <Image source={require('../../../assets/Images3/like.png')} style={{ height: 24 / 930 * height, width: 24 / 430 * width }} />
@@ -552,7 +552,11 @@ const Dashboard = ({ navigation }) => {
                                     </View>
                                 </View>
 
-                                <View style={{ borderWidth: 1, borderColor: '#E6E6E6', borderRadius: 16, padding: 16, flexDirection: 'row', gap: 8, width: '100%', alignItems: 'center', width: '100%', marginTop: 20, justifyContent: 'center' }}>
+                                <View
+                                    style={{
+                                        borderWidth: 1, borderColor: '#E6E6E6', borderRadius: 16, padding: 16,
+                                        flexDirection: 'row', gap: 8, width: '100%', alignItems: 'center', width: '100%', marginTop: 20, marginBottom: 40
+                                    }}>
                                     <View style={{ backgroundColor: '#F3F2FC', height: 46 / 930 * height, width: 46 / 930 * height, borderWidth: 1, alignItems: 'center', justifyContent: 'center', borderRadius: 50 }}>
                                         <Image source={require('../../../assets/Images3/heart-circle.png')} style={{ height: 24 / 930 * height, width: 24 / 430 * width }} />
                                     </View>

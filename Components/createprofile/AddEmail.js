@@ -14,7 +14,7 @@ const AddEmail = ({ navigation, route }) => {
     const [saveemail, setSaveemail] = useState('')
     const [focusEmail, setFocusEmail] = useState(false)
     const [indicattor, setIndicator] = useState(false)
-    const [emailError, setEmailError] = useState(false)
+    const [emailError, setEmailError] = useState(null)
     const [emailExists, setEmailExists] = useState(false);
     const [emailNotExists, setEmailNotExists] = useState(false);
     const [btnPosition,setBtnPosition] = useState(height*0.61)
@@ -86,6 +86,20 @@ const AddEmail = ({ navigation, route }) => {
 
 
     const handleNextClick = async () => {
+        
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const validEmail = emailRegex.test(saveemail);
+
+            if (!validEmail) {
+                setEmailError("Enter valid email")
+            }
+        if(!saveemail){
+            setEmailError("Enter email")
+            return
+        }
+        if(emailError || emailNotExists){
+            return
+        }
         try {
             setIndicator(true)
             let data = await AsyncStorage.getItem("USER")
@@ -213,7 +227,7 @@ const AddEmail = ({ navigation, route }) => {
                             <View>
                                 {emailError ? <View>
                                     <Text style={{ color: '#E01F1F', fontSize: 14, fontWeight: '500', marginTop: 5 / 930 * height }}>
-                                        Please enter email
+                                       {emailError}
                                     </Text>
                                 </View> : ''}
                                 {
@@ -233,11 +247,11 @@ const AddEmail = ({ navigation, route }) => {
                                     </View>
                                 }
                             </View>
-                            {emailError ? <View>
+                            {/* {emailError ? <View>
                                 <Text style={{ color: '#E01F1F', fontSize: 14, fontWeight: '500', marginTop: 5 / 930 * height }}>
                                     Please enter email
                                 </Text>
-                            </View> : ''}
+                            </View> : ''} */}
                         </View>
                     </View>
                     <View style={{ display: 'flex', justifyContent: 'flex-end' }}>

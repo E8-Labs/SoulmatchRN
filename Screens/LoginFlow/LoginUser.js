@@ -10,6 +10,7 @@ import ApisPath from '../../lib/ApisPath/ApisPath';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import * as AppleAuthentication from 'expo-apple-authentication';
+import { NavigateLogedUser } from '../../Services/user/NavigateLogedUser';
 
 const { height, width } = Dimensions.get("window");
 
@@ -72,119 +73,13 @@ export default function LoginUser(props) {
 
                     if (json.message === 'Logged in') {
                         let data = json.data.user
-
-
-                        if (data.profile_completion === 1) {
-                            console.log('profile_completion_comment', data.profile_completion_comment)
-                            props.navigation.navigate('UploadIntroVideo')
+                        let from = "Login"
+                        try{
+                            await NavigateLogedUser(props.navigation,from)
+                        }catch(e) {
+                            console.log('error finding in navigate user', e)
                         }
-                        else if (data.profile_completion === 2) {
-                            console.log('profile_completion_comment', data.profile_completion_comment)
-                            props.navigation.navigate('UploadMedia', {
-                                data: {
-                                    from: 'Login'
-                                }
-                            })
-                        }
-                        else if (data.profile_completion === 3) {
-
-                            //here user will add zodiac,age,height,school,job and interest
-
-                            console.log('profile_completion_comment', data.profile_completion_comment)
-                            props.navigation.navigate('AddZodiac', {
-                                data: {
-                                    from: 'Login',
-                                    user: ''
-                                }
-                            })
-
-                        } else if (data.profile_completion === 4) {
-
-                            //here user will add zodiac,age,height,school,job and interest
-
-                            console.log('profile_completion_comment', data.profile_completion_comment)
-                            props.navigation.navigate('AddAge', {
-                                data: {
-                                    from: 'Login',
-                                    user: ''
-                                }
-                            })
-
-                        } else if (data.profile_completion === 5) {
-
-                            //here user will add zodiac,age,height,school,job and interest
-
-                            console.log('profile_completion_comment', data.profile_completion_comment)
-                            props.navigation.navigate('AddHeight', {
-                                data: {
-                                    from: 'Login',
-                                    user: ''
-                                }
-                            })
-
-                        } else if (data.profile_completion === 6) {
-
-                            //here user will add zodiac,age,height,school,job and interest
-
-                            console.log('profile_completion_comment', data.profile_completion_comment)
-                            props.navigation.navigate('AddGender', {
-                                data: {
-                                    from: 'Login',
-                                    user: ''
-                                }
-                            })
-
-                        } else if (data.profile_completion === 7) {
-
-                            //here user will add zodiac,age,height,school,job and interest
-
-                            console.log('profile_completion_comment', data.profile_completion_comment)
-                            props.navigation.navigate('AddSchool', {
-                                data: {
-                                    from: 'Splash',
-                                    user: ''
-                                }
-                            })
-
-                        } else if (data.profile_completion === 8) {
-
-                            //here user will add zodiac,age,height,school,job and interest
-
-                            console.log('profile_completion_comment', data.profile_completion_comment)
-                            props.navigation.navigate('AddJobDetails', {
-                                data: {
-                                    from: 'Splash',
-                                    user: ''
-                                }
-                            })
-
-                        } else if (data.profile_completion === 9) {
-
-                            //here user will add zodiac,age,height,school,job and interest
-
-                            console.log('profile_completion_comment', data.profile_completion_comment)
-                            props.navigation.navigate('GetInterest', {
-                                data: {
-                                    from: 'Login',
-                                    user: ''
-                                }
-                            })
-
-                        } else if (data.profile_completion === 10) {
-
-                            // if last condition runs then profile complition comment will 11
-
-                            console.log('profile_completion_comment', data.profile_completion_comment)
-                            props.navigation.navigate("AddLocation")
-                        }
-
-                        else if (data.profile_completion === 11) {
-
-                            // if last condition runs then profile complition comment will 11
-
-                            console.log('profile_completion_comment', data.profile_completion_comment)
-                            props.navigation.navigate("TabBarContainer")
-                        }
+                        
                     } else if (json.message === 'User registered') {
                         props.navigation.navigate("UploadIntroVideo")
                     }
@@ -333,44 +228,20 @@ export default function LoginUser(props) {
                             let data = json.data.user
 
                             if (data.role === "admin") {
-                                props.navigation.navigate("AdminTabBarContainer")
+                                props.navigation.navigate("AdminTabBarContainer",{
+                                    from:'Login'
+                                })
                                 return
+                            } else {
+                                let from = "Login"
+                                try{
+                                    await NavigateLogedUser(props.navigation,from)
+                                }catch(e) {
+                                    console.log('error finding in navigate user', e)
+                                }
                             }
 
-                            if (data.profile_completion === 1) {
-                                console.log('profile_completion_comment', data.profile_completion_comment)
-                                props.navigation.navigate('UploadIntroVideo')
-                            }
-                            else if (data.profile_completion === 2) {
-                                console.log('profile_completion_comment', data.profile_completion_comment)
-                                props.navigation.navigate('UploadMedia')
-                            }
-                            else if (data.profile_completion === 3) {
-
-                                //here user will add zodiac,age,height,school,job and interest
-
-                                console.log('profile_completion_comment', data.profile_completion_comment)
-                                props.navigation.navigate('AddZodiac')
-
-                            } else if (data.profile_completion === 10) {
-
-                                // if last condition runs then profile complition comment will 11
-
-                                console.log('profile_completion_comment', data.profile_completion_comment)
-                                props.navigation.navigate("AddLocation")
-                            }
-
-                            else if (data.profile_completion === 11) {
-
-                                // if last condition runs then profile complition comment will 11
-
-                                console.log('profile_completion_comment', data.profile_completion_comment)
-                                props.navigation.navigate("TabBarContainer")
-                            }
-
-
-
-                            console.log('profile_completion_comment 2', data.profile_completion_comment)
+                           
                             // props.navigation.navigate('TabBarContainer')
                         } else {
                             console.log('json mesasage', json.message)

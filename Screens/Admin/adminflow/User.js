@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { ActivityIndicator, Dimensions, FlatList,  Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Dimensions, FlatList, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { Image } from 'expo-image'
 import customFonts from '../../../assets/fonts/Fonts'
@@ -237,14 +237,14 @@ const User = ({ navigation }) => {
                 {/* Grid view */}
 
                 <ScrollView
-                    style={{ height: height - 330, marginTop: 30 }}
+                    style={{ height: height - 310, marginTop: 30 }}
                     showsVerticalScrollIndicator={false}
                     onScroll={handleScroll}
                     scrollEventThrottle={16}>
-                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', display: 'flex', justifyContent: 'space-between' }}>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', display: 'flex', justifyContent: 'space-between', marginBottom: 30 }}>
                         {AdminUsers.map((item, index) => (
                             <TouchableOpacity onPress={() => handleUserDetails(item.id, index)} key={index} style={{ marginTop: 10 }}>
-                                <View style={{ borderWidth: 1, borderColor: '#E6E6E6', borderRadius: 10, padding: 12, width: 176 / 430 * width }}>
+                                <View style={{ borderWidth: 1, flexDirection: 'column', gap: 5, borderColor: '#E6E6E6', borderRadius: 10, padding: 12, width: 176 / 430 * width }}>
                                     <Image source={item.profile_image ? { uri: item.profile_image } : require('../../../assets/Images3/imagePlaceholder.webp')} style={{ height: 98 / 930 * height, width: 152 / 430 * width, borderRadius: 6, resizeMode: 'cover' }} />
                                     <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.medium, marginTop: 7 }}>
                                         {item.first_name} {item.last_name}
@@ -265,7 +265,7 @@ const User = ({ navigation }) => {
                             </TouchableOpacity>
                         ))}
                         {Loading && (
-                            <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 23 / 930 * height, width: width - 50 }}>
+                            <View style={{ justifyContent: 'center', alignItems: 'center', width: width - 50, height: height * 0.60, }}>
                                 <ActivityIndicator size={'large'} color={'#6050DC'} />
                             </View>
                         )}

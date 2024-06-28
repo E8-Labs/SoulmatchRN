@@ -7,6 +7,7 @@ import colors from '../../assets/colors/Colors';
 import { Image } from 'expo-image';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { GetBudget } from '../../Services/dates/GetBudget';
 const { height, width } = Dimensions.get('window')
 
 export default function DatesContainer({ navigation }) {
@@ -127,18 +128,7 @@ export default function DatesContainer({ navigation }) {
         }
 
     }
-    const getBudget = (item) =>{
-        console.log('max budget is', item.maxBudget)
-        if(item.minBudget ===0 && item.axBudget === 20){
-            return "$"
-        } else if(item.minBudget === 20 && item.maxBudget === 50){
-            return "$$"
-        }else if(item.minBudget === 50 && item.maxBudget === 80){
-            return "$$$"
-        }else if(item.minBudget > 80){
-            return "$$$$"
-        }
-    }
+   
 
     return (
 
@@ -225,7 +215,7 @@ export default function DatesContainer({ navigation }) {
 
                                                             <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
                                                                 <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Budget</Text>
-                                                                <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{getBudget(item)}</Text>
+                                                                <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{GetBudget(item)}</Text>
                                                             </View>
                                                             <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
                                                                 <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Ratings</Text>
@@ -299,7 +289,7 @@ export default function DatesContainer({ navigation }) {
 
                                                             <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
                                                                 <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Budget</Text>
-                                                                <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{item.maxBudget}$</Text>
+                                                                <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{GetBudget(item)}</Text>
                                                             </View>
                                                             <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
                                                                 <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Ratings</Text>

@@ -7,10 +7,12 @@ const Apis = {
     // DeleteDate: `${BasePath}api/admin/dates/delete_category`,
     GetAdminUsers: `${BasePath}api/admin/users`,
     AddDatePlace: `${BasePath}api/admin/dates/add_date_place`,
-    UpdateDatePlace: `${BasePath}api/admin/dates/add_date_place`,
+    UpdateDatePlace: `${BasePath}api/admin/dates/update_date_place`,
     SuspendUser: `${BasePath}api/admin/suspend_user`,
     DeleteUser: `${BasePath}api/admin/delete_user`,
-    DeleteDate: `${BasePath}api/admin/dates/delete_date_place`
+    DeleteDate: `${BasePath}api/admin/dates/delete_date_place`,
+    FlaggedUsers: `${BasePath}api/admin/reported_users`,
+    IgnoreReport: `${BasePath}api/admin/ignore_flagged`
 }
 
 export default Apis;

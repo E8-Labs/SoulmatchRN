@@ -18,6 +18,7 @@ import DiscoverGotMatch from '../../Components/DiscoverGotMatch';
 import { Video, ResizeMode, AVPlaybackStatu0s } from 'expo-av';
 import { getDistance } from 'geolib';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AddressPicker from '../Admin/ui/Addresspicker/AddressPicker'
 const { height, width } = Dimensions.get('window')
 
 const blurhash =
@@ -44,6 +45,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
     const [loadImage5, setLoadImage5] = useState(false)
     const [currentIndex, setCurrentIndex] = useState(0);
     const [openModal, setOpenModal] = useState(false);
+    const [openModalLocation, setOpenModalLocation] = useState(false);
     const [LikeIndicator, setLikeIndicator] = useState(false);
     const [rejecIndicator, setRejectIndicator] = useState(false);
     const [questions, setQuestions] = useState([]);
@@ -53,7 +55,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
     const [video, setVideo] = useState(null);
     const [status, setStatus] = React.useState({});
     const ref = useRef(null);
-
+    const [filters, setFilters] = useState({})
 
     // console.log("data from prev screen", data[currentIndex].media)
     console.log("current index", currentIndex)
@@ -136,16 +138,16 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
     };
 
     const handleNext = () => {
-        if(currentIndex === data.length - 1){
+        if (currentIndex === data.length - 1) {
             LastProfileSwiped()
         }
-        else{
+        else {
             fadeOut(() => {
                 setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, data.length - 1));
                 fadeIn();
             });
         }
-        
+
     };
     const handleLike = async () => {
         setLikeIndicator(true)
@@ -311,114 +313,116 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
     }
 
 
+    useEffect(() => {
+        console.log("Model opened ", openModal)
+    }, [openModal])
+
     return (
 
         <SafeAreaView>
             <Animated.View style={{ ...styles.componentContainer, opacity: fadeAnim }}>
-                <View style={{ height: height, alignItems: 'center' }}>
-                    {
-                        fromScreen !== "Main" ? (
-                            <View style={{ flexDirection: 'row', alignItems: 'center', width: width - 60, gap: 15, marginTop: 0 / 930 * height }}>
+                <View style={{ height: height, alignItems: 'center', marginTop: 10 }}>
 
-                                <TouchableOpacity onPress={() => navigation.goBack()}>
-                                    <View style={GlobalStyles.backBtn}>
-                                        <Image source={require('../../assets/images/close.png')}
-                                            style={GlobalStyles.backBtnImage}
-                                        />
-                                    </View>
-                                </TouchableOpacity>
+                    <View style={{ flexDirection: 'row', marginBottom: 20 / 930 * height, width: width - 40, justifyContent: 'space-between' }}>
+                        {
+                            currentIndex !== data.length ? (
                                 <Text style={{ fontSize: 24, fontFamily: customFonts.meduim }}>
-                                    user name
+                                    {data[currentIndex] ? data[currentIndex].first_name : ''} {data[currentIndex] ? data[currentIndex].last_name : ''}
                                 </Text>
-                            </View>
-                        ) : (
-                            <View style={{ flexDirection: 'row', marginBottom: 20 / 930 * height, width: width - 40, justifyContent: 'space-between' }}>
-                                {
-                                    currentIndex !== data.length ? (
-                                        <Text style={{ fontSize: 24, fontFamily: customFonts.meduim }}>
-                                            {data[currentIndex] ? data[currentIndex].first_name : ''} {data[currentIndex] ? data[currentIndex].last_name : ''}
-                                        </Text>
-                                    ) : <View style={{ width: 50 }}></View>
+                            ) : <View style={{ width: 50 }}></View>
+                        }
+
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 / 430 * width }}>
+                            <TouchableOpacity onPress={() => {
+                                let routeData = {
+                                    navigate: 'LikesList',
+                                    user: ''
                                 }
+                                onMenuClick(routeData)
+                            }}>
+                                <Image source={require('../../assets/images/profileLike.png')}
+                                    style={styles.image}
+                                />
+                            </TouchableOpacity>
 
-                                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 / 430 * width }}>
-                                    <TouchableOpacity onPress={() => {
-                                        let routeData = {
-                                            navigate: 'LikesList',
-                                            user: ''
-                                        }
-                                        onMenuClick(routeData)
-                                    }}>
-                                        <Image source={require('../../assets/images/profileLike.png')}
-                                            style={styles.image}
-                                        />
-                                    </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => {
 
-                                    <TouchableOpacity
-                                        onPress={() => {
+                                    let routeData = {
+                                        user: '',
+                                        navigate: 'Notifications'
+                                    }
+                                    onMenuClick(routeData)
+                                }}
+                            >
+                                <Image source={require('../../assets/images/bell.png')}
+                                    style={styles.image}
+                                />
+                            </TouchableOpacity>
 
-                                            let routeData = {
-                                                user: '',
-                                                navigate: 'Notifications'
-                                            }
-                                            onMenuClick(routeData)
-                                        }}
-                                    >
-                                        <Image source={require('../../assets/images/bell.png')}
-                                            style={styles.image}
-                                        />
-                                    </TouchableOpacity>
+                            <TouchableOpacity onPress={() => {
+                                setOpenModal(true)
+                            }}>
+                                <Image source={require('../../assets/images/setting.png')}
+                                    style={styles.image}
+                                />
+                            </TouchableOpacity>
+                            <Modal
+                                visible={openModal}
+                                transparent={true}
+                                animationType='slide'
+                            >
+                                <FilterPopup close={closeModal} filters={filters} addressPicker={async () => {
 
-                                    <TouchableOpacity onPress={() => {
-                                        setOpenModal(true)
-                                    }}>
-                                        <Image source={require('../../assets/images/setting.png')}
-                                            style={styles.image}
-                                        />
-                                    </TouchableOpacity>
-                                    <Modal
-                                        visible={openModal}
-                                        transparent={true}
-                                        animationType='slide'
-                                    >
-                                        <FilterPopup  close={closeModal} addressPicker={async () => {
-                                            closeModal()
-                                            let tempFltr = await AsyncStorage.getItem("TempFilters")
-                                            if (tempFltr) {
-                                                let tempFilter = JSON.parse(tempFltr)
-
-                                                // console.log('temp filters are ', tempFilter)
-                                                let routeData = {
-                                                    navigate: 'AddressPicker',
-                                                    PickAddress: (address) => {
-                                                        console.log("Address Picked Profie Detail screen", address)
-
-                                                        // console.log('temp filters after updating address', data)
-                                                        AsyncStorage.setItem("TempFilters", JSON.stringify({
-                                                            city: address.city,
-                                                            state: address.state,
-                                                            min_age: tempFilter.min_age,
-                                                            max_age: tempFilter.max_age,
-                                                            min_height: tempFilter.min_height,
-                                                            max_height: tempFilter.max_height,
-                                                            gender: tempFilter.gender
-                                                        }))
-                                                        setOpenModal(true)
+                                    let tempFltr = await AsyncStorage.getItem("TempFilters")
+                                    if (tempFltr) {
+                                        let tempFilter = JSON.parse(tempFltr)
+                                        // let getDiscover = false
+                                        // closeModal()
+                                        setOpenModalLocation(true)
+                                        console.log('temp filters are ', tempFilter)
+                                        
+                                    }
+                                    // onMenuClick(routeData)
+                                }} />
+                                {
+                                    openModalLocation && (
+                                        <Modal
+                                            visible={openModalLocation}
+                                            transparent={true}
+                                            animationType='slide'
+                                        >
+                                            <AddressPicker PickAddress={async (address) => {
+                                                console.log("Address picked from popup", address)
+                                                setOpenModalLocation(false)
+                                                let tempFltr = await AsyncStorage.getItem("TempFilters")
+                                                if (tempFltr) {
+                                                    let tempFilter = JSON.parse(tempFltr)
+                                                    let newFilters = {
+                                                        city: address.city,
+                                                        state: address.state,
+                                                        min_age: tempFilter.min_age,
+                                                        max_age: tempFilter.max_age,
+                                                        min_height: tempFilter.min_height,
+                                                        max_height: tempFilter.max_height,
+                                                        gender: tempFilter.gender
                                                     }
+                                                    setFilters(newFilters)
+                                                    AsyncStorage.setItem("TempFilters", JSON.stringify(newFilters))
                                                 }
-                                                navigation.navigate("AddressPicker", routeData)
-                                            }
-                                            // onMenuClick(routeData)
-                                        }} />
+                                            }} backButtonPressed={() => {
+                                                setOpenModalLocation(false)
+                                            }} />
+                                        </Modal>
+                                    )
+                                }
+                            </Modal>
 
-                                    </Modal>
 
 
+                        </View>
+                    </View>
 
-                                </View>
-                            </View>
-                        )
-                    }
                     {
                         currentIndex !== data.length ? (
 
@@ -689,7 +693,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                                                     onLoadEnd={() => {
                                                                         setLoadImage3(false)
                                                                     }}
-                                                                    onLoadStart={()=>{
+                                                                    onLoadStart={() => {
                                                                         setLoadImage3(true)
                                                                     }}
                                                                     placeholder={blurhash}
@@ -699,7 +703,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
 
                                                                 {
                                                                     loadImage3 ? (
-                                                                        <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 180/430*width }} />
+                                                                        <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 180 / 430 * width }} />
                                                                     ) : <></>
                                                                 }
                                                                 <TouchableOpacity style={{
@@ -760,7 +764,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                                                             </Text>
 
                                                                         </View>
-                                                                        <TouchableOpacity style={{ alignSelf: 'flex-end',marginRight:20/430*width }}
+                                                                        <TouchableOpacity style={{ alignSelf: 'flex-end', marginRight: 20 / 430 * width }}
                                                                             onPress={() => {
                                                                                 handleOnpress(item)
                                                                             }}

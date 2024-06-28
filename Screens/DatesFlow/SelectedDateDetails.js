@@ -8,6 +8,7 @@ import { StarRatingDisplay } from 'react-native-star-rating-widget';
 import moment from 'moment';
 
 import { Image } from 'expo-image';
+import { GetBudget } from '../../Services/dates/GetBudget';
 
 const { height, width } = Dimensions.get('window');
 
@@ -60,7 +61,7 @@ export default function SelectedDateDetails({ navigation, route }) {
                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 65 / 430 * width, marginTop: 20 / 930 * height }}>
                                 <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 5 }}>
                                     <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Budget</Text>
-                                    <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>${data.maxBudget}</Text>
+                                    <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>{GetBudget(data)}</Text>
 
                                 </View>
 

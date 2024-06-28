@@ -30,7 +30,7 @@ const ProfileEmailVerification = ({ navigation, route }) => {
     const ProfileLastName = user.ProfileLastName;
     const ProfileImage = user.ProfileImage
 
-    console.log('Email recieved from previous screen is', user);
+    // console.log('Email recieved from previous screen is', user);
 
     //code for checking the verification code entered by the user
 
@@ -142,6 +142,7 @@ const ProfileEmailVerification = ({ navigation, route }) => {
                     email: user.email,
                     code: code
                 })
+                console.log('body is', body)
                 const result = await fetch(ApisPath.ApiVerifyEmail, {
                     method: 'post',
                     headers: {

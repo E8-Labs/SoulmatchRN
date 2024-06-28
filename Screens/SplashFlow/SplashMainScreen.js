@@ -2,151 +2,26 @@ import React, { useEffect } from "react";
 import { View, Text, Dimensions, Image, Settings } from "react-native";
 import GlobalStyles from "../../assets/styles/GlobalStyles";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getProfile } from "../../Services/ProfileServices/GetProfile";
+import {NavigateLogedUser} from '../../Services/user/NavigateLogedUser'
 
 const SplashMainScreen = (props) => {
     const { height, width } = Dimensions.get('window')
 
 
-    const checkUserDetails = async()=>{
-        const user = await AsyncStorage.getItem("USER")
-        if (user) {
-            let d = JSON.parse(user)
-            console.log('user data available',d)
-            let data = d.user
-            // return
-            if(data.role === 'admin'){
-                props.navigation.navigate("AdminTabBarContainer")
-                return
-            }
-
-            if (data.profile_completion === 1) {
-                console.log('profile_completion_comment is ', data)
-                props.navigation.navigate('UploadIntroVideo')
-            }
-            else if (data.profile_completion === 2) {
-                console.log('profile_completion_comment', data.profile_completion_comment)
-                props.navigation.navigate('UploadMedia',{
-                    data:{
-                        from:'Splash'
-                    }
-                })
-            }
-            else if (data.profile_completion === 3) {
-
-                //here user will add zodiac,age,height,school,job and interest
-
-                console.log('profile_completion_comment', data.profile_completion_comment)
-                props.navigation.navigate('AddZodiac',{
-                    data:{
-                        from:'Splash',
-                        user:''
-                    }
-                })
-
-            } else if (data.profile_completion === 4) {
-
-                //here user will add zodiac,age,height,school,job and interest
-
-                console.log('profile_completion_comment', data.profile_completion_comment)
-                props.navigation.navigate('AddAge',{
-                    data:{
-                        from:'Splash',
-                        user:''
-                    }
-                })
-
-            }else if (data.profile_completion === 5) {
-
-                //here user will add zodiac,age,height,school,job and interest
-
-                console.log('profile_completion_comment', data.profile_completion_comment)
-                props.navigation.navigate('AddHeight',{
-                    data:{
-                        from:'Splash',
-                        user:''
-                    }
-                })
-
-            } else if (data.profile_completion === 6) {
-
-                //here user will add zodiac,age,height,school,job and interest
-
-                console.log('profile_completion_comment', data.profile_completion_comment)
-                props.navigation.navigate('AddGender',{
-                    data:{
-                        from:'Splash',
-                        user:''
-                    }
-                })
-
-            }else if (data.profile_completion === 7) {
-
-                //here user will add zodiac,age,height,school,job and interest
-
-                console.log('profile_completion_comment', data.profile_completion_comment)
-                props.navigation.navigate('AddSchool',{
-                    data:{
-                        from:'Splash',
-                        user:''
-                    }
-                })
-
-            }else if (data.profile_completion === 8) {
-
-                //here user will add zodiac,age,height,school,job and interest
-
-                console.log('profile_completion_comment', data.profile_completion_comment)
-                props.navigation.navigate('AddJobDetails',{
-                    data:{
-                        from:'Splash',
-                        user:''
-                    }
-                })
-
-            }else if (data.profile_completion === 9) {
-
-                //here user will add zodiac,age,height,school,job and interest
-
-                console.log('profile_completion_comment', data.profile_completion_comment)
-                props.navigation.navigate('GetInterest',{
-                    data:{
-                        from:'Splash',
-                        user:''
-                    }
-                })
-
-            }else if (data.profile_completion === 10) {
-
-                // if last condition runs then profile complition comment will 11
-
-                console.log('profile_completion_comment', data.profile_completion_comment)
-                props.navigation.navigate("AddLocation",{
-                    data:{
-                        from:"Splash"
-                    }
-                })
-            }
-
-            else if (data.profile_completion === 11) {
-
-                // if last condition runs then profile complition comment will 11
-
-                console.log('profile_completion_comment', data.profile_completion_comment)
-                props.navigation.navigate("TabBarContainer")
-            }else{
-                console.log('there is no screen to navigate',data.profile_completion_comment)
-            }
-
-           
-            // props.navigation.navigate('TabBarContainer')
-
-        } else {
-             console.log('user cannot navigate' )
-
-            props.navigation.navigate('SlideContainer')
-        }
-    }
     useEffect(() => {
+
+        const checkUserDetails = async() =>{
+            try{
+                let from = "Splash"
+              let u =  await NavigateLogedUser(props.navigation,from)
+              if(u === "SlideScreen"){
+                props.navigation.navigate("SlideContainer")
+              }
+            } catch(e){
+                console.log('error finding to navigate user', e)
+            }
+        }
 
         checkUserDetails()
 

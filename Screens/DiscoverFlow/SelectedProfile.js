@@ -30,7 +30,8 @@ const nonBinary = require('../../assets/images/nonBinaryIcon.png');
 
 export default function SelectedProfile({ navigation, route }) {
 
-    const user = route.params.user
+    const data = route.params.data
+    let user = data.user
     // console.log('user data from prev screen', user)
 
     const [totalInches, setTotalInches] = useState(null)
@@ -92,6 +93,7 @@ export default function SelectedProfile({ navigation, route }) {
 
 
     const handleLike = async () => {
+
         console.log('trying to likes profile')
 
         const User = await AsyncStorage.getItem("USER")

@@ -46,7 +46,7 @@ const AllowNotification = ({ navigation }) => {
                         d.user=json.data
                                    AsyncStorage.setItem("userLocation", JSON.stringify({d}))
 
-                        navigation.navigate("CongratulationsScreen")
+                        navigation.replace("CongratulationsScreen")
                     } else {
                         console.log('json message is', json.message)
                     }
@@ -195,7 +195,7 @@ const AllowNotification = ({ navigation }) => {
                             <TouchableOpacity
                                 onPress={() => {
 
-                                    navigation.navigate('CongratulationsScreen');
+                                    navigation.replace('CongratulationsScreen');
                                 }}
                                 style={{ height: 54 / 930 * height, width: '40%', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
                                 <Text style={{ color: '#666666', fontWeight: '500', fontSize: 18 }}>

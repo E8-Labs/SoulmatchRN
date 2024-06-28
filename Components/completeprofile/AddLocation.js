@@ -82,7 +82,7 @@ const AddLocation = ({ navigation }) => {
                         d.user = json.data
                                    AsyncStorage.setItem("userLocation", JSON.stringify({d}))
                         if(data.from === "Splash"){
-                            navigation.navigate('TabBarContainer')
+                            navigation.replace('TabBarContainer')
                         }
                         navigation.navigate('AllowNotification')
                     } else {
@@ -180,7 +180,9 @@ const AddLocation = ({ navigation }) => {
                         </View>
                         <View style={{ marginTop: 20 / 930 * height, width: '100%', display: 'flex', alignItems: 'center' }}>
                             <TouchableOpacity
-                                onPress={handleModalclick}
+                                onPress={()=>{
+                                    navigation.navigate("AllowNotification")
+                                }}
                                 style={{ height: 54 / 930 * height, width: '40%', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
                                 <Text style={{ color: '#666666', fontWeight: '500', fontSize: 18 }}>
                                     Not now, later

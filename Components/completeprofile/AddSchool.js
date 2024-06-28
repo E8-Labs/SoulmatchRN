@@ -127,7 +127,7 @@ const AddSchool = ({ navigation, route }) => {
                     }
                     <View style={{ marginTop: 40 / 930 * height }}>
                         <Text style={{ fontSize: 20, fontWeight: '500' }}>
-                            What school did you attend
+                            What school did you attend?
                         </Text>
                     </View>
                     <View style={{ display: 'flex', height:btnPosition, flexDirection: 'column', justifyContent: 'space-between' }}>

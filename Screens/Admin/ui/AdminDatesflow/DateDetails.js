@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import customFonts from '../../../../assets/fonts/Fonts'
-import { View, KeyboardAvoidingView, Modal, TouchableOpacity, TouchableWithoutFeedback, Platform, StyleSheet, Text, Keyboard, Dimensions, StatusBar,  ScrollView, ActivityIndicator, SafeAreaView } from 'react-native'
+import { View, KeyboardAvoidingView, Modal, TouchableOpacity, TouchableWithoutFeedback, Platform, StyleSheet, Text, Keyboard, Dimensions, StatusBar, ScrollView, ActivityIndicator, SafeAreaView } from 'react-native'
 import Apis from "../../apis/Apis"
 import { Image } from 'expo-image'
 import { AnimatedCircularProgress } from 'react-native-circular-progress'
 import colors from '../RangeSlider/Colors'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import moment from 'moment'
 
 const DateDetails = ({ navigation, route }) => {
     const { height, width } = Dimensions.get('window')
 
     const router = route.params.DATA
-    console.log("Data passed is :", router.DateDetails.name);
+    console.log("Data passed is :", router.DateDetails.Category);
     const UserDateDetails = router.DateDetails;
 
     const [openModal, setOpenModal] = useState(false);
@@ -131,7 +132,7 @@ const DateDetails = ({ navigation, route }) => {
                                 Hours of operation
                             </Text>
                             <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.medium, color: '#333333' }}>
-                                {UserDateDetails.openTime} - {UserDateDetails.closeTime}
+                                {moment(UserDateDetails.openTime, "HH:mm:ss").format("h:mm a")} - {moment(UserDateDetails.closeTime, "HH:mm:ss").format("h:mm a")}
                             </Text>
                             <Text style={{ fontWeight: '400', fontSize: 12, fontFamily: customFonts.medium, color: '#333333', marginTop: 8 }}>
                                 Description
@@ -248,16 +249,18 @@ const DateDetails = ({ navigation, route }) => {
                                     </TouchableOpacity>
                                 </View>
 
-                                <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: '#E01F1F' }}>
+                                <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, alignItems: 'center', justifyContent: 'center' }}>
                                     {Loading ?
                                         <View>
                                             <ActivityIndicator color={colors.blueColor} size={'small'} />
                                         </View> :
-                                        <TouchableOpacity onPress={handleDeleteDate}>
-                                            <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.medium, color: 'white' }}>
-                                                Yes, Delete
-                                            </Text>
-                                        </TouchableOpacity>
+                                        <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: '#E01F1F' }}>
+                                            <TouchableOpacity onPress={handleDeleteDate}>
+                                                <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.medium, color: 'white' }}>
+                                                    Yes, Delete
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
                                     }
                                 </View>
                             </View>

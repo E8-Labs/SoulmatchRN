@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar'
 import React, { useEffect, useState } from 'react'
-import { Alert, View, Text, Dimensions, KeyboardAvoidingView, Keyboard, Platform, TouchableWithoutFeedback, Image, TouchableOpacity, TextInput, StyleSheet, ScrollView, ActivityIndicator } from 'react-native'
+import { Alert, View, Text, Dimensions, Modal, Keyboard, Platform, TouchableWithoutFeedback, TouchableOpacity, TextInput, StyleSheet, ScrollView, ActivityIndicator } from 'react-native'
+import { Image } from 'expo-image'
 import customFonts from '../../../../assets/fonts/Fonts'
 import { Dropdown } from 'react-native-element-dropdown'
 import Apis from '../../apis/Apis'
@@ -8,46 +9,18 @@ import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import colors from '../RangeSlider/Colors';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import AddressPicker from '../Addresspicker/AddressPicker'
 
 const AddDate = ({ navigation, route }) => {
     const routeData = route.params.DATA;
-    // console.log('Data is', routeData)
+    // const test = route.params.newDate('Hello')
+    console.log('Data is', routeData.dateDetails)
     const DateData = routeData.dateDetails;
+    console.log('Route data of date details is :', DateData);
     // const LocationSelected = routeData.LocationSel;
     // console.log("selected location is :", LocationSelected);
     const { height, width } = Dimensions.get('window');
 
-    //code for getting location from addresspicker
-
-    // const locationData = route.params.Location;
-    // console.log("Address recieved from previous screen is :", locationData);
-
-    // try {
-    //     const locationData = route.params.Location;
-    //     console.log("Address received from the previous screen is:", locationData);
-    // } catch (error) {
-    //     console.error("Error fetching place details:", error);
-    // }
-
-    // let locationData;
-
-    // try {
-    //     // Check if route.params is defined and log it for debugging
-    //     if (route && route.params) {
-    //         console.log("Route params:", route.params);
-
-    //         // Safely access nested properties using optional chaining
-    //         locationData = route.params?.Location?.LocationData;
-
-    //         // Log the received data
-    //         console.log("Address received from the previous screen is:", locationData);
-    //     } else {
-    //         throw new Error("route.params is undefined");
-    //     }
-    // } catch (error) {
-    //     // Log the error for debugging purposes
-    //     console.error("Error fetching place details:", error);
-    // }
 
     const [BusinessName, setBusinessName] = useState('');
     const [CategorySelected, setCategorySelected] = useState('');
@@ -56,6 +29,8 @@ const AddDate = ({ navigation, route }) => {
     const [Description, setDescription] = useState('');
     const [ApiCategories, setApiCategories] = useState([]);
     const [Category, setCategory] = useState('Select category');
+    const [CategoryName, setCategoryName] = useState('Select category');
+    const [CategoryId, setCategoryId] = useState('');
     const [MinBudget, setMinBudget] = useState('');
     const [MaxBudget, setMaxBudget] = useState('');
     const [Budget, setBudget] = useState('Select budget');
@@ -70,31 +45,50 @@ const AddDate = ({ navigation, route }) => {
     const [date2, setDate2] = useState(new Date());
     const [mode, setMode] = useState('time');
     const [show, setShow] = useState(false);
+    const [loading2, setLoading2] = useState(false);
     const [openTime, setOpenTime] = useState(null);
     const [closeTime, setCloseTime] = useState(null);
     const [currentPicker, setCurrentPicker] = useState(null);
     const [error, setError] = useState(null);
     const [SelOpenTime, setSelOpenTime] = useState(null);
     const [SelCloseTime, setSelCloseTime] = useState(null);
+    const [filters, setFilters] = useState({})
+    const [openModalLocation, setOpenModalLocation] = useState(false);
 
     // console.log("Latitude is :", latitude);
     // console.log("Longitude is :", longitude);
     // console.log("Image is :", image);
     // console.log("MaxBudget is :", MaxBudget);
     // console.log("MinBudget is :", MinBudget);
+    useEffect(() => {
+        const updateCategory = () => {
+            setCategoryId(Category.value)
+            setCategoryName(Category.label)
+        }
+    }, [Category])
+
 
     useEffect(() => {
         if (routeData.from === "EditDate") {
             // console.log("Date Data is :", DateData);
+            // let DateData = routeData.UserDateDetails
             setBusinessName(DateData.name);
-            setCategory(DateData.Category.name);
+            setCategoryId(DateData.Category.id)
+            setCategoryName(DateData.Category.name)
             setBudget(`$${DateData.minBudget} - $${DateData.maxBudget}`);
+            setMaxBudget(DateData.maxBudget);
+            setMinBudget(DateData.minBudget);
             setDescription(DateData.description);
             setImage(DateData.imageUrl);
             setAddress(DateData.address);
             setSelCloseTime(DateData.closeTime);
             setSelOpenTime(DateData.openTime);
             setDateOpenTime(DateData.openTime);
+            setCityName(DateData.address);
+            setlatitude(DateData.latitude);
+            setlongitude(DateData.longitude);
+            // setDate(DateData.openTime)
+            // setDate2(DateData.closeTime)
         }
     }, [])
 
@@ -157,22 +151,22 @@ const AddDate = ({ navigation, route }) => {
 
         {
             value: '4',
-            lable: '$80+ = $$$$',
+            lable: '$80 + = $$$$',
         }
     ]
 
     useEffect(() => {
-        if (Budget === '$100 + $100000000 = $$$$') {
-            setMinBudget('100')
+        if (Budget === '$80 +  = $$$$') {
+            setMinBudget('80')
             setMaxBudget('100,000,000')
             // console.log('Budget valus is', MinBudget)
         } else if (Budget === '$50 - $80 = $$$') {
             setMinBudget('50')
             setMaxBudget('80')
-        } else if (Budget === '$30 - $50 = $$') {
+        } else if (Budget === '$20 - $50 = $$') {
             setMinBudget('30')
             setMaxBudget('50')
-        } else if (Budget === '$10 - $20 = $') {
+        } else if (Budget === '$0 - $20 = $') {
             setMinBudget('10')
             setMaxBudget('20')
         }
@@ -204,13 +198,10 @@ const AddDate = ({ navigation, route }) => {
         }
     };
 
-    //test code for keyboard
-    //tell about prompt savy search bar key working
-
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
-            quality: 1,
+            quality: 0.5,
         });
 
         if (!result.canceled) {
@@ -222,16 +213,20 @@ const AddDate = ({ navigation, route }) => {
             alert('You did not select any image.');
         }
     }
-    3
+
     const handleSaveButton = async () => {
-        console.warn("Selected open time is ", SelOpenTime);
+        if (BusinessName.length === 0 || Category === 'Select category' || Budget === 'Select budget' || Description.length === 0, !SelOpenTime || !SelCloseTime) {
+            Alert.alert('Enter all credentials')
+            return
+        }
+        console.log("Selected open time is ", SelOpenTime);
         // return 
         try {
             setLoading(true);
             const AuthToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoyNSwiZmlyc3RfbmFtZSI6ImFkbWluIiwibGFzdF9uYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQHNvdWxtYXRjaC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRmazNoTEN6MGlObGNNdjd4RVV3U2ouOWZtdms2SFNIRi4wdG5SWS5YWGl0MllTLkhsbUhBQyIsInByb2ZpbGVfaW1hZ2UiOiIiLCJpbnRyb192aWRlbyI6bnVsbCwiaW50cm9fdGh1bWJuYWlsX3VybCI6bnVsbCwiY29tcGFueSI6bnVsbCwiam9iX3RpdGxlIjpudWxsLCJhZ2UiOm51bGwsImhlaWdodF9pbmNoZXMiOm51bGwsImhlaWdodF9mZWV0IjpudWxsLCJ6b2RpYWMiOm51bGwsInNjaG9vbCI6bnVsbCwiY2l0eSI6bnVsbCwic3RhdGUiOm51bGwsImxhdCI6bnVsbCwibGFuZyI6bnVsbCwiZ2VuZGVyIjpudWxsLCJmY21fdG9rZW4iOm51bGwsImRldmljZV9pZCI6IiIsInByb3ZpZGVyX2lkIjoiIiwicHJvdmlkZXJfbmFtZSI6IkVtYWlsIiwicm9sZSI6ImFkbWluIiwic3RhdHVzIjpudWxsLCJlbmNfa2V5IjpudWxsLCJlbmNfaXYiOm51bGwsImRvYiI6bnVsbCwicG9pbnRzIjowLCJpbnRlcmVzdGVkX2dlbmRlciI6bnVsbCwiaW50ZXJlc3RlZF9taW5fYWdlIjpudWxsLCJpbnRlcmVzdGVkX21heF9hZ2UiOm51bGwsImNyZWF0ZWRBdCI6IjIwMjQtMDUtMjhUMDY6NDg6NTEuMDAwWiIsInVwZGF0ZWRBdCI6IjIwMjQtMDUtMjhUMDY6NTA6MDQuMDAwWiJ9LCJpYXQiOjE3MTY4NzkwNzUsImV4cCI6MTc0ODQxNTA3NX0.WdN1uRySZaxW2BzDJSWt3b97puD51PViXu6fL-sJQIs";
             const ApiUrl = "https://plurawlapp.com/soulmatch/api/admin/dates/add_date_place";
             const formData = new FormData();
-            formData.append("categoryId", Category);
+            formData.append("categoryId", Category.value);
             formData.append("minBudget", MinBudget);
             formData.append("maxBudget", MaxBudget);
             formData.append("openTime", SelOpenTime);
@@ -247,6 +242,9 @@ const AddDate = ({ navigation, route }) => {
                 uri: image,
                 type: 'image/jpeg'
             });
+
+            console.log('form data ', formData)
+            // return
             const response = await fetch(ApiUrl, {
                 'method': 'post',
                 headers: {
@@ -255,10 +253,26 @@ const AddDate = ({ navigation, route }) => {
                 },
                 body: formData
             });
-            console.log("Response of update api is :", response)
             if (response.ok) {
                 const Result = await response.json();
                 console.log("Response of api is", Result);
+                const newDateData = {
+                    CategoryId: Category,
+                    minBudget: MinBudget,
+                    Category: { name: Category.value },
+                    maxBudget: MaxBudget,
+                    openTime: SelOpenTime,
+                    closeTime: SelCloseTime,
+                    address: CityName,
+                    latitude: latitude,
+                    longitude: longitude,
+                    description: Description,
+                    name: BusinessName,
+                    image: image
+                }
+                console.log('new date data on add date screen is', newDateData)
+                // return
+                route.params.newDate(newDateData);
                 navigation.pop();
             } else if (!response.ok) {
                 console.log("Status is false");
@@ -272,8 +286,8 @@ const AddDate = ({ navigation, route }) => {
     }
 
     const handleSaveClick = () => {
-        showAlert(),
-            handleSaveButton()
+        // showAlert(),
+        handleSaveButton()
     }
 
     // console.log('Id recieved is :', DateData.id);
@@ -342,13 +356,16 @@ const AddDate = ({ navigation, route }) => {
         console.log('address is ', address)
         setCityName(address.city)
         setStateName(address.state)
+        setlongitude(address.lang)
+        setlatitude(address.lat)
     }
 
     const handlePickAddress = () => {
+        setOpenModalLocation(true)
         // console.warn("hello");
-        navigation.navigate('AddressPicker', {
-            PickAddress: pickAddress
-        })
+        // navigation.navigate('AddressPicker', {
+        //     PickAddress: pickAddress
+        // })
     }
 
     //test code for address
@@ -414,23 +431,17 @@ const AddDate = ({ navigation, route }) => {
         return `${hours}:${minutes} ${ampm}`;
     };
 
-    //test code for printing value of close time recieving from async storage
-
-
-    //test code for updating date place
-
     const handleUpdate = async () => {
 
-        const data = await AsyncStorage.getItem("USER")
-        if (data) {
-            let d = JSON.parse(data)
-            let AuthToken = d.token
-
-
-            try {
-                console.log('trying to update date')
+        try {
+            setLoading(true);
+            const data = await AsyncStorage.getItem("USER")
+            if (data) {
+                let d = JSON.parse(data)
+                let AuthToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoyNSwiZmlyc3RfbmFtZSI6ImFkbWluIiwibGFzdF9uYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQHNvdWxtYXRjaC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRmazNoTEN6MGlObGNNdjd4RVV3U2ouOWZtdms2SFNIRi4wdG5SWS5YWGl0MllTLkhsbUhBQyIsInByb2ZpbGVfaW1hZ2UiOiIiLCJpbnRyb192aWRlbyI6bnVsbCwiaW50cm9fdGh1bWJuYWlsX3VybCI6bnVsbCwiY29tcGFueSI6bnVsbCwiam9iX3RpdGxlIjpudWxsLCJhZ2UiOm51bGwsImhlaWdodF9pbmNoZXMiOm51bGwsImhlaWdodF9mZWV0IjpudWxsLCJ6b2RpYWMiOm51bGwsInNjaG9vbCI6bnVsbCwiY2l0eSI6bnVsbCwic3RhdGUiOm51bGwsImxhdCI6bnVsbCwibGFuZyI6bnVsbCwiZ2VuZGVyIjpudWxsLCJmY21fdG9rZW4iOm51bGwsImRldmljZV9pZCI6IiIsInByb3ZpZGVyX2lkIjoiIiwicHJvdmlkZXJfbmFtZSI6IkVtYWlsIiwicm9sZSI6ImFkbWluIiwic3RhdHVzIjpudWxsLCJlbmNfa2V5IjpudWxsLCJlbmNfaXYiOm51bGwsImRvYiI6bnVsbCwicG9pbnRzIjowLCJpbnRlcmVzdGVkX2dlbmRlciI6bnVsbCwiaW50ZXJlc3RlZF9taW5fYWdlIjpudWxsLCJpbnRlcmVzdGVkX21heF9hZ2UiOm51bGwsImNyZWF0ZWRBdCI6IjIwMjQtMDUtMjhUMDY6NDg6NTEuMDAwWiIsInVwZGF0ZWRBdCI6IjIwMjQtMDUtMjhUMDY6NTA6MDQuMDAwWiJ9LCJpYXQiOjE3MTY4NzkwNzUsImV4cCI6MTc0ODQxNTA3NX0.WdN1uRySZaxW2BzDJSWt3b97puD51PViXu6fL-sJQIs"
+                // const ApiUrl = "https://plurawlapp.com/soulmatch/api/admin/dates/update_date_place";
                 const formData = new FormData();
-                formData.append("categoryId", Category);
+                formData.append("categoryId", Category.value);
                 formData.append("minBudget", MinBudget);
                 formData.append("maxBudget", MaxBudget);
                 formData.append("openTime", SelOpenTime);
@@ -446,28 +457,35 @@ const AddDate = ({ navigation, route }) => {
                     uri: image,
                     type: 'image/jpeg'
                 });
-
+                formData.append("id", DateData.id)
+                console.log('Form data is :', formData);
                 const response = await fetch(Apis.UpdateDatePlace, {
-                    method: 'post',
+                    'method': 'post',
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         'Authorization': 'Bearer ' + AuthToken
                     },
                     body: formData
-                })
-                if(response){
-                    console.log('api called')
-                    let json = await response.json()
-                    if(json.status === true){
-                        console.log('date updated ', json.data)
-                    }else{
-                        console.log('json message is', json.message)
-                    }
+                });
+                console.log('Response of api is :', response);
+                if (response.ok) {
+                    const UpdateData = await response.json();
+                    console.log('Response of update api is :', UpdateData);
+                    navigation.navigate("AdminTabBarContainer", {
+                        from: 'Edit'
+                    });
+                } else {
+                    console.log('Response is not ok :', response);
+                    const errorText = await response.text();
+                    console.log('Error text:', errorText);
                 }
-
-            } catch (error) {
-                console.error("Error occured is: ", error);
+            } else {
+                console.log("No data recieved form localstorage");
             }
+        } catch (error) {
+            console.error('Error occured is :', error);
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -494,7 +512,7 @@ const AddDate = ({ navigation, route }) => {
 
 
     return (
-        <View style={{ display: 'flex', alignItems: 'center', height: height * 0.95, marginTop: marginTop }}>
+        <View style={{ alignSelf: 'center', alignItems: 'center', height: height * 0.95, marginTop: marginTop, width: width }}>
             {/*change if the screen is irResponsive height: height s*/}
             <View style={{ width: width - 50 }}>
                 <StatusBar
@@ -502,7 +520,7 @@ const AddDate = ({ navigation, route }) => {
                     backgroundColor="#FFFFFF"
                     translucent={false}
                 />
-                <View style={{ marginTop: 60, flexDirection: 'row', justifyContent: 'space-between' }}>
+                <View style={{ marginTop: 60, flexDirection: 'row', justifyContent: 'space-between', }}>
                     <View style={{ flexDirection: 'row', gap: 20, alignItems: 'center' }}>
                         <TouchableOpacity onPress={handleBackClick} style={{ width: 46 / 430 * width }}>
                             <View style={{ height: 46 / 930 * height, width: 46 / 430 * width, borderWidth: 1, borderColor: '#E6E6E6', alignItems: 'center', justifyContent: 'center', borderRadius: 6 }}>
@@ -522,52 +540,36 @@ const AddDate = ({ navigation, route }) => {
                         }
 
                     </View>
+                    {/* <View>
+                                        <ActivityIndicator style={{ height: height, width: width, alignItems: 'center', justifyContent: 'center' }} size={'small'} color={colors.blueColor} />
+                                    </View> */}
                     {
                         routeData.from === "AdminDates" ? (
                             <View style={{ justifyContent: 'center' }}>
-                                {Loading ?
-                                    <View>
-                                        <ActivityIndicator size={'small'} color={colors.blueColor} />
-                                    </View> :
-                                    <TouchableOpacity onPress={handleSaveClick} style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                        <Text style={{ fontWeight: '500', fontFamily: customFonts.medium, fontSize: 14, color: '#6050DC' }}>
-                                            Save
-                                        </Text>
-                                    </TouchableOpacity>
-                                }
+                                <TouchableOpacity onPress={handleSaveClick} style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                    <Text style={{ fontWeight: '500', fontFamily: customFonts.medium, fontSize: 14, color: '#6050DC' }}>
+                                        Save
+                                    </Text>
+                                </TouchableOpacity>
                             </View>
                         ) : (
                             <View style={{ justifyContent: 'center' }}>
-                                {Loading ?
-                                    <View>
-                                        <ActivityIndicator size={'small'} color={colors.blueColor} />
-                                    </View> :
-                                    <TouchableOpacity onPress={handleUpdate} style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                        <Text style={{ fontWeight: '500', fontFamily: customFonts.medium, fontSize: 14, color: '#6050DC' }}>
-                                            Update
-                                        </Text>
-                                    </TouchableOpacity>
-                                }
+                                <TouchableOpacity onPress={handleUpdate} style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                    <Text style={{ fontWeight: '500', fontFamily: customFonts.medium, fontSize: 14, color: '#6050DC' }}>
+                                        Update
+                                    </Text>
+                                </TouchableOpacity>
                             </View>
                         )
                     }
-                    {/*Loading ?
-                        <View>
-                            <ActivityIndicator size={'small'} color={colors.blueColor} />
-                        </View> :
-                        <TouchableOpacity onPress={handleSaveClick} style={{ alignItems: 'center', justifyContent: 'center' }}>
-                            <Text style={{ fontWeight: '500', fontFamily: customFonts.medium, fontSize: 14, color: '#6050DC' }}>
-                                Save
-                            </Text>
-                        </TouchableOpacity>
-                */}
+
                 </View>
 
-                <View style={{ height: height * 0.83 }}>
+                <View style={{ height: height * 0.85 }}>
                     <ScrollView showsVerticalScrollIndicator={false}>
-                        <Text style={{ fontWeight: '500', fontFamily: customFonts.medium, fontSize: 16, marginTop: 18 }}>
+                        {/* <Text style={{ fontWeight: '500', fontFamily: customFonts.medium, fontSize: 16, marginTop: 18 }}>
                             Add Image
-                        </Text>
+                        </Text> */}
 
                         {image ?
                             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -610,10 +612,10 @@ const AddDate = ({ navigation, route }) => {
                             data={ApiCategories}
                             valueField="value"
                             labelField="label"
-                            placeholder={Category}
+                            placeholder={CategoryName}
                             searchPlaceholder="Search categories"
                             onChange={item => {
-                                setCategory(item.value);
+                                setCategory(item);
                             }}
                         />
 
@@ -621,12 +623,6 @@ const AddDate = ({ navigation, route }) => {
                             Budget
                         </Text>
 
-                        {/* <Text>
-                            {
-                                MaxBudget ? MaxBudget : <Text>No</Text>
-                            }
-                        </Text> */}
-                        {/*<Budget style={{ marginTop: 15 }} onBudgetChange={handleBudgetChange} />*/}
 
                         < Dropdown
                             style={styles.dropdown}
@@ -655,67 +651,38 @@ const AddDate = ({ navigation, route }) => {
                         />
 
                         <Text style={styles.Dropdownlabel}>
-                            Hours of operation
+                            Hours of operation {DateData.openTime}
                         </Text>
 
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: 300 / 430 * width, alignSelf: 'center' }}>
+                            <View style={{ alignItems: 'center', flexDirection: 'column', gap: 10, marginTop: 20 }}>
+                                <Text style={{ fontSize: 16 }}>Open Time</Text>
+                                <DateTimePicker
+                                    testID="dateTimePicker"
+                                    value={date}
+                                    // minimumDate={new Date()}
+                                    mode={mode}
+                                    is24Hour={false}
+                                    display="default"
+                                    onChange={handleOpen}
+                                />
+                            </View>
 
-                        <View>
-                            {/* 
-                            <DateTimePicker
-                                testID="dateTimePicker"
-                                value={date}
-                                mode={mode}
-                                is24Hour={false}
-                                display="default"
-                                onChange={onChange}
-                            /> */}
+                            <View style={{ alignItems: 'center', flexDirection: 'column', gap: 10, marginTop: 20 }}>
+                                <Text style={{ fontSize: 16 }}>Close Time</Text>
+                                <DateTimePicker
+                                    testID="dateTimePicker"
+                                    value={date2}
+                                    // minimumDate={new Date()}
+                                    mode={mode}
+                                    is24Hour={false}
+                                    display="default"
+                                    onChange={handleClose}
+                                />
+                            </View>
 
                         </View>
 
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: 300 / 430 * width, alignSelf: 'center' }}>
-                                    <View style={{ alignItems: 'center', flexDirection: 'column', gap: 10, marginTop: 20 }}>
-                                        <Text style={{ fontSize: 16 }}>Open Time</Text>
-                                        <DateTimePicker
-                                            testID="dateTimePicker"
-                                            value={date}
-                                            mode={mode}
-                                            is24Hour={false}
-                                            display="default"
-                                            onChange={handleOpen}
-                                        />
-                                    </View>
-
-                                    <View style={{ alignItems: 'center', flexDirection: 'column', gap: 10, marginTop: 20 }}>
-                                        <Text style={{ fontSize: 16 }}>Close Time</Text>
-                                        <DateTimePicker
-                                            testID="dateTimePicker"
-                                            value={date2}
-                                            mode={mode}
-                                            is24Hour={false}
-                                            display="default"
-                                            onChange={handleClose}
-                                        />
-                                    </View>
-
-                                    {/* <TouchableOpacity onPress={showOpenTimepicker} style={{ width: 177 / 430 * width }}>
-                                        <View style={styles.timePicker}>
-                                            <Text style={styles.OperationTime}>
-                                               
-                                                {openTime ? formatTime(openTime) : 'Open'}
-                                            </Text>
-                                            <Image source={require('../../../../assets/Images3/clock.png')} style={styles.clockIcon} />
-                                        </View>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={showCloseTimepicker} style={{ width: 177 / 430 * width }}>
-                                        <View style={styles.timePicker}>
-                                            <Text style={styles.OperationTime}>
-                                                {SelCloseTime ? formatTime(closeTime) : 'Close'}
-                                            </Text>
-                                            <Image source={require('../../../../assets/Images3/clock.png')} style={styles.clockIcon} />
-                                        </View>
-                                    </TouchableOpacity> */}
-                                </View>
-                          
                         <View>
                             {error && <Text style={styles.ErrorText}>{error}</Text>}
                         </View>
@@ -737,27 +704,7 @@ const AddDate = ({ navigation, route }) => {
                                             </Text>
                                     }
                                 </Text>
-                                {/*<TextInput
-                                    value={Address}
-                                    onChangeText={(Address) => setAddress(Address)}
-                                    placeholder='Enter Address'
-                            style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.medium }} />*/}
-                                {/*<GooglePlacesAutocomplete
-                                    placeholder="Address"
-                                    query={{
-                                        key: GOOGLE_PLACES_API_KEY,
-                                        language: 'en', // language of the results
-                                    }}
-                                    onPress={handlePlaceSelect}
-                                    onFail={(error) => console.error(error)}
-                                    enablePoweredByContainer={false}
-                                    scrollEnabled={false}
-                                // requestUrl={{
-                                //   url:
-                                //     'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api',
-                                //   useOnPlatform: 'web',
-                                // }} // this in only required for use on the web. See https://git.io/JflFv more for details.
-                                />*/}
+
                             </View>
                         </TouchableOpacity>
 
@@ -775,8 +722,42 @@ const AddDate = ({ navigation, route }) => {
                         </View>
                     </ScrollView>
                 </View>
-
             </View>
+
+            {
+                openModalLocation && (
+                    <Modal
+                        visible={openModalLocation}
+                        transparent={true}
+                        animationType='slide'
+                    >
+                        <AddressPicker PickAddress={async (address) => {
+                            console.log("Address picked from popup", address)
+                            setOpenModalLocation(false)
+                            setCityName(address.city);
+                            setlatitude(address.latitude);
+                            setlongitude(address.longitude);
+                            setStateName(address.state)
+                            // setFilters(newFilters)                            
+                        }} backButtonPressed={() => {
+                            setOpenModalLocation(false)
+                        }} />
+                    </Modal>
+                )
+            }
+
+            {
+                loading2 ? (
+                    <View style={{
+                        height: height, width: width, backgroundColor: '#00000050', alignItems: 'center', justifyContent: 'center', position: 'absolute',
+                        top: 0, left: 0
+                    }}>
+                        <ActivityIndicator size={'large'} color={colors.blueColor} />
+                    </View>
+                ) : null
+            }
+
+
 
         </View>
     )

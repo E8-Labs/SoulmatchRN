@@ -72,7 +72,7 @@ const UploadMedia = ({ navigation, route }) => {
         });
         const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
             console.log("Keyboard hide")
-            setModalHeight(height * 0.56);
+            setModalHeight(height * 0.5);
         });
         return () => {
             keyboardDidShowListener.remove();
@@ -497,11 +497,11 @@ const UploadMedia = ({ navigation, route }) => {
                                     </View>
                                     {
                                         showIndicator ? (
-                                            <ActivityIndicator size={'large'} color={colors.blueColor} />
+                                            <ActivityIndicator size={'large'} color={colors.blueColor} style = {{ marginTop: 10,}}/>
                                         ) : (
                                             <TouchableOpacity
                                                 onPress={uploadMedia}
-                                                style={{ marginTop: 40, backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
+                                                style={{ marginTop: 10, backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10 }}>
                                                 <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>
                                                     Upload
                                                 </Text>

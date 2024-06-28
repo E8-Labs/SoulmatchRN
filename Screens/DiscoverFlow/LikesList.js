@@ -52,6 +52,8 @@ export default function LikesList(props) {
           if (json.status === true) {
             console.log('Profiles who likes me are', json.data)
             setLikes(json.data)
+            const likedProfiles = json.data.filter(user => user.isLiked).map(user => user.id)
+            setSelected(likedProfiles)
           } else {
             console.log('json message is', json.messsage)
           }
@@ -91,11 +93,22 @@ export default function LikesList(props) {
           let json = await result.json()
           if (json.status === true) {
             console.log('profile liked', json)
+            setSelected(prev => [...prev, item.id])
+              let match = ""
+              likes.forEach((user)=>{
+                
+                if(user.id === item.id){
+                    match = user
+                }
+              })
+              console.log('liked user profile is', match)
             if(json.match === true){
+              
+
               props.navigation.navigate("GotMatch",{
                 data:{
                   navigate: 'GotMatch',
-                  user: json.data
+                  user: match
                 }
               })
             }
@@ -138,7 +151,8 @@ export default function LikesList(props) {
             if (result) {
                 let json = await result.json()
                 if (json.status === true) {
-                    console.log('profile liked', json.data)
+                    console.log('profile disliked', json.data)
+                    setSelected(prev => prev.filter(id => id !== item.id))
                     
                     
                 } else {
@@ -202,7 +216,10 @@ export default function LikesList(props) {
                           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                             <TouchableOpacity onPress={() => {
                               props.navigation.navigate("SelectedProfile", {
-                                user: item
+                                data:{
+                                  user:item,
+                                  from:'LikesList'
+                                }
                               })
                             }}>
                               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 18 }}>
@@ -222,8 +239,8 @@ export default function LikesList(props) {
                                     <ActivityIndicator size={'small'} color={colors.blueColor} style={{ marginLeft: -50/430*width, }} />
                                   ) : <></>
                                 }
-                                <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>
-                                  {item.email}
+                                <Text numberOfLines={2} style={{ fontSize: 16, fontFamily: customFonts.meduim,width:200/430*width }}>
+                                  {item.first_name} {item.last_name}
                                 </Text>
                               </View>
                             </TouchableOpacity>

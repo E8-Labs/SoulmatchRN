@@ -1,10 +1,10 @@
 import React, { useEffect ,useState,useRef } from "react";
-import { Image, View, Text, ImageBackground, StyleSheet, TouchableOpacity, Dimensions, Platform,  } from "react-native";
+import { Image, View, Text, ImageBackground, StyleSheet, TouchableOpacity, Dimensions, Platform, Alert,  } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
-
+import { UpdateProfile } from "../../Services/ProfileServices/UpdateProfile";
 
 import DiscoverMain from "./DiscoverMain";
 import MessageMain from "./MessageMain";
@@ -170,12 +170,16 @@ export default function TabBarContainer() {
     const notificationListener = useRef();
     const responseListener = useRef();
     
-    
+    useEffect(()=>{
+        getNotificationPermission()
+    },[])
     
     useEffect(() => {
       registerForPushNotificationsAsync().then(
         (token) => token && setExpoPushToken(token)
       );
+
+      
     
       if (Platform.OS === 'android') {
         Notifications.getNotificationChannelsAsync().then((value) =>
@@ -202,6 +206,30 @@ export default function TabBarContainer() {
         }
       };
     }, []);
+
+
+  const getNotificationPermission = async () => {
+
+    console.log('enter in function')
+    registerForPushNotificationsAsync().then(
+        async(token) => {
+            if (token) {
+                setExpoPushToken(token)
+            }
+            console.log('token', token)
+            // Alert.alert("fcm token is ",token )
+            let body = JSON.stringify({
+                fcm_token: token
+            })
+            try {
+                await UpdateProfile(body);
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                setError('Failed to update profile.');
+            }
+        }
+    );
+}
     
     
     
