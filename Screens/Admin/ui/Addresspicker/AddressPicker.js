@@ -25,7 +25,7 @@ const AddressPicker = ({ backButtonPressed, PickAddress }) => {
 
             const geometry = placeDetails.result.geometry;
             const addressComponents = placeDetails.result.address_components;
-
+            console.log('Place details are :', JSON.stringify(placeDetails));
             // Extract latitude and longitude
             const lat = geometry.location.lat;
             const lon = geometry.location.lng;

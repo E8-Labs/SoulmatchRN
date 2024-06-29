@@ -19,14 +19,6 @@ export default function DatesContainer({ navigation }) {
     const [categories, setCategories] = useState([])
     const [loading, setLoading] = useState(false)
 
-    
-    // ]
-    // useFocusEffect(
-    //     React.useCallback(() => {
-    //         console.log("Use Focus Effect")
-    //         getDates()
-    //     }, [])
-    // );
     useEffect(() => {
         getDates()
         getDateCategories()
@@ -34,8 +26,6 @@ export default function DatesContainer({ navigation }) {
     useEffect(() => {
         getDates()
     }, [selectedCategory])
-
-
 
     const getDateCategories = async () => {
         try {
@@ -84,6 +74,9 @@ export default function DatesContainer({ navigation }) {
 
     }
 
+    //search bar timer code
+    
+
     const getDates = async () => {
         console.log('trying to get dates')
         setLoading(true)
@@ -129,7 +122,6 @@ export default function DatesContainer({ navigation }) {
 
     }
    
-
     return (
 
         <SafeAreaView style={{ alignItems: 'center' }}>

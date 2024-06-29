@@ -220,52 +220,54 @@ const DateDetails = ({ navigation, route }) => {
                         onRequestClose={() => setOpenModal(false)}
                         style={{}}
                     >
-                        <View style={{ height: 450 / 930 * height, borderTopRightRadius: 25, borderTopLeftRadius: 25, backgroundColor: 'white', width: width, position: 'absolute', bottom: 0, alignItems: 'center' }}>
-                            <View style={{ width: width - 50 }}>
-                                <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', marginTop: 15 / 930 * height, alignItems: 'center' }}>
-                                    <Text style={{ fontSize: 20, fontWeight: '500', fontFamily: customFonts.medium }}>
-                                        Delete
-                                    </Text>
-                                    <TouchableOpacity onPress={() => setOpenModal(false)} style={{ marginRight: 10 }}>
-                                        <Image source={require('../../../../assets/Images3/CrossIcon.png')} style={{ height: 20 / 930 * height, width: 20 / 430 * width, resizeMode: 'contain', }} />
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                            <View style={{ height: 0.1, borderWidth: 0.2, borderColor: '#E6E6E6', width: width, marginTop: 20 / 930 * height }}></View>
-
-                            <View style={{ marginTop: 25 }}>
-                                <Image source={require('../../../../assets/Images3/delete1.png')} style={{ height: 120, width: 120, resizeMode: 'contain' }} />
-                            </View>
-
-                            <Text style={{ fontWeight: '500', fontFamily: customFonts.medium, fontSize: 16, color: '#4D4D4D', marginTop: 15 }}>
-                                Are you sure you want to delete date?
-                            </Text>
-
-                            <View style={{ width: width - 50, flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 }}>
-                                <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 1, }}>
-                                    <TouchableOpacity onPress={() => setOpenModal(false)}>
-                                        <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.medium }}>
-                                            Cancel
+                        <View style={{ height: height, backgroundColor: '#00000050' }}>
+                            <View style={{ height: 450 / 930 * height, borderTopRightRadius: 25, borderTopLeftRadius: 25, backgroundColor: 'white', width: width, position: 'absolute', bottom: 0, alignItems: 'center' }}>
+                                <View style={{ width: width - 50 }}>
+                                    <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', marginTop: 15 / 930 * height, alignItems: 'center' }}>
+                                        <Text style={{ fontSize: 20, fontWeight: '500', fontFamily: customFonts.medium }}>
+                                            Delete
                                         </Text>
-                                    </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => setOpenModal(false)} style={{ marginRight: 10 }}>
+                                            <Image source={require('../../../../assets/Images3/CrossIcon.png')} style={{ height: 20 / 930 * height, width: 20 / 430 * width, resizeMode: 'contain', }} />
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                                <View style={{ height: 0.1, borderWidth: 0.2, borderColor: '#E6E6E6', width: width, marginTop: 20 / 930 * height }}></View>
+
+                                <View style={{ marginTop: 25 }}>
+                                    <Image source={require('../../../../assets/Images3/delete1.png')} style={{ height: 120, width: 120, resizeMode: 'contain' }} />
                                 </View>
 
-                                <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, alignItems: 'center', justifyContent: 'center' }}>
-                                    {Loading ?
-                                        <View>
-                                            <ActivityIndicator color={colors.blueColor} size={'small'} />
-                                        </View> :
-                                        <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: '#E01F1F' }}>
-                                            <TouchableOpacity onPress={handleDeleteDate}>
-                                                <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.medium, color: 'white' }}>
-                                                    Yes, Delete
-                                                </Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                    }
+                                <Text style={{ fontWeight: '500', fontFamily: customFonts.medium, fontSize: 16, color: '#4D4D4D', marginTop: 15 }}>
+                                    Are you sure you want to delete date?
+                                </Text>
+
+                                <View style={{ width: width - 50, flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 }}>
+                                    <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 1, }}>
+                                        <TouchableOpacity onPress={() => setOpenModal(false)}>
+                                            <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.medium }}>
+                                                Cancel
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
+
+                                    <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, alignItems: 'center', justifyContent: 'center' }}>
+                                        {Loading ?
+                                            <View>
+                                                <ActivityIndicator color={colors.blueColor} size={'small'} />
+                                            </View> :
+                                            <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: '#E01F1F' }}>
+                                                <TouchableOpacity onPress={handleDeleteDate}>
+                                                    <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.medium, color: 'white' }}>
+                                                        Yes, Delete
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        }
+                                    </View>
                                 </View>
+
                             </View>
-
                         </View>
                     </Modal>
 

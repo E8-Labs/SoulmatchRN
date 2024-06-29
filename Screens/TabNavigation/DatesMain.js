@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, TouchableOpacity, Dimensions, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions, TextInput, FlatList } from 'react-native';
 import { Image } from 'expo-image';
 import customFonts from '../../assets/fonts/Fonts'
 import GlobalStyles from '../../assets/styles/GlobalStyles'
@@ -11,31 +11,35 @@ const { height, width } = Dimensions.get('window')
 
 export default function DatesMain(props) {
 
-  const [showmodal,setShowModal] = useState(false)
-const closeModal = () =>{
-  setShowModal(false)
-}
-
+  const [showmodal, setShowModal] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchUser, setSearchUser] = useState('');
+  const closeModal = () => {
+    setShowModal(false)
+  }
 
   return (
     <View style={{ alignItems: 'center', height: height, backgroundColor: 'white' }}>
 
       <View style={{
-        backgroundColor: 'white', height: 110 / 930 * height, width: width,
+        backgroundColor: 'white', height: showSearch ? 180 / 930 * height : 110 / 930 * height, width: width,
       }}>
         <View style={{
-          alignItems: 'flex-end', flexDirection: 'row', height: 110 / 930 * height, width: width , alignSelf: 'center', paddingBottom: 10,
-          justifyContent: 'space-between',paddingLeft:20
+          alignItems: 'flex-end', flexDirection: 'row', height: 110 / 930 * height, width: width, alignSelf: 'center', paddingBottom: 10,
+          justifyContent: 'space-between', paddingLeft: 20
         }}>
           <Text style={{ fontSize: 23, fontFamily: customFonts.meduim }}>Dates</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
+
             <TouchableOpacity>
               <Image source={require('../../assets/images/searchIcon.png')}
                 style={GlobalStyles.backBtnImage}
               />
             </TouchableOpacity>
-            <TouchableOpacity 
-              onPress={()=>{
+
+
+            <TouchableOpacity
+              onPress={() => {
                 setShowModal(true)
               }}
             >
@@ -44,15 +48,32 @@ const closeModal = () =>{
               />
             </TouchableOpacity>
 
-            <DatesFilterPopup visible={showmodal} close={closeModal}/>
+            <DatesFilterPopup visible={showmodal} close={closeModal} />
 
           </View>
         </View>
+        {showSearch &&
+          <View style={{ width: width, alignItems: 'center', marginBottom: 50 }}>
+            <View style={{ flexDirection: 'row', width: width - 50, alignItems: 'center', height: 50, justifyContent: 'center', padding: 16, borderWidth: 1, borderRadius: 10, gap: 10, backgroundColor: '#ffffff', borderColor: '#E6E6E6', marginTop: 20 }}>
+              <TouchableOpacity style={{ width: 30 / 430 * width, height: 30 / 930 * height, alignItems: 'center', justifyContent: 'center' }}>
+                <Image source={require('../../assets/Images3/searchIcon.png')} style={{ height: 55 / 930 * height, width: 55 / 930 * width, resizeMode: 'contain' }} />
+              </TouchableOpacity>
+              <TextInput
+                value={searchUser}
+                onChangeText={(e) => setSearchUser(e)}
+                style={{
+                  width: 304 / 430 * width,
+                  fontSize: 14, fontWeight: '500', fontFamily: customFonts.medium
+                }}
+                placeholder='Search' />
+            </View>
+          </View>
+        }
       </View>
 
-      <DatesContainer navigation={props.navigation}/>
+      <DatesContainer style={{ marginTop: showSearch ? 80 : 0 }} navigation={props.navigation} />
 
-      
+
     </View>
 
   )

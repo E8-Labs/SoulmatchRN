@@ -63,7 +63,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                         setQuestionAnswers(Result.data.answers);
                         console.log('user media is ', Result.data.media)
                     }
-                } catch(error){
+                } catch (error) {
                     console.error('Error occured in api response is :', error);
                 }
             }
@@ -324,80 +324,85 @@ const UserProfileDetails = ({ navigation, route }) => {
                                 <Text style={{ fontSize: 20, fontFamily: customFonts.medium }}>Photos & videos</Text>
                             </View>
                             <View>
-                                <FlatList
-                                    scrollEnabled={false}
-                                    data={UserMedia}
-                                    renderItem={({ item, index }) => (
-                                        <View key={item.id} style={{ marginTop: 15 }}>
-                                            <View style={{ borderWidth: 1, borderColor: '#E6E6E6', borderRadius: 10, padding: 15, justifyContent: 'center' }}>
-                                                <Text style={{ fontWeight: '400', fontSize: 16, fontFamily: customFonts.regular }}>
+                                {UserMedia ?
+                                    <Text style={{ fontSize: 16, marginTop: 10, fontFamily: customFonts.semibold }}>
+                                        No Photo & Video Added
+                                    </Text> :
+                                    <FlatList
+                                        scrollEnabled={false}
+                                        data={UserMedia}
+                                        renderItem={({ item, index }) => (
+                                            <View key={item.id} style={{ marginTop: 15 }}>
+                                                <View style={{ borderWidth: 1, borderColor: '#E6E6E6', borderRadius: 10, padding: 15, justifyContent: 'center' }}>
+                                                    <Text style={{ fontWeight: '400', fontSize: 16, fontFamily: customFonts.regular }}>
+                                                        {
+                                                            item.caption ?
+                                                                <Text style={{ fontWeight: '400', fontSize: 16, fontFamily: customFonts.medium }}>
+                                                                    {item.caption}
+                                                                </Text> : ""
+
+                                                        }
+                                                    </Text>
                                                     {
-                                                        item.caption ?
-                                                            <Text style={{ fontWeight: '400', fontSize: 16, fontFamily: customFonts.medium }}>
-                                                                {item.caption}
-                                                            </Text> : ""
-
-                                                    }
-                                                </Text>
-                                                {
-                                                    item.type === "image" ? (
-                                                        <>
-                                                            <Image source={{ uri: item.url ? item.url : thumb_url }}
-                                                                onLoadStart={() => { setLoadImage(true) }}
-                                                                onLoadEnd={() => {
-                                                                    setLoadImage(false)
-                                                                }}
-                                                                placeholder={blurhash}
-                                                                contentFit="cover"
-                                                                transition={1000}
-                                                                style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
-                                                            />
-
-                                                            {
-                                                                loadImage ? (
-                                                                    <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 150 }} />
-                                                                ) : <></>
-                                                            }
-                                                        </>
-
-                                                    ) : (
-                                                        item.type === "video" ? (
+                                                        item.type === "image" ? (
                                                             <>
-                                                                <TouchableOpacity
-                                                                    onPress={() => {
-                                                                        navigation.navigate("VideoPlayer", {
-                                                                            data: {
-                                                                                url: item.url
-                                                                            }
-                                                                        })
+                                                                <Image source={{ uri: item.url ? item.url : thumb_url }}
+                                                                    onLoadStart={() => { setLoadImage(true) }}
+                                                                    onLoadEnd={() => {
+                                                                        setLoadImage(false)
                                                                     }}
-                                                                >
-                                                                    <Image source={{ uri: item.videoThumbnail }}
-                                                                        style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
-                                                                        onLoadEnd={() => {
-                                                                            setLoadVideo(false)
-                                                                        }} onLoadStart={() => { setLoadVideo(true) }}
-                                                                        placeholder={blurhash}
-                                                                        contentFit="cover"
-                                                                        transition={1000}
-                                                                    />
-                                                                    <Image source={require('../../../../assets/images/playIcon.png')}
-                                                                        style={{ height: 50, width: 50, position: 'absolute', bottom: 100 / 930 * height, left: 150 / 430 * width }}
-                                                                    />
-                                                                </TouchableOpacity>
+                                                                    placeholder={blurhash}
+                                                                    contentFit="cover"
+                                                                    transition={1000}
+                                                                    style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
+                                                                />
+
                                                                 {
-                                                                    loadVideo ? (
-                                                                        <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 180 / 430 * width }} />
+                                                                    loadImage ? (
+                                                                        <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 150 }} />
                                                                     ) : <></>
                                                                 }
                                                             </>
-                                                        ) : ''
-                                                    )
-                                                }
+
+                                                        ) : (
+                                                            item.type === "video" ? (
+                                                                <>
+                                                                    <TouchableOpacity
+                                                                        onPress={() => {
+                                                                            navigation.navigate("VideoPlayer", {
+                                                                                data: {
+                                                                                    url: item.url
+                                                                                }
+                                                                            })
+                                                                        }}
+                                                                    >
+                                                                        <Image source={{ uri: item.videoThumbnail }}
+                                                                            style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
+                                                                            onLoadEnd={() => {
+                                                                                setLoadVideo(false)
+                                                                            }} onLoadStart={() => { setLoadVideo(true) }}
+                                                                            placeholder={blurhash}
+                                                                            contentFit="cover"
+                                                                            transition={1000}
+                                                                        />
+                                                                        <Image source={require('../../../../assets/images/playIcon.png')}
+                                                                            style={{ height: 50, width: 50, position: 'absolute', bottom: 100 / 930 * height, left: 150 / 430 * width }}
+                                                                        />
+                                                                    </TouchableOpacity>
+                                                                    {
+                                                                        loadVideo ? (
+                                                                            <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 180 / 430 * width }} />
+                                                                        ) : <></>
+                                                                    }
+                                                                </>
+                                                            ) : ''
+                                                        )
+                                                    }
+                                                </View>
                                             </View>
-                                        </View>
-                                    )}
-                                />
+                                        )}
+                                    />
+                                }
                             </View>
 
                             <View style={{ marginTop: 22 / 930 * height, alignItems: 'flex-start', }}>
@@ -405,63 +410,68 @@ const UserProfileDetails = ({ navigation, route }) => {
                             </View>
 
                             <View style={{ marginBottom: 20 }}>
-                                <FlatList
-                                    scrollEnabled={false}
-                                    data={QuestionAnswers}
-                                    renderItem={({ item, index }) => (
-                                        <View key={item.id} style={{ marginTop: 15 }}>
-                                            <View style={{ borderWidth: 1, borderColor: '#E6E6E6', borderRadius: 10, padding: 15, justifyContent: 'center' }}>
-                                                <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.semibold }}>
-                                                    {item.title}
-                                                </Text>
-                                                <Text style={{ fontWeight: '400', fontSize: 16, fontFamily: customFonts.regular }}>
-                                                    {item.text}
-                                                </Text>
-                                                {item.answerText ? (
-                                                    <View style={{
-                                                        marginTop: 8, marginBottom: 8, width: 345 / 430 * width, backgroundColor: '#F5F5F5',
-                                                        borderRadius: 10, paddingVertical: 10, paddingHorizontal: 16, alignItems: 'center'
-                                                    }}>
-                                                        <Text style={{ fontSize: 14, fontFamily: customFonts.regular, color: '#000', textAlign: 'left', width: 320 / 430 * width, }}>
-                                                            {item.answerText}
-                                                        </Text>
+                                {QuestionAnswers ?
+                                    <Text style={{ fontSize: 16, marginTop: 10, fontFamily: customFonts.semibold }}>
+                                        No Answers Added
+                                    </Text> :
+                                    <FlatList
+                                        scrollEnabled={false}
+                                        data={QuestionAnswers}
+                                        renderItem={({ item, index }) => (
+                                            <View key={item.id} style={{ marginTop: 15 }}>
+                                                <View style={{ borderWidth: 1, borderColor: '#E6E6E6', borderRadius: 10, padding: 15, justifyContent: 'center' }}>
+                                                    <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.semibold }}>
+                                                        {item.title}
+                                                    </Text>
+                                                    <Text style={{ fontWeight: '400', fontSize: 16, fontFamily: customFonts.regular }}>
+                                                        {item.text}
+                                                    </Text>
+                                                    {item.answerText ? (
+                                                        <View style={{
+                                                            marginTop: 8, marginBottom: 8, width: 345 / 430 * width, backgroundColor: '#F5F5F5',
+                                                            borderRadius: 10, paddingVertical: 10, paddingHorizontal: 16, alignItems: 'center'
+                                                        }}>
+                                                            <Text style={{ fontSize: 14, fontFamily: customFonts.regular, color: '#000', textAlign: 'left', width: 320 / 430 * width, }}>
+                                                                {item.answerText}
+                                                            </Text>
 
-                                                    </View>
-                                                )
+                                                        </View>
+                                                    )
 
-                                                    : ''}
-                                                {item.answerImage ? <Image source={{ uri: item.answerImage }} style={{ height: 234 / 930 * height, width: 334 / 430 * width, borderRadius: 10, marginTop: 5 }} /> : ''}
-                                                {item.answerVideo ?
-                                                    <Video
-                                                        ref={videoRef}
-                                                        style={{ height: 370 / 930 * height, width: width - 60, marginTop: 33 / 930 * height, borderRadius: 4 }}
-                                                        source={{
-                                                            uri: item.answerVideo
-                                                        }}
-                                                        useNativeControls
-                                                        resizeMode={ResizeMode.COVER}
-                                                        isLooping={true}
-                                                        // shouldPlay={isPlaying}
-                                                        onPlaybackStatusUpdate={status => {
-                                                            setStatus(() => status)
-                                                            setIsPlaying(status.isPlaying);
-                                                        }}
-                                                        onLoad={(status) => {
-                                                            setDuration(status.durationMillis)
-                                                            setLoadVideo(false)
-                                                        }} // Set duration when video loads
-                                                        onLoadStart={() => {
-                                                            setLoadVideo(true)
-                                                        }}
+                                                        : ''}
+                                                    {item.answerImage ? <Image source={{ uri: item.answerImage }} style={{ height: 234 / 930 * height, width: 334 / 430 * width, borderRadius: 10, marginTop: 5 }} /> : ''}
+                                                    {item.answerVideo ?
+                                                        <Video
+                                                            ref={videoRef}
+                                                            style={{ height: 370 / 930 * height, width: width - 60, marginTop: 33 / 930 * height, borderRadius: 4 }}
+                                                            source={{
+                                                                uri: item.answerVideo
+                                                            }}
+                                                            useNativeControls
+                                                            resizeMode={ResizeMode.COVER}
+                                                            isLooping={true}
+                                                            // shouldPlay={isPlaying}
+                                                            onPlaybackStatusUpdate={status => {
+                                                                setStatus(() => status)
+                                                                setIsPlaying(status.isPlaying);
+                                                            }}
+                                                            onLoad={(status) => {
+                                                                setDuration(status.durationMillis)
+                                                                setLoadVideo(false)
+                                                            }} // Set duration when video loads
+                                                            onLoadStart={() => {
+                                                                setLoadVideo(true)
+                                                            }}
 
-                                                    />
-                                                    : ''}
-                                                {/* Test code */}
+                                                        />
+                                                        : ''}
+                                                    {/* Test code */}
 
+                                                </View>
                                             </View>
-                                        </View>
-                                    )}
-                                />
+                                        )}
+                                    />
+                                }
                             </View>
 
                         </View>

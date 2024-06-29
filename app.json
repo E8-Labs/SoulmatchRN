@@ -19,11 +19,12 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.e8labs.soulmatch",
       "googleServicesFile": "./GoogleService-Info.plist",
+      "buildNumber": "4.5",
       "infoPlist": {
         "UIBackgroundModes": [
           "audio"
         ],
-        "buildNumber": "41.0",
+        
         "NSLocationWhenInUseUsageDescription": "This app uses your location to find you nearby matches.",
         "NSMicrophoneUsageDescription": "Let Soulmatch access microphone to record voice messages.",
         "CFBundleURLTypes": [
@@ -32,11 +33,7 @@
               "plurawlapp.com"
             ]
           },
-          {
-            "CFBundleURLSchemes": [
-              "http://192.168.10.18:8081"
-            ]
-          },
+          
           {
             "CFBundleURLSchemes": [
               "com.googleusercontent.apps.532960006063-0lrmd4ktecke70t7ncjr2v7vapt230h6"

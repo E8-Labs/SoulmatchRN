@@ -21,7 +21,7 @@ const Dashboard = ({ navigation }) => {
 
     const haandleAllUsersClick = () => {
         // console.warn('Working');
-        navigation.navigate('AdminTabBarContainer')
+        navigation.navigate('Users')
     }
 
     //code for subscription graph
@@ -175,7 +175,7 @@ const Dashboard = ({ navigation }) => {
                 </View>
                 {
                     Loading ?
-                        <View style={{ height: height*0.80, alignItems: 'center', justifyContent: 'center' }}>
+                        <View style={{ height: height * 0.80, alignItems: 'center', justifyContent: 'center' }}>
                             <ActivityIndicator size={'large'} color={'#6050Dc'} />
                         </View>
                         :
@@ -489,20 +489,22 @@ const Dashboard = ({ navigation }) => {
                                         renderItem={({ item, index }) => (
                                             <View key={item.id} style={{ borderWidth: 1, marginLeft: 10, borderColor: '#E6E6E6', borderRadius: 10, padding: 8, width: 140 / 430 * width, alignItems: 'center', justifyContent: 'center' }}>
                                                 <Image source={item.profile_image ? { uri: item.profile_image } : require('../../../assets/Images3/imagePlaceholder.webp')} style={{ height: 96 / 930 * height, width: 126 / 430 * width, borderRadius: 5 }} />
-                                                <Text style={{ fontWeight: '500', fontSize: 12, marginTop: 5, fontFamily: customFonts.medium, width: '100%' }}>
-                                                    {item.first_name} {item.last_name}
-                                                </Text>
-                                                <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-                                                    <Image source={require('../../../assets/Images3/location.png')} style={{ height: 12 / 930 * height, width: 12 / 430 * width }} />
-                                                    <Text style={{ fontWeight: '400', fontSize: 10, fontFamily: customFonts.medium, color: '#333333' }}>
-                                                        {item.city} {item.city ? ',' : ''} {item.state}
+                                                <View style={{ flexDirection: 'column', width: '100%', gap: 7 }}>
+                                                    <Text style={{ fontWeight: '500', fontSize: 12, marginTop: 5, fontFamily: customFonts.medium, width: '100%' }}>
+                                                        {item.first_name} {item.last_name}
                                                     </Text>
-                                                </View>
-                                                <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-                                                    <Image source={require('../../../assets/Images3/crown2.png')} style={{ height: 12 / 930 * height, width: 12 / 430 * width }} />
-                                                    <Text style={{ fontWeight: '500', fontSize: 12, fontFamily: customFonts.medium, color: '#FFC401' }}>
-                                                        {item.pkgName}
-                                                    </Text>
+                                                    <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+                                                        <Image source={require('../../../assets/Images3/location.png')} style={{ height: 12 / 930 * height, width: 12 / 430 * width }} />
+                                                        <Text style={{ fontWeight: '400', fontSize: 10, fontFamily: customFonts.medium, color: '#333333' }}>
+                                                            {item.city} {item.city ? ',' : ''} {item.state}
+                                                        </Text>
+                                                    </View>
+                                                    <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+                                                        <Image source={require('../../../assets/Images3/crown2.png')} style={{ height: 12 / 930 * height, width: 12 / 430 * width }} />
+                                                        <Text style={{ fontWeight: '500', fontSize: 12, fontFamily: customFonts.medium, color: '#FFC401' }}>
+                                                            {item.pkgName}
+                                                        </Text>
+                                                    </View>
                                                 </View>
                                             </View>
                                         )}

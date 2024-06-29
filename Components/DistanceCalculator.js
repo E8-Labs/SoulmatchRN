@@ -1,6 +1,12 @@
-import react,{useState} from "react";
-import {View,Text} from "react-native";
+import react,{useState,useEffect} from "react";
+import {View,Text, Dimensions} from "react-native";
 import { getDistance } from 'geolib';
+import {customFonts} from '../assets/fonts/Fonts'
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const {height,width} = Dimensions.get('window')
+
 
 
 const DistanceCalculator = ({ userId, lat, lang }) => {
@@ -50,7 +56,7 @@ const DistanceCalculator = ({ userId, lat, lang }) => {
 
     return (
         <Text style = {{ fontSize: 16,
-            fontFamily: customFonts.meduim,
+            // fontFamily: customFonts.meduim,
             textAlign: 'left',
             width: 334 / 430 * width
         }}>{distance !== null ? `${distance} miles` : 'Calculating...'}</Text>

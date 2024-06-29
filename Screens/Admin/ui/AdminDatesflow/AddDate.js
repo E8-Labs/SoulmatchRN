@@ -239,6 +239,8 @@ const AddDate = ({ navigation, route }) => {
             formData.append("closeTime", SelCloseTime);
             //add long address here
             formData.append("address", CityName);
+            formData.append("state", StateName);
+            formData.append("city", CityName);
             formData.append("latitude", latitude);
             formData.append("longitude", longitude);
             formData.append("description", Description);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { ActivityIndicator, Dimensions, FlatList, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { Image } from 'expo-image'
@@ -11,30 +11,40 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { GetBudget } from '../../../Services/dates/GetBudget'
 
 const Dates = ({ navigation }) => {
+    const timerRef = useRef(null);
     const { height, width } = Dimensions.get('window')
 
     const [DATA, setData] = useState([]);
     const [userImage, setuserImage] = useState('');
     const [openModal, setOpenModal] = useState('');
     const [Loading, setLoading] = useState(false);
+    const [searchUser, setSearchUser] = useState('')
 
     const handleModalclick = () => {
         setOpenModal(true);
     }
 
-    //Getting dates api
-
-    useFocusEffect(
-        React.useCallback(() => {
-            // console.log("Use Focus Effect")
-            // GetDates();
-        }, [])
-    );
-
+    //code for search params
     useEffect(() => {
-        GetDates()
-    }, [])
 
+        // Clear the previous timer
+        if (timerRef.current) {
+            clearTimeout(timerRef.current);
+        }
+        setData([])
+        // setNoMoreUsers(false)
+        // Set a new timer
+        timerRef.current = setTimeout(() => {
+            console.log("Search timer clicked")
+            GetDates(searchUser);
+        }, 1000);
+
+        // Cleanup function to clear the timer when component unmounts
+        return () => clearTimeout(timerRef.current);
+
+    }, [searchUser]);
+
+    //get delete dates api
     const deleteDates = (index) => {
         console.log("Deleting user at index", index)
         const newItems = [...DATA];
@@ -42,6 +52,7 @@ const Dates = ({ navigation }) => {
         setData(newItems);
     }
 
+    //get dates api
     const GetDates = async () => {
         // console.log('Hello there')
         try {
@@ -52,7 +63,7 @@ const Dates = ({ navigation }) => {
                 let d = JSON.parse(data)
 
                 const AuthToken = d.token
-                const response = await fetch(Apis.AdminDates, {
+                const response = await fetch(Apis.AdminDates + `?search=${searchUser}`, {
                     method: 'get',
                     headers: {
                         'Content-Type': 'application/json',
@@ -61,8 +72,11 @@ const Dates = ({ navigation }) => {
                 });
                 if (response.ok) {
                     const Result = await response.json();
-                    const Result1 =
-                        setData(Result.data);
+                    const newDates = Result.data;
+                    if (newDates) {
+                        console.log("Prev list ", newDates)
+                        setData(prevDates => [...prevDates, ...newDates])
+                    }
                     console.log('Response recieved from api is', Result.data);
                 } else {
                     console.log("Response is not ok");
@@ -75,7 +89,6 @@ const Dates = ({ navigation }) => {
             setLoading(false);
         }
     }
-
 
     //Add new date btn
     const handleAddDate = () => {
@@ -270,7 +283,14 @@ const Dates = ({ navigation }) => {
                     <TouchableOpacity style={{ width: 30 / 430 * width, height: 30 / 930 * height, alignItems: 'center', justifyContent: 'center' }}>
                         <Image source={require('../../../assets/Images3/searchIcon.png')} style={{ height: 55 / 930 * height, width: 55 / 930 * width, resizeMode: 'contain' }} />
                     </TouchableOpacity>
-                    <TextInput style={{ width: 304 / 430 * width, fontSize: 14, fontWeight: '500', fontFamily: customFonts.medium }} placeholder='Search' />
+                    <TextInput
+                        value={searchUser}
+                        onChangeText={(e) => setSearchUser(e)}
+                        style={{
+                            width: 304 / 430 * width,
+                            fontSize: 14, fontWeight: '500', fontFamily: customFonts.medium
+                        }}
+                        placeholder='Search' />
                 </View>
 
                 {/* Grid view */}
@@ -279,7 +299,9 @@ const Dates = ({ navigation }) => {
                     <View style={{ height: height * 0.7, alignItems: 'center', justifyContent: 'center' }}>
                         <ActivityIndicator size={'large'} color={colors.blueColor} />
                     </View> :
-                    <ScrollView style={{ height: height - 300, marginTop: 30 }} showsVerticalScrollIndicator={false} >
+                    <ScrollView
+                        style={{ height: height - 300, marginTop: 30 }}
+                        showsVerticalScrollIndicator={false} >
                         <View style={{ flexDirection: 'row', flexWrap: 'wrap', display: 'flex', justifyContent: 'space-between', marginBottom: 30 }}>
                             {DATA.map((item, index) => (
                                 <TouchableOpacity onPress={() => handleDateDetails(item, index)} key={item.id} style={{ marginTop: 10 }}>
@@ -292,7 +314,11 @@ const Dates = ({ navigation }) => {
                                             <Text style={{ fontSize: 12, fontWeight: '400', fontFamily: customFonts.medium, color: '#333333' }}>
                                                 Budget :
                                             </Text>
-                                            <Text style={{ fontWeight: '500', width: 50, fontSize: 12, fontFamily: customFonts.bold, color: '#333333' }}>
+                                            <Text
+                                                style={{
+                                                    fontWeight: '500', fontSize: 12,
+                                                    fontFamily: customFonts.bold, color: '#333333'
+                                                }}>
                                                 {GetBudget(item)}
                                             </Text>
                                         </View>
@@ -344,10 +370,14 @@ const Dates = ({ navigation }) => {
                                         City/State
                                     </Text>
                                     <View style={{ borderRadius: 10, borderColor: '#CCCCCC', padding: 8, borderWidth: 1, marginTop: 5 }}>
-                                        <TextInput
-                                            // onChangeText={(Address) => setAddress(Address)}
-                                            placeholder='City/State'
-                                            style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.medium, color: '#999999' }} />
+                                        <TouchableOpacity
+                                            style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.medium, color: '#999999' }}>
+                                            <TextInput
+                                                // onChangeText={(Address) => setAddress(Address)}
+                                                placeholder='City/State'
+                                                style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.medium, color: '#999999' }}
+                                            />
+                                        </TouchableOpacity>
                                     </View>
                                     <Text style={{ fontWeight: '600', fontSize: 16, fontFamily: customFonts.semibold, color: '#333333', marginTop: 30 }}>
                                         Budget
