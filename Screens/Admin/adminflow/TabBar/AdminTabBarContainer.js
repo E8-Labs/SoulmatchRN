@@ -1,10 +1,11 @@
 import React, { useEffect ,useState,useRef } from "react";
-import { Image, View, Text, ImageBackground, StyleSheet, TouchableOpacity, Dimensions, Platform,  } from "react-native";
+import { View, Text, ImageBackground, StyleSheet, TouchableOpacity, Dimensions, Platform,  } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Dashboard from "../Dashboard";
 import User from "../User";
 import Dates from "../Dates";
 import Profile from "../Profile";
+import { Image } from "expo-image";
 
 //code of screens used
 

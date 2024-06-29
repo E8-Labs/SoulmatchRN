@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, TouchableOpacity, Image, Dimensions, TextInput, Settings, ActivityIndicator,TouchableWithoutFeedback,
+import { Text, View, TouchableOpacity, Dimensions, TextInput, Settings, ActivityIndicator,TouchableWithoutFeedback,
     Keyboard
  } from 'react-native';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Image } from 'expo-image';
 
 const AddEmail = ({ navigation, route }) => {
 

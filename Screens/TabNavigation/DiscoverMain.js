@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, Dimensions, Image, StyleSheet, TouchableOpacity, Settings, ActivityIndicator } from 'react-native'
+import { View, Text, Dimensions, StyleSheet, TouchableOpacity, Settings, ActivityIndicator } from 'react-native'
+import { Image } from 'expo-image';
 import CardContainerMain from '../DiscoverFlow/CardSwipContainer/CardContainerMain'
 import customFonts from '../../assets/fonts/Fonts';
 import LikesList from '../DiscoverFlow/LikesList';
@@ -118,9 +119,7 @@ export default function DiscoverMain(props) {
                 props.navigation.push("LoginUser")
 
               } else if (data.navigate === 'Notifications') {
-                props.navigation.navigate("NotificationsScreen", {
-
-                })
+                props.navigation.navigate("NotificationsScreen")
               } else if (data.navigate === 'VideoPlayer') {
                 props.navigation.navigate("VideoPlayer", {
                   data: data

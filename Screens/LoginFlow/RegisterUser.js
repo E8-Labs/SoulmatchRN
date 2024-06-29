@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { View, Text, Dimensions, TextInput, TouchableOpacity, Image, SafeAreaView ,Keyboard,KeyboardAvoidingView,TouchableWithoutFeedback,Platform} from 'react-native'
-import GlobalStyles from '../../assets/styles/GlobalStyles'
+import React, { useEffect, useState } from 'react';
+import { View, Text, Dimensions, TextInput, TouchableOpacity, SafeAreaView ,Keyboard,KeyboardAvoidingView,TouchableWithoutFeedback,Platform} from 'react-native'
+import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
 import customFonts from '../../assets/fonts/Fonts';
+import { Image } from 'expo-image';
 
 
 const { height, width } = Dimensions.get("window");

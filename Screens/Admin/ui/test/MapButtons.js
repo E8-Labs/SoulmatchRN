@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity, Image, StyleSheet, Text } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { Image } from 'expo-image';
 
 const buttonData = [
     { id: 'trial', label: 'Trial' },

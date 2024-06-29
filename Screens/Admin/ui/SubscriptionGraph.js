@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 import Apis from '../apis/Apis';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SubscriptionGraph = () => {
     const { width, height } = Dimensions.get('window');
@@ -16,37 +17,42 @@ const SubscriptionGraph = () => {
     //code for calling dashboarddetails api
     useEffect(() => {
         const dashBoardDetails = async () => {
-            const AuthToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxMTYsIm5hbWUiOiJBZG1pbiBQbHVyYXdsIiwiZW1haWwiOiJhZG1pbkBwbHVyYXdsLmNvbSIsInBhc3N3b3JkIjoiJDJiJDEwJE4uRHcyZTloZ2FvSy9BbzAxVmk2dGVla0xUMXVBdi9ycEhBTXdCblpaVDd3WUhTWmNLMnFlIiwicHJvZmlsZV9pbWFnZSI6bnVsbCwiY29tcGFueSI6bnVsbCwidGl0bGUiOm51bGwsImluZHVzdHJ5IjpudWxsLCJjaXR5IjpudWxsLCJzdGF0ZSI6bnVsbCwiZ2VuZGVyIjpudWxsLCJyYWNlIjpudWxsLCJsZ2J0cSI6bnVsbCwidmV0ZXJhbiI6bnVsbCwiZmNtX3Rva2VuIjpudWxsLCJkZXZpY2VfaWQiOiIiLCJwcm92aWRlcl9pZCI6bnVsbCwicHJvdmlkZXJfbmFtZSI6bnVsbCwicm9sZSI6ImFkbWluIiwicG9pbnRzIjowLCJlbmNfa2V5IjpudWxsLCJlbmNfaXYiOm51bGwsImNvdW50cmllcyI6bnVsbCwicHJvbm91bnMiOm51bGwsImRvYiI6bnVsbCwiY3JlYXRlZEF0IjoiMjAyNC0wNS0wMlQxMTo1NzozMy4wMDBaIiwidXBkYXRlZEF0IjoiMjAyNC0wNS0wMlQxMTo1NzozMy4wMDBaIn0sImlhdCI6MTcxNDY0Mzk1NSwiZXhwIjoxNzQ2MTc5OTU1fQ._iU0mPQUIjHIj8GvT_YvooVfditUOX3Grs9V8PmSGy0"
-            try {
-                setLoading(true);
-                const response = await fetch(Apis.DashboardDetails, {
-                    'method': 'get',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + AuthToken
-                    }
-                });
-                if (response.ok) {
-                    const Result = await response.json();
-                    console.log('Response of api is :', Result);
-                    setApiResponse(Result.data);
-                    setRecentUsers(Result.data.recent_users);
-                    // const SubscriptionDetails = 
-                    let Subscription = [];
-                    Result.data.downloads.graph_data.forEach((item, index) => {
-                        if (index % 4 === 0) {
-                            Subscription.push(item.date);
+            const data = await AsyncStorage.getItem('USER');
+            if (data) {
+                let d = JSON.parse(data);
+                const AuthToken = d.token;
+                // const AuthToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxMTYsIm5hbWUiOiJBZG1pbiBQbHVyYXdsIiwiZW1haWwiOiJhZG1pbkBwbHVyYXdsLmNvbSIsInBhc3N3b3JkIjoiJDJiJDEwJE4uRHcyZTloZ2FvSy9BbzAxVmk2dGVla0xUMXVBdi9ycEhBTXdCblpaVDd3WUhTWmNLMnFlIiwicHJvZmlsZV9pbWFnZSI6bnVsbCwiY29tcGFueSI6bnVsbCwidGl0bGUiOm51bGwsImluZHVzdHJ5IjpudWxsLCJjaXR5IjpudWxsLCJzdGF0ZSI6bnVsbCwiZ2VuZGVyIjpudWxsLCJyYWNlIjpudWxsLCJsZ2J0cSI6bnVsbCwidmV0ZXJhbiI6bnVsbCwiZmNtX3Rva2VuIjpudWxsLCJkZXZpY2VfaWQiOiIiLCJwcm92aWRlcl9pZCI6bnVsbCwicHJvdmlkZXJfbmFtZSI6bnVsbCwicm9sZSI6ImFkbWluIiwicG9pbnRzIjowLCJlbmNfa2V5IjpudWxsLCJlbmNfaXYiOm51bGwsImNvdW50cmllcyI6bnVsbCwicHJvbm91bnMiOm51bGwsImRvYiI6bnVsbCwiY3JlYXRlZEF0IjoiMjAyNC0wNS0wMlQxMTo1NzozMy4wMDBaIiwidXBkYXRlZEF0IjoiMjAyNC0wNS0wMlQxMTo1NzozMy4wMDBaIn0sImlhdCI6MTcxNDY0Mzk1NSwiZXhwIjoxNzQ2MTc5OTU1fQ._iU0mPQUIjHIj8GvT_YvooVfditUOX3Grs9V8PmSGy0"
+                try {
+                    setLoading(true);
+                    const response = await fetch(Apis.DashboardDetails, {
+                        'method': 'get',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + AuthToken
                         }
                     });
-                    // console.log('Value of subscription is :', Subscription);
-                    setSubscriptionUsersDate(Subscription);
-                } else {
-                    console.log('Api response is not ok');
+                    if (response.ok) {
+                        const Result = await response.json();
+                        console.log('Response of api is :', Result);
+                        setApiResponse(Result.data);
+                        setRecentUsers(Result.data.recent_users);
+                        // const SubscriptionDetails = 
+                        let Subscription = [];
+                        Result.data.downloads.graph_data.forEach((item, index) => {
+                            if (index % 4 === 0) {
+                                Subscription.push(item.date);
+                            }
+                        });
+                        // console.log('Value of subscription is :', Subscription);
+                        setSubscriptionUsersDate(Subscription);
+                    } else {
+                        console.log('Api response is not ok');
+                    }
+                } catch (error) {
+                    console.error("Error occured is :", error);
+                } finally {
+                    setLoading(false);
                 }
-            } catch (error) {
-                console.error("Error occured is :", error);
-            } finally {
-                setLoading(false);
             }
         }
         dashBoardDetails();

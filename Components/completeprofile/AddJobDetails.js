@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import {
-    View, TouchableOpacity, TouchableWithoutFeedback, Image, Text, KeyboardAvoidingView, Platform, Keyboard, Dimensions
+    View, TouchableOpacity, TouchableWithoutFeedback, Text, KeyboardAvoidingView, Platform, Keyboard, Dimensions
     , TextInput,
     Settings,
     ActivityIndicator
-} from 'react-native'
+} from 'react-native';
 import customFonts from '../../assets/fonts/Fonts';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
 import { UpdateProfile } from '../../Services/ProfileServices/UpdateProfile';
+import { Image } from 'expo-image';
 
 const { height, width } = Dimensions.get('window');
 

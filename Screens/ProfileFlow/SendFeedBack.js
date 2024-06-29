@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, Text, View, StatusBar, Dimensions, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, TouchableOpacity, Image, StyleSheet, TextInput } from 'react-native'
+import { ActivityIndicator, Text, View, StatusBar, Dimensions, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, TouchableOpacity, StyleSheet, TextInput } from 'react-native'
 import customFonts from '../../assets/fonts/Fonts';
+import { Image } from 'expo-image';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import colors from '../../assets/colors/Colors';

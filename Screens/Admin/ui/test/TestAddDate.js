@@ -1,50 +1,20 @@
-import { StatusBar } from 'expo-status-bar'
-import React, { useEffect, useState } from 'react'
-import { Alert, View, Text, Dimensions, KeyboardAvoidingView, Keyboard, Platform, TouchableWithoutFeedback, Image, TouchableOpacity, TextInput, StyleSheet, ScrollView, ActivityIndicator } from 'react-native'
-import customFonts from '../../../assets/fonts/Fonts'
-import { Dropdown } from 'react-native-element-dropdown'
-import Apis from '../../apis/Apis'
+import { StatusBar } from 'expo-status-bar';
+import React, { useEffect, useState } from 'react';
+import { Alert, View, Text, Dimensions, KeyboardAvoidingView, Keyboard, Platform, TouchableWithoutFeedback, TouchableOpacity, TextInput, StyleSheet, ScrollView, ActivityIndicator } from 'react-native'
+import customFonts from '../../../assets/fonts/Fonts';
+import { Dropdown } from 'react-native-element-dropdown';
+import Apis from '../../apis/Apis';
 import * as ImagePicker from 'expo-image-picker';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Constants from 'expo-constants';
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import colors from '../RangeSlider/Colors'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import colors from '../RangeSlider/Colors';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { Image } from 'expo-image';
 
 const TestAddDate = ({ navigation, route }) => {
+
     const { height, width } = Dimensions.get('window');
-
-    //code for getting location from addresspicker
-
-    // const locationData = route.params.Location;
-    // console.log("Address recieved from previous screen is :", locationData);
-
-    // try {
-    //     const locationData = route.params.Location;
-    //     console.log("Address received from the previous screen is:", locationData);
-    // } catch (error) {
-    //     console.error("Error fetching place details:", error);
-    // }
-
-    // let locationData;
-
-    // try {
-    //     // Check if route.params is defined and log it for debugging
-    //     if (route && route.params) {
-    //         console.log("Route params:", route.params);
-
-    //         // Safely access nested properties using optional chaining
-    //         locationData = route.params?.Location?.LocationData;
-
-    //         // Log the received data
-    //         console.log("Address received from the previous screen is:", locationData);
-    //     } else {
-    //         throw new Error("route.params is undefined");
-    //     }
-    // } catch (error) {
-    //     // Log the error for debugging purposes
-    //     console.error("Error fetching place details:", error);
-    // }
 
     const [BusinessName, setBusinessName] = useState('');
     const [CategorySelected, setCategorySelected] = useState('');

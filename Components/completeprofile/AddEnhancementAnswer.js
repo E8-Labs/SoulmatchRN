@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Dimensions, View, TouchableOpacity, Image, Text, TextInput, Modal, TouchableWithoutFeedback, Keyboard } from 'react-native'
+import { Dimensions, View, TouchableOpacity, Text, TextInput, Modal, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { Image } from 'expo-image';
 
 const AddEnhancementAnswer = ({ openModal, closeModal }) => {
     const { height, width } = Dimensions.get('window')

@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { Dimensions, Text, View, Image, TouchableOpacity, Modal, Settings, ActivityIndicator } from 'react-native'
+import { Dimensions, Text, View, TouchableOpacity, Modal, Settings, ActivityIndicator } from 'react-native'
 import * as VideoThumbnails from 'expo-video-thumbnails';
 import * as ImagePicker from 'expo-image-picker';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import colors from '../../assets/colors/Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Image } from 'expo-image';
 
 const UploadIntroVideo = ({ navigation }) => {
     const { height, width } = Dimensions.get('window');

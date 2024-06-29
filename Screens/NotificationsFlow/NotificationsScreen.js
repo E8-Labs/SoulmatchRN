@@ -110,47 +110,6 @@ export default function NotificationsScreen({ navigation }) {
     setSections(section)
   };
 
-  const renderItem = (item) => {
-    console.log('trying to render items')
-    let not = getNotificationType(item)
-    console.log('notification object is', not)
-    // return
-
-    return (
-      <TouchableOpacity>
-        <View style={{
-          flexDirection: 'row', alignItems: 'cemter', justifyContent: 'space-between',
-          marginTop: 25 / 930 * height,
-        }}>
-
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, }}>
-            <Image source={not.type === "Like" || not.type === "Dislike" || not.type === "DateInvite" || not.type === "NewUser" ? (
-              not.image
-            ) : (
-              { uri: not.image }
-            )}
-              style={{ height: 46 / 930 * height, width: 46 / 930 * height, borderRadius: 23 }}
-            />
-            <Text style={{ fontSize: 14, width: 250 / 930 * height }}>{not.message}
-            </Text>
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, alignSelf: 'center' }}>
-            {
-              not.read === false ? (
-                <Image source={require('../../assets/images/unread.png')}
-                  style={{ height: 6, width: 6 }}
-                />
-              ) : null
-            }
-
-            <Text>{moment(item.createdAt).format("hh:mm a")}</Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-
-    )
-
-  }
 
   const getNotificationType = (item) => {
     if (item.notification_type === 'Like') {
@@ -219,11 +178,80 @@ export default function NotificationsScreen({ navigation }) {
       // console.log('notification type data is', not)
       return not
 
+    } else if (item.notification_type === 'DateInviteToAdmin') {
+      let not = {
+        image:inviteNotImage,
+        message: 'New date scheduled.',
+        time: item.createdAt,
+        read: item.is_read,
+        type: item.notification_type
+      }
+      // console.log('notification type data is', not)
+      return not
+
+    }else if (item.notification_type === 'ReportedUser') {
+      let not = {
+        image: item.fromUser.profile_image,
+        message: 'New user reported.',
+        time: item.createdAt,
+        read: item.is_read,
+        type: item.notification_type
+      }
+      // console.log('notification type data is', not)
+      return not
+
     }
     else {
       console.log('other notification type', item.notification_type)
     }
   }
+
+
+  const renderItem = (item) => {
+    console.log('trying to render items')
+    let not = getNotificationType(item)
+    console.log('notification object is', not)
+    // return
+
+    return (
+      <TouchableOpacity>
+        <View style={{
+          flexDirection: 'row', alignItems: 'cemter', justifyContent: 'space-between',
+          marginTop: 25 / 930 * height,
+        }}>
+
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, }}>
+            <Image source={
+              not.type === "Like" || not.type === "Dislike" || not.type === "DateInvite" || not.type === "NewUser" || not.type === "DateInviteToAdmin"  || 
+              not.type === "DateInviteToAdmin" || not.type === "ReportedUser"  ? (
+              not.image
+            ) : (
+              { uri: not.image }
+            )}
+              style={{ height: 46 / 930 * height, width: 46 / 930 * height, borderRadius: 23 }}
+            />
+            <Text style={{ fontSize: 14, width: 250 / 930 * height }}>{not.message}
+            </Text>
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, alignSelf: 'center' }}>
+            {
+              not.read === false ? (
+                <Image source={require('../../assets/images/unread.png')}
+                  style={{ height: 6, width: 6 }}
+                />
+              ) : null
+            }
+
+            <Text>{moment(item.createdAt).format("hh:mm a")}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+
+    )
+
+  }
+
+ 
 
 
   return (

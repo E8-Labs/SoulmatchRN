@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { FlatList, Image, SafeAreaView, TextInput } from 'react-native';
+import { FlatList, SafeAreaView, TextInput } from 'react-native';
 import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
 import customFonts from '../../assets/fonts/Fonts';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
+import { Image } from 'expo-image';
+
 const Resources = ({ navigation }) => {
 
     const { height, width } = Dimensions.get('window')

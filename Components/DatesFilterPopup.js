@@ -1,15 +1,16 @@
 import {
-    View, Text, SafeAreaView, TouchableOpacity, Modal, Dimensions, Image, StyleSheet,
+    View, Text, SafeAreaView, TouchableOpacity, Modal, Dimensions, StyleSheet,
     TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard,
     ScrollView
 
 }
-    from 'react-native'
+    from 'react-native';
 import React, { useState } from 'react'
 import customFonts from '../assets/fonts/Fonts';
 import GlobalStyles from '../assets/styles/GlobalStyles';
 import colors from '../assets/colors/Colors';
 import RangeSlider from './createprofile/RangeSlider';
+import { Image } from 'expo-image';
 
 const { height, width } = Dimensions.get('window');
 

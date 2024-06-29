@@ -1,11 +1,12 @@
 import {
-    View, Text, SafeAreaView, TouchableOpacity, Modal, Dimensions, Image, StyleSheet,
+    View, Text, SafeAreaView, TouchableOpacity, Modal, Dimensions, StyleSheet,
     TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard,
     ScrollView
 
 }
-    from 'react-native'
-import React, { useState, useEffect } from 'react'
+    from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Image } from 'expo-image';
 import customFonts from '../assets/fonts/Fonts';
 import GlobalStyles from '../assets/styles/GlobalStyles';
 import colors from '../assets/colors/Colors';

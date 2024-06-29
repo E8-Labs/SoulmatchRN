@@ -1,5 +1,6 @@
 import React from 'react'
-import { View, Text, Dimensions, Image, TouchableOpacity } from 'react-native'
+import { View, Text, Dimensions, TouchableOpacity } from 'react-native'
+import { Image } from 'expo-image'
 import customFonts from '../../assets/fonts/Fonts'
 import GlobalStyles from '../../assets/styles/GlobalStyles'
 import MessagesList from '../ChatFlow/MessagesList'

@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { View, Text, Dimensions, Image, Settings } from "react-native";
+import { View, Text, Dimensions, Settings } from "react-native";
+import { Image } from "expo-image";
 import GlobalStyles from "../../assets/styles/GlobalStyles";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getProfile } from "../../Services/ProfileServices/GetProfile";

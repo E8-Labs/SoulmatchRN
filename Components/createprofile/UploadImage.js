@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { Dimensions, Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
+import { Image } from 'expo-image';
 
 const UploadImage = ({ navigation }) => {
     const { height, width } = Dimensions.get('window');

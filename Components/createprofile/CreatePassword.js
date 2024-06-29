@@ -1,10 +1,11 @@
 import React from 'react';
 import { useState,useEffect } from 'react';
-import { Dimensions, Text, View, Image, TouchableOpacity, TextInput, Settings, ActivityIndicator, TouchableWithoutFeedback, Keyboard, } from 'react-native'
+import { Dimensions, Text, View, TouchableOpacity, TextInput, Settings, ActivityIndicator, TouchableWithoutFeedback, Keyboard, } from 'react-native';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Image } from 'expo-image';
 
 const CreatePassword = ({ navigation, route }) => {
 

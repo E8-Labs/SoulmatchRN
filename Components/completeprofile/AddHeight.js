@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { TouchableOpacity, View, Image, Text, Dimensions, ActivityIndicator } from 'react-native';
+import { TouchableOpacity, View, Text, Dimensions, ActivityIndicator } from 'react-native';
 import { useState } from 'react';
 import WheelPickerExpo from 'react-native-wheel-picker-expo';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
 import { UpdateProfile } from '../../Services/ProfileServices/UpdateProfile';
+import { Image } from 'expo-image';
 
 const AddHeight = ({ navigation, route }) => {
 

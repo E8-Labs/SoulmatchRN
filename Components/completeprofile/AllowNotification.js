@@ -1,11 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react'
-import { View, Image, TouchableOpacity, Text, Dimensions, Platform, Settings } from 'react-native'
+import React, { useEffect, useState, useRef } from 'react';
+import { View, TouchableOpacity, Text, Dimensions, Platform, Settings } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Image } from 'expo-image';
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({

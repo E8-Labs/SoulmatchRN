@@ -1,6 +1,7 @@
-import { View, Text, Dimensions, Image, Animated, TouchableOpacity } from 'react-native';
+import { View, Text, Dimensions, Animated, TouchableOpacity } from 'react-native';
 import React, { useCallback } from 'react';
 import CardLike from './CardLike';
+import { Image } from 'expo-image';
 // import LinearGradient from 'react-native-linear-gradient';
 const { height, width } = Dimensions.get('window');
 const Card = ({ item, isFirst, swipe, ...rest }) => {

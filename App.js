@@ -121,6 +121,8 @@ export default function App() {
     PoppinsSemiBold
   });
 
+  const [forceNavigate, setForceNavigate] = useState(false)
+
 
   const [expoPushToken, setExpoPushToken] = useState('');
 
@@ -242,12 +244,18 @@ async function registerForPushNotificationsAsync() {
     }
   }, [fontsLoaded])
 
+  useEffect(() => {
+    setTimeout(() => {
+      setForceNavigate(true)
+    }, 2000);
+  }, [])
 
-  if (!fontsLoaded) {
+
+  if (!fontsLoaded && !forceNavigate) {
     return (
 
       <View>
-        <Text>Loading Fonts</Text>
+        
       </View>
     )
   } else {

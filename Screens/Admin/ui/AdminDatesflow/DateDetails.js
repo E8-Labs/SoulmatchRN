@@ -7,6 +7,7 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress'
 import colors from '../RangeSlider/Colors'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import moment from 'moment'
+import { GetBudget } from '../../../../Services/dates/GetBudget'
 
 const DateDetails = ({ navigation, route }) => {
     const { height, width } = Dimensions.get('window')
@@ -116,7 +117,7 @@ const DateDetails = ({ navigation, route }) => {
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <Text style={styles.RatingsValue}>
-                                    $
+                                    {GetBudget(UserDateDetails)}
                                 </Text>
                                 <Text style={styles.RatingsValue}>
                                     {UserDateDetails.Category.name}

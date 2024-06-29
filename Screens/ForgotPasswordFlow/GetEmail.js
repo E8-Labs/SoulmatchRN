@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
-import { View, Text, Dimensions, TextInput, TouchableOpacity, Image, SafeAreaView, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, Platform, Settings, ActivityIndicator } from 'react-native'
-import GlobalStyles from '../../assets/styles/GlobalStyles'
+import React, { useState } from 'react';
+import { View, Text, Dimensions, TextInput, TouchableOpacity, SafeAreaView, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, Platform, Settings, ActivityIndicator } from 'react-native'
+import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
+import { Image } from 'expo-image';
 import customFonts from '../../assets/fonts/Fonts';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import AsyncStorage from '@react-native-async-storage/async-storage';

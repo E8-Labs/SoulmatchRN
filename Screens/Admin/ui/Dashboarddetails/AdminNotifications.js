@@ -1,6 +1,7 @@
 import React from "react";
-import { SafeAreaView, Text, TouchableOpacity, View, Image, Dimensions } from "react-native";
+import { SafeAreaView, Text, TouchableOpacity, View, Dimensions } from "react-native";
 import customFonts from "../../../../assets/fonts/Fonts";
+import { Image } from "expo-image";
 
 const AdminNotifications = ({ navigation }) => {
     const { height, width } = Dimensions.get('window')
@@ -19,7 +20,7 @@ const AdminNotifications = ({ navigation }) => {
                             </View>
                         </TouchableOpacity>
                         <Text style={{ fontWeight: '500', fontSize: 24, fontFamily: customFonts.medium }}>
-                            Account details
+                            Notifications
                         </Text>
                     </View>
                 </View>

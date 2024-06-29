@@ -9,6 +9,7 @@ import { Video, ResizeMode } from 'expo-av';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image } from 'react-native';
+import DistanceCalculator from '../../../../Components/DistanceCalculator';
 
 
 const placholder = require('../../../../assets/images/imagePlaceholder.webp')
@@ -39,22 +40,32 @@ const UserProfileDetails = ({ navigation, route }) => {
     //api call for user details
     useEffect(() => {
         const UserDetail = async () => {
-            const ApiUrl = `https://plurawlapp.com/soulmatch/api/users/get_profile?userid=${ID}`;
-            const AuthToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxMTYsIm5hbWUiOiJBZG1pbiBQbHVyYXdsIiwiZW1haWwiOiJhZG1pbkBwbHVyYXdsLmNvbSIsInBhc3N3b3JkIjoiJDJiJDEwJE4uRHcyZTloZ2FvSy9BbzAxVmk2dGVla0xUMXVBdi9ycEhBTXdCblpaVDd3WUhTWmNLMnFlIiwicHJvZmlsZV9pbWFnZSI6bnVsbCwiY29tcGFueSI6bnVsbCwidGl0bGUiOm51bGwsImluZHVzdHJ5IjpudWxsLCJjaXR5IjpudWxsLCJzdGF0ZSI6bnVsbCwiZ2VuZGVyIjpudWxsLCJyYWNlIjpudWxsLCJsZ2J0cSI6bnVsbCwidmV0ZXJhbiI6bnVsbCwiZmNtX3Rva2VuIjpudWxsLCJkZXZpY2VfaWQiOiIiLCJwcm92aWRlcl9pZCI6bnVsbCwicHJvdmlkZXJfbmFtZSI6bnVsbCwicm9sZSI6ImFkbWluIiwicG9pbnRzIjowLCJlbmNfa2V5IjpudWxsLCJlbmNfaXYiOm51bGwsImNvdW50cmllcyI6bnVsbCwicHJvbm91bnMiOm51bGwsImRvYiI6bnVsbCwiY3JlYXRlZEF0IjoiMjAyNC0wNS0wMlQxMTo1NzozMy4wMDBaIiwidXBkYXRlZEF0IjoiMjAyNC0wNS0wMlQxMTo1NzozMy4wMDBaIn0sImlhdCI6MTcxNDY0Mzk1NSwiZXhwIjoxNzQ2MTc5OTU1fQ._iU0mPQUIjHIj8GvT_YvooVfditUOX3Grs9V8PmSGy0"
-            const response = await fetch(ApiUrl, {
-                'method': 'get',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + AuthToken
+            // const ApiUrl = `https://plurawlapp.com/soulmatch/api/users/get_profile?userid=${ID}`;
+            const ApiUrl = Apis.GetProfile + `?userid=${ID}`;
+            const d = await AsyncStorage.getItem("USER");
+            if (d) {
+                const data = JSON.parse(d);
+                const AuthToken = data.token;
+                // const AuthToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxMTYsIm5hbWUiOiJBZG1pbiBQbHVyYXdsIiwiZW1haWwiOiJhZG1pbkBwbHVyYXdsLmNvbSIsInBhc3N3b3JkIjoiJDJiJDEwJE4uRHcyZTloZ2FvSy9BbzAxVmk2dGVla0xUMXVBdi9ycEhBTXdCblpaVDd3WUhTWmNLMnFlIiwicHJvZmlsZV9pbWFnZSI6bnVsbCwiY29tcGFueSI6bnVsbCwidGl0bGUiOm51bGwsImluZHVzdHJ5IjpudWxsLCJjaXR5IjpudWxsLCJzdGF0ZSI6bnVsbCwiZ2VuZGVyIjpudWxsLCJyYWNlIjpudWxsLCJsZ2J0cSI6bnVsbCwidmV0ZXJhbiI6bnVsbCwiZmNtX3Rva2VuIjpudWxsLCJkZXZpY2VfaWQiOiIiLCJwcm92aWRlcl9pZCI6bnVsbCwicHJvdmlkZXJfbmFtZSI6bnVsbCwicm9sZSI6ImFkbWluIiwicG9pbnRzIjowLCJlbmNfa2V5IjpudWxsLCJlbmNfaXYiOm51bGwsImNvdW50cmllcyI6bnVsbCwicHJvbm91bnMiOm51bGwsImRvYiI6bnVsbCwiY3JlYXRlZEF0IjoiMjAyNC0wNS0wMlQxMTo1NzozMy4wMDBaIiwidXBkYXRlZEF0IjoiMjAyNC0wNS0wMlQxMTo1NzozMy4wMDBaIn0sImlhdCI6MTcxNDY0Mzk1NSwiZXhwIjoxNzQ2MTc5OTU1fQ._iU0mPQUIjHIj8GvT_YvooVfditUOX3Grs9V8PmSGy0"
+                try {
+                    const response = await fetch(ApiUrl, {
+                        'method': 'get',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + AuthToken
+                        }
+                    });
+                    if (response.ok) {
+                        const Result = await response.json();
+                        console.log("Apis response is :", Result.data.email);
+                        setProfileData(Result.data);
+                        setUserMedia(Result.data.media);
+                        setQuestionAnswers(Result.data.answers);
+                        console.log('user media is ', Result.data.media)
+                    }
+                } catch(error){
+                    console.error('Error occured in api response is :', error);
                 }
-            });
-            if (response.ok) {
-                const Result = await response.json();
-                console.log("Apis response is :", Result.data.email);
-                setProfileData(Result.data);
-                setUserMedia(Result.data.media);
-                setQuestionAnswers(Result.data.answers);
-                console.log('user media is ', Result.data.media)
             }
         };
         UserDetail();
@@ -121,7 +132,8 @@ const UserProfileDetails = ({ navigation, route }) => {
 
     const handleDelete = async () => {
         try {
-            const ApiUrl = "https://plurawlapp.com/soulmatch/api/admin/delete_user";
+            // const ApiUrl = "https://plurawlapp.com/soulmatch/api/admin/delete_user";
+            const ApiUrl = Apis.DeleteUser;
             //add api link here
             const data = await AsyncStorage.getItem("USER")
             if (data) {
@@ -154,7 +166,8 @@ const UserProfileDetails = ({ navigation, route }) => {
     //api call for suspending user
     const handleSuspend = async () => {
         try {
-            const ApiUrl = "https://plurawlapp.com/soulmatch/api/admin/suspend_user";
+            // const ApiUrl = "https://plurawlapp.com/soulmatch/api/admin/suspend_user";
+            const ApiUrl = Apis.SuspendUser;
             const data = await AsyncStorage.getItem("USER")
             if (data) {
                 let d = JSON.parse(data)
@@ -272,7 +285,9 @@ const UserProfileDetails = ({ navigation, route }) => {
                                 <Image source={require('../../../../assets/Images3/location.png')}
                                     style={styles.viewImage}
                                 />
-                                <Text style={styles.viewText}>5 miles</Text>
+                                <Text style={styles.viewText}>
+                                    <DistanceCalculator userId={ProfileData.id} lat={ProfileData.lat} lang={ProfileData.lang} />
+                                </Text>
                             </View>
 
                             <View style={styles.viewStyle}>
@@ -389,7 +404,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                                 <Text style={{ fontSize: 20, fontFamily: customFonts.medium }}>Profile statement questions</Text>
                             </View>
 
-                            <View style = {{marginBottom:20}}>
+                            <View style={{ marginBottom: 20 }}>
                                 <FlatList
                                     scrollEnabled={false}
                                     data={QuestionAnswers}

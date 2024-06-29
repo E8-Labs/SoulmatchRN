@@ -1,5 +1,6 @@
 import React, { useEffect ,useState,useRef } from "react";
-import { Image, View, Text, ImageBackground, StyleSheet, TouchableOpacity, Dimensions, Platform, Alert,  } from "react-native";
+import { View, Text, ImageBackground, StyleSheet, TouchableOpacity, Dimensions, Platform, Alert,  } from "react-native";
+import { Image } from "expo-image";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';

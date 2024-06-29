@@ -1,7 +1,8 @@
-import { View, Text, Dimensions, Image, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform, TextInput, Modal, TouchableWithoutFeedback } from 'react-native'
-import React, { useRef, useState } from 'react'
-import customFonts from '../assets/fonts/Fonts'
-import colors from '../assets/colors/Colors'
+import { View, Text, Dimensions, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform, TextInput, Modal, TouchableWithoutFeedback } from 'react-native'
+import React, { useRef, useState } from 'react';
+import customFonts from '../assets/fonts/Fonts';
+import colors from '../assets/colors/Colors';
+import { Image } from 'expo-image';
 
 const { height, width } = Dimensions.get('window')
 

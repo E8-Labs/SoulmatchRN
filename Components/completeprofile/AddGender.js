@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, Image, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native'
+import { View, Text, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native'
 import customFonts from '../../assets/fonts/Fonts'
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
 import { UpdateProfile } from '../../Services/ProfileServices/UpdateProfile';
+import { Image } from 'expo-image';
 
 const { height, width } = Dimensions.get('window')
 

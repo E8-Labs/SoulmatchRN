@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import {
-    View, Text, Dimensions, TextInput, TouchableOpacity, Image, SafeAreaView, Keyboard, KeyboardAvoidingView,
+    View, Text, Dimensions, TextInput, TouchableOpacity, SafeAreaView, Keyboard, KeyboardAvoidingView,
     TouchableWithoutFeedback, Platform, Settings, ActivityIndicator
-} from 'react-native'
-import GlobalStyles from '../../assets/styles/GlobalStyles'
+} from 'react-native';
+import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
 import customFonts from '../../assets/fonts/Fonts';
 import ApisPath from '../../lib/ApisPath/ApisPath';
@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { NavigateLogedUser } from '../../Services/user/NavigateLogedUser';
+import { Image } from 'expo-image';
 
 const { height, width } = Dimensions.get("window");
 
@@ -21,15 +22,15 @@ const eyeslash = require('../../assets/images/eye-slash.png')
 
 export default function LoginUser(props) {
 
-    const [selected, setSelected] = useState(false)
-    const [email, setEmail] = useState("")
-    const [emailFocused, setEmailFocused] = useState(false)
-    const [password, setPassword] = useState("")
-    const [error, setError] = useState("")
-    const [passwordFocused, setPasswordFocused] = useState(false)
-    const [showPassword, setShowPassword] = useState(false)
-    const [indicator, setIndicator] = useState(false)
-    const [indicator1, setIndicator1] = useState(false)
+    const [selected, setSelected] = useState(false);
+    const [email, setEmail] = useState("");
+    const [emailFocused, setEmailFocused] = useState(false);
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [passwordFocused, setPasswordFocused] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [indicator, setIndicator] = useState(false);
+    const [indicator1, setIndicator1] = useState(false);
 
 
     GoogleSignin.configure({
@@ -74,12 +75,12 @@ export default function LoginUser(props) {
                     if (json.message === 'Logged in') {
                         let data = json.data.user
                         let from = "Login"
-                        try{
-                            await NavigateLogedUser(props.navigation,from)
-                        }catch(e) {
+                        try {
+                            await NavigateLogedUser(props.navigation, from)
+                        } catch (e) {
                             console.log('error finding in navigate user', e)
                         }
-                        
+
                     } else if (json.message === 'User registered') {
                         props.navigation.navigate("UploadIntroVideo")
                     }
@@ -228,20 +229,20 @@ export default function LoginUser(props) {
                             let data = json.data.user
 
                             if (data.role === "admin") {
-                                props.navigation.navigate("AdminTabBarContainer",{
-                                    from:'Login'
+                                props.navigation.navigate("AdminTabBarContainer", {
+                                    from: 'Login'
                                 })
                                 return
-                            } else {
+                            } else if(data.status === "active") {
                                 let from = "Login"
-                                try{
-                                    await NavigateLogedUser(props.navigation,from)
-                                }catch(e) {
+                                try {
+                                    await NavigateLogedUser(props.navigation, from)
+                                } catch (e) {
                                     console.log('error finding in navigate user', e)
                                 }
                             }
 
-                           
+
                             // props.navigation.navigate('TabBarContainer')
                         } else {
                             console.log('json mesasage', json.message)
@@ -261,13 +262,13 @@ export default function LoginUser(props) {
         <SafeAreaView>
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                style={{ flex: 1, flexDirection: 'column', alignItems:'center',width:width}}>
+                style={{ flex: 1, flexDirection: 'column', alignItems: 'center', width: width }}>
                 <TouchableWithoutFeedback style={GlobalStyles.container} onPress={Keyboard.dismiss}>
-                    <View style={[{ flexDirection: 'column', height: height, marginTop: 20 / 930 * height,alignItems:'center',width:width }]}>
-                        <View style={{ justifyContent: 'space-between', height: height * 0.8,alignItems:'center' }}>
-                            <View style={{ alignItems: 'center',}}>
-                                <View style={{ width: width-40 , marginTop: 0,alignSelf:'center',marginLeft:20/430*width}}>
-                                    <Text style={{ fontSize: 28, fontFamily: customFonts.semibold ,}}>
+                    <View style={[{ flexDirection: 'column', height: height, marginTop: 20 / 930 * height, alignItems: 'center', width: width }]}>
+                        <View style={{ justifyContent: 'space-between', height: height * 0.8, alignItems: 'center' }}>
+                            <View style={{ alignItems: 'center', }}>
+                                <View style={{ width: width - 40, marginTop: 0, alignSelf: 'center', marginLeft: 20 / 430 * width }}>
+                                    <Text style={{ fontSize: 28, fontFamily: customFonts.semibold, }}>
                                         Welcome back!
                                     </Text>
 
@@ -323,7 +324,7 @@ export default function LoginUser(props) {
                                     </View>
                                     <Text style={GlobalStyles.errorText}>{error}</Text>
 
-                                    <View style={{width:width-70, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10 }}>
+                                    <View style={{ width: width - 70, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10 }}>
 
                                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                                             <TouchableOpacity

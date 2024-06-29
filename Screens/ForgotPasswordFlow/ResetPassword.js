@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
-import { View, Text, Dimensions, TextInput, TouchableOpacity, Image, SafeAreaView, Keyboard, 
+import React, { useState } from 'react';
+import { View, Text, Dimensions, TextInput, TouchableOpacity, SafeAreaView, Keyboard, 
     KeyboardAvoidingView, TouchableWithoutFeedback, Platform, ActivityIndicator,Settings
- } from 'react-native'
-import GlobalStyles from '../../assets/styles/GlobalStyles'
+ } from 'react-native';
+import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
 import customFonts from '../../assets/fonts/Fonts';
 import ApisPath from '../../lib/ApisPath/ApisPath';
+import { Image } from 'expo-image';
 
 const { height, width } = Dimensions.get("window");
 

@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import { Text, View, Dimensions, SafeAreaView, TouchableOpacity, Image, FlatList, TextInput, Keyboard } from 'react-native'
-import customFonts from '../../assets/fonts/Fonts'
+import React, { useState, useEffect } from 'react';
+import { Text, View, Dimensions, SafeAreaView, TouchableOpacity, FlatList, TextInput, Keyboard } from 'react-native';
+import customFonts from '../../assets/fonts/Fonts';
+import { Image } from 'expo-image';
 
 const SelectedResourceDetails = ({ navigation }) => {
     const { height, width } = Dimensions.get('window')

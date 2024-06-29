@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
-import { View, Text, KeyboardAvoidingView, TouchableOpacity, Image, Platform, Keyboard, TouchableWithoutFeedback, Dimensions, Modal } from 'react-native'
-import { StatusBar } from 'expo-status-bar'
-import customFonts from '../../../assets/fonts/Fonts'
+import React, { useState } from 'react';
+import { View, Text, KeyboardAvoidingView, TouchableOpacity, Platform, Keyboard, TouchableWithoutFeedback, Dimensions, Modal } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import customFonts from '../../../assets/fonts/Fonts';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LogoutPopup from '../../../Components/LogoutPopup';
 import GlobalStyles from '../../../assets/styles/GlobalStyles';
+import { Image } from 'expo-image';
 
 const Profile = ({ navigation }) => {
     const { height, width } = Dimensions.get('window')

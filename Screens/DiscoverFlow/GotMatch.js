@@ -1,9 +1,10 @@
-import { View, Text, Dimensions, Image, TouchableOpacity, SafeAreaView, Settings, ActivityIndicator } from 'react-native'
-import React, { useState } from 'react'
-import GlobalStyles from '../../assets/styles/GlobalStyles'
-import customFonts from '../../assets/fonts/Fonts'
-import ApisPath from '../../lib/ApisPath/ApisPath'
-import colors from '../../assets/colors/Colors'
+import { View, Text, Dimensions, TouchableOpacity, SafeAreaView, Settings, ActivityIndicator } from 'react-native'
+import React, { useState } from 'react';
+import GlobalStyles from '../../assets/styles/GlobalStyles';
+import customFonts from '../../assets/fonts/Fonts';
+import ApisPath from '../../lib/ApisPath/ApisPath';
+import colors from '../../assets/colors/Colors';
+import { Image } from 'expo-image';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const { height, width } = Dimensions.get('window')
 

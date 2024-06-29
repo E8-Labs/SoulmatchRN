@@ -1,14 +1,15 @@
 import {
-  View, Text, SafeAreaView, Dimensions, TouchableOpacity, Image, KeyboardAvoidingView, Platform,
+  View, Text, SafeAreaView, Dimensions, TouchableOpacity, KeyboardAvoidingView, Platform,
   FlatList, TextInput, TouchableWithoutFeedback, Keyboard,
   ActivityIndicator
-} from 'react-native'
-import React, { useState, useEffect, useRef } from 'react'
+} from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
 import GlobalStyles from '../assets/styles/GlobalStyles';
 import customFonts from '../assets/fonts/Fonts';
 import colors from '../assets/colors/Colors';
 import ApisPath from '../lib/ApisPath/ApisPath';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Image } from 'expo-image';
 const { height, width } = Dimensions.get('window');
 const selectedImage = require('../assets/images/selectedCircle.png');
 const unselectedImage = require('../assets/images/unselectedCircle.png');

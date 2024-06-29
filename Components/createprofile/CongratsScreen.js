@@ -1,7 +1,8 @@
-import React from 'react'
-import { Text, View, TouchableOpacity, Image, Dimensions, Settings } from 'react-native'
+import React from 'react';
+import { Text, View, TouchableOpacity, Dimensions, Settings } from 'react-native';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import customFonts from '../../assets/fonts/Fonts';
+import { Image } from 'expo-image';
 
 const CongratsScreen = ({ navigation }) => {
     const { height, width } = Dimensions.get('window');

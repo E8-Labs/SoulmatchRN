@@ -8,6 +8,7 @@ import RangeSlider from '../ui/RangeSlider/RangeSlider'
 import { useFocusEffect } from '@react-navigation/native'
 import colors from '../ui/RangeSlider/Colors'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { GetBudget } from '../../../Services/dates/GetBudget'
 
 const Dates = ({ navigation }) => {
     const { height, width } = Dimensions.get('window')
@@ -292,7 +293,7 @@ const Dates = ({ navigation }) => {
                                                 Budget :
                                             </Text>
                                             <Text style={{ fontWeight: '500', width: 50, fontSize: 12, fontFamily: customFonts.bold, color: '#333333' }}>
-                                                ${item.minBudget} - ${item.maxBudget}
+                                                {GetBudget(item)}
                                             </Text>
                                         </View>
                                         <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>

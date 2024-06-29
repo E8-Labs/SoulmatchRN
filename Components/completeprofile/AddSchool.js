@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { Dimensions, Keyboard, TouchableWithoutFeedback, View, Text, Image, ActivityIndicator, TouchableOpacity, TextInput } from 'react-native'
-import customFonts from '../../assets/fonts/Fonts'
+import React, { useEffect, useState } from 'react';
+import { Dimensions, Keyboard, TouchableWithoutFeedback, View, Text, ActivityIndicator, TouchableOpacity, TextInput } from 'react-native';
+import customFonts from '../../assets/fonts/Fonts';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
 import { UpdateProfile } from '../../Services/ProfileServices/UpdateProfile';
+import { Image } from 'expo-image';
+
 const AddSchool = ({ navigation, route }) => {
 
     const { height, width } = Dimensions.get('window')

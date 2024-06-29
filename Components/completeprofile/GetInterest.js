@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react'
-import { TouchableOpacity, View, Image, Text, Dimensions, ActivityIndicator, Settings } from 'react-native';
+import React, { useEffect } from 'react';
+import { TouchableOpacity, View, Text, Dimensions, ActivityIndicator, Settings } from 'react-native';
 import { useState } from 'react';
 import WheelPickerExpo from 'react-native-wheel-picker-expo';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
 import { UpdateProfile } from '../../Services/ProfileServices/UpdateProfile';
 import ApisPath from '../../lib/ApisPath/ApisPath';
+import { Image } from 'expo-image';
 
 const GetInterest = ({ navigation, route }) => {
 

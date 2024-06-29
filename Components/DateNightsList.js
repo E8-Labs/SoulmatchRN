@@ -1,7 +1,8 @@
-import { View, Text, Dimensions, FlatList, Image, TouchableOpacity } from 'react-native'
-import React from 'react'
+import { View, Text, Dimensions, FlatList, TouchableOpacity } from 'react-native'
+import React from 'react';
 import colors from '../assets/colors/Colors';
 import customFonts from '../assets/fonts/Fonts';
+import { Image } from 'expo-image';
 
 const { height, width } = Dimensions.get('window');
 

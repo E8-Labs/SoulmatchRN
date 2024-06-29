@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
-import { Dimensions, View, TouchableOpacity, Text, Image, Modal } from 'react-native'
+import React, { useState } from 'react';
+import { Dimensions, View, TouchableOpacity, Text, Modal } from 'react-native';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
+import { Image } from 'expo-image';
+
 const PackagePlan = ({ navigation }) => {
     const { height, width } = Dimensions.get('window');
     const [packages, setPackages] = useState([]);

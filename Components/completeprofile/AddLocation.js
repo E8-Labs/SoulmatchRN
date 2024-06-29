@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { View, Image, TouchableOpacity, Text, TouchableWithoutFeedback, Dimensions, Modal, Settings, ActivityIndicator, Alert } from 'react-native'
+import { View, TouchableOpacity, Text, TouchableWithoutFeedback, Dimensions, Modal, Settings, ActivityIndicator, Alert } from 'react-native'
 import * as Location from 'expo-location';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Image } from 'expo-image';
 
 const AddLocation = ({ navigation }) => {
     const { height, width } = Dimensions.get('window')

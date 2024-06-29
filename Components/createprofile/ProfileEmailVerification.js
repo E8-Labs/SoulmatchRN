@@ -1,10 +1,12 @@
 import React from 'react';
 import { useRef, useState,useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, Dimensions, TextInput, TouchableWithoutFeedback, Keyboard, Settings, ActivityIndicator } from 'react-native'
+import { View, Text, TouchableOpacity, Dimensions, TextInput, TouchableWithoutFeedback, Keyboard, Settings, ActivityIndicator } from 'react-native'
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import { err } from 'react-native-svg';
 import colors from '../../assets/colors/Colors';
+import { Image } from 'expo-image';
+
 const ProfileEmailVerification = ({ navigation, route }) => {
 
     const { height, width } = Dimensions.get('window');

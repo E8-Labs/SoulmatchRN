@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image, Text, TouchableOpacity, View, StyleSheet, ScrollView, FlatList, ActivityIndicator } from 'react-native';
+import { Dimensions, Text, TouchableOpacity, View, StyleSheet, ScrollView, FlatList, ActivityIndicator } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import customFonts from '../../../assets/fonts/Fonts';
 import Dropdown2 from '../ui/Dropdown2';
@@ -7,6 +7,7 @@ import Apis from '../apis/Apis';
 import { BarChart } from 'react-native-chart-kit';
 import { Dropdown } from 'react-native-element-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Image } from 'expo-image';
 
 const Dashboard = ({ navigation }) => {
     const { height, width } = Dimensions.get('window');
@@ -15,7 +16,7 @@ const Dashboard = ({ navigation }) => {
     const [RecentUsers, setRecentUsers] = useState([]);
 
     const handleNotifications = () => {
-        navigation.navigate('AdminNotifications')
+        navigation.navigate('NotificationsScreen')
     }
 
     const haandleAllUsersClick = () => {

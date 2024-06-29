@@ -3,11 +3,11 @@ import {
     Text,
     Animated,
     PanResponder,
-    TouchableOpacity,
-    Image, Dimensions
+    TouchableOpacity,Dimensions
 } from 'react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Card from './Card';
+import { Image } from 'expo-image';
 
 const CardContainerMain = () => {
 

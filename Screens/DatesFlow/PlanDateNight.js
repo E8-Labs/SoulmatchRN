@@ -1,5 +1,5 @@
 import {
-    View, Text, SafeAreaView, Dimensions, TouchableOpacity, Image, StyleSheet, Modal, TouchableWithoutFeedback, TextInput,
+    View, Text, SafeAreaView, Dimensions, TouchableOpacity, StyleSheet, Modal, TouchableWithoutFeedback, TextInput,
     ScrollView, Keyboard,
     ActivityIndicator
 } from 'react-native'
@@ -14,6 +14,7 @@ import moment from 'moment';
 import fonts from 'fonts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ApisPath from '../../lib/ApisPath/ApisPath';
+import { Image } from 'expo-image';
 
 const { height, width } = Dimensions.get('window');
 const selectedImage = require('../../assets/images/selected.png');
