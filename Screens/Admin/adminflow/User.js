@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { ActivityIndicator, Dimensions, FlatList, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { Image } from 'expo-image'
@@ -8,7 +8,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useFocusEffect } from '@react-navigation/native'
 
 
+
+
 const User = ({ navigation }) => {
+    const timerRef = useRef(null)
     const { height, width } = Dimensions.get('window')
 
     const [openModal, setOpenModal] = useState(false);
@@ -17,6 +20,8 @@ const User = ({ navigation }) => {
     const [PlanStatus, setPlanStatus] = useState('');
     //value of plan
     const [PlanValue, setPlanValue] = useState('');
+    const [searchUser, setSearchUser] = useState('');
+    const [noMoreUsers, setNoMoreUsers] = useState(false)
 
     //handleUser Details
     const handleUserDetails = (item, index) => {
@@ -48,47 +53,6 @@ const User = ({ navigation }) => {
         }
     });
 
-
-    const DATA = [
-        {
-            id: 1,
-            userImg: require('../../../assets/Images3/sarah.png'),
-            // name: 'Grace Clark',
-            // locationImg: require('../../../assets/Images3/location.png'),
-            // crown: require('../../../assets/Images3/crown2.png'),
-            // city: 'New York, CA',
-            // package: 'Monthly'
-        },
-        {
-            id: 2,
-            userImg: require('../../../assets/Images3/sarah.png'),
-        },
-        {
-            id: 3,
-            userImg: require('../../../assets/Images3/sarah.png'),
-        },
-        {
-            id: 4,
-            userImg: require('../../../assets/Images3/sarah.png'),
-        },
-        {
-            id: 5,
-            userImg: require('../../../assets/Images3/sarah.png'),
-        },
-        {
-            id: 6,
-            userImg: require('../../../assets/Images3/sarah.png'),
-        },
-        {
-            id: 7,
-            userImg: require('../../../assets/Images3/sarah.png'),
-        },
-        {
-            id: 8,
-            userImg: require('../../../assets/Images3/sarah.png'),
-        }
-    ]
-
     const flaggedUsersClick = () => {
         navigation.navigate('FlaggedUsers')
     }
@@ -105,16 +69,16 @@ const User = ({ navigation }) => {
         }, [])
     )
 
-    useEffect(() => {
-        getUsers();
-    }, []);
+    // useEffect(() => {
+    //     getUsers();
+    // }, []);
 
-    const getUsers = async () => {
-        if (Loading) {
+    const getUsers = async (search) => {
+
+        if (Loading || noMoreUsers) {
             return
         }
         try {
-
             console.log('trying to get users')
             const data = await AsyncStorage.getItem("USER")
             if (data) {
@@ -122,8 +86,12 @@ const User = ({ navigation }) => {
 
                 const AuthToken = d.token
                 let path = `${Apis.GetAdminUsers}?offset=${AdminUsers.length}`
-                console.log('Fetching users ', path)
                 setLoading(true);
+                let searchParam = ''
+                if (search) {
+                    path = `${Apis.GetAdminUsers}?offset=${AdminUsers.length}&search=${search}`
+                } 
+                console.log("Path is ", path)
                 const response = await fetch(path, {
                     method: 'get',
                     headers: {
@@ -140,11 +108,20 @@ const User = ({ navigation }) => {
                 if (response.ok) {
                     const Result = await response.json();
                     const newUsers = Result.data;
-
-                    // Check if newUsers is not null before spreading
-                    if (newUsers !== null) {
-                        setAdminUsers(prevUsers => [...prevUsers, ...newUsers]);
+                    console.log("#############################################################")
+                    console.log("Data from server ", newUsers)
+                    console.log("#############################################################")
+                    if(newUsers){
+                        console.log("Prev list ", AdminUsers)
+                        setAdminUsers(prevUsers => [...prevUsers, ...newUsers])
                     }
+                    else{
+                        setNoMoreUsers(true)
+                    }
+                    // Check if newUsers is not null before spreading
+                    // if (newUsers !== null) {
+                    //     setAdminUsers(prevUsers => [...prevUsers, ...newUsers]);
+                    // }
                 }
             }
         } catch (error) {
@@ -158,6 +135,7 @@ const User = ({ navigation }) => {
         const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
         const paddingToBottom = 20;
         if (layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom) {
+            console.log("Getting new users in handleScroll")
             getUsers(); // Fetch more data when scrolled to the bottom
         }
     };
@@ -190,9 +168,25 @@ const User = ({ navigation }) => {
     //citystatename
     const [cityStateName, setCityStateName] = useState('');
 
-    // useEffect(() => {
-    //     console.log('Value of text is :', cityStateName);
-    // }, [cityStateName])
+    //code for search params
+    useEffect(() => {
+        
+            // Clear the previous timer
+            if (timerRef.current) {
+                clearTimeout(timerRef.current);
+            }
+            setAdminUsers([])
+            setNoMoreUsers(false)
+            // Set a new timer
+            timerRef.current = setTimeout(() => {
+                console.log("Search timer clicked")
+                getUsers(searchUser);
+            }, 1000);
+
+            // Cleanup function to clear the timer when component unmounts
+            return () => clearTimeout(timerRef.current);
+        
+    }, [searchUser]);
 
     return (
         <View style={{ display: 'flex', alignItems: 'center', height: height }}>
@@ -231,7 +225,14 @@ const User = ({ navigation }) => {
                     <TouchableOpacity style={{ width: 30 / 430 * width, height: 30 / 930 * height, alignItems: 'center', justifyContent: 'center' }}>
                         <Image source={require('../../../assets/Images3/searchIcon.png')} style={{ height: 55 / 930 * height, width: 55 / 930 * width, resizeMode: 'contain' }} />
                     </TouchableOpacity>
-                    <TextInput style={{ width: 304 / 430 * width, fontSize: 14, fontWeight: '500', fontFamily: customFonts.medium }} placeholder='Search by name, email' />
+                    <TextInput
+                        value={searchUser}
+                        onChangeText={(e) => setSearchUser(e)}
+                        style={{
+                            width: 304 / 430 * width, fontSize: 14, fontWeight: '500',
+                            fontFamily: customFonts.medium
+                        }}
+                        placeholder='Search by name, email' />
                 </View>
 
                 {/* Grid view */}
@@ -242,7 +243,7 @@ const User = ({ navigation }) => {
                     onScroll={handleScroll}
                     scrollEventThrottle={16}>
                     <View style={{ flexDirection: 'row', flexWrap: 'wrap', display: 'flex', justifyContent: 'space-between', marginBottom: 30 }}>
-                        {AdminUsers.map((item, index) => (
+                        {AdminUsers&&AdminUsers.map((item, index) => (
                             <TouchableOpacity onPress={() => handleUserDetails(item.id, index)} key={index} style={{ marginTop: 10 }}>
                                 <View style={{ borderWidth: 1, flexDirection: 'column', gap: 5, borderColor: '#E6E6E6', borderRadius: 10, padding: 12, width: 176 / 430 * width }}>
                                     <Image source={item.profile_image ? { uri: item.profile_image } : require('../../../assets/Images3/imagePlaceholder.webp')} style={{ height: 98 / 930 * height, width: 152 / 430 * width, borderRadius: 6, resizeMode: 'cover' }} />

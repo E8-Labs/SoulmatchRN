@@ -31,10 +31,67 @@ const male = require('../../assets/images/maleIcon.png');
 const female = require('../../assets/images/femaleIcon.png');
 const nonBinary = require('../../assets/images/nonBinaryIcon.png');
 
+
+
+const DistanceCalculator = ({ userId, lat, lang }) => {
+    const [distance, setDistance] = useState(null);
+    
+
+    const calculateDistance =  async() => {
+        // return 0
+        const userdata = await AsyncStorage.getItem("USER")
+
+        if (userdata) {
+            let d = JSON.parse(userdata)
+
+            // setLocalUser(d)
+            let localLat = d.user.lat
+            let localLong = d.user.lang
+            // let lat = data[currentIndex] ? data[currentIndex].lat : ''
+            // let lang = data[currentIndex] ? data[currentIndex].lang : ''
+            let location = { myLat: localLat, myLang: localLong, otherLat: lat, otherLang: lang }
+            console.log('user data fro local is', location)
+            // return
+            let distance = 0
+            if (localLong !== null && localLat !== null && lat !== null && lang !== null) {
+                distance = getDistance(
+                    { latitude: localLat, longitude: localLong },
+                    { latitude: lat, longitude: lang }
+                );
+                console.log('total distance is', distance)
+                const distanceInMiles = distance / 1000 * 0.621371.toFixed(2);
+                return parseInt(distanceInMiles)
+            }
+            else{
+                return distance
+            }
+            // console.log('distance found ', )
+
+        }
+    }
+
+    useEffect(() => {
+        const fetchDistance = async () => {
+            const result = await calculateDistance(userId);
+            setDistance(result);
+        }
+        fetchDistance();
+    }, [userId, lat, lang]); // Dependency array includes userId to recalculate if it changes
+
+    return (
+        <Text>{distance !== null ? `${distance} miles` : 'Calculating...'}</Text>
+    );
+}
+
+
+
+
+
+
 export default function ProfileDetail({ navigation, fromScreen, data, onMenuClick, filtersData, LastProfileSwiped }) {
 
     // const fromScreen = route.params.fromScreen
-
+    const [imageLoading, setImageLoading] = useState({});
     const [totalInches, setTotalInches] = useState(null)
     const [selected, setSelected] = useState('');
     const [like, setLike] = useState(false);
@@ -289,28 +346,48 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
 
     }
 
-    const calculateDistance = async () => {
-        const userdata = await AsyncStorage.getItem("USER")
+    const calculateDistance =  () => {
+        // return 0
+        // const userdata = await AsyncStorage.getItem("USER")
 
-        if (userdata) {
-            let d = JSON.parse(userdata)
+        // if (userdata) {
+        //     let d = JSON.parse(userdata)
 
             // setLocalUser(d)
-            let loaclLat = d.user.lat
-            let localLong = d.user.lang
+            let localLat = 37.87227//d.user.lat
+            let localLong = 74.12212 //d.user.lang
             let lat = data[currentIndex] ? data[currentIndex].lat : ''
             let lang = data[currentIndex] ? data[currentIndex].lang : ''
-            // console.log('user data fro local is', d)
+            let location = { myLat: localLat, myLang: localLong, otherLat: lat, otherLang: lang }
+            console.log('user data fro local is', location)
             // return
-            const distance = getDistance(
-                { latitude: loaclLat, longitude: localLong },
-                { latitude: lat, longitude: lang }
-            );
-            console.log('total distance is', distance)
-            const distanceInMiles = distance / 1000 * 0.621371.toFixed(2);
-            return distanceInMiles
-        }
+            let distance = 0
+            if (localLong !== null && localLat !== null && lat !== null && lang !== null) {
+                distance = getDistance(
+                    { latitude: localLat, longitude: localLong },
+                    { latitude: lat, longitude: lang }
+                );
+                console.log('total distance is', distance)
+                const distanceInMiles = distance / 1000 * 0.621371.toFixed(2);
+                return distanceInMiles
+            }
+            else{
+                return distance
+            }
+            // console.log('distance found ', )
+
+        // }
     }
+    
+   
+
+    const handleImageLoadStart = (uri) => {
+        setImageLoading(prevState => ({ ...prevState, [uri]: true }));
+    };
+
+    const handleImageLoadEnd = (uri) => {
+        setImageLoading(prevState => ({ ...prevState, [uri]: false }));
+    };
 
 
     useEffect(() => {
@@ -381,7 +458,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                         // closeModal()
                                         setOpenModalLocation(true)
                                         console.log('temp filters are ', tempFilter)
-                                        
+
                                     }
                                     // onMenuClick(routeData)
                                 }} />
@@ -431,18 +508,16 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                 <ScrollView style={{}} showsVerticalScrollIndicator={false}>
 
                                     <Image source={data[currentIndex] ? { uri: data[currentIndex].profile_image } : ''}
-                                        onLoadStart={() => { setLoadImage(true) }}
-                                        onLoadEnd={() => {
-                                            setLoadImage(false)
-                                        }}
+                                       onLoadStart={() => handleImageLoadStart(data[currentIndex] ?  data[currentIndex].profile_image : '')}
+                                       onLoadEnd={() => handleImageLoadEnd(data[currentIndex] ? data[currentIndex].profile_image  : '')}
                                         placeholder={blurhash}
                                         contentFit="cover"
-                                        transition={1000}
+                                        transition={300}
                                         style={{ backgroundColor: 'grey', minHeight: height * 0.6, width: width - 40, borderRadius: 10, }}
                                     />
                                     {
-                                        loadImage ? (
-                                            <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop: -500, height: height * 0.6, width: width - 40, }} />
+                                        imageLoading[data[currentIndex] ? data[currentIndex].profile_image  : ''] ? (
+                                            <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop: -500, height: height * 0.6, width: width - 40,opacity:imageLoading?0:1 }} />
                                         ) : <></>
                                     }
                                     <View
@@ -541,7 +616,12 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                             <Image source={require('../../assets/images/location.png')}
                                                 style={styles.viewImage}
                                             />
-                                            <Text style={styles.viewText}> miles</Text>
+                                            {
+                                                data[currentIndex] &&(
+                                                    <DistanceCalculator userId={data[currentIndex].id} lat={data[currentIndex].lat} lang={data[currentIndex].lang} />
+                                                )
+                                            }
+                                            {/* <Text style={styles.viewText}>{calculateDistance()} miles</Text> */}
                                         </View>
                                         <View style={styles.viewStyle}>
                                             <Image source={require('../../assets/images/eduCap.png')}

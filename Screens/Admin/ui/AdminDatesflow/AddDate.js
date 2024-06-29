@@ -513,7 +513,6 @@ const AddDate = ({ navigation, route }) => {
 
     return (
         <View style={{ alignSelf: 'center', alignItems: 'center', height: height * 0.95, marginTop: marginTop, width: width }}>
-            {/*change if the screen is irResponsive height: height s*/}
             <View style={{ width: width - 50 }}>
                 <StatusBar
                     barStyle="dark-content"
@@ -540,9 +539,7 @@ const AddDate = ({ navigation, route }) => {
                         }
 
                     </View>
-                    {/* <View>
-                                        <ActivityIndicator style={{ height: height, width: width, alignItems: 'center', justifyContent: 'center' }} size={'small'} color={colors.blueColor} />
-                                    </View> */}
+
                     {
                         routeData.from === "AdminDates" ? (
                             <View style={{ justifyContent: 'center' }}>
@@ -757,7 +754,16 @@ const AddDate = ({ navigation, route }) => {
                 ) : null
             }
 
-
+            {
+                Loading &&
+                <View
+                    style={{
+                        height: height, backgroundColor: '#00000050', width: width, alignItems: 'center',
+                        justifyContent: 'center', position: 'absolute', top: 50
+                    }}>
+                    <ActivityIndicator size={'large'} color={colors.blueColor} />
+                </View>
+            }
 
         </View>
     )
