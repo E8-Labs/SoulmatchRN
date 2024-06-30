@@ -13,50 +13,105 @@ import RangeSlider from './createprofile/RangeSlider';
 import { Image } from 'expo-image';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ApisPath from '../lib/ApisPath/ApisPath';
+import AddressPicker from '../Screens/Admin/ui/Addresspicker/AddressPicker';
+import { min } from 'moment';
 
 const { height, width } = Dimensions.get('window');
 
 const selectedImage = require('../assets/images/selected.png');
 const unselectedImage = require('../assets/images/unSelected.png');
 
-export default function DatesFilterPopup({ visible, close }) {
+export default function DatesFilterPopup({ visible, close, closeWithouFilters, filters }) {
 
     const [selected, setselected] = useState('');
+    const [minBudget, setMinBudget] = useState('');
+    const [maxBudget, setMaxBudget] = useState('');
     const [selectedCat, setselectedCat] = useState(-1);
     const [startRat, setStartRat] = useState(0);
     const [endRat, setEndRat] = useState(100);
     const [categories, setCategories] = useState([])
+    const [openAddressPicker, setOpenAddressPicker] = useState(false)
+    const [city, setCity] = useState(false)
+    const [state, setState] = useState(false)
+
 
     const budget = [
         {
             id: 1,
             name: '$',
-            minBudget:0,
-            maxBudget:20,
+            minBudget: 0,
+            maxBudget: 20,
         },
         {
             id: 2,
             name: '$$',
-            minBudget:20,
-            maxBudget:50,
+            minBudget: 20,
+            maxBudget: 50,
         },
         {
             id: 3,
             name: "$$$",
-            minBudget:50,
-            maxBudget:80,
+            minBudget: 50,
+            maxBudget: 80,
         },
         {
             id: 4,
             name: "$$$$",
-            minBudget:80,
-            maxBudget:100000
+            minBudget: 80,
+            maxBudget: 10000000
         },
     ]
 
+
     useEffect(() => {
         getDateCategories()
+        // updateFilters()
     }, [])
+    useEffect(() => {
+        console.log("Filters on Popup changed")
+        updateFilters(filters)
+    }, [filters])
+
+    const updateFilters = (data) =>{
+        // let data = await AsyncStorage.getItem("DatesFilters")
+        
+        if (data) {
+            let filters = data         
+            console.log('filters from previous are', filters)
+            // return
+
+            setCity(filters.city)
+            setState(filters.state)
+            setStartRat(filters.minRating * 20)
+            setEndRat(filters.maxRating * 20)
+            setMinBudget(filters.minBudget)
+            setMaxBudget(filters.maxBudget)
+            setselectedCat(filters.category)
+            setselected(filters.budget)
+        }
+    }
+
+    function isBudgetSelected(item){
+        console.log("Budget Select Check ", item)
+        console.log("Min Budget ", minBudget)
+        console.log("Max Budget ", maxBudget)
+        if(minBudget === item.minBudget && maxBudget === item.maxBudget){
+            
+            console.log("Budget Selected  true")
+            return true
+        }
+        console.log("Budget Selected  false")
+        return false
+    }
+
+    // const updateBudget = () =>{
+        // setMinBudget(selected.minBudget)
+        // setMaxBudget(selected.maxBudget)
+    // }
+
+    // useEffect(()=>{
+    //     updateBudget()
+    // },[selected])
 
 
     const getDateCategories = async () => {
@@ -77,12 +132,13 @@ export default function DatesFilterPopup({ visible, close }) {
                 if (result) {
                     const json = await result.json();
                     if (json.status === true) {
-                        console.log('date categories are ', json.data)
+                        // console.log('date categories are ', json.data)
                         let allCats = [{
                             id: -1,
                             name: "All"
                         }]
                         let merged = [...allCats, ...json.data]
+                        console.log("Cats are ", merged)
                         setCategories(merged)
 
                     } else {
@@ -96,32 +152,36 @@ export default function DatesFilterPopup({ visible, close }) {
 
     }
 
+    const resetFilters = () =>{
+        let filters = {
+            minBudget:null,
+            maxBudget:null,
+            minRating: null,
+            maxRating:null,
+            category: -1,
+            budget:null,
+            city :null,
+            state:null
+        }
+        close(filters)
+    }
+
 
     const applyFilters = () => {
         let filters = {
-            minBudget: selected.minBudget,
-            maxBudget: selected.maxBudget,
-            min_reting: startRat,
-            max_rating: endRat,
-            category: selectedCat
+            minBudget:minBudget,
+            maxBudget:maxBudget,
+            minRating: startRat/20,
+            maxRating: endRat/20,
+            category: selectedCat,
+            budget:selected,
+            city :city,
+            state:state
         }
 
-        AsyncStorage.setItem("DatesFilters", JSON.stringify({
-            minBudget: selected.minBudget,
-            maxBudget: selected.maxBudget,
-            min_reting: startRat,
-            max_rating: endRat,
-            category: selectedCat
-        }))
+        // AsyncStorage.setItem("DatesFilters", JSON.stringify(filters))
 
-        close({
-            minBudget: selected.minBudget,
-            maxBudget: selected.maxBudget,
-            min_reting: startRat,
-            max_rating: endRat,
-            category: selectedCat,
-            getDate : true
-        })
+        close(filters)
 
         console.log('apply filters are ', filters)
     }
@@ -146,7 +206,7 @@ export default function DatesFilterPopup({ visible, close }) {
                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 60 }}>
                                     <Text style={{ fontSize: 20, fontFamily: customFonts.meduim }}> Filters</Text>
 
-                                    <TouchableOpacity onPress={close}>
+                                    <TouchableOpacity onPress={closeWithouFilters}>
                                         <Image source={require('../assets/images/close.png')}
                                             style={GlobalStyles.backBtnImage}
                                         />
@@ -159,10 +219,20 @@ export default function DatesFilterPopup({ visible, close }) {
                                     <Text style={{ fontSize: 16, fontFamily: customFonts.semibold }}>
                                         City/State
                                     </Text>
-                                    <TextInput
-                                        style={GlobalStyles.textInput}
-                                        placeholder='Enter city/state'
-                                    />
+                                    <TouchableOpacity style={GlobalStyles.textInput}
+                                        onPress={() => {
+                                            setOpenAddressPicker(true)
+                                        }}
+                                    >
+                                        <Text style={{ color: 'grey', fontSize: 14 }}>
+
+                                            <Text style={{ color: 'grey', fontSize: 14 }}>
+                                                {city ? city : ''}{state ? `,${state}` : " Enter city/state"}
+                                            </Text>
+
+                                        </Text>
+                                    </TouchableOpacity>
+
                                 </View>
 
 
@@ -176,12 +246,14 @@ export default function DatesFilterPopup({ visible, close }) {
                                             budget.map((item) => (
                                                 <TouchableOpacity key={item.id} style={{ marginTop: 22, alignSelf: 'flex-start', }}
                                                     onPress={() => {
-                                                        setselected(item)
+                                                        // setselected(item)
+                                                        setMinBudget(item.minBudget)
+                                                        setMaxBudget(item.maxBudget)
                                                     }}
                                                 >
                                                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, }}>
 
-                                                        <Image source={selected.id === item.id ? selectedImage : unselectedImage}
+                                                        <Image source={isBudgetSelected(item) ? selectedImage : unselectedImage}
                                                             style={{ height: 20 / 930 * height, width: 20 / 930 * height }}
                                                         />
 
@@ -206,7 +278,7 @@ export default function DatesFilterPopup({ visible, close }) {
                                         {parseInt(startRat / 20)} - {parseInt(endRat / 20)}
                                     </Text>
                                 </View>
-                                <RangeSlider heightSlider={false} start={0} end={100} minValue={0} maxValue={100} rangeStartUpdated={(value) => {
+                                <RangeSlider heightSlider={false} start={startRat?startRat:0} end={endRat?endRat:100} minValue={0} maxValue={100} rangeStartUpdated={(value) => {
                                     // console.log('start age', value)
                                     setStartRat(value)
                                 }} rangeEndUpdated={(value) => {
@@ -218,7 +290,7 @@ export default function DatesFilterPopup({ visible, close }) {
                                 </Text>
 
                                 <View style={{
-                                    width: width, height: 70 / 930 * height, paddingLeft: 20, marginTop: 20
+                                    width: width, height: 70 / 930 * height, paddingLeft: 20, marginTop: 40
                                 }}>
                                     <FlatList
                                         showsHorizontalScrollIndicator={false}
@@ -228,15 +300,15 @@ export default function DatesFilterPopup({ visible, close }) {
                                         renderItem={({ item }) => (
                                             <View style={{ alignItems: 'center', marginLeft: 8 }}>
                                                 <TouchableOpacity onPress={() => {
-                                                    setselectedCat(item)
+                                                    setselectedCat(item.id)
                                                 }}
                                                     style={{
                                                         paddingVertical: 6, paddingHorizontal: 20,
-                                                        backgroundColor: selectedCat.id === item.id ? colors.blueColor : '#f5f5f5', borderRadius: 4
+                                                        backgroundColor: selectedCat === item.id ? colors.blueColor : '#f5f5f5', borderRadius: 4
                                                     }}
                                                 >
                                                     <Text style={{
-                                                        fontSize: 16, fontFamily: customFonts.meduim, color: selectedCat.id === item.id ? "#fff" : '#000'
+                                                        fontSize: 16, fontFamily: customFonts.meduim, color: selectedCat === item.id ? "#fff" : '#000'
                                                     }}>
                                                         {item.name}
                                                     </Text>
@@ -250,7 +322,9 @@ export default function DatesFilterPopup({ visible, close }) {
                                 <View style={{ width: width - 60, flexDirection: 'column', }}  >
 
                                     <View style={{ width: width - 60, flexDirection: 'row', marginTop: 45 / 930 * height, justifyContent: 'space-between' }}>
-                                        <TouchableOpacity style={{
+                                        <TouchableOpacity onPress = {resetFilters}
+                                        
+                                        style={{
                                             width: 173 / 430 * width, height: 48 / 930 * height, borderWidth: 2, borderColor: "#000", borderRadius: 10,
                                             alignItems: 'center', justifyContent: 'center'
                                         }}>
@@ -271,6 +345,27 @@ export default function DatesFilterPopup({ visible, close }) {
                                 </View>
 
 
+                                {/* Address picker modal */}
+
+                                <Modal
+                                    transparent={true}
+                                    animationType='slide'
+                                    visible={openAddressPicker}
+                                >
+
+                                    <AddressPicker PickAddress={(address) => {
+                                        console.log('address pick from address picker', address)
+                                        setOpenAddressPicker(false)
+                                        setCity(address.city)
+                                        setState(address.state)
+                                    }}
+                                        backButtonPressed={() => {
+                                            setOpenAddressPicker(false)
+                                        }}
+
+                                    />
+
+                                </Modal>
 
                             </View>
                         </View>

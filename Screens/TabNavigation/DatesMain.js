@@ -14,13 +14,13 @@ export default function DatesMain(props) {
 
   const [showmodal, setShowModal] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
-  const [searchDates, setSearchDates] = useState('');
+  const [searchDates, setSearchDates] = useState(null);
   const [dateFilters, setDateFilters] = useState({})
 
 
   const closeModal = (filters) => {
     if (filters) {
-      console.log('filters recevied from popup are', filters)
+      console.log('filters received from popup are', filters)
 
       setDateFilters(filters)
     }
@@ -61,7 +61,9 @@ export default function DatesMain(props) {
               />
             </TouchableOpacity>
 
-            <DatesFilterPopup visible={showmodal} close={closeModal} />
+            <DatesFilterPopup visible={showmodal} close={closeModal} closeWithouFilters={()=>{
+              setShowModal(false)
+            }} filters={dateFilters} />
 
           </View>
         </View>
@@ -88,8 +90,10 @@ export default function DatesMain(props) {
         }
       </View>
 
-      <DatesContainer style={{ marginTop: showSearch ? 80 : 0 }} navigation={props.navigation}
-        search={searchDates} showSearch={showSearch} filters={dateFilters}
+      <DatesContainer style={{ marginTop: showSearch ? 0 : 0 }} navigation={props.navigation}
+        search={searchDates} showSearch={showSearch} filters={dateFilters} filtersChanged={(filters)=>{
+          setDateFilters(filters)
+        }}
       />
 
 

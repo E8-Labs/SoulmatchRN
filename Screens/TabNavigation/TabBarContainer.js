@@ -11,6 +11,7 @@ import DiscoverMain from "./DiscoverMain";
 import MessageMain from "./MessageMain";
 import DatesMain from "./DatesMain";
 import ProfileMain from "./ProfileMain";
+import DatesContainer from "../DatesFlow/DatesContainer";
 
 const Tab = createBottomTabNavigator()
 
@@ -330,7 +331,7 @@ export default function TabBarContainer() {
                 }}
             />
 
-            <Tab.Screen name="Dates" component={DatesMain}
+            <Tab.Screen name="Dates" component={DatesContainer}
                 options={{
                     tabBarShowLabel: false,
                     tabBarIcon: ({ focused }) =>

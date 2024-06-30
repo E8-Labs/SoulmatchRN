@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { View, Text, TouchableOpacity, Dimensions, FlatList, SafeAreaView, ScrollView, Settings, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Dimensions, FlatList, SafeAreaView, ScrollView, Settings, ActivityIndicator } from 'react-native';
 import customFonts from '../../assets/fonts/Fonts'
 import { useFocusEffect } from '@react-navigation/native';
 import GlobalStyles from '../../assets/styles/GlobalStyles'
@@ -8,38 +8,64 @@ import { Image } from 'expo-image';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GetBudget } from '../../Services/dates/GetBudget';
+import DatesFilterPopup from '../../Components/DatesFilterPopup';
+
 const { height, width } = Dimensions.get('window')
 
-export default function DatesContainer({ navigation, search, showSearch, filters }) {
+export default function DatesContainer({ navigation }) {
 
- console.log('dates filters from dates main screen are', filters)
-
- let finalFilters = filters
+ 
+ const [finalFilters, setFinalFilters] = useState({
+ category: -1
+ })
  const timerRef = useRef(null)
 
- const [selectedCategory, setSelectedCategory] = useState(-1)
  const [dateNights, setDateNights] = useState([])
  const [recommendedDates, SetRecommendedDates] = useState([])
  const [upComingDates, setUpComingDates] = useState([])
  const [categories, setCategories] = useState([])
  const [loading, setLoading] = useState(false)
+ const [showmodal, setShowModal] = useState(false);
+ const[isSearching, setIsSearching] = useState(false)
+ const [search, setSearch] = useState(null);
+ const [searchDates, setSearchDates] = useState(null);
+ // const [dateFilters, setDateFilters] = useState({})
+ 
+ 
+ const closeModal = (filters) => {
+ if (filters) {
+ console.log('filters received from popup are', filters)
+ 
+ // setDateFilters(filters)
+ // setFinalFilters(filters)
+ setFinalFilters(prevFilters => ({
+ ...prevFilters,
+ ...filters
+ }));
+ }
+ setShowModal(false)
+ }
+
 
  useEffect(() => {
  // getDates()
  getDateCategories()
- if(Object.keys(finalFilters).length !== 0){
- console.log('final filter category is ', finalFilters.category.name)
- setSelectedCategory(finalFilters.category.id)
- } else{
- console.log('final filters obj is blank')
- }
+
  }, [])
+
+
+
+ // useEffect(() => {
+ // console.log("Filters are ", filters);
+ // setFinalFilters(prevFilters => ({
+ // ...prevFilters,
+ // ...filters
+ // }));
+ // }, [filters])
+
  useEffect(() => {
- getDates()
- }, [selectedCategory])
-
-
-
+ getDates("Final Filters Change")
+ }, [finalFilters])
 
  const getDateCategories = async () => {
  try {
@@ -59,7 +85,7 @@ export default function DatesContainer({ navigation, search, showSearch, filters
  if (result) {
  const json = await result.json();
  if (json.status === true) {
- console.log('date categories are ', json.data)
+ // console.log('date categories are ', json.data)
  let allCats = [{
  id: -1,
  name: "All"
@@ -91,8 +117,10 @@ export default function DatesContainer({ navigation, search, showSearch, filters
  // setNoMoreUsers(false)
  // Set a new timer
  timerRef.current = setTimeout(() => {
- console.log("Search timer clicked")
- getDates(search);
+ console.log("Search timer clicked", search)
+ if (search !== null) {
+ getDates("From Search Timer Change");
+ }
  }, 1000);
 
  // Cleanup function to clear the timer when component unmounts
@@ -103,8 +131,10 @@ export default function DatesContainer({ navigation, search, showSearch, filters
 
  //search bar timer code
 
- const getDates = async (search) => {
- console.log('trying to get dates')
+ const getDates = async (from = "None") => {
+ console.log("-----------------------------------------------------------")
+ console.log("")
+ console.log('trying to get dates from ', from)
  setLoading(true)
 
  const data = await AsyncStorage.getItem("USER")
@@ -112,29 +142,44 @@ export default function DatesContainer({ navigation, search, showSearch, filters
  if (data) {
  let d = JSON.parse(data)
  let apiUrl = null
- if (selectedCategory !== -1) {
- // console.log('object', object)
- apiUrl = ApisPath.ApiGetDates + `?category=${selectedCategory}`
- console.log('api url is', apiUrl)
- // return
- } else if (search) {
- apiUrl = ApisPath.ApiGetDates + `?category=${selectedCategory}` + `&search=${search}`
+ let path = ApisPath.ApiGetDates
+ let firstParamSplitter = "?"
+ if (typeof finalFilters.category !== 'undefined' && finalFilters.category !== -1) {
+ console.log("Category is in api ", finalFilters.category)
+ path = `${path}${firstParamSplitter}category=${finalFilters.category}`
+ firstParamSplitter = "&"
  }
+ if (search !== null) {
+ path = `${path}${firstParamSplitter}search=${search}`
+ firstParamSplitter = "&"
+ }
+ if (typeof finalFilters.minBudget !== 'undefined' && finalFilters.minBudget !== null) {
+ path = `${path}${firstParamSplitter}minBudget=${finalFilters.minBudget}`
+ firstParamSplitter = "&"
+ }
+ if (typeof finalFilters.maxBudget !== 'undefined' && finalFilters.maxBudget !== null) {
+ path = `${path}${firstParamSplitter}maxBudget=${finalFilters.maxBudget}`
+ firstParamSplitter = "&"
+ }
+ if (typeof finalFilters.minRating !== 'undefined' && finalFilters.minRating !== null) {
+ path = `${path}${firstParamSplitter}minRating=${finalFilters.minRating}`
+ firstParamSplitter = "&"
+ }
+ if (typeof finalFilters.maxRating !== 'undefined' && finalFilters.maxRating !== null) {
+ path = `${path}${firstParamSplitter}maxRating=${finalFilters.maxRating}`
+ firstParamSplitter = "&"
+ }
+ if (typeof finalFilters.city !== 'undefined' && finalFilters.city !== null) {
+ path = `${path}${firstParamSplitter}city=${finalFilters.city}`
+ firstParamSplitter = "&"
+ }
+ if (typeof finalFilters.state !== 'undefined' && finalFilters.state !== null) {
+ path = `${path}${firstParamSplitter}state=${finalFilters.state}`
+ firstParamSplitter = "&"
+ }
+ apiUrl = path;
+ console.log("Api path is ", apiUrl)
 
- else {
- apiUrl = ApisPath.ApiGetDates
- }
-
- if (Object.keys(finalFilters).length !== 0) {
- if (search) {
- apiUrl = 
- ApisPath.ApiGetDates + `?category=${selectedCategory}`+ + `&search=${search}`
- } 
- console.log('final filters object is ', finalFilters)
- // apiUrl = ApisPath.ApiGetDates + `&`
- } else{
- console.log('final filter in api function is blank')
- }
 
  const result = await fetch(apiUrl, {
  method: 'get',
@@ -147,21 +192,22 @@ export default function DatesContainer({ navigation, search, showSearch, filters
  if (result) {
  setLoading(false)
  let json = await result.json()
+ console.log("Api Filters Response is ", json)
  if (json.status === true) {
  console.log('get dates are', json.data)
  const newDateNights = json.data.dateNights;
  const newRecommended = json.data.recommended;
  const newUpcomings = json.data.upcoming;
  if (newDateNights) {
- console.log("Prev list ", newDateNights)
+ // console.log("Prev list ", newDateNights)
  setDateNights(newDateNights)
  }
  if (newRecommended) {
- console.log("Prev list ", newRecommended)
+ // console.log("Prev list ", newRecommended)
  SetRecommendedDates(newRecommended)
  }
  if (newUpcomings) {
- console.log("Prev list ", newUpcomings)
+ // console.log("Prev list ", newUpcomings)
  setUpComingDates(newUpcomings)
  }
  // setDateNights(json.data.dateNights)
@@ -172,18 +218,79 @@ export default function DatesContainer({ navigation, search, showSearch, filters
  console.log('json message is', json.message)
  }
  }
- 
+
  }
  } catch (error) {
  console.log('error finding in get dates', error)
  }
+ console.log("")
+ console.log("-----------------------------------------------------------")
 
  }
 
  return (
 
- <SafeAreaView style={{ alignItems: 'center' }}>
- <View style={{ alignItems: 'center', height: height * 0.76, }}>
+ <SafeAreaView style={{ alignItems: 'center',height: height, backgroundColor: 'white' }}>
+ {/* <View style={{
+ backgroundColor: 'red',width: width,
+ }}> */}
+ <View style={{
+ alignItems: 'flex-end', flexDirection: 'row', height: 50 / 930 * height, width: width, alignSelf: 'center', paddingBottom: 10,
+ justifyContent: 'space-between', paddingLeft: 20
+ }}>
+ <Text style={{ fontSize: 23, fontFamily: customFonts.meduim }}>Dates</Text>
+ <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
+
+ <TouchableOpacity
+ onPress={() => {
+ setIsSearching(!isSearching)
+ }}
+ >
+ <Image source={require('../../assets/images/searchIcon.png')}
+ style={GlobalStyles.backBtnImage}
+ />
+ </TouchableOpacity>
+
+
+ <TouchableOpacity
+ onPress={() => {
+ setShowModal(true)
+ }}
+ >
+ <Image source={require('../../assets/images/setting.png')}
+ style={GlobalStyles.backBtnImage}
+ />
+ </TouchableOpacity>
+
+ <DatesFilterPopup visible={showmodal} close={closeModal} closeWithouFilters={() => {
+ setShowModal(false)
+ }} filters={finalFilters} />
+
+ </View>
+ </View>
+ {isSearching &&
+ <View style={{ width: width, alignItems: 'center', marginBottom: 20 }}>
+ <View style={{
+ flexDirection: 'row', width: width - 50, alignItems: 'center', height: 50, justifyContent: 'center',
+ padding: 16, borderRadius: 10, gap: 10, backgroundColor: '#f5f5f5',
+ marginTop: 20,
+ }}>
+ <TouchableOpacity style={{ width: 30 / 430 * width, height: 30 / 930 * height, alignItems: 'center', justifyContent: 'center' }}>
+ <Image source={require('../../assets/Images3/searchIcon.png')} style={{ height: 55 / 930 * height, width: 55 / 930 * width, resizeMode: 'contain' }} />
+ </TouchableOpacity>
+ <TextInput
+ value={search}
+ onChangeText={(e) => setSearch(e)}
+ style={{
+ width: 304 / 430 * width,
+ fontSize: 14, fontWeight: '500', fontFamily: customFonts.medium
+ }}
+ placeholder='Search' />
+ </View>
+ </View>
+ }
+ {/* </View> */}
+ <View style={{ alignItems: 'center',height:height*0.75,backgroundColor:'transparent' }}>
  <ScrollView style={{}} showsVerticalScrollIndicator={false}>
 
  <View style={{ alignItems: 'center' }}>
@@ -197,15 +304,20 @@ export default function DatesContainer({ navigation, search, showSearch, filters
  renderItem={({ item }) => (
  <View style={{ alignItems: 'center', marginLeft: 8 }}>
  <TouchableOpacity onPress={() => {
- setSelectedCategory(item.id)
+
+ setFinalFilters(prevState => ({
+ ...prevState,
+ category: item.id,
+ }))
+
  }}
  style={{
  paddingVertical: 6, paddingHorizontal: 20,
- backgroundColor: selectedCategory === item.id ? colors.blueColor : '#f5f5f5', borderRadius: 4
+ backgroundColor: finalFilters && finalFilters.category === item.id ? colors.blueColor : '#f5f5f5', borderRadius: 4
  }}
  >
  <Text style={{
- fontSize: 16, fontFamily: customFonts.meduim, color: selectedCategory === item.id ? "#fff" : '#000'
+ fontSize: 16, fontFamily: customFonts.meduim, color: finalFilters.category === item.id ? "#fff" : '#000'
  }}>
  {item.name}
  </Text>
@@ -279,7 +391,7 @@ export default function DatesContainer({ navigation, search, showSearch, filters
  </View>
  <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
  <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Category</Text>
- <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{item.Category.name}</Text>
+ <Text style={{ fontSize: 12, fontFamily: customFonts.meduim ,width:80/430*width,backgroundColor:'transparet'}}>{item.Category.name}</Text>
  </View>
 
  </View>
@@ -290,12 +402,6 @@ export default function DatesContainer({ navigation, search, showSearch, filters
  <Text style={{ fontSize: 18 }}>No dates</Text>
  )
  }
- {/* 
- <DateNightsList navigate={(item) => {
- console.log('selected date night details are', item)
- navigation.navigate("SelectedDateDetails")
- }} /> */}
-
 
  <View style={{
  width: width - 60 / 430 * width, flexDirection: 'row', flexDirection: 'row', alignItems: 'center',
@@ -353,7 +459,7 @@ export default function DatesContainer({ navigation, search, showSearch, filters
  </View>
  <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
  <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Category</Text>
- <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{item.Category.name}</Text>
+ <Text style={{ fontSize: 12, fontFamily: customFonts.meduim ,width:80/430*width}}>{item.Category.name}</Text>
  </View>
 
  </View>
@@ -377,7 +483,7 @@ export default function DatesContainer({ navigation, search, showSearch, filters
  upComingDates && upComingDates.length > 0 ? (
 
  <FlatList
- style={{ paddingBottom: showSearch ? 100 : 0, width: width }}
+ style={{ marginBottom: isSearching ? 150 : 50, width: width }}
  horizontal
  showsHorizontalScrollIndicator={false}
  data={upComingDates && upComingDates}
@@ -428,7 +534,7 @@ export default function DatesContainer({ navigation, search, showSearch, filters
  You don't have any upcoming dates planned
  </Text>
 
- <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 40 / 930 * height, marginBottom: showSearch ? 100 : 0 }]}
+ <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 40 / 930 * height, marginBottom: isSearching ? 100 : 0 }]}
  onPress={() => {
  navigation.navigate("PlanDateNight")
  }}

@@ -199,7 +199,7 @@ export default function ReserveNightScreen({ navigation, route }) {
 
           <View style={styles.dateTimePickerContainer}>
 
-            <Text style={{ color: '#000', fontSize: 18, fontFamily: customFonts.meduim }}>
+            <Text style={styles.text}>
               Select date
             </Text>
 
@@ -376,6 +376,7 @@ const styles = StyleSheet.create({
   text: {
     color: '#000',
     fontSize: 18,
+    fontFamily:customFonts.meduim
   },
   clockIcon: {
     height: 24 / 930 * height,

@@ -67,7 +67,7 @@ const AddDate = ({ navigation, route }) => {
     // console.log("Image is :", image);
     // console.log("MaxBudget is :", MaxBudget);
     // console.log("MinBudget is :", MinBudget);
-    console.log('Long address of user is :', longAddress);
+    // console.log('Long address of user is :', longAddress);
     useEffect(() => {
         const updateCategory = () => {
             setCategoryId(Category.value)
@@ -169,9 +169,9 @@ const AddDate = ({ navigation, route }) => {
     ]
 
     useEffect(() => {
-        if (Budget === '$80 +  = $$$$') {
+        if (Budget === '$80 + = $$$$') {
             setMinBudget('80')
-            setMaxBudget('100,000,000')
+            setMaxBudget('100000000')
             // console.log('Budget valus is', MinBudget)
         } else if (Budget === '$50 - $80 = $$$') {
             setMinBudget('50')
@@ -233,71 +233,71 @@ const AddDate = ({ navigation, route }) => {
             return
         }
         console.log("Selected open time is ", SelOpenTime);
-        // return 
-        try {
-            setLoading(true);
-            const AuthToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoyNSwiZmlyc3RfbmFtZSI6ImFkbWluIiwibGFzdF9uYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQHNvdWxtYXRjaC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRmazNoTEN6MGlObGNNdjd4RVV3U2ouOWZtdms2SFNIRi4wdG5SWS5YWGl0MllTLkhsbUhBQyIsInByb2ZpbGVfaW1hZ2UiOiIiLCJpbnRyb192aWRlbyI6bnVsbCwiaW50cm9fdGh1bWJuYWlsX3VybCI6bnVsbCwiY29tcGFueSI6bnVsbCwiam9iX3RpdGxlIjpudWxsLCJhZ2UiOm51bGwsImhlaWdodF9pbmNoZXMiOm51bGwsImhlaWdodF9mZWV0IjpudWxsLCJ6b2RpYWMiOm51bGwsInNjaG9vbCI6bnVsbCwiY2l0eSI6bnVsbCwic3RhdGUiOm51bGwsImxhdCI6bnVsbCwibGFuZyI6bnVsbCwiZ2VuZGVyIjpudWxsLCJmY21fdG9rZW4iOm51bGwsImRldmljZV9pZCI6IiIsInByb3ZpZGVyX2lkIjoiIiwicHJvdmlkZXJfbmFtZSI6IkVtYWlsIiwicm9sZSI6ImFkbWluIiwic3RhdHVzIjpudWxsLCJlbmNfa2V5IjpudWxsLCJlbmNfaXYiOm51bGwsImRvYiI6bnVsbCwicG9pbnRzIjowLCJpbnRlcmVzdGVkX2dlbmRlciI6bnVsbCwiaW50ZXJlc3RlZF9taW5fYWdlIjpudWxsLCJpbnRlcmVzdGVkX21heF9hZ2UiOm51bGwsImNyZWF0ZWRBdCI6IjIwMjQtMDUtMjhUMDY6NDg6NTEuMDAwWiIsInVwZGF0ZWRBdCI6IjIwMjQtMDUtMjhUMDY6NTA6MDQuMDAwWiJ9LCJpYXQiOjE3MTY4NzkwNzUsImV4cCI6MTc0ODQxNTA3NX0.WdN1uRySZaxW2BzDJSWt3b97puD51PViXu6fL-sJQIs";
-            // const ApiUrl = "https://plurawlapp.com/soulmatch/api/admin/dates/add_date_place";
-            const ApiUrl = Apis.AddDatePlace;
-            const formData = new FormData();
-            formData.append("categoryId", Category.value);
-            formData.append("minBudget", MinBudget);
-            formData.append("maxBudget", MaxBudget);
-            formData.append("openTime", SelOpenTime);
-            formData.append("closeTime", SelCloseTime);
-            //add long address here
-            formData.append("address", longAddress);
-            formData.append("state", StateName);
-            formData.append("city", CityName);
-            formData.append("latitude", latitude);
-            formData.append("longitude", longitude);
-            formData.append("description", Description);
-            formData.append("name", BusinessName);
-            formData.append("image", {
-                name: "imageName",
-                uri: image,
-                type: 'image/jpeg'
-            });
+        // return
+        setLoading(true);
+        const data = await AsyncStorage.getItem("USER")
+        if (data) {
+            let d = JSON.parse(data)
 
-            console.log('form data ', formData)
-            // return
-            const response = await fetch(ApiUrl, {
-                'method': 'post',
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': 'Bearer ' + AuthToken
-                },
-                body: formData
-            });
-            if (response.ok) {
-                const Result = await response.json();
-                console.log("Response of api is", Result);
-                const newDateData = {
-                    CategoryId: Category,
-                    minBudget: MinBudget,
-                    Category: { name: Category.value },
-                    maxBudget: MaxBudget,
-                    openTime: SelOpenTime,
-                    closeTime: SelCloseTime,
-                    address: CityName,
-                    latitude: latitude,
-                    longitude: longitude,
-                    description: Description,
-                    name: BusinessName,
-                    image: image
-                }
-                console.log('new date data on add date screen is', newDateData)
+            const AuthToken = d.token
+            try {
+                setLoading(true);
+                // const AuthToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoyNSwiZmlyc3RfbmFtZSI6ImFkbWluIiwibGFzdF9uYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQHNvdWxtYXRjaC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRmazNoTEN6MGlObGNNdjd4RVV3U2ouOWZtdms2SFNIRi4wdG5SWS5YWGl0MllTLkhsbUhBQyIsInByb2ZpbGVfaW1hZ2UiOiIiLCJpbnRyb192aWRlbyI6bnVsbCwiaW50cm9fdGh1bWJuYWlsX3VybCI6bnVsbCwiY29tcGFueSI6bnVsbCwiam9iX3RpdGxlIjpudWxsLCJhZ2UiOm51bGwsImhlaWdodF9pbmNoZXMiOm51bGwsImhlaWdodF9mZWV0IjpudWxsLCJ6b2RpYWMiOm51bGwsInNjaG9vbCI6bnVsbCwiY2l0eSI6bnVsbCwic3RhdGUiOm51bGwsImxhdCI6bnVsbCwibGFuZyI6bnVsbCwiZ2VuZGVyIjpudWxsLCJmY21fdG9rZW4iOm51bGwsImRldmljZV9pZCI6IiIsInByb3ZpZGVyX2lkIjoiIiwicHJvdmlkZXJfbmFtZSI6IkVtYWlsIiwicm9sZSI6ImFkbWluIiwic3RhdHVzIjpudWxsLCJlbmNfa2V5IjpudWxsLCJlbmNfaXYiOm51bGwsImRvYiI6bnVsbCwicG9pbnRzIjowLCJpbnRlcmVzdGVkX2dlbmRlciI6bnVsbCwiaW50ZXJlc3RlZF9taW5fYWdlIjpudWxsLCJpbnRlcmVzdGVkX21heF9hZ2UiOm51bGwsImNyZWF0ZWRBdCI6IjIwMjQtMDUtMjhUMDY6NDg6NTEuMDAwWiIsInVwZGF0ZWRBdCI6IjIwMjQtMDUtMjhUMDY6NTA6MDQuMDAwWiJ9LCJpYXQiOjE3MTY4NzkwNzUsImV4cCI6MTc0ODQxNTA3NX0.WdN1uRySZaxW2BzDJSWt3b97puD51PViXu6fL-sJQIs";
+                // const ApiUrl = "https://plurawlapp.com/soulmatch/api/admin/dates/add_date_place";
+                const ApiUrl = Apis.AddDatePlace;
+                const formData = new FormData();
+                formData.append("categoryId", Category.value);
+                formData.append("minBudget", MinBudget);
+                formData.append("maxBudget", MaxBudget);
+                formData.append("openTime", SelOpenTime);
+                formData.append("closeTime", SelCloseTime);
+                //add long address here
+                formData.append("address", longAddress);
+                formData.append("state", StateName);
+                formData.append("city", CityName);
+                formData.append("latitude", latitude);
+                formData.append("longitude", longitude);
+                formData.append("description", Description);
+                formData.append("name", BusinessName);
+                formData.append("image", {
+                    name: "imageName",
+                    uri: image,
+                    type: 'image/jpeg'
+                });
+
+                console.log('form data ', formData)
                 // return
-                route.params.newDate(newDateData);
-                navigation.pop();
-            } else if (!response.ok) {
-                console.log("Status is false");
+                const response = await fetch(ApiUrl, {
+                    'method': 'post',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': 'Bearer ' + AuthToken
+                    },
+                    body: formData
+                });
+                if (response.ok) {
+                    const Result = await response.json();
+                    if (Result.status === true) {
+                        console.log("Response of api is", Result);
+                        const newDateData = Result.data
+                        console.log('new date data on add date screen is', newDateData)
+                        // return
+                        route.params.newDate(newDateData);
+                        navigation.pop();
+                    }
+                    else {
+                        //show error message to the user
+                        console.log("Error adding date place ", Result.message)
+                    }
+                } else if (!response.ok) {
+                    console.log("Status is false");
+                }
+            } catch (error) {
+                console.log('Error occured is :', error);
             }
-        } catch (error) {
-            console.log('Error occured is :', error);
-        }
-        finally {
-            setLoading(false);
+            finally {
+                setLoading(false);
+            }
         }
     }
 
@@ -337,7 +337,7 @@ const AddDate = ({ navigation, route }) => {
         setCityName(address.city)
         setStateName(address.state)
         setlongitude(address.lang)
-        setlatitude(address.lat)
+        // setlatitude(address.lat)
     }
 
     const handlePickAddress = () => {
@@ -414,7 +414,7 @@ const AddDate = ({ navigation, route }) => {
     const handleUpdate = async () => {
 
         try {
-            setLoading(true);
+            setLoading2(true);
             const data = await AsyncStorage.getItem("USER")
             if (data) {
                 let d = JSON.parse(data);
@@ -428,7 +428,7 @@ const AddDate = ({ navigation, route }) => {
                 formData.append("openTime", SelOpenTime);
                 formData.append("closeTime", SelCloseTime);
                 //add long address here
-                formData.append("address", CityName);
+                formData.append("address", longAddress);
                 formData.append("latitude", latitude);
                 formData.append("longitude", longitude);
                 formData.append("description", Description);
@@ -438,7 +438,7 @@ const AddDate = ({ navigation, route }) => {
                     uri: image,
                     type: 'image/jpeg'
                 });
-                formData.append("id", DateData.id)
+                formData.append("id", DateData.id);
                 console.log('Form data is :', formData);
                 const response = await fetch(Apis.UpdateDatePlace, {
                     'method': 'post',
@@ -448,6 +448,7 @@ const AddDate = ({ navigation, route }) => {
                     },
                     body: formData
                 });
+                // console.log('Auth token for update api is :', AuthToken);
                 console.log('Response of api is :', response);
                 if (response.ok) {
                     const UpdateData = await response.json();
@@ -466,7 +467,7 @@ const AddDate = ({ navigation, route }) => {
         } catch (error) {
             console.error('Error occured is :', error);
         } finally {
-            setLoading(false)
+            setLoading2(false)
         }
     }
 
@@ -524,19 +525,27 @@ const AddDate = ({ navigation, route }) => {
                     {
                         routeData.from === "AdminDates" ? (
                             <View style={{ justifyContent: 'center' }}>
-                                <TouchableOpacity onPress={handleSaveClick} style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    <Text style={{ fontWeight: '500', fontFamily: customFonts.medium, fontSize: 14, color: '#6050DC' }}>
-                                        Save
-                                    </Text>
-                                </TouchableOpacity>
+                                {
+                                    Loading ?
+                                        <ActivityIndicator size={'small'} color={colors.blueColor} /> :
+                                        <TouchableOpacity onPress={handleSaveClick} style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                            <Text style={{ fontWeight: '500', fontFamily: customFonts.medium, fontSize: 14, color: '#6050DC' }}>
+                                                Save
+                                            </Text>
+                                        </TouchableOpacity>
+                                }
                             </View>
                         ) : (
                             <View style={{ justifyContent: 'center' }}>
-                                <TouchableOpacity onPress={handleUpdate} style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    <Text style={{ fontWeight: '500', fontFamily: customFonts.medium, fontSize: 14, color: '#6050DC' }}>
-                                        Update
-                                    </Text>
-                                </TouchableOpacity>
+                                {
+                                    loading2 ?
+                                        <ActivityIndicator size={'small'} color={colors.blueColor} /> :
+                                        <TouchableOpacity onPress={handleUpdate} style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                            <Text style={{ fontWeight: '500', fontFamily: customFonts.medium, fontSize: 14, color: '#6050DC' }}>
+                                                Update
+                                            </Text>
+                                        </TouchableOpacity>
+                                }
                             </View>
                         )
                     }
@@ -570,7 +579,7 @@ const AddDate = ({ navigation, route }) => {
                             <TextInput
                                 value={BusinessName}
                                 onChangeText={(Business) => setBusinessName(Business)}
-                                style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.medium, color: '#999999' }}
+                                style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.medium, color: '#000000' }}
                                 placeholder='Enter business name'
                             />
                         </View>
@@ -617,7 +626,7 @@ const AddDate = ({ navigation, route }) => {
                             placeholder={Budget}
                             searchPlaceholder="Select budget"
                             itemTextStyle={{
-                                color: '#999999',
+                                color: '#000000',
                                 fontWeight: '500',
                                 fontFamily: customFonts.medium,
                                 fontSize: 14
@@ -703,7 +712,7 @@ const AddDate = ({ navigation, route }) => {
                                 multiline
                                 placeholder='Enter description'
                                 textAlignVertical='top'
-                                style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.medium, height: 100 / 930 * height, }} />
+                                style={{ fontWeight: '500', color: '#000000', fontSize: 14, fontFamily: customFonts.medium, height: 100 / 930 * height, }} />
                         </View>
                     </ScrollView>
                 </View>
@@ -720,14 +729,6 @@ const AddDate = ({ navigation, route }) => {
                             console.log("Address picked from popup", address)
                             setOpenModalLocation(false)
                             setCityName(address.city);
-                            // setLongAddress({
-                            //     userCity: address.city,
-                            //     userState: address.state,
-                            //     userStreet: address.streetNo,
-                            //     userCountry: address.country,
-                            //     userPostalCode: address.postalCodeNo,
-                            //     userRoute: address.route
-                            // })
                             let completeAddress = ""
                             if (address.streetNo) {
                                 completeAddress = address.streetNo
@@ -746,8 +747,8 @@ const AddDate = ({ navigation, route }) => {
                             }
                             console.log("Compelte address is ", completeAddress)
                             setLongAddress(completeAddress);
-                            setlatitude(address.latitude);
-                            setlongitude(address.longitude);
+                            setlatitude(address.lang);
+                            setlongitude(address.lat);
                             setStateName(address.state)
                             // setFilters(newFilters)                            
                         }} backButtonPressed={() => {
@@ -755,28 +756,6 @@ const AddDate = ({ navigation, route }) => {
                         }} />
                     </Modal>
                 )
-            }
-
-            {
-                loading2 ? (
-                    <View style={{
-                        height: height, width: width, backgroundColor: '#00000050', alignItems: 'center', justifyContent: 'center', position: 'absolute',
-                        top: 0, left: 0
-                    }}>
-                        <ActivityIndicator size={'large'} color={colors.blueColor} />
-                    </View>
-                ) : null
-            }
-
-            {
-                Loading &&
-                <View
-                    style={{
-                        height: height, backgroundColor: '#00000050', width: width, alignItems: 'center',
-                        justifyContent: 'center', position: 'absolute', top: 50
-                    }}>
-                    <ActivityIndicator size={'large'} color={colors.blueColor} />
-                </View>
             }
 
         </View>
@@ -806,7 +785,7 @@ const styles = StyleSheet.create({
     },
     selectedTextStyle: {
         fontSize: 14,
-        color: '#999999',
+        color: '#000000',
         fontWeight: '500',
         fontFamily: customFonts.medium
     },
@@ -822,7 +801,7 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         fontFamily: customFonts.medium,
         fontSize: 16,
-        color: '#333333',
+        color: '#00000',
         marginTop: 20 / 930 * height
     },
     OperationTime: {

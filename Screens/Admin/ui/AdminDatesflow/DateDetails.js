@@ -120,7 +120,7 @@ const DateDetails = ({ navigation, route }) => {
                                     {GetBudget(UserDateDetails)}
                                 </Text>
                                 <Text style={styles.RatingsValue}>
-                                    {UserDateDetails.Category.name}
+                                    {/* {UserDateDetails.Category.name} */}
                                 </Text>
                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
                                     <Image source={require('../../../../assets/Images3/RatingStar.png')} style={{ height: 18, width: 17, resizeMode: 'contain' }} />

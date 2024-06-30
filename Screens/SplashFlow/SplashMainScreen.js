@@ -5,6 +5,7 @@ import GlobalStyles from "../../assets/styles/GlobalStyles";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getProfile } from "../../Services/ProfileServices/GetProfile";
 import {NavigateLogedUser} from '../../Services/user/NavigateLogedUser'
+import customFonts from "../../assets/fonts/Fonts";
 
 const SplashMainScreen = (props) => {
     const { height, width } = Dimensions.get('window')
@@ -35,7 +36,7 @@ const SplashMainScreen = (props) => {
             <Image source={require("../../assets/images/logo.png")}
                 style={{ height: 81 / 930 * height, width: 98 / 930 * height, resizeMode: 'contain' }}
             />
-            <Text style={{ fontSize: 38, fontWeight: '400' }}>soulmatch</Text>
+            <Text style={{ fontSize: 38, fontWeight: '400' ,fontFamily: customFonts.semibold}}>soulmatch</Text>
 
         </View>
     )
