@@ -1,19 +1,19 @@
-import react,{useState,useEffect} from "react";
-import {View,Text, Dimensions} from "react-native";
+import react, { useState, useEffect } from "react";
+import { View, Text, Dimensions } from "react-native";
 import { getDistance } from 'geolib';
-import {customFonts} from '../assets/fonts/Fonts'
+import customFonts from "../assets/fonts/Fonts";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const {height,width} = Dimensions.get('window')
+const { height, width } = Dimensions.get('window')
 
 
 
 const DistanceCalculator = ({ userId, lat, lang }) => {
     const [distance, setDistance] = useState(null);
-    
 
-    const calculateDistance =  async() => {
+
+    const calculateDistance = async () => {
         // return 0
         const userdata = await AsyncStorage.getItem("USER")
 
@@ -38,7 +38,7 @@ const DistanceCalculator = ({ userId, lat, lang }) => {
                 const distanceInMiles = distance / 1000 * 0.621371.toFixed(2);
                 return parseInt(distanceInMiles)
             }
-            else{
+            else {
                 return distance
             }
             // console.log('distance found ', )
@@ -55,11 +55,12 @@ const DistanceCalculator = ({ userId, lat, lang }) => {
     }, [userId, lat, lang]); // Dependency array includes userId to recalculate if it changes
 
     return (
-        <Text style = {{ fontSize: 16,
-            // fontFamily: customFonts.meduim,
+        <Text style={{
+            fontSize: 16,
             textAlign: 'left',
-            width: 334 / 430 * width
+            width: 334 / 430 * width,
+            fontFamily: customFonts.meduim
         }}>{distance !== null ? `${distance} miles` : 'Calculating...'}</Text>
     );
-} 
+}
 export default DistanceCalculator
