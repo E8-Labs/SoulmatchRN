@@ -38,6 +38,13 @@ const AddDate = ({ navigation, route }) => {
     const [latitude, setlatitude] = useState('');
     const [longitude, setlongitude] = useState('');
     const [CityName, setCityName] = useState('');
+    const [longAddress, setLongAddress] = useState('');
+    //test code
+    const [country, setCountry] = useState('');
+    const [street, setStreet] = useState('');
+    const [userRoute, setUserRoute] = useState('');
+    const [postalCode, setostalCode] = useState('');
+    //test code ends here
     const [StateName, setStateName] = useState('');
     const [Loading, setLoading] = useState(false);
     const [DateOpenTime, setDateOpenTime] = useState('');
@@ -60,6 +67,7 @@ const AddDate = ({ navigation, route }) => {
     // console.log("Image is :", image);
     // console.log("MaxBudget is :", MaxBudget);
     // console.log("MinBudget is :", MinBudget);
+    console.log('Long address of user is :', longAddress);
     useEffect(() => {
         const updateCategory = () => {
             setCategoryId(Category.value)
@@ -108,31 +116,31 @@ const AddDate = ({ navigation, route }) => {
     useEffect(() => {
         const GetCategoriesData = async () => {
             const data = await AsyncStorage.getItem("USER");
-            if(data) {
+            if (data) {
                 let d = JSON.parse(data);
                 const AuthToken = d.token
-            // const AuthToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoyLCJmaXJzdF9uYW1lIjoiQXJzbGFuIiwibGFzdF9uYW1lIjoiTmFlZW0iLCJlbWFpbCI6ImFyc2xhbkBzb3VsbWF0Y2guY29tIiwicGFzc3dvcmQiOiIkMmIkMTAkZk1kY05WRFdya050QS8zaHF1NHhlZVI5aUNSVGxlQ25QTkFZa3dCOHpydEwyMExPTHUzZVciLCJwcm9maWxlX2ltYWdlIjoiIiwiaW50cm9fdmlkZW8iOiJodHRwczovL3BsdXJhd2wtc3RvcmFnZS5zMy51cy1lYXN0LTIuYW1hem9uYXdzLmNvbS9tZWRpYVByb2ZpbGUxNzE1ODc0OTE2MDk3IiwiaW50cm9fdGh1bWJuYWlsX3VybCI6Imh0dHBzOi8vcGx1cmF3bC1zdG9yYWdlLnMzLnVzLWVhc3QtMi5hbWF6b25hd3MuY29tL3RodW1ibWVkaWFQcm9maWxlMTcxNTg3NDkyNzM4MSIsImNvbXBhbnkiOm51bGwsImpvYl90aXRsZSI6bnVsbCwiYWdlIjpudWxsLCJoZWlnaHRfaW5jaGVzIjpudWxsLCJoZWlnaHRfZmVldCI6bnVsbCwiem9kaWFjIjpudWxsLCJzY2hvb2wiOm51bGwsImNpdHkiOm51bGwsInN0YXRlIjpudWxsLCJsYXQiOm51bGwsImxhbmciOm51bGwsImdlbmRlciI6bnVsbCwiZmNtX3Rva2VuIjpudWxsLCJkZXZpY2VfaWQiOiIiLCJwcm92aWRlcl9pZCI6IiIsInByb3ZpZGVyX25hbWUiOiJFbWFpbCIsInJvbGUiOiJ1c2VyIiwic3RhdHVzIjpudWxsLCJlbmNfa2V5IjpudWxsLCJlbmNfaXYiOm51bGwsImRvYiI6bnVsbCwicG9pbnRzIjowLCJpbnRlcmVzdGVkX2dlbmRlciI6bnVsbCwiaW50ZXJlc3RlZF9taW5fYWdlIjpudWxsLCJpbnRlcmVzdGVkX21heF9hZ2UiOm51bGwsImNyZWF0ZWRBdCI6IjIwMjQtMDUtMDdUMTk6MDA6MzkuMDAwWiIsInVwZGF0ZWRBdCI6IjIwMjQtMDUtMTZUMTU6NTU6MzAuMDAwWiJ9LCJpYXQiOjE3MTY4NzMyOTcsImV4cCI6MTc0ODQwOTI5N30.0HygSYQSh2WJbYWajmCB0aizc08lElYZITADVeEBNuw";
-            const response = await fetch(Apis.GetCategories, {
-                'method': 'get',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + AuthToken
-                }
-            });
-            if (response.ok) {
-                const DATA = await response.json();
-                // setApiCategories(DATA.data.name);
-                const apiData = DATA.data;
-                const transformedData = apiData.map(item => ({
-                    value: item.id,
-                    label: item.name
-                }));
+                // const AuthToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoyLCJmaXJzdF9uYW1lIjoiQXJzbGFuIiwibGFzdF9uYW1lIjoiTmFlZW0iLCJlbWFpbCI6ImFyc2xhbkBzb3VsbWF0Y2guY29tIiwicGFzc3dvcmQiOiIkMmIkMTAkZk1kY05WRFdya050QS8zaHF1NHhlZVI5aUNSVGxlQ25QTkFZa3dCOHpydEwyMExPTHUzZVciLCJwcm9maWxlX2ltYWdlIjoiIiwiaW50cm9fdmlkZW8iOiJodHRwczovL3BsdXJhd2wtc3RvcmFnZS5zMy51cy1lYXN0LTIuYW1hem9uYXdzLmNvbS9tZWRpYVByb2ZpbGUxNzE1ODc0OTE2MDk3IiwiaW50cm9fdGh1bWJuYWlsX3VybCI6Imh0dHBzOi8vcGx1cmF3bC1zdG9yYWdlLnMzLnVzLWVhc3QtMi5hbWF6b25hd3MuY29tL3RodW1ibWVkaWFQcm9maWxlMTcxNTg3NDkyNzM4MSIsImNvbXBhbnkiOm51bGwsImpvYl90aXRsZSI6bnVsbCwiYWdlIjpudWxsLCJoZWlnaHRfaW5jaGVzIjpudWxsLCJoZWlnaHRfZmVldCI6bnVsbCwiem9kaWFjIjpudWxsLCJzY2hvb2wiOm51bGwsImNpdHkiOm51bGwsInN0YXRlIjpudWxsLCJsYXQiOm51bGwsImxhbmciOm51bGwsImdlbmRlciI6bnVsbCwiZmNtX3Rva2VuIjpudWxsLCJkZXZpY2VfaWQiOiIiLCJwcm92aWRlcl9pZCI6IiIsInByb3ZpZGVyX25hbWUiOiJFbWFpbCIsInJvbGUiOiJ1c2VyIiwic3RhdHVzIjpudWxsLCJlbmNfa2V5IjpudWxsLCJlbmNfaXYiOm51bGwsImRvYiI6bnVsbCwicG9pbnRzIjowLCJpbnRlcmVzdGVkX2dlbmRlciI6bnVsbCwiaW50ZXJlc3RlZF9taW5fYWdlIjpudWxsLCJpbnRlcmVzdGVkX21heF9hZ2UiOm51bGwsImNyZWF0ZWRBdCI6IjIwMjQtMDUtMDdUMTk6MDA6MzkuMDAwWiIsInVwZGF0ZWRBdCI6IjIwMjQtMDUtMTZUMTU6NTU6MzAuMDAwWiJ9LCJpYXQiOjE3MTY4NzMyOTcsImV4cCI6MTc0ODQwOTI5N30.0HygSYQSh2WJbYWajmCB0aizc08lElYZITADVeEBNuw";
+                const response = await fetch(Apis.GetCategories, {
+                    'method': 'get',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + AuthToken
+                    }
+                });
+                if (response.ok) {
+                    const DATA = await response.json();
+                    // setApiCategories(DATA.data.name);
+                    const apiData = DATA.data;
+                    const transformedData = apiData.map(item => ({
+                        value: item.id,
+                        label: item.name
+                    }));
 
-                // Set the transformed data to ApiCategories
-                setApiCategories(transformedData);
-                // console.log('Resposne from api is', DATA.data)
+                    // Set the transformed data to ApiCategories
+                    setApiCategories(transformedData);
+                    // console.log('Resposne from api is', DATA.data)
+                }
             }
-        }
         }
         GetCategoriesData();
     }, [])
@@ -169,10 +177,10 @@ const AddDate = ({ navigation, route }) => {
             setMinBudget('50')
             setMaxBudget('80')
         } else if (Budget === '$20 - $50 = $$') {
-            setMinBudget('30')
+            setMinBudget('20')
             setMaxBudget('50')
         } else if (Budget === '$0 - $20 = $') {
-            setMinBudget('10')
+            setMinBudget('0')
             setMaxBudget('20')
         }
     }, [Budget])
@@ -238,7 +246,7 @@ const AddDate = ({ navigation, route }) => {
             formData.append("openTime", SelOpenTime);
             formData.append("closeTime", SelCloseTime);
             //add long address here
-            formData.append("address", CityName);
+            formData.append("address", longAddress);
             formData.append("state", StateName);
             formData.append("city", CityName);
             formData.append("latitude", latitude);
@@ -303,42 +311,6 @@ const AddDate = ({ navigation, route }) => {
     //test code for getting user location using google addresspicker
 
     const GOOGLE_PLACES_API_KEY = 'AIzaSyAvhNXgMGSYcFIHLkRmZkDta_U7yWdgQQI';
-
-    // const handlePlaceSelect = async (data, details) => {
-    //     try {
-    //         const placeDetailsResponse = await fetch(
-    //             `https://maps.googleapis.com/maps/api/place/details/json?place_id=${details.place_id}&fields=geometry,address_components&key=${GOOGLE_PLACES_API_KEY}`
-    //         );
-    //         const placeDetails = await placeDetailsResponse.json();
-
-    //         const geometry = placeDetails.result.geometry;
-    //         const addressComponents = placeDetails.result.address_components;
-
-    //         // Extract latitude and longitude
-    //         const lat = geometry.location.lat;
-    //         const lon = geometry.location.lng;
-
-    //         let city = '';
-    //         let state = '';
-
-    //         // Find city and state in address components
-    //         addressComponents.forEach(component => {
-    //             if (component.types.includes('locality')) {
-    //                 city = component.long_name;
-    //             }
-    //             if (component.types.includes('administrative_area_level_1')) {
-    //                 state = component.long_name;
-    //             }
-    //         });
-
-    //         console.log('Latitude:', lat);
-    //         console.log('Longitude:', lon);
-    //         console.log('City:', city);
-    //         console.log('State:', state);
-    //     } catch (error) {
-    //         console.error('Error fetching place details:', error);
-    //     }
-    // };
 
     //code for listeners
     const [marginTop, setmarginTop] = useState(0);
@@ -445,8 +417,9 @@ const AddDate = ({ navigation, route }) => {
             setLoading(true);
             const data = await AsyncStorage.getItem("USER")
             if (data) {
-                let d = JSON.parse(data)
-                let AuthToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoyNSwiZmlyc3RfbmFtZSI6ImFkbWluIiwibGFzdF9uYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQHNvdWxtYXRjaC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRmazNoTEN6MGlObGNNdjd4RVV3U2ouOWZtdms2SFNIRi4wdG5SWS5YWGl0MllTLkhsbUhBQyIsInByb2ZpbGVfaW1hZ2UiOiIiLCJpbnRyb192aWRlbyI6bnVsbCwiaW50cm9fdGh1bWJuYWlsX3VybCI6bnVsbCwiY29tcGFueSI6bnVsbCwiam9iX3RpdGxlIjpudWxsLCJhZ2UiOm51bGwsImhlaWdodF9pbmNoZXMiOm51bGwsImhlaWdodF9mZWV0IjpudWxsLCJ6b2RpYWMiOm51bGwsInNjaG9vbCI6bnVsbCwiY2l0eSI6bnVsbCwic3RhdGUiOm51bGwsImxhdCI6bnVsbCwibGFuZyI6bnVsbCwiZ2VuZGVyIjpudWxsLCJmY21fdG9rZW4iOm51bGwsImRldmljZV9pZCI6IiIsInByb3ZpZGVyX2lkIjoiIiwicHJvdmlkZXJfbmFtZSI6IkVtYWlsIiwicm9sZSI6ImFkbWluIiwic3RhdHVzIjpudWxsLCJlbmNfa2V5IjpudWxsLCJlbmNfaXYiOm51bGwsImRvYiI6bnVsbCwicG9pbnRzIjowLCJpbnRlcmVzdGVkX2dlbmRlciI6bnVsbCwiaW50ZXJlc3RlZF9taW5fYWdlIjpudWxsLCJpbnRlcmVzdGVkX21heF9hZ2UiOm51bGwsImNyZWF0ZWRBdCI6IjIwMjQtMDUtMjhUMDY6NDg6NTEuMDAwWiIsInVwZGF0ZWRBdCI6IjIwMjQtMDUtMjhUMDY6NTA6MDQuMDAwWiJ9LCJpYXQiOjE3MTY4NzkwNzUsImV4cCI6MTc0ODQxNTA3NX0.WdN1uRySZaxW2BzDJSWt3b97puD51PViXu6fL-sJQIs"
+                let d = JSON.parse(data);
+                const AuthToken = d.token;
+                // let AuthToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoyNSwiZmlyc3RfbmFtZSI6ImFkbWluIiwibGFzdF9uYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQHNvdWxtYXRjaC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRmazNoTEN6MGlObGNNdjd4RVV3U2ouOWZtdms2SFNIRi4wdG5SWS5YWGl0MllTLkhsbUhBQyIsInByb2ZpbGVfaW1hZ2UiOiIiLCJpbnRyb192aWRlbyI6bnVsbCwiaW50cm9fdGh1bWJuYWlsX3VybCI6bnVsbCwiY29tcGFueSI6bnVsbCwiam9iX3RpdGxlIjpudWxsLCJhZ2UiOm51bGwsImhlaWdodF9pbmNoZXMiOm51bGwsImhlaWdodF9mZWV0IjpudWxsLCJ6b2RpYWMiOm51bGwsInNjaG9vbCI6bnVsbCwiY2l0eSI6bnVsbCwic3RhdGUiOm51bGwsImxhdCI6bnVsbCwibGFuZyI6bnVsbCwiZ2VuZGVyIjpudWxsLCJmY21fdG9rZW4iOm51bGwsImRldmljZV9pZCI6IiIsInByb3ZpZGVyX2lkIjoiIiwicHJvdmlkZXJfbmFtZSI6IkVtYWlsIiwicm9sZSI6ImFkbWluIiwic3RhdHVzIjpudWxsLCJlbmNfa2V5IjpudWxsLCJlbmNfaXYiOm51bGwsImRvYiI6bnVsbCwicG9pbnRzIjowLCJpbnRlcmVzdGVkX2dlbmRlciI6bnVsbCwiaW50ZXJlc3RlZF9taW5fYWdlIjpudWxsLCJpbnRlcmVzdGVkX21heF9hZ2UiOm51bGwsImNyZWF0ZWRBdCI6IjIwMjQtMDUtMjhUMDY6NDg6NTEuMDAwWiIsInVwZGF0ZWRBdCI6IjIwMjQtMDUtMjhUMDY6NTA6MDQuMDAwWiJ9LCJpYXQiOjE3MTY4NzkwNzUsImV4cCI6MTc0ODQxNTA3NX0.WdN1uRySZaxW2BzDJSWt3b97puD51PViXu6fL-sJQIs"
                 // const ApiUrl = "https://plurawlapp.com/soulmatch/api/admin/dates/update_date_place";
                 const formData = new FormData();
                 formData.append("categoryId", Category.value);
@@ -700,12 +673,19 @@ const AddDate = ({ navigation, route }) => {
                             <View style={{ borderRadius: 10, borderColor: '#CCCCCC', padding: 8, borderWidth: 1 }}>
                                 <Text style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.medium }}>
                                     {
-                                        CityName ?
+                                        longAddress ?
                                             <Text>
-                                                {CityName}, {StateName}
+                                                {longAddress}
                                             </Text> :
                                             <Text>
-                                                Enter Address
+                                                {DateData ?
+                                                    <Text>
+                                                        {DateData.address}
+                                                    </Text> :
+                                                    <Text>
+                                                        Enter Address
+                                                    </Text>
+                                                }
                                             </Text>
                                     }
                                 </Text>
@@ -740,6 +720,32 @@ const AddDate = ({ navigation, route }) => {
                             console.log("Address picked from popup", address)
                             setOpenModalLocation(false)
                             setCityName(address.city);
+                            // setLongAddress({
+                            //     userCity: address.city,
+                            //     userState: address.state,
+                            //     userStreet: address.streetNo,
+                            //     userCountry: address.country,
+                            //     userPostalCode: address.postalCodeNo,
+                            //     userRoute: address.route
+                            // })
+                            let completeAddress = ""
+                            if (address.streetNo) {
+                                completeAddress = address.streetNo
+                            }
+                            if (address.route) {
+                                completeAddress = completeAddress + ` ${address.route}`
+                            }
+                            if (address.city) {
+                                completeAddress = completeAddress + ` ${address.city}`
+                            }
+                            if (address.state2) {
+                                completeAddress = completeAddress + ` ${address.state2}`
+                            }
+                            if (address.state) {
+                                completeAddress = completeAddress + ` ${address.state}`
+                            }
+                            console.log("Compelte address is ", completeAddress)
+                            setLongAddress(completeAddress);
                             setlatitude(address.latitude);
                             setlongitude(address.longitude);
                             setStateName(address.state)

@@ -144,7 +144,16 @@ export default function FilterPopup({ visible, close, addressPicker, filters }) 
         }
         AsyncStorage.setItem("FilterDiscovers", JSON.stringify(filters))
         let getDiscover = true
-        close({ filters, getDiscover })
+        close({  
+            minAge: startAgeRange,
+            maxAge: endAgeRange,
+            minHeight: startHeight * .96,
+            maxHeight: endHeight * .96,
+            gender: selected.name,
+            state: state,
+            city: city, 
+            getDiscover ,
+        })
 
 
     }

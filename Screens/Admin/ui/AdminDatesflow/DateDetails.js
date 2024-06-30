@@ -115,7 +115,7 @@ const DateDetails = ({ navigation, route }) => {
                                     Ratings
                                 </Text>
                             </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
                                 <Text style={styles.RatingsValue}>
                                     {GetBudget(UserDateDetails)}
                                 </Text>
@@ -129,13 +129,13 @@ const DateDetails = ({ navigation, route }) => {
                                     </Text>
                                 </View>
                             </View>
-                            <Text style={{ fontWeight: '400', fontSize: 12, fontFamily: customFonts.regular, color: '#333333', marginTop: 15 }}>
+                            <Text style={{ fontWeight: '400', fontSize: 16, fontFamily: customFonts.semibold, color: '#333333', marginTop: 15 }}>
                                 Hours of operation
                             </Text>
                             <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.medium, color: '#333333' }}>
                                 {moment(UserDateDetails.openTime, "HH:mm:ss").format("h:mm a")} - {moment(UserDateDetails.closeTime, "HH:mm:ss").format("h:mm a")}
                             </Text>
-                            <Text style={{ fontWeight: '400', fontSize: 12, fontFamily: customFonts.medium, color: '#333333', marginTop: 8 }}>
+                            <Text style={{ fontWeight: '400', fontSize: 16, fontFamily: customFonts.semibold, color: '#333333', marginTop: 8 }}>
                                 Description
                             </Text>
                             <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.medium, color: '#333333', marginTop: 3 }}>
@@ -148,7 +148,7 @@ const DateDetails = ({ navigation, route }) => {
                                 108+Ratings . 10 Reviews
                             </Text>
 
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20, marginTop: 10 }}>
                                 <View style={{ borderRadius: 8, width: 73 / 430 * width, borderWidth: 1, borderColor: '#66666660', justifyContent: 'center', alignItems: 'center' }}>
                                     <View style={{ alignItems: 'center' }}>
                                         <AnimatedCircularProgress

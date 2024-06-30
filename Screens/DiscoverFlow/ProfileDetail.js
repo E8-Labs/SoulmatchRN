@@ -299,40 +299,40 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
 
     }
 
-    const calculateDistance =  () => {
+    const calculateDistance = () => {
         // return 0
         // const userdata = await AsyncStorage.getItem("USER")
 
         // if (userdata) {
         //     let d = JSON.parse(userdata)
 
-            // setLocalUser(d)
-            let localLat = 37.87227//d.user.lat
-            let localLong = 74.12212 //d.user.lang
-            let lat = data[currentIndex] ? data[currentIndex].lat : ''
-            let lang = data[currentIndex] ? data[currentIndex].lang : ''
-            let location = { myLat: localLat, myLang: localLong, otherLat: lat, otherLang: lang }
-            console.log('user data fro local is', location)
-            // return
-            let distance = 0
-            if (localLong !== null && localLat !== null && lat !== null && lang !== null) {
-                distance = getDistance(
-                    { latitude: localLat, longitude: localLong },
-                    { latitude: lat, longitude: lang }
-                );
-                console.log('total distance is', distance)
-                const distanceInMiles = distance / 1000 * 0.621371.toFixed(2);
-                return distanceInMiles
-            }
-            else{
-                return distance
-            }
-            // console.log('distance found ', )
+        // setLocalUser(d)
+        let localLat = 37.87227//d.user.lat
+        let localLong = 74.12212 //d.user.lang
+        let lat = data[currentIndex] ? data[currentIndex].lat : ''
+        let lang = data[currentIndex] ? data[currentIndex].lang : ''
+        let location = { myLat: localLat, myLang: localLong, otherLat: lat, otherLang: lang }
+        console.log('user data fro local is', location)
+        // return
+        let distance = 0
+        if (localLong !== null && localLat !== null && lat !== null && lang !== null) {
+            distance = getDistance(
+                { latitude: localLat, longitude: localLong },
+                { latitude: lat, longitude: lang }
+            );
+            console.log('total distance is', distance)
+            const distanceInMiles = distance / 1000 * 0.621371.toFixed(2);
+            return distanceInMiles
+        }
+        else {
+            return distance
+        }
+        // console.log('distance found ', )
 
         // }
     }
-    
-   
+
+
 
     const handleImageLoadStart = (uri) => {
         setImageLoading(prevState => ({ ...prevState, [uri]: true }));
@@ -356,7 +356,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                     <View style={{ flexDirection: 'row', marginBottom: 20 / 930 * height, width: width - 40, justifyContent: 'space-between' }}>
                         {
                             currentIndex !== data.length ? (
-                                <Text style={{ fontSize: 24, fontFamily: customFonts.meduim }}>
+                                <Text style={{ fontSize: 24, fontFamily: customFonts.meduim, width: 280 / 430 * width }}>
                                     {data[currentIndex] ? data[currentIndex].first_name : ''} {data[currentIndex] ? data[currentIndex].last_name : ''}
                                 </Text>
                             ) : <View style={{ width: 50 }}></View>
@@ -461,16 +461,16 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                 <ScrollView style={{}} showsVerticalScrollIndicator={false}>
 
                                     <Image source={data[currentIndex] ? { uri: data[currentIndex].profile_image } : ''}
-                                       onLoadStart={() => handleImageLoadStart(data[currentIndex] ?  data[currentIndex].profile_image : '')}
-                                       onLoadEnd={() => handleImageLoadEnd(data[currentIndex] ? data[currentIndex].profile_image  : '')}
+                                        onLoadStart={() => handleImageLoadStart(data[currentIndex] ? data[currentIndex].profile_image : '')}
+                                        onLoadEnd={() => handleImageLoadEnd(data[currentIndex] ? data[currentIndex].profile_image : '')}
                                         placeholder={blurhash}
                                         contentFit="cover"
                                         transition={300}
                                         style={{ backgroundColor: 'grey', minHeight: height * 0.6, width: width - 40, borderRadius: 10, }}
                                     />
                                     {
-                                        imageLoading[data[currentIndex] ? data[currentIndex].profile_image  : ''] ? (
-                                            <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop: -500, height: height * 0.6, width: width - 40,opacity:imageLoading?0:1 }} />
+                                        imageLoading[data[currentIndex] ? data[currentIndex].profile_image : ''] ? (
+                                            <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop: -500, height: height * 0.6, width: width - 40, opacity: imageLoading ? 0 : 1 }} />
                                         ) : <></>
                                     }
                                     <View
@@ -570,7 +570,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                                 style={styles.viewImage}
                                             />
                                             {
-                                                data[currentIndex] &&(
+                                                data[currentIndex] && (
                                                     <DistanceCalculator userId={data[currentIndex].id} lat={data[currentIndex].lat} lang={data[currentIndex].lang} />
                                                 )
                                             }
