@@ -74,19 +74,22 @@ export default function ChatScreen({ navigation, route }) {
             if (permissionResponse.status !== 'granted') {
                 await requestPermission();
             }
-            if (recording) {
-                console.warn('Recording is already in progress');
-                return;
+            else{
+                if (recording) {
+                    console.warn('Recording is already in progress');
+                    return;
+                }
+    
+                setRecordingPopup(true);
+                await Audio.setAudioModeAsync({
+                    allowsRecordingIOS: true,
+                    playsInSilentModeIOS: true,
+                });
+    
+                const { recording } = await Audio.Recording.createAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY);
+                setRecording(recording);
             }
-
-            setRecordingPopup(true);
-            await Audio.setAudioModeAsync({
-                allowsRecordingIOS: true,
-                playsInSilentModeIOS: true,
-            });
-
-            const { recording } = await Audio.Recording.createAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY);
-            setRecording(recording);
+            
         } catch (err) {
             console.error('Failed to start recording', err);
         }
