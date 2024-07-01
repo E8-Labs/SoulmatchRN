@@ -22,7 +22,7 @@ export default function ReserveNightScreen({ navigation, route }) {
   const data = route.params.data
   const sourceMoment = moment.unix(1636765200);
   const sourceDate = sourceMoment.local().toDate();
-  console.log('selected date is', data)
+  // console.log('selected date is', data)
 
   const [numberofGuest, setNumberofGuest] = useState(2)
   const [startedDate, setStartedDate] = useState('')
@@ -40,18 +40,18 @@ export default function ReserveNightScreen({ navigation, route }) {
   const [showPicker, setShowPicker] = useState(false);
 
 
-  useEffect(()=>{
-    const updateData = () =>{
+  useEffect(() => {
+    const updateData = () => {
       console.log('user id is', data.date.id)
       setNumberofGuest(2)
-      setSelectedDateProfile({id:data.userId})
+      setSelectedDateProfile({ id: data.userId })
     }
 
-    if(data.from === "ChatScreen"){
+    if (data.from === "ChatScreen") {
       updateData()
-      
+
     }
-  },[])
+  }, [])
 
 
   const bookDate = async () => {
@@ -62,9 +62,25 @@ export default function ReserveNightScreen({ navigation, route }) {
 
     }
 
+    // let date = {
+    //   createdAt: "2024-07-01T04:42:36.818Z",
+    //   date: "2021-11-13",
+    //   datePlaceId: 64,
+    //   dateUserId: 16,
+    //   id: 31,
+    //   numberOfGuests: 2,
+    //   time: "2021-11-13T01:00:00.000Z",
+    //   userId: 15
+    // }
+
+    
+    // return
+
     setShowIndicator(true)
 
     const userData = await AsyncStorage.getItem("USER")
+
+
 
     if (userData) {
       let d = JSON.parse(userData)
@@ -92,11 +108,14 @@ export default function ReserveNightScreen({ navigation, route }) {
           let json = await result.json()
           if (json.status === true) {
             console.log('book date data', json.data)
-            if(data.from === "ChatScreen"){
+            if (data.from === "ChatScreen") {
               navigation.pop(2)
               return
             }
-            navigation.navigate('TabBarContainer')
+
+            route.params.invitedDate(json.data)
+            navigation.pop()
+            // navigation.navigate('TabBarContainer')
           } else {
             console.log('json message is', json.message)
           }
@@ -151,7 +170,7 @@ export default function ReserveNightScreen({ navigation, route }) {
   }
 
   const closeModal = (user) => {
-    console.log('selected date profile', user)
+    // console.log('selected date profile', user)
     setSelectedDateProfile(user)
     setOpenModal(false)
   }
@@ -160,12 +179,21 @@ export default function ReserveNightScreen({ navigation, route }) {
   const formatDate = (dateString) => {
     return moment(dateString).format("MM-DD-YYYY")
   };
-  function handleChangeStartDate(event, selectedDate) {
+  function handleChangeDate(event, selectedDate) {
     const currentDate = selectedDate || date;
+    console.log('current date is', currentDate)
     setDate(currentDate);
     setOpenTimePicker(false)
-    let formatted = moment(currentDate).format('YYYY/MM/DD');
+
     console.log("Formatted date is ", formatDate(currentDate))
+  }
+  function handleChangeTime(event, selectedDate) {
+    const currentDate = selectedDate || date;
+    console.log('current time is', currentDate)
+
+    setTime(currentDate);
+    setOpenTimePicker(false)
+    // console.log("Formatted time is ", formatDate(currentDate))
   }
 
 
@@ -210,7 +238,7 @@ export default function ReserveNightScreen({ navigation, route }) {
               mode={'date'}
               is24Hour={false}
               display="default"
-              onChange={handleChangeStartDate}
+              onChange={handleChangeDate}
               style={styles.dateTimePicker}
             // width = {400}
             />
@@ -230,7 +258,7 @@ export default function ReserveNightScreen({ navigation, route }) {
               mode={"time"}
               is24Hour={false}
               display="default"
-              onChange={handleChangeStartDate}
+              onChange={handleChangeTime}
               style={styles.dateTimePicker}
             // width = {400}
             />
@@ -322,7 +350,7 @@ export default function ReserveNightScreen({ navigation, route }) {
               onPress={bookDate}
             >
               <Text style={GlobalStyles.btnText}>
-                {data.from ==='ChatScreen'?"Invite":"Reserve a date night"}
+                {data.from === 'ChatScreen' ? "Invite" : "Reserve a date night"}
               </Text>
             </TouchableOpacity>
           )
@@ -376,7 +404,7 @@ const styles = StyleSheet.create({
   text: {
     color: '#000',
     fontSize: 18,
-    fontFamily:customFonts.meduim
+    fontFamily: customFonts.meduim
   },
   clockIcon: {
     height: 24 / 930 * height,

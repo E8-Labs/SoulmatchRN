@@ -168,11 +168,13 @@ export default function DatesFilterPopup({ visible, close, closeWithouFilters, f
 
 
     const applyFilters = () => {
+        console.log("Applying filters Min Rating")
+        console.log(endRat)
         let filters = {
             minBudget:minBudget,
             maxBudget:maxBudget,
-            minRating: startRat/20,
-            maxRating: endRat/20,
+            minRating: Math.round(startRat/20),
+            maxRating: Math.round(endRat/20),
             category: selectedCat,
             budget:selected,
             city :city,

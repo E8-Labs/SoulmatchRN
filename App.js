@@ -265,6 +265,7 @@ async function registerForPushNotificationsAsync() {
 
       <NavigationContainer>
         <Stack.Navigator initialRouteName="SplashMainScreen" screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Testfile" component={Testfile} options={{ gestureEnabled: false }} />
           <Stack.Screen name="SplashMainScreen" component={SplashMainScreen} options={{ gestureEnabled: false }} />
           <Stack.Screen name="SlideContainer" component={SlideContainer} options={{ gestureEnabled: false, headerShown: false }}/>
           <Stack.Screen name="RegisterUser" component={RegisterUser} options={{ gestureEnabled: false }} />

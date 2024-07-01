@@ -28,13 +28,17 @@ export default function ChangeIntroVideo({ navigation, route }) {
 
 
 
+    let videoSource = ''
+    let thumbnail = ''
 
+    useEffect(() => {
+        if (user&&user.introVideo !== null) {
+            videoSource = user.intro_video
+            thumbnail = user.intro_video_thumbnail
+        }
 
-    // useEffect(() => {
-    let videoSource = user.intro_video
-    let thumbnail = user.intro_video_thumbnail
-    //     setIntroVideo(videoSource)
-    // }, [videoSource])
+        //     setIntroVideo(videoSource)
+    }, [])
     // console.log('intro video ', user.intro_video_thumbnail)
 
     const [popup, setPopup] = useState(false)
@@ -318,7 +322,7 @@ export default function ChangeIntroVideo({ navigation, route }) {
 
                             {
                                 loadVideo ? (
-                                    <ActivityIndicator size={'large'} color={colors.blueColor} style={{ height:250 ,marginTop:-250}} />
+                                    <ActivityIndicator size={'large'} color={colors.blueColor} style={{ height: 250, marginTop: -250 }} />
                                 ) : <></>
                             }
 

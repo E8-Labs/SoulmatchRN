@@ -94,6 +94,10 @@ export default function SelectedProfile({ navigation, route }) {
 
     const handleLike = async () => {
 
+        if(data.from === "Profile"){
+            return
+        }
+
         console.log('trying to likes profile')
 
         const User = await AsyncStorage.getItem("USER")
@@ -140,6 +144,9 @@ export default function SelectedProfile({ navigation, route }) {
     };
 
     const handleReject = async () => {
+        if(data.from === "Profile"){
+            return
+        }
         console.log('trying to likes profile')
 
         const User = await AsyncStorage.getItem("USER")
@@ -182,6 +189,9 @@ export default function SelectedProfile({ navigation, route }) {
 
 
     const handleOnpress = (item) => {
+        if(data.from === "Profile"){
+            return
+        }
         const selectedIndex = selected.indexOf(item.id);
         if (selectedIndex > -1) {
             // If selected, remove it from the array

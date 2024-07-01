@@ -36,7 +36,7 @@ const SplashMainScreen = (props) => {
             <Image source={require("../../assets/images/logo.png")}
                 style={{ height: 81 / 930 * height, width: 98 / 930 * height, resizeMode: 'contain' }}
             />
-            <Text style={{ fontSize: 38, fontWeight: '400' ,fontFamily: customFonts.semibold}}>soulmatch</Text>
+            <Text style={{ fontSize: 38, fontWeight: '400' ,fontFamily: customFonts.meduim}}>soulmatch</Text>
 
         </View>
     )

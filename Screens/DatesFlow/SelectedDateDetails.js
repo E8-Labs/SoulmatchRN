@@ -18,14 +18,43 @@ export default function SelectedDateDetails({ navigation, route }) {
 
     console.log('selected date details are ', data)
     const [loading, setLoading] = useState(false)
+    const [invitedDate,setInvitedDate] = useState({})
+
+
+    const getInvitedDate = (date) =>{
+        console.log('invited date on date details screen is  ', date)
+        setInvitedDate(date)
+    }
+
+
+    const reserveDate = () =>{
+
+        navigation.navigate("ReserveNightScreen", {
+            data:{
+                date:data,
+                from:"DateScreen",
+                userId:'',
+            },
+            invitedDate:getInvitedDate
+
+        })
+    }
+
+    const handleBackPress = () =>{
+        if(Object.keys(invitedDate).length !== 0){
+            console.log('invited date is', invitedDate)
+            route.params.selectedDate(invitedDate)
+        }
+        navigation.pop()
+    }
 
     return (
         <SafeAreaView>
             <View style={{ alignItems: 'center', height: height, width: width }}>
                 <View style={{ width: width - 60 / 430 * width, flexDirection: 'row', alignItems: 'center', gap: 20 / 430 * width }}>
                     <TouchableOpacity onPress={() => {
-                        navigation.goBack()
-                    }}>
+                        handleBackPress()
+                     }}>
                         <View style={GlobalStyles.backBtn}>
                             <Image source={require('../../assets/images/backArrow.png')}
                                 style={GlobalStyles.backBtnImage}
@@ -180,13 +209,7 @@ export default function SelectedDateDetails({ navigation, route }) {
 
                             <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 30 / 930 * height }]}
                                 onPress={() => {
-                                    navigation.navigate("ReserveNightScreen", {
-                                        data:{
-                                            date:data,
-                                            from:"DateScreen",
-                                            userId:''
-                                        }
-                                    })
+                                   reserveDate()
                                 }}
                             >
                                 <Text style={GlobalStyles.btnText}>Reserve a date night</Text>

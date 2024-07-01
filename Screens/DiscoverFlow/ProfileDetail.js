@@ -20,6 +20,7 @@ import { getDistance } from 'geolib';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AddressPicker from '../Admin/ui/Addresspicker/AddressPicker';
 import DistanceCalculator from '../../Components/DistanceCalculator';
+import AddCommentPopup from '../../Components/AddCommentPopup';
 
 const { height, width } = Dimensions.get('window')
 
@@ -66,6 +67,8 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
     const [status, setStatus] = React.useState({});
     const ref = useRef(null);
     const [filters, setFilters] = useState({})
+    const [openCommentPopup, setOpenCommentPopup] = useState(false)
+    const [commentedAnswer, setCommentAnswer] = useState(null)
 
     // console.log("data from prev screen", data[currentIndex].media)
     console.log("current index", currentIndex)
@@ -194,6 +197,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                 user: data[currentIndex]
                             }
                             onMenuClick(routeData)
+                            handleNext();
                         } else {
                             handleNext();
                         }
@@ -258,6 +262,9 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
 
 
     const handleOnpress = (item) => {
+        setOpenCommentPopup(true)
+        setCommentAnswer(item)
+        console.log(' popup is here')
         const selectedIndex = selected.indexOf(item.id);
         if (selectedIndex > -1) {
             // If selected, remove it from the array
@@ -299,41 +306,6 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
 
     }
 
-    const calculateDistance = () => {
-        // return 0
-        // const userdata = await AsyncStorage.getItem("USER")
-
-        // if (userdata) {
-        //     let d = JSON.parse(userdata)
-
-        // setLocalUser(d)
-        let localLat = 37.87227//d.user.lat
-        let localLong = 74.12212 //d.user.lang
-        let lat = data[currentIndex] ? data[currentIndex].lat : ''
-        let lang = data[currentIndex] ? data[currentIndex].lang : ''
-        let location = { myLat: localLat, myLang: localLong, otherLat: lat, otherLang: lang }
-        console.log('user data fro local is', location)
-        // return
-        let distance = 0
-        if (localLong !== null && localLat !== null && lat !== null && lang !== null) {
-            distance = getDistance(
-                { latitude: localLat, longitude: localLong },
-                { latitude: lat, longitude: lang }
-            );
-            console.log('total distance is', distance)
-            const distanceInMiles = distance / 1000 * 0.621371.toFixed(2);
-            return distanceInMiles
-        }
-        else {
-            return distance
-        }
-        // console.log('distance found ', )
-
-        // }
-    }
-
-
-
     const handleImageLoadStart = (uri) => {
         setImageLoading(prevState => ({ ...prevState, [uri]: true }));
     };
@@ -344,8 +316,10 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
 
 
     useEffect(() => {
-        console.log("Model opened ", openModal)
-    }, [openModal])
+        console.log("Model opened ", commentedAnswer)
+    }, [commentedAnswer])
+
+
 
     return (
 
@@ -466,11 +440,11 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                         placeholder={blurhash}
                                         contentFit="cover"
                                         transition={300}
-                                        style={{ backgroundColor: 'grey', minHeight: height * 0.6, width: width - 40, borderRadius: 10, }}
+                                        style={{ opacity: imageLoading[data[currentIndex]] ? 0 : 1, backgroundColor: 'grey', minHeight: height * 0.6, width: width - 40, borderRadius: 10, }}
                                     />
                                     {
                                         imageLoading[data[currentIndex] ? data[currentIndex].profile_image : ''] ? (
-                                            <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop: -500, height: height * 0.6, width: width - 40, opacity: imageLoading ? 0 : 1 }} />
+                                            <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop: -550 / 930 * height, height: height * 0.6, width: width - 40, }} />
                                         ) : <></>
                                     }
                                     <View
@@ -484,7 +458,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                             ) : (
                                                 <TouchableOpacity
                                                     style={{
-                                                        width: 56 / 430 * width, height: 56 / 930 * height, backgroundColor: '#fff', elevation: 5, borderRadius: 30,
+                                                        width: 56 / 930 * height, height: 56 / 930 * height, backgroundColor: '#fff', elevation: 5, borderRadius: 30,
                                                         justifyContent: 'center', alignItems: 'center',
                                                     }}
                                                     onPress={() => {
@@ -494,7 +468,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                                 >
                                                     <Image
                                                         source={unlikeImage}
-                                                        style={{ width: 40, height: 40, }}
+                                                        style={{ width: 34, height: 34, }}
                                                     />
                                                 </TouchableOpacity>
                                             )
@@ -508,7 +482,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                                     handleReject()
                                                 }}
                                                     style={{
-                                                        width: 56 / 430 * width, height: 56 / 930 * height, backgroundColor: '#fff', elevation: 5, borderRadius: 30,
+                                                        width: 56 / 930 * height, height: 56 / 930 * height, backgroundColor: '#fff', elevation: 5, borderRadius: 30,
                                                         justifyContent: 'center', alignItems: 'center',
                                                     }}
                                                 >
@@ -783,6 +757,8 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                                                                 <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 120, left: 160 }} />
                                                                             ) : <></>
                                                                         }
+
+
                                                                     </>
 
                                                                 ) : (
@@ -825,7 +801,24 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                             : ''
                                     }
 
+                                    <Modal
+                                        visible={openCommentPopup }
+                                        transparent={true}
+                                        animationType='fade'
+                                    >
+                                        {/* <View>
+                                            <Text>hellloorjnerifh</Text>
+                                        </View> */}
+                                        <AddCommentPopup item = {commentedAnswer}   close={(data) => {
+                                            console.log('modal close here',data)
+                                            if(data === true){
+                                                console.log('profile liked and now animate')
+                                                handleNext()
+                                            }
+                                            setOpenCommentPopup(false)
+                                        }} />
 
+                                    </Modal>
                                 </ScrollView>
                             </View>
                         ) : (
