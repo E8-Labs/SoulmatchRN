@@ -19,7 +19,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.e8labs.soulmatch",
       "googleServicesFile": "./GoogleService-Info.plist",
-      "buildNumber": "4.5",
+      "buildNumber": 5.2,
       "infoPlist": {
         "UIBackgroundModes": [
           "audio"
