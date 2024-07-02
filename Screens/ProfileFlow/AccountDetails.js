@@ -19,16 +19,16 @@ const placholder = require('../../assets/images/imagePlaceholder.webp')
 
 export default function AccountDetails({ navigation, route }) {
     const user = route.params.user
-    // console.log('user from prev screen is', user)
+    console.log('user from prev screen is', user)
 
-    const [firstName, setFirstName] = useState(user.first_name !== null ?user.first_name:'');
-    const [lastName, setLastName] = useState(user.last_name !== null ?user.last_name:'');
-    const [email, setEmail] = useState(user.email !== null ?user.email:'');
+    const [firstName, setFirstName] = useState(user.first_name);
+    const [lastName, setLastName] = useState(user.last_name);
+    const [email, setEmail] = useState(user.email);
     const [error, setError] = useState(null);
     const [marginTop, setmarginTop] = useState(null);
     const [showIndicator, setShowIndicator] = useState(false);
     const [showIndicator2, setShowIndicator2] = useState(false);
-    const [image, setImage] = useState(user.profile_image !== null ?user.profile_image:'');
+    const [image, setImage] = useState(user.profile_image);
     const [loadImage, setLoadImage] = useState(false);
 
     useEffect(() => {
@@ -107,11 +107,10 @@ export default function AccountDetails({ navigation, route }) {
                     let json = await result.json();
                     if (json.status === true) {
 
-                        console.log('user profile', json.data)
+                        console.log('user profile after update image', json.data)
                         d.user = json.data
-                                  AsyncStorage.setItem("USER",JSON.stringify(d))
-
-                        navigation.goBack()
+                        AsyncStorage.setItem("USER", JSON.stringify(d))
+                        // navigation.goBack()
                     }
                     else {
                         console.log('json message', json.message)
@@ -161,7 +160,7 @@ export default function AccountDetails({ navigation, route }) {
 
                         console.log('user profile', json.data)
                         d.user = json.data
-                                  AsyncStorage.setItem("USER",JSON.stringify(d))
+                        AsyncStorage.setItem("USER", JSON.stringify(d))
 
                         navigation.goBack()
                     }
@@ -205,22 +204,23 @@ export default function AccountDetails({ navigation, route }) {
                         <TouchableOpacity onPress={pickImage}>
                             <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 33 / 930 * height }}>
                                 <Image source={image ? { uri: image } : placholder}
-                                    style={{ height: 140 / 930 * height, width: 140 / 930 * height, resizeMode: 'cover', borderRadius: 70 }}
-                                />
-                                <Image source={require('../../assets/images/edit.png')}
                                     onLoadStart={() => {
                                         setLoadImage(true)
                                     }}
                                     onLoadEnd={() => {
                                         setLoadImage(false)
                                     }}
+                                    style={{ height: 140 / 930 * height, width: 140 / 930 * height, resizeMode: 'cover', borderRadius: 70 }}
+                                />
+                                <Image source={require('../../assets/images/edit.png')}
+
                                     style={{
                                         height: 28 / 930 * height, width: 28 / 930 * height, resizeMode: 'contain', position: 'absolute', bottom: 10, right: 5
                                     }}
                                 />
                                 {
                                     loadImage ? (
-                                        <View style = {{ marginTop: -80/930*height, height: 100 / 930 * height, }}>
+                                        <View style={{ marginTop: -80 / 930 * height, height: 100 / 930 * height, }}>
                                             <ActivityIndicator size={'small'} color={colors.blueColor} style={{}} />
                                         </View>
                                     ) : null

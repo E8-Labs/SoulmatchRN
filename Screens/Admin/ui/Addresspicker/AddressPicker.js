@@ -2,15 +2,14 @@ import * as React from 'react';
 import { View, StyleSheet, TextInput, TouchableOpacity, Text, Image } from 'react-native';
 import Constants from 'expo-constants';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalStyles from '../../../../assets/styles/GlobalStyles';
 
 const GOOGLE_PLACES_API_KEY = 'AIzaSyAvhNXgMGSYcFIHLkRmZkDta_U7yWdgQQI'; // never save your real api key in a snack!
+const AddressPicker = ({ backButtonPressed, PickAddress, inputReference }) => {
 
-const AddressPicker = ({ backButtonPressed, PickAddress }) => {
-
-
+    let useinputRef = useRef('');
     const [CityName, setCityName] = useState('');
     const [StateName, setStateName] = useState('');
     const [stateName2, setStateName2] = useState('');
@@ -20,6 +19,12 @@ const AddressPicker = ({ backButtonPressed, PickAddress }) => {
     const [countryName, setCountryName] = useState('');
     const [postalCode, setPostalCode] = useState('');
     const [streetNumber, setStreetNumber] = useState('');
+
+    useEffect(() => {
+        if (useinputRef.current) {
+            useinputRef.current.focus();
+        }
+    }, []);
 
     const handlePlaceSelect = async (data, details) => {
         try {
@@ -120,6 +125,7 @@ const AddressPicker = ({ backButtonPressed, PickAddress }) => {
                 </View>
             </TouchableOpacity>
             <GooglePlacesAutocomplete
+                ref={useinputRef}
                 placeholder="Search"
                 query={{
                     key: GOOGLE_PLACES_API_KEY,

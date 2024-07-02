@@ -111,7 +111,7 @@ const SendFeedBack = ({ navigation }) => {
                                     </View>
                                 </TouchableOpacity>
                                 <Text style={{ fontWeight: '500', fontSize: 24, color: '#333333', fontFamily: customFonts.medium }}>
-                                    FeedBack
+                                    Feedback
                                 </Text>
                             </View>
                             <Text style={[styles.labelText, { marginTop: marginTop ? marginTop : 45 / 930 * height }]}>

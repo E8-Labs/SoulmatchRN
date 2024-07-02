@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react'
 import {
     View, Text, TextInput, TouchableOpacity, Dimensions, FlatList, SafeAreaView, ScrollView,
-    ActivityIndicator, Animated, Easing, StyleSheet
+    ActivityIndicator, Animated, Easing, StyleSheet, DeviceEventEmitter,
+    Keyboard
 } from 'react-native';
 import customFonts from '../../assets/fonts/Fonts'
 import { useFocusEffect } from '@react-navigation/native';
@@ -12,6 +13,7 @@ import ApisPath from '../../lib/ApisPath/ApisPath';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GetBudget } from '../../Services/dates/GetBudget';
 import DatesFilterPopup from '../../Components/DatesFilterPopup';
+import { BroadcastEvents } from '../../models/Constants';
 
 const { height, width } = Dimensions.get('window')
 const searchIcon = require('../../assets/images/searchIcon.png')
@@ -27,6 +29,8 @@ export default function DatesContainer({ navigation }) {
 
     const searchWidth = useRef(new Animated.Value(0)).current; // Initial width of the search field
     const searchOpacity = useRef(new Animated.Value(0)).current;
+    const textInputRef = useRef(null);
+
 
     const [dateNights, setDateNights] = useState([])
     const [recommendedDates, SetRecommendedDates] = useState([])
@@ -35,9 +39,39 @@ export default function DatesContainer({ navigation }) {
     const [loading, setLoading] = useState(false)
     const [showmodal, setShowModal] = useState(false);
     const [isSearching, setIsSearching] = useState(false)
-    const [search, setSearch] = useState(null);
+    const [search, setSearch] = useState('');
     const [searchDates, setSearchDates] = useState(null);
+    const [showKeyboard, setShowKeyboard] = useState(false)
     // const [dateFilters, setDateFilters] = useState({})
+
+
+    useFocusEffect(
+        React.useCallback(() => {
+
+        })
+    )
+    useEffect(() => {
+        const listener = DeviceEventEmitter.addListener(BroadcastEvents.EventUpcomingDateAdded, (data) => {
+            console.log('date object received from broad cast', data)
+
+            setUpComingDates(prevDate =>{
+                let d = prevDate
+                d.push(data)
+                return d
+        })
+            
+        })
+        return () => {
+            listener.remove()
+        }
+    }, [])
+    
+
+    useEffect(()=>{
+        console.log('upcoming dates after update', upComingDates)
+    },[upComingDates])
+
+
 
 
     const closeModal = (filters) => {
@@ -129,7 +163,7 @@ export default function DatesContainer({ navigation }) {
             if (search !== null) {
                 getDates("From Search Timer Change");
             }
-        }, 1000);
+        }, 300);
 
         // Cleanup function to clear the timer when component unmounts
         return () => clearTimeout(timerRef.current);
@@ -254,10 +288,21 @@ export default function DatesContainer({ navigation }) {
     }, [isSearching])
 
     const handleSearchPress = () => {
+
+        if (isSearching) {
+            Keyboard.dismiss()
+            setSearch('')
+            textInputRef.current?.setNativeProps({ text: '' });
+            setShowKeyboard(false)
+        } else {
+            setShowKeyboard(true)
+            textInputRef.current?.focus()
+        }
         setIsSearching(prev => !prev)
+
         Animated.parallel([
             Animated.timing(searchWidth, {
-                toValue: isSearching ? 0 : 280, // Change 250 to the desired width of the search field
+                toValue: isSearching ? 0 : 280 / 430 * width, // Change 250 to the desired width of the search field
                 duration: 300,
                 easing: Easing.linear,
                 useNativeDriver: false,
@@ -282,26 +327,33 @@ export default function DatesContainer({ navigation }) {
                 alignItems: 'flex-end', flexDirection: 'row', height: 50 / 930 * height, width: width, alignSelf: 'center',
                 justifyContent: 'space-between', paddingLeft: 20,
             }}>
-                <Text style={{ fontSize: 23, fontFamily: customFonts.meduim,paddingBottom:10 }}>Dates</Text>
+                <Text style={{ fontSize: 23, fontFamily: customFonts.meduim, paddingBottom: 10 }}>Dates</Text>
 
                 <Animated.View style={[styles.searchContainer, { width: searchWidth, opacity: searchOpacity }]}>
                     <View style={styles.searchInput}>
                         <TextInput
-                            // style={styles.searchInput}
+                            style={{ width: 230 / 430 * width, backgroundColor: 'transparent' }}
+                            ref={textInputRef}
+                            autoCorrect={false} autoComplete='none'
+                            spellCheck={false}
                             placeholder="Search"
                             placeholderTextColor="#aaa"
+                            autoFocus={showKeyboard}
                             Value={search}
                             onChangeText={(e) => {
                                 setSearch(e)
                             }}
+
+                        // onFocus={() => setShowKeyboard(true)}
                         />
                         <TouchableOpacity
                             onPress={() => {
                                 handleSearchPress()
+                                // setSearch('')
                             }}
                         >
                             <Image source={closeIcon}
-                                style={{height:20,width:20}}
+                                style={{ height: 20, width: 20 }}
                             />
                         </TouchableOpacity>
 
@@ -313,7 +365,7 @@ export default function DatesContainer({ navigation }) {
 
                     {
                         !isSearching &&
-                        <TouchableOpacity style = {{paddingBottom:10}}
+                        <TouchableOpacity style={{ paddingBottom: 10 }}
                             onPress={() => {
                                 handleSearchPress()
                             }}
@@ -324,7 +376,7 @@ export default function DatesContainer({ navigation }) {
                         </TouchableOpacity>
                     }
 
-                    <TouchableOpacity style = {{paddingBottom:10 }}
+                    <TouchableOpacity style={{ paddingBottom: 10 }}
                         onPress={() => {
                             setShowModal(true)
                         }}
@@ -612,7 +664,7 @@ export default function DatesContainer({ navigation }) {
 
 const styles = StyleSheet.create({
     searchContainer: {
-        alignSelf:'center',
+        alignSelf: 'center',
         overflow: 'hidden',
         marginLeft: 10,
         height: 40,
@@ -621,6 +673,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 10,
+        width: 280 / 430 * width
     },
     searchInput: {
         flex: 1,

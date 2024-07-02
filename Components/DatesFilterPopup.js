@@ -5,7 +5,7 @@ import {
 
 }
     from 'react-native';
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import customFonts from '../assets/fonts/Fonts';
 import GlobalStyles from '../assets/styles/GlobalStyles';
 import colors from '../assets/colors/Colors';
@@ -29,8 +29,8 @@ export default function DatesFilterPopup({ visible, close, closeWithouFilters, f
     const [selectedCat, setselectedCat] = useState(-1);
     const [startRat, setStartRat] = useState(0);
     const [endRat, setEndRat] = useState(100);
-    const [categories, setCategories] = useState([])
-    const [openAddressPicker, setOpenAddressPicker] = useState(false)
+    const [categories, setCategories] = useState([]);
+    const [openAddressPicker, setOpenAddressPicker] = useState(false);
     const [city, setCity] = useState(false)
     const [state, setState] = useState(false)
 
@@ -72,11 +72,11 @@ export default function DatesFilterPopup({ visible, close, closeWithouFilters, f
         updateFilters(filters)
     }, [filters])
 
-    const updateFilters = (data) =>{
+    const updateFilters = (data) => {
         // let data = await AsyncStorage.getItem("DatesFilters")
-        
+
         if (data) {
-            let filters = data         
+            let filters = data
             console.log('filters from previous are', filters)
             // return
 
@@ -84,19 +84,19 @@ export default function DatesFilterPopup({ visible, close, closeWithouFilters, f
             setState(filters.state)
             setStartRat(filters.minRating * 20)
             setEndRat(filters.maxRating * 20)
-            setMinBudget(filters.minBudget)
-            setMaxBudget(filters.maxBudget)
+            setMinBudget(filters.minBudget || 0)
+            setMaxBudget(filters.maxBudget || 5)
             setselectedCat(filters.category)
             setselected(filters.budget)
         }
     }
 
-    function isBudgetSelected(item){
+    function isBudgetSelected(item) {
         console.log("Budget Select Check ", item)
         console.log("Min Budget ", minBudget)
         console.log("Max Budget ", maxBudget)
-        if(minBudget === item.minBudget && maxBudget === item.maxBudget){
-            
+        if (minBudget === item.minBudget && maxBudget === item.maxBudget) {
+
             console.log("Budget Selected  true")
             return true
         }
@@ -105,8 +105,8 @@ export default function DatesFilterPopup({ visible, close, closeWithouFilters, f
     }
 
     // const updateBudget = () =>{
-        // setMinBudget(selected.minBudget)
-        // setMaxBudget(selected.maxBudget)
+    // setMinBudget(selected.minBudget)
+    // setMaxBudget(selected.maxBudget)
     // }
 
     // useEffect(()=>{
@@ -152,16 +152,16 @@ export default function DatesFilterPopup({ visible, close, closeWithouFilters, f
 
     }
 
-    const resetFilters = () =>{
+    const resetFilters = () => {
         let filters = {
-            minBudget:null,
-            maxBudget:null,
-            minRating: null,
-            maxRating:null,
+            minBudget: null,
+            maxBudget: null,
+            minRating: 0,
+            maxRating: 5,
             category: -1,
-            budget:null,
-            city :null,
-            state:null
+            budget: null,
+            city: null,
+            state: null
         }
         close(filters)
     }
@@ -171,14 +171,14 @@ export default function DatesFilterPopup({ visible, close, closeWithouFilters, f
         console.log("Applying filters Min Rating")
         console.log(endRat)
         let filters = {
-            minBudget:minBudget,
-            maxBudget:maxBudget,
-            minRating: Math.round(startRat/20),
-            maxRating: Math.round(endRat/20),
+            minBudget: minBudget,
+            maxBudget: maxBudget,
+            minRating: Math.round(startRat / 20) || 0,
+            maxRating: Math.round(endRat / 20) || 5,
             category: selectedCat,
-            budget:selected,
-            city :city,
-            state:state
+            budget: selected,
+            city: city,
+            state: state
         }
 
         // AsyncStorage.setItem("DatesFilters", JSON.stringify(filters))
@@ -277,10 +277,10 @@ export default function DatesFilterPopup({ visible, close, closeWithouFilters, f
                                         Ratings
                                     </Text>
                                     <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>
-                                        {parseInt(startRat / 20)} - {parseInt(endRat / 20)}
+                                        {Math.round(startRat / 20) || 0} - {Math.round(endRat / 20) || 5}
                                     </Text>
                                 </View>
-                                <RangeSlider heightSlider={false} start={startRat?startRat:0} end={endRat?endRat:100} minValue={0} maxValue={100} rangeStartUpdated={(value) => {
+                                <RangeSlider heightSlider={false} start={startRat ? startRat : 0} end={endRat ? endRat : 100} minValue={0} maxValue={100} rangeStartUpdated={(value) => {
                                     // console.log('start age', value)
                                     setStartRat(value)
                                 }} rangeEndUpdated={(value) => {
@@ -324,12 +324,12 @@ export default function DatesFilterPopup({ visible, close, closeWithouFilters, f
                                 <View style={{ width: width - 60, flexDirection: 'column', }}  >
 
                                     <View style={{ width: width - 60, flexDirection: 'row', marginTop: 45 / 930 * height, justifyContent: 'space-between' }}>
-                                        <TouchableOpacity onPress = {resetFilters}
-                                        
-                                        style={{
-                                            width: 173 / 430 * width, height: 48 / 930 * height, borderWidth: 2, borderColor: "#000", borderRadius: 10,
-                                            alignItems: 'center', justifyContent: 'center'
-                                        }}>
+                                        <TouchableOpacity onPress={resetFilters}
+
+                                            style={{
+                                                width: 173 / 430 * width, height: 48 / 930 * height, borderWidth: 2, borderColor: "#000", borderRadius: 10,
+                                                alignItems: 'center', justifyContent: 'center'
+                                            }}>
                                             <Text style={[GlobalStyles.btnText, { color: '#000' }]}>
                                                 Reset
                                             </Text>

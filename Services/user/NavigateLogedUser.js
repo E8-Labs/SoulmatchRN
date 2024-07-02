@@ -7,10 +7,12 @@ export const NavigateLogedUser = async (navigation, from) => {
   if (user) {
     let d = JSON.parse(user)
     console.log('user data available', d)
+    try{
     let u = await getProfile()
     let data = u
+    
     // return
-    if (data.role === 'admin') {
+    if ( typeof data.role !== undefined && typeof data.role === 'admin') {
       navigation.navigate("AdminTabBarContainer", {
         data: {
           from: from
@@ -163,7 +165,11 @@ export const NavigateLogedUser = async (navigation, from) => {
         console.log('there is no screen to navigate', data.profile_completion_comment)
       }
     }
-
+ 
+  }catch(e){
+    // alert(e)
+    console.log('error finding in get profile', e)
+  }
 
 
     // navigation.navigate('TabBarContainer')

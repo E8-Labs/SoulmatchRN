@@ -21,20 +21,20 @@ export default function MessagesList({ navigate }) {
     const [loadImage, setLoadImage] = useState(false)
     const [showIndicator, setShowIndicator] = useState(false)
     const [user, setUser] = useState(false)
-useFocusEffect(
-    useCallback(()=>{
-        getMessagesList()
-    },[])
-)
+    useFocusEffect(
+        useCallback(() => {
+            getMessagesList()
+        }, [])
+    )
 
-useEffect(()=>{
-    // getMessagesList()
-},[])
+    useEffect(() => {
+        // getMessagesList()
+    }, [])
 
 
     const getMessagesList = async () => {
         setShowIndicator(true)
-        const data =await AsyncStorage.getItem("USER")
+        const data = await AsyncStorage.getItem("USER")
 
         try {
             console.log('trying to get messages list')
@@ -67,6 +67,63 @@ useEffect(()=>{
         }
     }
 
+    const readAllMessages = async (item) => {
+
+        // console.log('item is', item)
+        // return
+
+        const data = await AsyncStorage.getItem("USER")
+        try {
+            if (data) {
+                let d = JSON.parse(data)
+
+
+                let body = JSON.stringify({
+                    chatid: item.id
+                })
+
+                const result = await fetch(ApisPath.ApiReadAll, {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + d.token
+                    },
+                    body: body
+                })
+
+                if (result) {
+                    let json = await result.json()
+
+                    if (json.status === true) {
+                        item.unread = 0
+                        console.log('all messages readed ')
+                    } else {
+                        console.log('json message of read all messages is', json.message)
+                    }
+                }
+            }
+        } catch (e) {
+            console.log('error finding in read messages is', e)
+        }
+
+    }
+
+
+    const getLastMessage = (item) =>{
+        let message = item.lastMessage
+        if(message){
+            if(message.content){
+                return message.content
+            }else if(message.voice){
+                return "Voice message"
+            } else if(message.thumb_url){
+                return "Video"
+            } else if(message.image_url){
+                return "Image"
+            }
+        }
+    }
+
 
 
     return (
@@ -86,11 +143,13 @@ useEffect(()=>{
                                 renderItem={({ item }) => (
                                     <>
                                         <TouchableOpacity onPress={() => {
+                                            readAllMessages(item)
                                             navigate(item)
+
                                         }} >
                                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 60, alignSelf: 'center', paddingTop: 20, }}>
                                                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                                                    <Image source={item.users[0]?{ uri: item.users[0].profile_image }:placholder}
+                                                    <Image source={item.users[0] ? { uri: item.users[0].profile_image } : placholder}
                                                         onLoadStart={() => {
                                                             setLoadImage(true)
                                                         }}
@@ -114,18 +173,18 @@ useEffect(()=>{
 
                                                     <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 3 }}>
                                                         <Text style={{ fontSize: 14, fontFamily: customFonts.meduim, color: item.unread ? "#000" : colors.unreadColor }}>
-                                                            {item.users[0]&&item.users[0].first_name} {item.users[0]&&item.users[0].last_name}
+                                                            {item.users[0] && item.users[0].first_name} {item.users[0] && item.users[0].last_name}
                                                         </Text>
                                                         <Text numberOfLines={1} lineBreakMode='tail' style={{
                                                             fontSize: 12, fontFamily: customFonts.regular, width: 230 / 430 * width, color: item.unread ? "#000" : colors.unreadColor
                                                         }}>
-                                                            {item.lastMessage ? item.lastMessage.content : ''}
+                                                           {getLastMessage(item)}
                                                         </Text>
                                                     </View>
                                                 </View>
                                                 <View style={{ flexDirection: 'column', alignItems: 'flex-end', gap: 3 }}>
                                                     <Text style={{ fontSize: 12, fontFamily: customFonts.regular, color: item.unread ? "#000" : colors.unreadColor }}>
-                                                        {moment(item.createdAt).format('h:mm A')}
+                                                        {moment(item.lastMessage.createdAt).format('h:mm A')}
                                                     </Text>
                                                     {
                                                         item.unread ? (
@@ -147,8 +206,8 @@ useEffect(()=>{
 
                             />
                         ) : (
-                            <View style = {{ alignItems: 'center', width: width, height: height * 0.76, justifyContent: 'center'}}>
-                                <Text style = {{fontSize:20}}>No chats</Text>
+                            <View style={{ alignItems: 'center', width: width, height: height * 0.76, justifyContent: 'center' }}>
+                                <Text style={{ fontSize: 20 }}>No chats</Text>
                             </View>
                         )
 

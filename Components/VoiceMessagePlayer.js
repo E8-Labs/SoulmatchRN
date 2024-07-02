@@ -6,6 +6,9 @@ import moment from 'moment';
 import colors from '../assets/colors/Colors';
 
 const VoiceMessagePlayer = ({ uri, timestamp, fromMe = true }) => {
+
+    // console.log('time stamp on voice message player screen is', timestamp)
+
     const [sound, setSound] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -23,10 +26,13 @@ const VoiceMessagePlayer = ({ uri, timestamp, fromMe = true }) => {
 
     const playPauseAudio = async () => {
         try {
+            console.log("Trying to play audio ", uri)
             if (isPlaying) {
+                console.log("Already playing")
                 await sound.pauseAsync();
                 setIsPlaying(false);
             } else {
+                console.log("Not already playing")
                 setIsLoading(true);
                 const { sound: newSound, status } = await Audio.Sound.createAsync({ uri });
                 setSound(newSound);
@@ -62,17 +68,18 @@ const VoiceMessagePlayer = ({ uri, timestamp, fromMe = true }) => {
     };
 
     useEffect(() => {
+        console.log("Duration : ", duration)
         if (isPlaying) {
             Animated.timing(progress, {
                 toValue: currentPosition / duration,
-                duration: 100,
+                duration: duration * 1000 ,
                 useNativeDriver: false,
             }).start();
         }
     }, [currentPosition, duration, isPlaying, progress]);
 
     return (
-        <View style={[styles.container, {marginLeft: fromMe ?  "28%" : '2%'}]}>
+        <View style={[styles.container, { marginLeft: fromMe ? "25%" : '2%' }]}>
             <TouchableOpacity onPress={playPauseAudio} disabled={isLoading}>
                 {isLoading ? (
                     <ActivityIndicator size="small" color="#0000ff" />
@@ -88,8 +95,23 @@ const VoiceMessagePlayer = ({ uri, timestamp, fromMe = true }) => {
                     ]}
                 />
             </View>
-            <View style={styles.leftArrow}></View>
-            <View style={styles.leftArrowOverlap}></View>
+
+            { fromMe ? (
+                <>
+                    <View style={styles.rightArrow}></View>
+                    <View style={styles.rightArrowOverlap}></View>
+                </>
+
+            ) : (
+                <>
+                    <View style={styles.leftArrow}></View>
+                    <View style={styles.leftArrowOverlap}></View>
+                </>
+
+            )}
+
+            {/* <View style={styles.leftArrow}></View>
+            <View style={styles.leftArrowOverlap}></View> */}
             <Text style={styles.timestamp}>{moment(timestamp).format("h:mm a")}</Text>
         </View>
     );
@@ -100,12 +122,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10,
-        borderRadius: 10,
+        borderRadius: 20,
         backgroundColor: '#f1f1f1',
         marginVertical: 5,
         width: "70%",
         marginLeft: "2%",
-        
+        marginTop: 10
+
     },
     waveformContainer: {
         flex: 1,
@@ -125,7 +148,7 @@ const styles = StyleSheet.create({
     },
     rightArrow: {
         position: "absolute",
-        backgroundColor: colors.blueColor,
+        backgroundColor:'#F5F5F5',
         width: 20,
         height: 25,
         bottom: 0,

@@ -1,6 +1,6 @@
-import { View, Text, Dimensions, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native'
+import { View, Text, Dimensions, TouchableOpacity, TextInput, ActivityIndicator,Keyboard } from 'react-native'
 import { Image } from 'expo-image'
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import customFonts from '../assets/fonts/Fonts'
 import GlobalStyles from '../assets/styles/GlobalStyles'
 import colors from '../assets/colors/Colors'
@@ -19,6 +19,8 @@ export default function AddCommentPopup({ item, close }) {
     const [comment, setComment] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
+    const [align,setalign] = useState('center')
+    const [marginTop,setMarginTop] = useState(0)
     // console.log('item from ', item)
 
 
@@ -75,8 +77,31 @@ export default function AddCommentPopup({ item, close }) {
 
     }
 
+    useEffect(() => {
+        console.log("Use Effect")
+        // getLocalDiscoverFilters()
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+            console.log("Keyboard show")
+            setalign('flex-start')
+            setMarginTop(100/930*height)
+        });
+
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+            console.log("Keyboard hide")
+            setalign('center')
+            setMarginTop(0)
+            
+
+        });
+        return () => {
+            keyboardDidShowListener.remove();
+            keyboardDidHideListener.remove();
+        };
+},[])
+
     return (
-        <View style={{ height: height, width: width, backgroundColor: '#00000050', alignItems: 'center', justifyContent: 'center' }} >
+        <View style={{ height: height, width: width, backgroundColor: '#00000050', alignItems: 'center',
+         justifyContent: align,paddingTop:marginTop }} >
             <View style={{
                 justifyContent: 'center', width: width - 40, alignItems: 'center', backgroundColor: 'white',
                 borderRadius: 10, paddingHorizontal: 20, paddingVertical: 20
@@ -96,7 +121,7 @@ export default function AddCommentPopup({ item, close }) {
                             <>
                                 <Image
                                     source={{ uri: item.answerImage }}
-                                    style={{ height: 230 / 930 * height, width:  330/430*width, borderRadius: 10, marginTop: 8 }}
+                                    style={{ height: 230 / 930 * height, width: 330 / 430 * width, borderRadius: 10, marginTop: 8 }}
                                     // onLoadEnd={() => {
                                     //     setLoadImage3(false)
                                     // }}
@@ -121,7 +146,7 @@ export default function AddCommentPopup({ item, close }) {
                                     handleOnpress(item)
                                 }}
                             > */}
-                                <View style={[GlobalStyles.likeBtn,{alignSelf:'flex-end',marginTop:15}]}>
+                                <View style={[GlobalStyles.likeBtn, { alignSelf: 'flex-end', marginTop: 15 }]}>
                                     <Image source={likeImage} style={{ height: 27, width: 27, backgroundColor: 'transparent' }} />
                                 </View>
                                 {/* </TouchableOpacity> */}
@@ -162,26 +187,31 @@ export default function AddCommentPopup({ item, close }) {
                                 </>
 
                             ) : (
-                                <View style={{
-                                    marginTop: 8, marginBottom: 8, width: 345 / 430 * width, backgroundColor: '#F5F5F5',
-                                    borderRadius: 10, paddingVertical: 10, paddingHorizontal: 16, alignItems: 'center', width: 330 / 430 * width,
-                                }}>
-                                    <Text style={{
-                                        paddingHorizontal: 8, fontSize: 14, fontFamily: customFonts.regular, color: '#000',
-                                        textAlign: 'left', width: 320 / 430 * width,
+                                <>
+
+                                    <View style={{
+                                        marginTop: 8, marginBottom: 8, width: 345 / 430 * width, backgroundColor: '#F5F5F5',
+                                        borderRadius: 10, paddingVertical: 10, paddingHorizontal: 16, alignItems: 'center', width: 330 / 430 * width,
                                     }}>
-                                        {item.answerText}
-                                    </Text>
+                                        <Text style={{
+                                            paddingHorizontal: 8, fontSize: 14, fontFamily: customFonts.regular, color: '#000',
+                                            textAlign: 'left', width: 320 / 430 * width,
+                                        }}>
+                                            {item.answerText}
+                                        </Text>
+
+                                    </View>
                                     {/* <TouchableOpacity style={{ alignSelf: 'flex-end', marginRight: 0 / 430 * width }}
-                        onPress={() => {
-                            handleOnpress(item)
-                        }}
-                    > */}
+                                            onPress={() => {
+                                            handleOnpress(item)
+                                            }}      
+                                    > */}
                                     <View style={[GlobalStyles.likeBtn, { alignSelf: 'flex-end' }]}>
                                         <Image source={likeImage} style={GlobalStyles.likeBtnImage} />
                                     </View>
                                     {/* </TouchableOpacity> */}
-                                </View>
+
+                                </>
                             )
                         )
                     }

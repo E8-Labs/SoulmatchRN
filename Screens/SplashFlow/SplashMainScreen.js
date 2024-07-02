@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, Text, Dimensions, Settings } from "react-native";
+import { View, Text, Dimensions, Settings, Alert } from "react-native";
 import { Image } from "expo-image";
 import GlobalStyles from "../../assets/styles/GlobalStyles";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,6 +21,7 @@ const SplashMainScreen = (props) => {
                 props.navigation.navigate("SlideContainer")
               }
             } catch(e){
+                // alert(e)
                 console.log('error finding to navigate user', e)
             }
         }

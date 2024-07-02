@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, KeyboardAvoidingView, TouchableOpacity, Platform, Keyboard, TouchableWithoutFeedback, Dimensions, Modal } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, KeyboardAvoidingView, TouchableOpacity, Platform, Keyboard, TouchableWithoutFeedback, Dimensions, Modal, ActivityIndicator } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import customFonts from '../../../assets/fonts/Fonts';
 import * as ImagePicker from 'expo-image-picker';
@@ -7,31 +7,37 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import LogoutPopup from '../../../Components/LogoutPopup';
 import GlobalStyles from '../../../assets/styles/GlobalStyles';
 import { Image } from 'expo-image';
+import Apis from '../apis/Apis';
+import { useFocusEffect } from '@react-navigation/native';
+import colors from '../ui/RangeSlider/Colors';
 
 const Profile = ({ navigation }) => {
     const { height, width } = Dimensions.get('window')
 
-    const [image, setImage] = useState(null);
     const [openModal, setOpenModal] = useState(false);
-    const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            allowsEditing: true,
-            quality: 1,
-        });
+    //data from local storage
+    const [profileData, setProfileData] = useState("");
+    //data from getprofile api
+    const [userProfileData, setUserProfileData] = useState('');
+    const [profileImg, setProfileImg] = useState(null);
+    //code for image loader
+    const [imgLoading, setImgLoading] = useState(false);
 
-        if (!result.canceled) {
-            const ImageUrl = result.assets[0].uri;
-            console.log('Image url recieved is', ImageUrl)
-            setImage(ImageUrl)
-            console.log(result.assets[0].uri);
-        } else {
-            alert('You did not select any image.');
-        }
-    }
+    useFocusEffect(
+        React.useCallback(() => {
+            getprofile();
+        }, [])
+    )
 
     const handleAccountDetails = () => {
-        navigation.navigate('AdminAccountDetails')
-    }
+        navigation.navigate('AccountDetails', {
+            user: userProfileData,
+            imageUpdated: () => {
+                console.log("Setting profile iamge null")
+                setProfileImg(null)
+            }
+        })
+    };
 
     const handleChangePassword = () => {
         navigation.navigate('ChangePassword')
@@ -51,6 +57,23 @@ const Profile = ({ navigation }) => {
         }
     }
 
+    //code for calling getprofile api
+    const getprofile = async () => {
+        console.log("Getting profile data")
+        try {
+            // const AuthToken = profileData.token;
+            let profileResult = await AsyncStorage.getItem("USER");
+            const data = JSON.parse(profileResult);
+            console.log('Auth token for admmin profile is :', data.token);
+            setUserProfileData(data.user)
+            setProfileImg(data.user.profile_image)
+        } catch (error) {
+            console.error('Error occured is :', error);
+        }
+    }
+
+
+
     return (
         <View style={{ display: 'flex', alignItems: 'center', height: height }}>
             {/*change if the screen is irResponsive height: height s*/}
@@ -65,21 +88,28 @@ const Profile = ({ navigation }) => {
                         Profile
                     </Text>
                     <View>
-                        {image ?
-                            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                <Image source={{ uri: image }} style={{ width: 148 / 430 * width, height: 148 / 930 * height, resizeMode: 'cover', marginTop: 50 / 930 * height, borderRadius: 100 }} />
-                                <Text style={{ fontWeight: '500', fontSize: 18, fontFamily: customFonts.medium, marginTop: 20 }}>
-                                    Username
-                                </Text>
-                            </View> :
-                            <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
-                                <TouchableOpacity onPress={pickImage}>
-                                    <Image source={require('../../../assets/Images3/uploadImage.png')}
-                                        style={{ height: 148 / 930 * height, width: 148 / 430 * width, resizeMode: 'contain' }}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                        }
+                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                            <Image
+                                source={profileImg ? { uri: userProfileData.profile_image } : require('../../../assets/Images3/imagePlaceholder.webp')}
+                                onLoadStart={() => {
+                                    setImgLoading(true);
+                                }}
+                                onLoadEnd={() => {
+                                    setImgLoading(false);
+                                }}
+                                style={{
+                                    width: 148 / 430 * width, height: 148 / 930 * height, resizeMode: 'cover',
+                                    marginTop: 50 / 930 * height, borderRadius: 100
+                                }} />
+
+                            {
+                                imgLoading ?
+                                    <View style={{ marginTop: -80 / 930 * height, height: 100 / 930 * height, }}>
+                                        <ActivityIndicator size={'small'} color={colors.blueColor} style={{}} />
+                                    </View> : null
+                            }
+
+                        </View>
                     </View>
 
                     <TouchableOpacity onPress={handleAccountDetails} style={{ marginTop: 30 }}>

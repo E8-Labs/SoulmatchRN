@@ -102,7 +102,12 @@ const DateDetails = ({ navigation, route }) => {
                             </View>
 
                             <View style={{ marginTop: 20 }}>
-                                <Image source={{ uri: UserDateDetails.imageUrl }} style={{ height: 240 / 930 * height, width: 370 / 430 * width, borderRadius: 10 }} />
+                                <Image
+                                    source={UserDateDetails.imageUrl ? { uri: UserDateDetails.imageUrl } :
+                                        require('../../../../assets/Images3/imagePlaceholder.webp')}
+                                    style={{
+                                        height: 240 / 930 * height, width: 370 / 430 * width, borderRadius: 10, resizeMode: 'cover'
+                                    }} />
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 25 }}>
                                 <Text style={styles.Budget}>
@@ -120,7 +125,7 @@ const DateDetails = ({ navigation, route }) => {
                                     {GetBudget(UserDateDetails)}
                                 </Text>
                                 <Text style={styles.RatingsValue}>
-                                    {/* {UserDateDetails.Category.name} */}
+                                    {UserDateDetails.Category.name}
                                 </Text>
                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
                                     <Image source={require('../../../../assets/Images3/RatingStar.png')} style={{ height: 18, width: 17, resizeMode: 'contain' }} />
@@ -129,13 +134,13 @@ const DateDetails = ({ navigation, route }) => {
                                     </Text>
                                 </View>
                             </View>
-                            <Text style={{ fontWeight: '400', fontSize: 16, fontFamily: customFonts.semibold, color: '#333333', marginTop: 15 }}>
+                            <Text style={{ fontWeight: '400', fontSize: 12, fontFamily: customFonts.regular, color: '#333333', marginTop: 15 }}>
                                 Hours of operation
                             </Text>
                             <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.medium, color: '#333333' }}>
                                 {moment(UserDateDetails.openTime, "HH:mm:ss").format("h:mm a")} - {moment(UserDateDetails.closeTime, "HH:mm:ss").format("h:mm a")}
                             </Text>
-                            <Text style={{ fontWeight: '400', fontSize: 16, fontFamily: customFonts.semibold, color: '#333333', marginTop: 8 }}>
+                            <Text style={{ fontWeight: '400', fontSize: 12, fontFamily: customFonts.regular, color: '#333333', marginTop: 8 }}>
                                 Description
                             </Text>
                             <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.medium, color: '#333333', marginTop: 3 }}>

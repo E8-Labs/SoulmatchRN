@@ -1,6 +1,6 @@
 import {
   View, Text, SafeAreaView, Dimensions, TouchableOpacity, Image, StyleSheet, Modal, ActivityIndicator,
-  Settings
+  Settings,DeviceEventEmitter
 } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import GlobalStyles from '../../assets/styles/GlobalStyles';
@@ -15,6 +15,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const { height, width } = Dimensions.get('window');
 const placholder = require('../../assets/images/imagePlaceholder.webp')
+import { BroadcastEvents } from '../../models/Constants';
 
 
 export default function ReserveNightScreen({ navigation, route }) {
@@ -40,6 +41,7 @@ export default function ReserveNightScreen({ navigation, route }) {
   const [showPicker, setShowPicker] = useState(false);
 
 
+
   useEffect(() => {
     const updateData = () => {
       console.log('user id is', data.date.id)
@@ -62,25 +64,9 @@ export default function ReserveNightScreen({ navigation, route }) {
 
     }
 
-    // let date = {
-    //   createdAt: "2024-07-01T04:42:36.818Z",
-    //   date: "2021-11-13",
-    //   datePlaceId: 64,
-    //   dateUserId: 16,
-    //   id: 31,
-    //   numberOfGuests: 2,
-    //   time: "2021-11-13T01:00:00.000Z",
-    //   userId: 15
-    // }
-
-    
-    // return
-
     setShowIndicator(true)
 
     const userData = await AsyncStorage.getItem("USER")
-
-
 
     if (userData) {
       let d = JSON.parse(userData)
@@ -109,7 +95,8 @@ export default function ReserveNightScreen({ navigation, route }) {
           if (json.status === true) {
             console.log('book date data', json.data)
             if (data.from === "ChatScreen") {
-              navigation.pop(2)
+                DeviceEventEmitter.emit(BroadcastEvents.EventUpcomingDateAdded,json.data)
+                navigation.pop(2)
               return
             }
 

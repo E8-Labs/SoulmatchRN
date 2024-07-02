@@ -23,6 +23,8 @@ import {
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import { Ionicons } from '@expo/vector-icons';
 import VoiceMessagePlayer from '../../Components/VoiceMessagePlayer'
+import { ImageViewer } from '../../Components/ImageViewer'
+
 
 const { height, width } = Dimensions.get('window');
 
@@ -49,11 +51,15 @@ export default function ChatScreen({ navigation, route }) {
     const [loading, setLoading] = useState(false)
     const [recording, setRecording] = useState();
     const [permissionResponse, requestPermission] = Audio.usePermissions();
-    const [openImage, setOpenImage] = useState(null);
+    const [openImage, setOpenImage] = useState(false);
     const [loadImage, setLoadImage] = useState(false);
     const [recordingPopup, setRecordingPopup] = useState(false);
-    // const [selectedMediaType,setselectedMediaType ]= useState(null)
+    const [visible, setIsVisible] = useState(false);
+    const [imageUrl, setImageUrl] = useState(null)
 
+    useEffect(()=>{
+        console.log("Image url changed ", imageUrl)
+    }, [imageUrl])
     const iceBreakers = [
         {
             id: 1,
@@ -473,7 +479,7 @@ export default function ChatScreen({ navigation, route }) {
             if (type === "voice") {
                 console.log('voice uri is', item.timestamp)
                 return (
-                    <VoiceMessagePlayer uri={item.voice} timestamp={item.timestamp} />
+                    <VoiceMessagePlayer uri={item.voice} timestamp={item.timestamp}/>
                 )
             }
             if (getMessageType(item) === "text") {
@@ -540,22 +546,14 @@ export default function ChatScreen({ navigation, route }) {
                         }}>
                             <TouchableOpacity
                                 onPress={() => {
-                                    let screenWidth = width;
-                                    let imHeight = 300;
-                                    if (item.image_width !== null && item.image_height !== null) {
-                                        imHeight = screenWidth * item.image_height / item.image_width;
-                                    }
-                                    let image = {
-                                        url: item.image_url,
-                                        imageheight: imHeight,
-                                        imagewidth: screenWidth
-                                    }
-                                    setOpenImage(image)
+                                   setImageUrl(item.image_url)
+                                    setOpenImage(true)
                                 }}
                             >
                                 <Image source={{ uri: item.image_url }}
                                     style={{ height: imageHeight, width: imageWidth, resizeMode: 'cover', borderRadius: 20 }}
                                     onLoadStart={() => {
+
                                         setLoadImage(true)
                                     }}
                                     onLoadEnd={() => {
@@ -571,6 +569,8 @@ export default function ChatScreen({ navigation, route }) {
                                     ) : null
                                 }
                             </TouchableOpacity>
+                            
+                            <ImageViewer swipeToCloseEnabled={true}  visible = {imageUrl !== null}  close = {()=>{setImageUrl(null)}} url = {imageUrl}/>
                             <Text style={{
                                 fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right',
                                 paddingTop: 10 / 430 * width
@@ -583,6 +583,12 @@ export default function ChatScreen({ navigation, route }) {
             }
         }
         else {
+            if (type === "voice") {
+                // console.log('voice uri is', item.createdAt)
+                return (
+                    <VoiceMessagePlayer uri={item.voice} timestamp={item.createdAt} fromMe = {false} />
+                )
+            }
             if (getMessageType(item) === "text") {
                 return (
                     <View style={{ alignItems: 'flex-start', width: width - 50, marginTop: 10 }}>
@@ -645,17 +651,8 @@ export default function ChatScreen({ navigation, route }) {
                         }}>
                             <TouchableOpacity
                                 onPress={() => {
-                                    let screenWidth = width;
-                                    let imHeight = 300;
-                                    if (item.image_width !== null && item.image_height !== null) {
-                                        imHeight = screenWidth * item.image_height / item.image_width;
-                                    }
-                                    let image = {
-                                        url: item.image_url,
-                                        imageheight: imHeight,
-                                        imagewidth: screenWidth
-                                    }
-                                    setOpenImage(image)
+                                   setImageUrl(item.image_url)
+                                    setOpenImage(true)
                                 }}
                             >
                                 <Image source={{ uri: item.image_url }}
@@ -676,6 +673,7 @@ export default function ChatScreen({ navigation, route }) {
                                     ) : null
                                 }
                             </TouchableOpacity>
+                            <ImageViewer swipeToCloseEnabled={true} visible = {imageUrl !== null}  close = {()=>{setImageUrl(null)}} url = {imageUrl}/>
                             <Text style={{
                                 fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right',
                                 paddingTop: 10 / 430 * width, width: 200, paddingRight: 5
@@ -973,31 +971,12 @@ export default function ChatScreen({ navigation, route }) {
                             </View>
                         </TouchableWithoutFeedback>
                     </Modal>
-                    <Modal
-                        visible={openImage !== null}
-                        animationType='fade'
-                        transparent={true}
-                    >
-                        <View style={{ height: height, width: width, backgroundColor: '#000000', alignItems: 'center', justifyContent: 'center' }}>
-                            <View style={{ height: height * 0.8, justifyContent: 'center', alignItems: 'center', width: width - 50 }}>
-                                <TouchableOpacity
-                                    style={{
-                                        backgroundColor: 'grey', position: 'absolute', top: 0, borderRadius: 50, height: 40, width: 40, right: 0,
-                                        alignItems: 'center', justifyContent: 'center'
-                                    }}
-                                    onPress={() => {
-                                        setOpenImage(null)
-                                    }} >
-                                    <Image source={require('../../assets/images/close.png')}
-                                        style={{ height: 30, width: 30 }}
-                                    />
-                                </TouchableOpacity>
-                                <Image source={{ uri: openImage && openImage.url }}
-                                    style={{ height: openImage && openImage.imageheight, width: openImage && openImage.imagewidth, borderRadius: 5 }}
-                                />
-                            </View>
-                        </View>
-                    </Modal>
+
+
+                   
+
+                    
+                   
                 </View>
             </KeyboardAvoidingView>
         </View>

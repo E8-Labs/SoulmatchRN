@@ -92,7 +92,7 @@
           "photosPermission": "Allow $(PRODUCT_NAME) to open the Photos",
           "cameraPermission": "Allow $(PRODUCT_NAME) to open the camera",
           "//": "Disables the microphone permission",
-          "microphonePermission": false
+          "microphonePermission": true
         }
       ],
       [
