@@ -17,6 +17,7 @@ export default function ProfileMain(props) {
   const [showLogoutPopup, setShowLogoutPopup] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
+  const [profileImg, setProfileImg] = useState(null);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -27,13 +28,18 @@ export default function ProfileMain(props) {
 
     }, [])
   );
+  // console.log('User profile image update is:', user.profile_image);
   const fetchProfile = async () => {
     setLoading(true);
     setError(null);
     try {
       const data = await getProfile();
-      setUser(data);
-      setMedia(data.media)
+      setUser(data); 
+      setProfileImg(data.profile_image);
+      console.log('image is',data.profile_image)
+      setMedia(data.media);
+      
+     
     } catch (err) {
       setError(err);
     } finally {
@@ -48,7 +54,7 @@ export default function ProfileMain(props) {
       await AsyncStorage.removeItem("FilterDiscovers")
       await AsyncStorage.removeItem("TempFilters")
       await AsyncStorage.removeItem("UserAnswers")
-      
+
       props.navigation.navigate('LoginUser')
     } catch (error) {
       console.log(error)
@@ -72,12 +78,12 @@ export default function ProfileMain(props) {
           flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 60, alignSelf: 'center',
         }}>
           <Text style={{ fontSize: 26, fontWeight: '500' }}>Profile</Text>
-          <TouchableOpacity 
-            onPress={() =>{
-              props.navigation.navigate("SelectedProfile",{
-                data:{
-                  user:user,
-                  from:"Profile"
+          <TouchableOpacity
+            onPress={() => {
+              props.navigation.navigate("SelectedProfile", {
+                data: {
+                  user: user,
+                  from: "Profile"
                 }
               })
             }}
@@ -90,8 +96,8 @@ export default function ProfileMain(props) {
             </View>
           </TouchableOpacity>
         </View>
-
-        <Image source={user && user.profile_image ? { uri: user.profile_image } : placholder}
+        {/* source={user && user.profile_image ? { uri: user.profile_image } : placholder} */}
+        <Image source={profileImg ? { uri: user.profile_image } : placholder}
           onLoadStart={() => {
             setLoadImage(true)
           }}
@@ -101,7 +107,12 @@ export default function ProfileMain(props) {
           style={{ height: 110 / 930 * height, width: 110 / 930 * height, borderRadius: 55, marginTop: 25 / 930 * height }}
         />
         {
-          loadImage && <ActivityIndicator size={'small'} color={colors.blueColor} style={{ marginTop: -110 / 930 * height, height: 110 }} />
+          
+          loadImage && (
+            <View style = {{height: 110 / 930 * height, width: 110 / 930 * height,marginTop:-60/930*height}}>
+               <ActivityIndicator size={'small'} color={colors.blueColor} style={{ }} />
+            </View>
+          )
         }
 
         <Text style={{ fontSize: 18, marginTop: 10 }}>
@@ -114,7 +125,12 @@ export default function ProfileMain(props) {
             <View style={{ flexDirection: 'column', gap: 10, alignItems: 'center', }}>
               <TouchableOpacity
                 onPress={() => {
-                  props.navigation.navigate('MyAccount')
+                  props.navigation.navigate('MyAccount', {
+                    imageUpdated: () => {
+                      console.log("Setting profile iamge null")
+                      setProfileImg(null)
+                    }
+                  })
                 }}
               >
                 <View style={styles.mainView}>
@@ -225,8 +241,8 @@ export default function ProfileMain(props) {
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity 
-                onPress={()=>{
+              <TouchableOpacity
+                onPress={() => {
                   props.navigation.navigate("SendFeedBack")
                 }}
               >

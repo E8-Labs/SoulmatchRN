@@ -18,17 +18,19 @@ const placholder = require('../../assets/images/imagePlaceholder.webp')
 
 
 export default function AccountDetails({ navigation, route }) {
-    const user = route.params.user
+    const user = route.params.user;
+    // let userImg = route.params.imageUpdated();
+    // console.log('Image updated is :', userImg);
     console.log('user from prev screen is', user)
 
-    const [firstName, setFirstName] = useState(user.first_name);
-    const [lastName, setLastName] = useState(user.last_name);
-    const [email, setEmail] = useState(user.email);
+    const [firstName, setFirstName] = useState(user.first_name !== null ? user.first_name : '');
+    const [lastName, setLastName] = useState(user.last_name !== null ? user.last_name : '');
+    const [email, setEmail] = useState(user.email !== null ? user.email : '');
     const [error, setError] = useState(null);
     const [marginTop, setmarginTop] = useState(null);
     const [showIndicator, setShowIndicator] = useState(false);
     const [showIndicator2, setShowIndicator2] = useState(false);
-    const [image, setImage] = useState(user.profile_image);
+    const [image, setImage] = useState(user.profile_image !== null ? user.profile_image : '');
     const [loadImage, setLoadImage] = useState(false);
 
     useEffect(() => {
@@ -90,7 +92,7 @@ export default function AccountDetails({ navigation, route }) {
 
             if (data) {
                 let d = JSON.parse(data)
-                //  console.log('user data is', d)
+                // console.log('user data is', d)
                 const result = await fetch(ApisPath.ApiUpdateProfile, {
                     method: 'post',
                     headers: {
@@ -106,10 +108,20 @@ export default function AccountDetails({ navigation, route }) {
                     setShowIndicator(false)
                     let json = await result.json();
                     if (json.status === true) {
+                        if(route.params.from === "Profile"){
 
-                        console.log('user profile after update image', json.data)
-                        d.user = json.data
-                        AsyncStorage.setItem("USER", JSON.stringify(d))
+                            route.params.imageUpdated()
+                            console.log('user profile', json.data)
+                            d.user = json.data
+                            AsyncStorage.setItem("USER", JSON.stringify(d))
+                        } else if(route.params.from === "MyAccount") {
+                            route.params.imageUpdated
+                            console.log('user profile', json.data)
+                            d.user = json.data
+                            AsyncStorage.setItem("USER", JSON.stringify(d))
+                        }
+                       
+
                         // navigation.goBack()
                     }
                     else {
@@ -141,7 +153,7 @@ export default function AccountDetails({ navigation, route }) {
 
             if (data) {
                 let d = JSON.parse(data)
-                //  console.log('user data is', d)
+                // console.log('user data is', d)
                 const result = await fetch(ApisPath.ApiUpdateProfile, {
                     method: 'post',
                     headers: {
@@ -204,14 +216,13 @@ export default function AccountDetails({ navigation, route }) {
                         <TouchableOpacity onPress={pickImage}>
                             <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 33 / 930 * height }}>
                                 <Image source={image ? { uri: image } : placholder}
+                                    style={{ height: 140 / 930 * height, width: 140 / 930 * height, resizeMode: 'cover', borderRadius: 70 }}
                                     onLoadStart={() => {
                                         setLoadImage(true)
                                     }}
                                     onLoadEnd={() => {
                                         setLoadImage(false)
-                                    }}
-                                    style={{ height: 140 / 930 * height, width: 140 / 930 * height, resizeMode: 'cover', borderRadius: 70 }}
-                                />
+                                    }} />
                                 <Image source={require('../../assets/images/edit.png')}
 
                                     style={{

@@ -35,7 +35,8 @@ const Profile = ({ navigation }) => {
             imageUpdated: () => {
                 console.log("Setting profile iamge null")
                 setProfileImg(null)
-            }
+            },
+            from:'Profile'
         })
     };
 
@@ -98,8 +99,8 @@ const Profile = ({ navigation }) => {
                                     setImgLoading(false);
                                 }}
                                 style={{
-                                    width: 148 / 430 * width, height: 148 / 930 * height, resizeMode: 'cover',
-                                    marginTop: 50 / 930 * height, borderRadius: 100
+                                    width: 148 / 930 * height, height: 148 / 930 * height, resizeMode: 'cover',
+                                    marginTop: 50 / 930 * height, borderRadius: 124
                                 }} />
 
                             {

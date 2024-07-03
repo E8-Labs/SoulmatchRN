@@ -9,10 +9,12 @@ import { getProfile } from '../../Services/ProfileServices/GetProfile';
 
 const { height, width } = Dimensions.get('window')
 
-export default function MyAccount({ navigation }) {
-    const [loading, setLoading] = useState(false)
+export default function MyAccount({ navigation, route }) {
+    let imageUpdated = route.params.imageUpdated();
+    // console.log('Image updated function on my account screen is :', imageUpdated);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState(null);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -66,7 +68,9 @@ export default function MyAccount({ navigation }) {
                         <TouchableOpacity
                             onPress={() => {
                                 navigation.navigate('AccountDetails', {
-                                    user: user
+                                    user: user,
+                                    imageUpdated: imageUpdated,
+                                    from:'MyAccount'
                                 })
                             }}
                         >
