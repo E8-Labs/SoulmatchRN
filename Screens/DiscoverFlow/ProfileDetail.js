@@ -640,9 +640,14 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                                                                 transition={1000}
                                                                                 style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
                                                                             />
-                                                                            <Image source={require('../../assets/images/playIcon.png')}
-                                                                                style={{ height: 50, width: 50, position: 'absolute', bottom: 100 / 930 * height, left: 150 / 430 * width }}
-                                                                            />
+                                                                            {
+                                                                                !loadImage4 && (
+                                                                                    <Image source={require('../../assets/images/playIcon.png')}
+                                                                                        style={{ height: 50, width: 50, position: 'absolute', bottom: 100 / 930 * height, left: 150 / 430 * width }}
+                                                                                    />
+                                                                                )
+                                                                            }
+
                                                                         </TouchableOpacity>
 
                                                                         {
@@ -802,16 +807,16 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                     }
 
                                     <Modal
-                                        visible={openCommentPopup }
+                                        visible={openCommentPopup}
                                         transparent={true}
                                         animationType='fade'
                                     >
                                         {/* <View>
                                             <Text>hellloorjnerifh</Text>
                                         </View> */}
-                                        <AddCommentPopup item = {commentedAnswer}   close={(data) => {
-                                            console.log('modal close here',data)
-                                            if(data === true){
+                                        <AddCommentPopup item={commentedAnswer} close={(data) => {
+                                            console.log('modal close here', data)
+                                            if (data === true) {
                                                 console.log('profile liked and now animate')
                                                 handleNext()
                                             }

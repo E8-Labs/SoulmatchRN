@@ -12,7 +12,7 @@ export const NavigateLogedUser = async (navigation, from) => {
     let data = u
     
     // return
-    if ( typeof data.role !== undefined && typeof data.role === 'admin') {
+    if ( typeof data.role !== undefined && data.role === 'admin') {
       navigation.navigate("AdminTabBarContainer", {
         data: {
           from: from

@@ -15,7 +15,7 @@ const placholder = require('../../assets/images/imagePlaceholder.webp')
 const { height, width } = Dimensions.get('window');
 const profile = require('../../assets/images/profileImage.png')
 
-export default function MessagesList({ navigate }) {
+export default function MessagesList({ navigation }) {
 
     const [messageList, setMesssageList] = useState([])
     const [loadImage, setLoadImage] = useState(false)
@@ -23,14 +23,47 @@ export default function MessagesList({ navigate }) {
     const [user, setUser] = useState(false)
     useFocusEffect(
         useCallback(() => {
-            getMessagesList()
+            // getMessagesList()
+            // getLastMessage()
+
         }, [])
     )
 
     useEffect(() => {
-        // getMessagesList()
+        getMessagesList()
+
+        console.log('rearranged messasges list is', messageList)
     }, [])
 
+    const getLastMessageObject = (lastMsg) => {
+        console.log('last message from chat screen is', lastMsg)
+
+        if (lastMsg) {
+            const index = messageList.findIndex(message => message.id === lastMsg.chatId)
+            if (index !== -1) {
+                let chat = messageList[index];
+                console.log('chat found at  ', index)
+                if(typeof messageList[index] != 'undefined'){
+                    messageList[index].lastMessage = lastMsg
+                }
+            }
+            messageList.sort((a, b) => new Date(b.lastMessage.createdAt) - new Date(a.lastMessage.createdAt));
+        }
+    }
+
+
+    const handleOnPress = (item) => {
+        readAllMessages(item)
+        navigation.navigate("ChatScreen", {
+            data: {
+                chat: item,
+                from: 'message'
+            },
+            LastMessage: getLastMessageObject
+        })
+
+
+    }
 
     const getMessagesList = async () => {
         setShowIndicator(true)
@@ -109,16 +142,16 @@ export default function MessagesList({ navigate }) {
     }
 
 
-    const getLastMessage = (item) =>{
+    const getLastMessage = (item) => {
         let message = item.lastMessage
-        if(message){
-            if(message.content){
+        if (message) {
+            if (message.content) {
                 return message.content
-            }else if(message.voice){
+            } else if (message.voice) {
                 return "Voice message"
-            } else if(message.thumb_url){
+            } else if (message.thumb_url) {
                 return "Video"
-            } else if(message.image_url){
+            } else if (message.image_url) {
                 return "Image"
             }
         }
@@ -127,92 +160,119 @@ export default function MessagesList({ navigate }) {
 
 
     return (
+
         <View style={{ width: width, height: height, alignItems: 'center' }}>
 
-            <View style={{ flexDirection: 'column', alignItems: 'center', width: width, height: height * 0.76, paddingBottom: 10, backgroundColor: 'white' }}>
-                {
-                    showIndicator ? (
-                        <View style={{ alignItems: 'center', width: width, height: height * 0.76, justifyContent: 'center' }}>
-                            <ActivityIndicator color={colors.blueColor} size={'large'} />
+            <View style={{ alignItems: 'center', height: height, backgroundColor: 'white' }}>
+
+                <View style={{
+                    backgroundColor: '#fff', height: 110 / 930 * height, width: width, shadowColor: 'grey', shadowOffset: {
+                        width: 0,
+                        height: 5
+                    }, shadowRadius: 5, shadowOpacity: 0.4,
+                }}>
+                    <View style={{
+                        alignItems: 'flex-end', flexDirection: 'row', height: 110 / 930 * height, width: width - 50, alignSelf: 'center', paddingBottom: 10,
+                        justifyContent: 'space-between',
+                    }}>
+                        <Text style={{ fontSize: 23, fontFamily: customFonts.meduim }}>Messages</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
+                            <TouchableOpacity>
+                                <Image source={require('../../assets/images/searchIcon.png')}
+                                    style={GlobalStyles.backBtnImage}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity>
+                                <Image source={require('../../assets/images/moreIcon.png')}
+                                    style={GlobalStyles.backBtnImage}
+                                />
+                            </TouchableOpacity>
+
                         </View>
-                    ) : (
-                        messageList && messageList.length > 0 ? (
-                            <FlatList
-                                showsVerticalScrollIndicator={false}
-                                data={messageList}
-                                renderItem={({ item }) => (
-                                    <>
-                                        <TouchableOpacity onPress={() => {
-                                            readAllMessages(item)
-                                            navigate(item)
+                    </View>
+                </View>
 
-                                        }} >
-                                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 60, alignSelf: 'center', paddingTop: 20, }}>
-                                                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                                                    <Image source={item.users[0] ? { uri: item.users[0].profile_image } : placholder}
-                                                        onLoadStart={() => {
-                                                            setLoadImage(true)
-                                                        }}
-                                                        onLoadEnd={() => {
-                                                            setLoadImage(false)
-                                                        }}
-                                                        style={{
-                                                            resizeMode: 'cover', height: 46 / 930 * height, width: 46 / 430 * width,
-                                                            opacity: item.unread ? 100 : 0.8, borderRadius: 25
-                                                        }}
-                                                    />
-                                                    {
-                                                        loadImage ? (
-                                                            <View style={{
-                                                                height: 46 / 930 * height, width: 46 / 430 * width, marginLeft: -50, alignItems: 'center', justifyContent: 'center'
+                <View style={{ flexDirection: 'column', alignItems: 'center', width: width, height: height * 0.76, paddingBottom: 10, backgroundColor: 'white' }}>
+                    {
+                        showIndicator ? (
+                            <View style={{ alignItems: 'center', width: width, height: height * 0.76, justifyContent: 'center' }}>
+                                <ActivityIndicator color={colors.blueColor} size={'large'} />
+                            </View>
+                        ) : (
+                            messageList && messageList.length > 0 ? (
+                                <FlatList
+                                    showsVerticalScrollIndicator={false}
+                                    data={messageList}
+                                    renderItem={({ item }) => (
+                                        <>
+                                            <TouchableOpacity onPress={() => handleOnPress(item)} >
+                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 60, alignSelf: 'center', paddingTop: 20, }}>
+                                                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                                                        <Image source={item.users[0] ? { uri: item.users[0].profile_image } : placholder}
+                                                            onLoadStart={() => {
+                                                                setLoadImage(true)
+                                                            }}
+                                                            onLoadEnd={() => {
+                                                                setLoadImage(false)
+                                                            }}
+                                                            style={{
+                                                                resizeMode: 'cover', height: 46 / 930 * height, width: 46 / 430 * width,
+                                                                opacity: item.unread ? 100 : 0.8, borderRadius: 25
+                                                            }}
+                                                        />
+                                                        {
+                                                            loadImage ? (
+                                                                <View style={{
+                                                                    height: 46 / 930 * height, width: 46 / 430 * width, marginLeft: -50, alignItems: 'center', justifyContent: 'center'
+                                                                }}>
+                                                                    <ActivityIndicator style={{}} size={'small'} color={colors.blueColor} />
+                                                                </View>
+                                                            ) : null
+                                                        }
+
+                                                        <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 3 }}>
+                                                            <Text style={{ fontSize: 14, fontFamily: customFonts.meduim, color: item.unread ? "#000" : colors.unreadColor }}>
+                                                                {item.users[0] && item.users[0].first_name} {item.users[0] && item.users[0].last_name}
+                                                            </Text>
+                                                            <Text numberOfLines={1} lineBreakMode='tail' style={{
+                                                                fontSize: 12, fontFamily: customFonts.regular, width: 230 / 430 * width, color: item.unread ? "#000" : colors.unreadColor
                                                             }}>
-                                                                <ActivityIndicator style={{}} size={'small'} color={colors.blueColor} />
-                                                            </View>
-                                                        ) : null
-                                                    }
-
-                                                    <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 3 }}>
-                                                        <Text style={{ fontSize: 14, fontFamily: customFonts.meduim, color: item.unread ? "#000" : colors.unreadColor }}>
-                                                            {item.users[0] && item.users[0].first_name} {item.users[0] && item.users[0].last_name}
+                                                                {getLastMessage(item)}
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{ flexDirection: 'column', alignItems: 'flex-end', gap: 3 }}>
+                                                        <Text style={{ fontSize: 12, fontFamily: customFonts.regular, color: item.unread ? "#000" : colors.unreadColor }}>
+                                                            {item.lastMessage ? moment(item.lastMessage.createdAt).format('h:mm A') : ''}
                                                         </Text>
-                                                        <Text numberOfLines={1} lineBreakMode='tail' style={{
-                                                            fontSize: 12, fontFamily: customFonts.regular, width: 230 / 430 * width, color: item.unread ? "#000" : colors.unreadColor
-                                                        }}>
-                                                           {getLastMessage(item)}
-                                                        </Text>
+                                                        {
+                                                            item.unread ? (
+                                                                <View style={{ backgroundColor: colors.blueColor, height: 20, borderRadius: 50, width: 20, alignItems: 'center', justifyContent: 'center' }}>
+                                                                    <Text style={{ fontSize: 10, fontFamily: customFonts.meduim, color: 'white' }}>{item.unread}</Text>
+                                                                </View>
+                                                            ) : ''
+                                                        }
                                                     </View>
                                                 </View>
-                                                <View style={{ flexDirection: 'column', alignItems: 'flex-end', gap: 3 }}>
-                                                    <Text style={{ fontSize: 12, fontFamily: customFonts.regular, color: item.unread ? "#000" : colors.unreadColor }}>
-                                                        {item.lastMessage ? moment(item.lastMessage.createdAt).format('h:mm A'):''}
-                                                    </Text>
-                                                    {
-                                                        item.unread ? (
-                                                            <View style={{ backgroundColor: colors.blueColor, height: 20, borderRadius: 50, width: 20, alignItems: 'center', justifyContent: 'center' }}>
-                                                                <Text style={{ fontSize: 10, fontFamily: customFonts.meduim, color: 'white' }}>{item.unread}</Text>
-                                                            </View>
-                                                        ) : ''
-                                                    }
-                                                </View>
-                                            </View>
-                                        </TouchableOpacity>
+                                            </TouchableOpacity>
 
-                                        <View style={[GlobalStyles.divider]}></View>
-                                    </>
+                                            <View style={[GlobalStyles.divider]}></View>
+                                        </>
 
 
 
-                                )}
+                                    )}
 
-                            />
-                        ) : (
-                            <View style={{ alignItems: 'center', width: width, height: height * 0.76, justifyContent: 'center' }}>
-                                <Text style={{ fontSize: 20 }}>No chats</Text>
-                            </View>
+                                />
+                            ) : (
+                                <View style={{ alignItems: 'center', width: width, height: height * 0.76, justifyContent: 'center' }}>
+                                    <Text style={{ fontSize: 20 }}>No chats</Text>
+                                </View>
+                            )
+
                         )
-
-                    )
-                }
+                    }
+                </View>
             </View>
         </View>
     )

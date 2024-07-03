@@ -17,6 +17,9 @@ import FilterPopup from '../../Components/FilterPopup';
 import DiscoverGotMatch from '../../Components/DiscoverGotMatch';
 import { getDistance } from 'geolib';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import DistanceCalculator from '../../Components/DistanceCalculator';
+
+
 const { height, width } = Dimensions.get('window')
 
 const blurhash =
@@ -32,7 +35,7 @@ export default function SelectedProfile({ navigation, route }) {
 
     const data = route.params.data
     let user = data.user
-    // console.log('user data from prev screen', user)
+    console.log('user data from prev screen', user)
 
     const [totalInches, setTotalInches] = useState(null)
     const [selected, setSelected] = useState('');
@@ -66,35 +69,11 @@ export default function SelectedProfile({ navigation, route }) {
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     }
 
-    const calculateDistance = async () => {
-        const data = await AsyncStorage.getItem("USER")
-
-        if (data) {
-            let d = JSON.parse(data)
-            // console.log('user data fro local is', d)
-            // setLocalUser(d)
-            if (d.user.lat !== null || d.user.lang !== null || user.lang !== null || user.lat !== null) {
-                let loaclLat = d.user.lat
-                let localLong = d.user.lang
-                let lat = user.lat
-                let lang = user.lang
-
-                const distance = getDistance(
-                    { latitude: loaclLat, longitude: localLong },
-                    { latitude: lat, longitude: lang }
-                );
-                console.log('total distance is', distance)
-                const distanceInMiles = distance / 1000 * 0.621371;
-                return distanceInMiles
-            }
-        }
-    }
-    // calculateDistance()
 
 
     const handleLike = async () => {
 
-        if(data.from === "Profile"){
+        if (data.from === "Profile") {
             return
         }
 
@@ -144,7 +123,7 @@ export default function SelectedProfile({ navigation, route }) {
     };
 
     const handleReject = async () => {
-        if(data.from === "Profile"){
+        if (data.from === "Profile") {
             return
         }
         console.log('trying to likes profile')
@@ -189,7 +168,7 @@ export default function SelectedProfile({ navigation, route }) {
 
 
     const handleOnpress = (item) => {
-        if(data.from === "Profile"){
+        if (data.from === "Profile") {
             return
         }
         const selectedIndex = selected.indexOf(item.id);
@@ -356,7 +335,8 @@ export default function SelectedProfile({ navigation, route }) {
                                 <Image source={require('../../assets/images/location.png')}
                                     style={styles.viewImage}
                                 />
-                                <Text style={styles.viewText}>{ } miles</Text>
+                                    
+                                        <DistanceCalculator userId={user.id} lat={user.lat} lang={user.lang} />
                             </View>
                             <View style={styles.viewStyle}>
                                 <Image source={require('../../assets/images/eduCap.png')}
@@ -398,9 +378,9 @@ export default function SelectedProfile({ navigation, route }) {
                                             marginTop: 22 / 930 * height,
                                         }}>
                                             {
-                                                item.caption ? (
+                                                item.caption !== "null" ? (
                                                     <Text style={{ fontSize: 16, fontFamily: customFonts.regular }}>{item.caption}</Text>
-                                                ) : null
+                                                ) : ""
                                             }
                                             {/* {
                                             item.hashtage ? (
@@ -556,7 +536,7 @@ export default function SelectedProfile({ navigation, route }) {
                                                                 <Text style={{ fontSize: 14, fontFamily: customFonts.regular, color: '#000', width: 320 / 430 * width, textAlign: 'left' }}>{item.answerText}</Text>
 
                                                             </View>
-                                                            <TouchableOpacity style={{ alignSelf: 'flex-end', marginRight:20/430*width}}
+                                                            <TouchableOpacity style={{ alignSelf: 'flex-end', marginRight: 20 / 430 * width }}
                                                                 onPress={() => {
                                                                     handleOnpress(item)
                                                                 }}

@@ -12,6 +12,7 @@ import MessageMain from "./MessageMain";
 import DatesMain from "./DatesMain";
 import ProfileMain from "./ProfileMain";
 import DatesContainer from "../DatesFlow/DatesContainer";
+import MessagesList from "../ChatFlow/MessagesList";
 
 const Tab = createBottomTabNavigator()
 
@@ -320,7 +321,7 @@ export default function TabBarContainer() {
 
                 }}
             />
-            <Tab.Screen name="Messages" component={MessageMain}
+            <Tab.Screen name="Messages" component={MessagesList}
                 options={{
                     tabBarShowLabel: true,
                     tabBarIcon: ({ focused }) =>

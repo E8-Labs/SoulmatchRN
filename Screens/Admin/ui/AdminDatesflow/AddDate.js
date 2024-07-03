@@ -174,18 +174,18 @@ const AddDate = ({ navigation, route }) => {
 
     useEffect(() => {
         if (Budget === '$80 + = $$$$') {
-            setMinBudget('80')
-            setMaxBudget('100000000')
+            setMinBudget(80)
+            setMaxBudget(10000000)
             // console.log('Budget valus is', MinBudget)
         } else if (Budget === '$50 - $80 = $$$') {
-            setMinBudget('50')
-            setMaxBudget('80')
+            setMinBudget(50)
+            setMaxBudget(80)
         } else if (Budget === '$20 - $50 = $$') {
-            setMinBudget('20')
-            setMaxBudget('50')
+            setMinBudget(20)
+            setMaxBudget(50)
         } else if (Budget === '$0 - $20 = $') {
-            setMinBudget('0')
-            setMaxBudget('20')
+            setMinBudget(0)
+            setMaxBudget(20)
         }
     }, [Budget])
 
@@ -463,6 +463,7 @@ const AddDate = ({ navigation, route }) => {
                 if (response.ok) {
                     const UpdateData = await response.json();
                     console.log('Response of update api is :', UpdateData);
+                    route.params.updateDate(UpdateData);
                     navigation.pop();
                 } else {
                     console.log('Response is not ok :', response);
@@ -568,7 +569,9 @@ const AddDate = ({ navigation, route }) => {
 
                         {image ?
                             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                <Image source={{ uri: image }} style={{ width: 148 / 430 * width, height: 148 / 930 * height, resizeMode: 'cover', marginTop: 30 / 930 * height, borderRadius: 100 }} />
+                                <TouchableOpacity onPress={pickImage}>
+                                    <Image source={image ? { uri: image } : require('../../../../assets/Images3/imagePlaceholder.webp')} style={{ width: 148 / 430 * width, height: 148 / 930 * height, resizeMode: 'cover', marginTop: 30 / 930 * height, borderRadius: 100 }} />
+                                </TouchableOpacity>
                             </View> :
                             <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
                                 <TouchableOpacity onPress={pickImage}>

@@ -8,22 +8,62 @@ import colors from '../RangeSlider/Colors'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import moment from 'moment'
 import { GetBudget } from '../../../../Services/dates/GetBudget'
+import { useFocusEffect } from '@react-navigation/native'
 
 const DateDetails = ({ navigation, route }) => {
     const { height, width } = Dimensions.get('window')
-
-    const router = route.params.DATA
-    console.log("Data passed is :", router.DateDetails.Category);
-    const UserDateDetails = router.DateDetails;
+    const router = route.params.DATA;
+    // const UD = route.params.DATA;
+    // console.log("Data from update is :", UD);
+    // console.log("Data passed is :", router.DateDetails.Category);
 
     const [openModal, setOpenModal] = useState(false);
     const [Loading, setLoading] = useState(false);
+
+    const [dateDetails, setDateDetails] = useState({})
+
+
+
+    const From = router.from;
+    console.log("I am comming from :", From);
+    const UserDateDetails = router.DateDetails;
+    console.log("UserDate details are :", UserDateDetails);
+
+    useEffect(() => {
+        setDateDetails(router)
+        const update = () => {
+            setDateDetails(router.DateDetails)
+        }
+        update()
+    }, [])
+
+    useEffect(() => {
+        console.log("Data of date updated ", dateDetails)
+    }, [dateDetails])
+
+    // useFocusEffect(
+    // React.useCallback(() => {
+    // if (route.params.DATA.from === 'Dates') {
+    // console.log("Cmdsnfksknzxkvksdai :", From);
+    // setUserDateDetails2(router.DateDetails);
+    // }else if(route.params.DATA.from === 'UpdateDate'){
+    // console.log("Coming from update :", route.params.DATA.from);
+    // setUserDateDetails2(UD)
+    // }
+    // }, [])
+    // );
+
+    const [updateDate, setUpdateDate] = useState('');
+
+    console.log("Date updated data is :", updateDate.data);
+    console.log("Data from previous screen is :", UserDateDetails);
 
     const handleModalclick = () => {
         setOpenModal(true);
     }
 
-    const handleBackClick = () => {
+    const handleBackClick = (UpdateData) => {
+        route.params.DateUpdated(dateDetails);
         navigation.pop();
     }
 
@@ -32,6 +72,10 @@ const DateDetails = ({ navigation, route }) => {
             DATA: {
                 dateDetails: UserDateDetails,
                 from: 'EditDate',
+            },
+            updateDate: (UpdateData) => {
+                // console.log("Updated Dat")
+                setDateDetails(UpdateData.data);
             }
         })
     }
@@ -47,14 +91,14 @@ const DateDetails = ({ navigation, route }) => {
 
                 const AuthToken = d.token
                 // const ApiUrl = "https://plurawlapp.com/soulmatch/api/admin/dates/delete_date_place"
-                console.log("USerId is :", UserDateDetails.id);
+                console.log("USerId is :", dateDetails.id);
                 const response = await fetch(Apis.DeleteDate, {
                     'method': 'post',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': 'Bearer ' + AuthToken
                     },
-                    body: JSON.stringify({ id: UserDateDetails.id })
+                    body: JSON.stringify({ id: dateDetails.id })
                 });
                 console.log('Result is', response)
                 if (response.ok) {
@@ -73,6 +117,7 @@ const DateDetails = ({ navigation, route }) => {
             setLoading(false);
         }
     }
+    // return
     return (
         <SafeAreaView>
             <View style={{ display: 'flex', alignItems: 'center', height: height }}>
@@ -93,7 +138,7 @@ const DateDetails = ({ navigation, route }) => {
                                         </View>
                                     </TouchableOpacity>
                                     <Text style={{ fontWeight: '500', fontSize: 22, fontFamily: customFonts.medium }}>
-                                        {UserDateDetails.name}
+                                        {dateDetails.name}
                                     </Text>
                                 </View>
                                 <TouchableOpacity onPress={handleModalclick} style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -103,48 +148,79 @@ const DateDetails = ({ navigation, route }) => {
 
                             <View style={{ marginTop: 20 }}>
                                 <Image
-                                    source={UserDateDetails.imageUrl ? { uri: UserDateDetails.imageUrl } :
+                                    source={dateDetails.imageUrl ? { uri: dateDetails.imageUrl } :
                                         require('../../../../assets/Images3/imagePlaceholder.webp')}
                                     style={{
                                         height: 240 / 930 * height, width: 370 / 430 * width, borderRadius: 10, resizeMode: 'cover'
                                     }} />
                             </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 25 }}>
-                                <Text style={styles.Budget}>
-                                    Budget
-                                </Text>
-                                <Text style={styles.Budget}>
-                                    Category
-                                </Text>
-                                <Text style={styles.Budget}>
-                                    Ratings
-                                </Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
-                                <Text style={styles.RatingsValue}>
-                                    {GetBudget(UserDateDetails)}
-                                </Text>
-                                <Text style={styles.RatingsValue}>
-                                    {UserDateDetails.Category.name}
-                                </Text>
-                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
-                                    <Image source={require('../../../../assets/Images3/RatingStar.png')} style={{ height: 18, width: 17, resizeMode: 'contain' }} />
-                                    <Text style={[styles.RatingsValue, { height: 26 }]}>
-                                        5.0
+                            {/* <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 25 }}>
+ <Text style={styles.Budget}>
+ Budget
+ </Text>
+ <Text style={styles.Budget}>
+ Category
+ </Text>
+ <Text style={styles.Budget}>
+ Ratings
+ </Text>
+ </View>
+ <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
+ <Text style={styles.RatingsValue}>
+ {GetBudget(dateDetails)}
+ </Text>
+ <Text style={styles.RatingsValue}>
+ {dateDetails.Category ? dateDetails.Category.name : ""}
+ </Text>
+ <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
+ <Image source={require('../../../../assets/Images3/RatingStar.png')} style={{ height: 18, width: 17, resizeMode: 'contain' }} />
+ <Text style={[styles.RatingsValue, { height: 26 }]}>
+ 5.0
+ </Text>
+ </View>
+ </View> */}
+
+                            <View style={{ marginTop: 25, flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <View>
+                                    <Text style={styles.Budget}>
+                                        Budget
+                                    </Text>
+                                    <Text style={[styles.RatingsValue, { textAlign: 'start' }]}>
+                                        {GetBudget(dateDetails)}
                                     </Text>
                                 </View>
+                                <View>
+                                    <Text style={styles.Budget}>
+                                        Category
+                                    </Text>
+                                    <Text style={styles.RatingsValue}>
+                                        {dateDetails.Category ? dateDetails.Category.name : ""}
+                                    </Text>
+                                </View>
+                                <View>
+                                    <Text style={styles.Budget}>
+                                        Ratings
+                                    </Text>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
+                                        <Image source={require('../../../../assets/Images3/RatingStar.png')} style={{ height: 18, width: 17, resizeMode: 'contain' }} />
+                                        <Text style={[styles.RatingsValue, { height: 22 }]}>
+                                            {dateDetails.rating}
+                                        </Text>
+                                    </View>
+                                </View>
                             </View>
+
                             <Text style={{ fontWeight: '400', fontSize: 12, fontFamily: customFonts.regular, color: '#333333', marginTop: 15 }}>
                                 Hours of operation
                             </Text>
                             <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.medium, color: '#333333' }}>
-                                {moment(UserDateDetails.openTime, "HH:mm:ss").format("h:mm a")} - {moment(UserDateDetails.closeTime, "HH:mm:ss").format("h:mm a")}
+                                {moment(dateDetails.openTime, "HH:mm:ss").format("h:mm a")} - {moment(dateDetails.closeTime, "HH:mm:ss").format("h:mm a")}
                             </Text>
                             <Text style={{ fontWeight: '400', fontSize: 12, fontFamily: customFonts.regular, color: '#333333', marginTop: 8 }}>
                                 Description
                             </Text>
                             <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.medium, color: '#333333', marginTop: 3 }}>
-                                {UserDateDetails.description}
+                                {dateDetails.description}
                             </Text>
                             <Text style={{ fontWeight: '500', fontSize: 20, fontFamily: customFonts.medium, marginTop: 10 }}>
                                 Reviews
@@ -277,8 +353,8 @@ const DateDetails = ({ navigation, route }) => {
                     </Modal>
 
                 </View>
-            </View>
-        </SafeAreaView>
+            </View >
+        </SafeAreaView >
     )
 }
 
@@ -289,13 +365,14 @@ const styles = StyleSheet.create({
         fontWeight: '400',
         fontFamily: customFonts.regular,
         fontSize: 12,
-        color: '#333333'
+        color: '#333333',
+        textAlign: 'center'
     },
     RatingsValue: {
         fontWeight: '500',
         fontSize: 18,
         fontFamily: customFonts.medium,
         color: '#333333',
-        width: '35%',
+        textAlign: 'center'
     }
 })

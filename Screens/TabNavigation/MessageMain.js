@@ -11,7 +11,7 @@ export default function MessageMain(props) {
   return (
     <View style={{ alignItems: 'center', height: height,backgroundColor:'white' }}>
 
-      <View style={{
+      {/* <View style={{
         backgroundColor: 'white', height: 110 / 930 * height, width: width, shadowColor: '#000', shadowOffset: {
           width: 0,
           height: 5
@@ -36,7 +36,7 @@ export default function MessageMain(props) {
 
           </View>
         </View>
-      </View>
+      </View> */}
 
       <MessagesList navigate={(chat) => {
         console.log("User selected ", chat)

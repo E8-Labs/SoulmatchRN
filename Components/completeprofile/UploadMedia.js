@@ -24,6 +24,7 @@ const UploadMedia = ({ navigation, route }) => {
     const [popup, setPopup] = useState(false)
     const [popup2, setPopup2] = useState(false)
     const [loadImage, setLoadImage] = useState(false)
+    const [loadImage2, setLoadImage2] = useState(false)
     const handleModalclick = () => {
         setPopup(true);
         setError(null)
@@ -153,7 +154,7 @@ const UploadMedia = ({ navigation, route }) => {
             setselectedMediaType(result.assets[0].type)
 
             console.log(result.assets[0].uri);
-        }else{
+        } else {
             setPopup(false)
         }
     };
@@ -246,7 +247,7 @@ const UploadMedia = ({ navigation, route }) => {
 
     const deleteMedia = async (media, type) => {
         setShowIndicator2(true)
-        const data =await AsyncStorage.getItem("USER")
+        const data = await AsyncStorage.getItem("USER")
 
         try {
             console.log(`deleting media ${media} of type ${type}`)
@@ -270,7 +271,7 @@ const UploadMedia = ({ navigation, route }) => {
                     if (json.status === true) {
                         setMedia(json.data)
                         d.user = json.data
-                                  AsyncStorage.setItem("USER",JSON.stringify(d))
+                        AsyncStorage.setItem("USER", JSON.stringify(d))
 
                         console.log('media deleted', json.data)
                     } else {
@@ -301,7 +302,7 @@ const UploadMedia = ({ navigation, route }) => {
                         </View>
                     </TouchableOpacity>
                     <Text style={{ fontWeight: '500', fontSize: 24, marginLeft: 20 / 430 * width }}>
-                       { data.from === "profile" ? "Media":"Complete your profile"}
+                        {data.from === "profile" ? "Media" : "Complete your profile"}
                     </Text>
                 </View>
                 {
@@ -346,7 +347,7 @@ const UploadMedia = ({ navigation, route }) => {
                     <View style={{ display: 'flex', alignItems: 'center', marginTop: 50 / 930 * height }}>
 
                     </View>
-                    <FlatList style={{ height:data.from !== "profile"? height * 0.53:height*0.65, width: width }} showsVerticalScrollIndicator={false}
+                    <FlatList style={{ height: data.from !== "profile" ? height * 0.53 : height * 0.65, width: width }} showsVerticalScrollIndicator={false}
                         data={media ? [{ type: 'Button' }, ...media] : [{ type: 'Button' }]}
                         keyExtractor={(item, index) => `${item.type}-${index}`}
                         renderItem={({ item, index }) => {
@@ -378,20 +379,69 @@ const UploadMedia = ({ navigation, route }) => {
                                                     {
                                                         item.caption !== "null" ? <Text style={{ fontSize: 16, fontFamily: customFonts.regular, color: 'black' }}>
                                                             {item.caption}
-                                                        </Text> : null
+                                                        </Text> : ""
                                                     }
-                                                    <Image source={{ uri: item.type === "video" ? item.thumb_url : item.url }}
-                                                        onLoadStart={() => { setLoadImage(true) }}
-                                                        onLoadEnd={() => {
-                                                            setLoadImage(false)
-                                                        }}
-                                                        placeholder={blurhash}
-                                                        contentFit="cover"
-                                                        transition={1000}
-                                                        style={{ resizeMode: 'cover', width: 338 / 430 * width, height: 232 / 930 * height, borderRadius: 10, }}
-                                                    />
                                                     {
-                                                        loadImage && <ActivityIndicator size={'small'} style={{ position: 'relative', top: -130 }} color={colors.blueColor} />
+                                                        item.type === "image" ? (
+                                                            <>
+                                                                <Image source={{ uri: item.url }}
+                                                                    onLoadStart={() => { setLoadImage2(true) }}
+                                                                    onLoadEnd={() => {
+                                                                        setLoadImage(false)
+                                                                    }}
+                                                                    placeholder={blurhash}
+                                                                    contentFit="cover"
+                                                                    transition={1000}
+                                                                    style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
+                                                                />
+
+                                                                {
+                                                                    loadImage2 ? (
+                                                                        <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 150 }} />
+                                                                    ) : <></>
+                                                                }
+                                                            </>
+
+                                                        ) : (
+                                                            item.type === "video" ? (
+                                                                <>
+                                                                    <TouchableOpacity
+                                                                        onPress={() => {
+                                                                            navigation.navigate("VideoPlayer",{
+                                                                                data:{
+                                                                                    url:item.image_url
+                                                                                }
+                                                                            })
+                                                                        }}
+                                                                    >
+                                                                        <Image source={{ uri: item.thumb_url }}
+                                                                            onLoadStart={() => { setLoadImage(true) }}
+                                                                            onLoadEnd={() => {
+                                                                                setLoadImage(false)
+                                                                            }}
+                                                                            placeholder={blurhash}
+                                                                            contentFit="cover"
+                                                                            transition={1000}
+                                                                            style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
+                                                                        />
+                                                                        {
+                                                                            !loadImage && (
+                                                                                <Image source={require('../../assets/images/playIcon.png')}
+                                                                                    style={{ height: 50, width: 50, position: 'absolute', bottom: 100 / 930 * height, left: 150 / 430 * width }}
+                                                                                />
+                                                                            )
+                                                                        }
+
+                                                                    </TouchableOpacity>
+
+                                                                    {
+                                                                        loadImage ? (
+                                                                            <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 120, left: 160 }} />
+                                                                        ) : <></>
+                                                                    }
+                                                                </>
+                                                            ) : ''
+                                                        )
                                                     }
 
                                                 </View>
@@ -502,7 +552,7 @@ const UploadMedia = ({ navigation, route }) => {
                                     </View>
                                     {
                                         showIndicator ? (
-                                            <ActivityIndicator size={'large'} color={colors.blueColor} style = {{ marginTop: 10,}}/>
+                                            <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop: 10, }} />
                                         ) : (
                                             <TouchableOpacity
                                                 onPress={uploadMedia}

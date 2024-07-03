@@ -9,7 +9,7 @@ const {height,width} = Dimensions.get('window')
 
 export default function MoreOptionsPopup({visible,close, handleMenu}) {
 
-console.log("Modal 2 visible ", visible)
+// console.log("Modal 2 visible ", visible)
 
     function onpresshandle  () {
         // modal3 = true

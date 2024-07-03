@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         fontFamily: customFonts.medium,
         fontSize: 16,
-        color: '#333333'
+        color: '#000'
     },
     feedBackInput: {
         padding: 16,
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
         borderColor: '#CCCCCC',
         borderRadius: 10,
         width: '100%',
-        color: '#999999',
+        color: '#000',
         fontWeight: '500',
         marginTop: 5
     },

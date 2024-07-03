@@ -32,7 +32,7 @@ export default function ChangeIntroVideo({ navigation, route }) {
     let thumbnail = ''
 
     useEffect(() => {
-        if (user&&user.introVideo !== null) {
+        if (user && user.introVideo !== null) {
             videoSource = user.intro_video
             thumbnail = user.intro_video_thumbnail
         }
@@ -52,8 +52,10 @@ export default function ChangeIntroVideo({ navigation, route }) {
     const [introVideo, setIntroVideo] = useState(null);
     const [isPlaying, setIsPlaying] = useState(true);
     const [duration, setDuration] = useState(0);
+    const [isSaving, setIsSaving] = useState(false)
+    const [showButton, setShowButton] = useState(false)
+
     const videoRef = React.useRef(null);
-    const [status, setStatus] = React.useState({});
     const ref = useRef(null);
 
     const formatDuration = (durationMillis) => {
@@ -135,12 +137,14 @@ export default function ChangeIntroVideo({ navigation, route }) {
             // console.log(result.assets[0].uri);
             // const introVideo = { video: ImageUrl, thumbnail: thumbnail }
             // uploadVideo(introVideo)
-        }else{
+        } else {
             setPopup(false)
         }
     };
 
     const uploadVideo = async () => {
+
+        setIsSaving(true)
 
         const formdata = new FormData()
         formdata.append(
@@ -180,6 +184,7 @@ export default function ChangeIntroVideo({ navigation, route }) {
                     let json = await result.json();
                     console.log('json ', json)
                     if (json.status === true) {
+                        setIsSaving(false)
                         console.log('video uploaded')
                         setVideo(json.data.intro_video)
                         d.user = json.data
@@ -265,7 +270,9 @@ export default function ChangeIntroVideo({ navigation, route }) {
         <View style={{ height: height, width: width, alignItems: 'center', }}>
             <View style={{ justifyContent: 'space-between', width: width - 60, marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
                 <TouchableOpacity onPress={() => {
-
+                    if (isSaving) {
+                        return
+                    }
                     navigation.goBack()
                 }}>
                     <View style={GlobalStyles.backBtn}>
@@ -319,9 +326,14 @@ export default function ChangeIntroVideo({ navigation, route }) {
                                     transition={1000}
                                     style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 60 }}
                                 />
-                                <Image source={require('../../assets/images/playIcon.png')}
-                                    style={{ height: 50, width: 50, position: 'absolute', bottom: 90 / 930 * height, left: 150 / 430 * width }}
-                                />
+                                {
+                                    !loadVideo && (
+                                        <Image source={require('../../assets/images/playIcon.png')}
+                                            style={{ height: 50, width: 50, position: 'absolute', bottom: 90 / 930 * height, left: 150 / 430 * width }}
+                                        />
+                                    )
+                                }
+
                             </TouchableOpacity>
 
 
@@ -374,6 +386,9 @@ export default function ChangeIntroVideo({ navigation, route }) {
 
                         <TouchableOpacity
                             onPress={() => {
+                                if (isSaving) {
+                                    return
+                                }
                                 setPopup(true)
                             }}
                             style={GlobalStyles.reqtengularBtn}>

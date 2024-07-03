@@ -7,6 +7,7 @@ import Apis from "../apis/Apis"
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useFocusEffect } from '@react-navigation/native'
 import { DateFilterpoupAdmin } from '../ui/AdminDatesflow/DateFilterpoupAdmin'
+import colors from '../../../assets/colors/Colors'
 
 
 
@@ -32,7 +33,16 @@ const User = ({ navigation }) => {
     //code for users filter
     const [filterUserAddress, setFilterUserAddress] = useState('');
     const [openFilterModal, setOpenFilterModal] = useState(false);
+    const [imgLoading, setImgLoading] = useState(false)
 
+    //code for img loading
+    const handleImageLoadStart = (uri) => {
+        setImgLoading(prevState => ({ ...prevState, [uri]: true }));
+    };
+
+    const handleImageLoadEnd = (uri) => {
+        setImgLoading(prevState => ({ ...prevState, [uri]: false }));
+    };
 
     //handleUser Details
     const handleUserDetails = (item, index) => {
@@ -305,7 +315,20 @@ const User = ({ navigation }) => {
                         {AdminUsers && AdminUsers.map((item, index) => (
                             <TouchableOpacity onPress={() => handleUserDetails(item.id, index)} key={index} style={{ marginTop: 10 }}>
                                 <View style={{ borderWidth: 1, flexDirection: 'column', gap: 5, borderColor: '#E6E6E6', borderRadius: 10, padding: 12, width: 176 / 430 * width }}>
-                                    <Image source={item.profile_image ? { uri: item.profile_image } : require('../../../assets/Images3/imagePlaceholder.webp')} style={{ height: 98 / 930 * height, width: 152 / 430 * width, borderRadius: 6, resizeMode: 'cover' }} />
+                                    <Image
+                                        // onLoadStart={() => handleImageLoadStart(item.profile_image)}
+                                        // onLoadEnd={() => handleImageLoadEnd(item.profile_image)}
+                                        source={item.profile_image ? { uri: item.profile_image } :
+                                            require('../../../assets/Images3/imagePlaceholder.webp')}
+                                        style={{
+                                            height: 98 / 930 * height, width: 152 / 430 * width, borderRadius: 6, resizeMode: 'cover'
+                                        }} />
+                                    {/* {
+ imgLoading ?
+ <View style={{ width: 176 / 430 * width }}>
+ <ActivityIndicator size={'small'} color={colors.blueColor} />
+ </View> : ""
+ } */}
                                     <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, marginTop: 7 }}>
                                         {item.first_name} {item.last_name}
                                     </Text>

@@ -71,12 +71,28 @@ const Dates = ({ navigation }) => {
 
     }, [searchUser]);
 
+    // useFocusEffect(
+    // React.useCallback(() => {
+    // GetDates()
+    // }, [])
+    // )
+
     //get delete dates api
     const deleteDates = (index) => {
         console.log("Deleting user at index", index)
         const newItems = [...DATA];
         newItems.splice(index, 1);
         setData(newItems);
+    }
+
+    const updateDate = (date) => {
+        const index = DATA.findIndex(item => item.id === date.id);
+
+        if (index !== -1) {
+            // Create a new array with the new object inserted at the specific index
+            const updatedDate = [...DATA.slice(0, index), date, ...DATA.slice(index + 1)];
+            setData(updatedDate);
+        }
     }
 
     //get filter details
@@ -185,10 +201,12 @@ const Dates = ({ navigation }) => {
         console.log("item to pass is", item);
         navigation.navigate('DateDetails', {
             DATA: {
-                DateDetails: item
+                DateDetails: item,
+                from: 'Dates'
             },
             index: index,
             DateDeleted: deleteDates,
+            DateUpdated: updateDate,
         })
     }
 

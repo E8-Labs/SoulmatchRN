@@ -24,6 +24,8 @@ import ApisPath from '../../lib/ApisPath/ApisPath';
 import { Ionicons } from '@expo/vector-icons';
 import VoiceMessagePlayer from '../../Components/VoiceMessagePlayer'
 import { ImageViewer } from '../../Components/ImageViewer'
+import { getProfile } from '../../Services/ProfileServices/GetProfile'
+
 
 
 const { height, width } = Dimensions.get('window');
@@ -41,6 +43,8 @@ export default function ChatScreen({ navigation, route }) {
     const data = route.params.data
     let chat = data.chat
 
+    // console.log('data from messages list screen', data)
+
     const [currentUser, setCurrentUser] = useState(null)
     const [openModal, setOpenModal] = useState(false);
     const [openModal3, setOpenModal3] = useState(false);
@@ -56,10 +60,13 @@ export default function ChatScreen({ navigation, route }) {
     const [recordingPopup, setRecordingPopup] = useState(false);
     const [visible, setIsVisible] = useState(false);
     const [imageUrl, setImageUrl] = useState(null)
+    const [user,setUser] = useState(null)
 
-    useEffect(()=>{
-        console.log("Image url changed ", imageUrl)
-    }, [imageUrl])
+    // useEffect(()=>{
+    //     console.log("Image url changed ", imageUrl)
+    // }, [imageUrl])
+
+
     const iceBreakers = [
         {
             id: 1,
@@ -362,7 +369,7 @@ export default function ChatScreen({ navigation, route }) {
     }
 
     const captureMedia = async () => {
-        setOpenModal(false);
+        // setOpenModal(false);
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
         if (status !== 'granted') {
             alert('Sorry, we need camera permissions to make this work!');
@@ -689,6 +696,17 @@ export default function ChatScreen({ navigation, route }) {
         }
     }
 
+    const handleGoBack = () =>{
+        if (data.from === "Match") {
+            navigation.pop(2)
+            return
+        }
+        console.log('last message is ', messages[messages.length-1])
+        // return
+        route.params.LastMessage(messages[messages.length-1])
+        navigation.goBack()
+    }
+
     return (
         <View style={{ alignItems: 'center', height: height, backgroundColor: 'white' }}>
             <View style={{
@@ -704,11 +722,7 @@ export default function ChatScreen({ navigation, route }) {
                     <View style={{ alignItems: 'center', flexDirection: 'row', width: width - 50 / 430 * width, justifyContent: 'space-between' }}>
                         <View style={{ alignItems: 'center', flexDirection: 'row', gap: 15 / 430 * width }}>
                             <TouchableOpacity onPress={() => {
-                                if (data.from === "Match") {
-                                    navigation.pop(2)
-                                    return
-                                }
-                                navigation.goBack()
+                               handleGoBack()
                             }}>
                                 <View style={GlobalStyles.backBtn}>
                                     <Image source={require('../../assets/images/backArrow.png')}
@@ -717,8 +731,11 @@ export default function ChatScreen({ navigation, route }) {
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => {
-                                // navigation.navigate("ProfileDetail", {
-                                //     fromScreen: "ChatScreen"
+                                // navigation.navigate("SelectedProfile", {
+                                //     data:{
+                                //         user:user,
+                                //         from:'ChatScreen'
+                                //     }
                                 // })
                             }}>
                                 <View style={{ alignItems: 'center', flexDirection: 'row', gap: 12 / 430 * width }}>
