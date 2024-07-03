@@ -143,13 +143,18 @@ const UploadMedia = ({ navigation, route }) => {
 
         if (!result.canceled) {
             const ImageUrl = result.assets[0].uri;
+            console.log('selected media type', result.assets[0].type)
+            console.log('Image url recieved is', ImageUrl)
+            // setPopup(false)
             setPopup2(true)
             let thumb = await generateThumbnail(ImageUrl)
             setThumnail(thumb)
-            console.log("Thumbnail is")
             setselectedMedia(result.assets[0].uri)
             setselectedMediaType(result.assets[0].type)
 
+            console.log(result.assets[0].uri);
+        }else{
+            setPopup(false)
         }
     };
 

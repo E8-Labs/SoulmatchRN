@@ -79,9 +79,16 @@ const UploadIntroVideo = ({ navigation }) => {
         });
 
         if (!result.canceled) {
-            setVideo(result.assets[0].uri);
+            const ImageUrl = result.assets[0].uri;
+            // console.log("Base 64 image ", result.assets[0].base64)
+            console.log('Image url recieved is', ImageUrl)
             setPopup(false)
-            generateThumbnail(result.assets[0].uri)
+            setVideo(ImageUrl)
+            generateThumbnail(ImageUrl)
+            console.log(result.assets[0].uri);
+        } else {
+            setPopup(false)
+            // alert('You did not select any video.');
         }
     };
 

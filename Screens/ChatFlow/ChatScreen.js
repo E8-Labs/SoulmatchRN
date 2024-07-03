@@ -387,6 +387,8 @@ export default function ChatScreen({ navigation, route }) {
             }
             setOpenModal(false);
             sendMedia(selectedMedia);
+        }else{
+            setOpenModal(false)
         }
     };
 

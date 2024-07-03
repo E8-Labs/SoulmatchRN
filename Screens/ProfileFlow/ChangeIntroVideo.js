@@ -126,12 +126,17 @@ export default function ChangeIntroVideo({ navigation, route }) {
         });
 
         if (!result.canceled) {
-            setVideo(result.assets[0].uri);
+            const ImageUrl = result.assets[0].uri;
+            // console.log("Base 64 image ", result.assets[0].base64)
+            console.log('Image url recieved is', ImageUrl)
             setPopup(false)
+            setVideo(ImageUrl)
             const thumbnail = await generateThumbnail(ImageUrl)
             // console.log(result.assets[0].uri);
             // const introVideo = { video: ImageUrl, thumbnail: thumbnail }
             // uploadVideo(introVideo)
+        }else{
+            setPopup(false)
         }
     };
 

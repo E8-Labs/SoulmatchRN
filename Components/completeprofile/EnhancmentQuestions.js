@@ -125,10 +125,11 @@ const EnhancmentQuestions = ({ navigation, route }) => {
         });
         if (!result.canceled) {
             const ImageUrl = result.assets[0].uri;
+            //console.log('selected media type', result.assets[0].type);
+            //console.log('Image url received is', ImageUrl);
             let thumbnail = await generateThumbnail(ImageUrl);
-            let type = result.assets[0].type;
-            setMediaType(type);
-            let mediaSelected = { uri: ImageUrl, thumb: thumbnail, text: null, type: type };
+            setMediaType(result.assets[0].type);
+            let mediaSelected = { uri: ImageUrl, thumb: thumbnail, text: null, type: result.assets[0].type };
             uploadMedia(item, mediaSelected);
             //console.log(result.assets[0].uri);
         }

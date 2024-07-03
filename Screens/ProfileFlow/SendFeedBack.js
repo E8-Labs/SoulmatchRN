@@ -88,9 +88,7 @@ const SendFeedBack = ({ navigation }) => {
         };
     }, [])
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        >
+       
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={{ alignItems: 'center', }}>
                     <StatusBar
@@ -170,7 +168,6 @@ const SendFeedBack = ({ navigation }) => {
                     </View>
                 </View>
             </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
     )
 }
 

@@ -184,7 +184,7 @@ export default function MessagesList({ navigate }) {
                                                 </View>
                                                 <View style={{ flexDirection: 'column', alignItems: 'flex-end', gap: 3 }}>
                                                     <Text style={{ fontSize: 12, fontFamily: customFonts.regular, color: item.unread ? "#000" : colors.unreadColor }}>
-                                                        {moment(item.lastMessage.createdAt).format('h:mm A')}
+                                                        {item.lastMessage ? moment(item.lastMessage.createdAt).format('h:mm A'):''}
                                                     </Text>
                                                     {
                                                         item.unread ? (

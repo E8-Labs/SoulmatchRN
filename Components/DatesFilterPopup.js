@@ -82,10 +82,10 @@ export default function DatesFilterPopup({ visible, close, closeWithouFilters, f
 
             setCity(filters.city)
             setState(filters.state)
-            setStartRat(filters.minRating * 20)
-            setEndRat(filters.maxRating * 20)
-            setMinBudget(filters.minBudget || 0)
-            setMaxBudget(filters.maxBudget || 5)
+            setStartRat(filters.minRating * 20 || 0)
+            setEndRat(filters.maxRating * 20 ||100)
+            setMinBudget(filters.minBudget )
+            setMaxBudget(filters.maxBudget)
             setselectedCat(filters.category)
             setselected(filters.budget)
         }
