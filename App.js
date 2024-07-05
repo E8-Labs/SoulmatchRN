@@ -270,9 +270,9 @@ async function registerForPushNotificationsAsync() {
           <Stack.Screen name="SlideContainer" component={SlideContainer} options={{ gestureEnabled: false, headerShown: false }}/>
           <Stack.Screen name="RegisterUser" component={RegisterUser} options={{ gestureEnabled: false }} />
           <Stack.Screen name="LoginUser" component={LoginUser} options={{ gestureEnabled: false }} />
-          <Stack.Screen name="GetEmail" component={GetEmail} options={{ gestureEnabled: false }} />
-          <Stack.Screen name="EmailVerification" component={EmailVerification} options={{ gestureEnabled: false }} />
-          <Stack.Screen name="ResetPassword" component={ResetPassword} options={{ gestureEnabled: false }} />
+          <Stack.Screen name="GetEmail" component={GetEmail} />
+          <Stack.Screen name="EmailVerification" component={EmailVerification} />
+          <Stack.Screen name="ResetPassword" component={ResetPassword} />
           <Stack.Screen name="SuccessfullyPasswordChanged" component={SuccessfullyPasswordChanged} options={{ gestureEnabled: false }} />
           <Stack.Screen name="TabBarContainer" component={TabBarContainer} options={{ gestureEnabled: false }} />
           <Stack.Screen name="CardContainerMain" component={CardContainerMain} options={{ gestureEnabled: false }} />
@@ -283,14 +283,14 @@ async function registerForPushNotificationsAsync() {
           <Stack.Screen name="GotMatch" component={GotMatch} options={{ gestureEnabled: false }} />
           <Stack.Screen name="MessagesList" component={MessagesList} options={{ gestureEnabled: false }} />
           <Stack.Screen name="ChatScreen" component={ChatScreen} options={{ gestureEnabled: false }} />
-          <Stack.Screen name="ReportChat" component={ReportChat} options={{ gestureEnabled: false }} />
+          <Stack.Screen name="ReportChat" component={ReportChat}/>
           <Stack.Screen name="DatesContainer" component={DatesContainer} options={{ gestureEnabled: false }} />
-          <Stack.Screen name="SelectedDateDetails" component={SelectedDateDetails} options={{ gestureEnabled: false }} />
-          <Stack.Screen name="ReserveNightScreen" component={ReserveNightScreen} options={{ gestureEnabled: false }} />
+          <Stack.Screen name="SelectedDateDetails" component={SelectedDateDetails} />
+          <Stack.Screen name="ReserveNightScreen" component={ReserveNightScreen} />
           <Stack.Screen name="InviteDatePopup" component={InviteDatePopup} options={{ gestureEnabled: false }} />
-          <Stack.Screen name="PlanDateNight" component={PlanDateNight} options={{ gestureEnabled: false }} />
-          <Stack.Screen name="InviteDateFromChatScreen" component={InviteDateFromChatScreen} options={{ gestureEnabled: false }} />
-          <Stack.Screen name="SelectedProfile" component={SelectedProfile} options={{ gestureEnabled: false }} />
+          <Stack.Screen name="PlanDateNight" component={PlanDateNight} />
+          <Stack.Screen name="InviteDateFromChatScreen" component={InviteDateFromChatScreen}  />
+          <Stack.Screen name="SelectedProfile" component={SelectedProfile}/>
 
           {/* <Stack.Screen name='Signin' component={Signin} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='Signup' component={Signup} options={{ gestureEnabled: false, headerShown: false }} /> */}
@@ -298,50 +298,50 @@ async function registerForPushNotificationsAsync() {
           <Stack.Screen name='EmailVerification' component={Emailverification} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='NewPassword' component={CreateNewPassword} options={{ gestureEnabled: false, headerShown: false }} /> */}
           <Stack.Screen name='UploadImage' component={UploadImage} />
-          <Stack.Screen name='AddEmail' component={AddEmail} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='ProfileEmailverification' component={ProfileEmailVerification} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='AddName' component={AddName} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='CreatePassword' component={CreatePassword} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='AddEmail' component={AddEmail} />
+          <Stack.Screen name='ProfileEmailverification' component={ProfileEmailVerification}  />
+          <Stack.Screen name='AddName' component={AddName}  />
+          <Stack.Screen name='CreatePassword' component={CreatePassword}  />
           <Stack.Screen name='CongratsScreen' component={CongratsScreen} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='UploadIntroVideo' component={UploadIntroVideo} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='UploadMedia' component={UploadMedia} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='AddZodiac' component={AddZodiac} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='AddAge' component={AddAge} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='AddGender' component={AddGender} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='AddSchool' component={AddSchool} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='AddJobDetails' component={AddJobDetails} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='GetInterest' component={GetInterest} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='AddHeight' component={AddHeight} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='UploadIntroVideo' component={UploadIntroVideo}  />
+          <Stack.Screen name='UploadMedia' component={UploadMedia} />
+          <Stack.Screen name='AddZodiac' component={AddZodiac}  />
+          <Stack.Screen name='AddAge' component={AddAge} />
+          <Stack.Screen name='AddGender' component={AddGender}  />
+          <Stack.Screen name='AddSchool' component={AddSchool} />
+          <Stack.Screen name='AddJobDetails' component={AddJobDetails} />
+          <Stack.Screen name='GetInterest' component={GetInterest}  />
+          <Stack.Screen name='AddHeight' component={AddHeight}  />
           {/*add picker here*/}
-          <Stack.Screen name='EnhancmentQuestions' component={EnhancmentQuestions} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='AddLocation' component={AddLocation} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='AllowNotification' component={AllowNotification} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='PackagePlan' component={PackagePlan} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='CongratulationsScreen' component={CongratulationsScreen} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='MyAccount' component={MyAccount} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='AccountDetails' component={AccountDetails} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='ChangePassword' component={ChangePassword} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='ChangeIntroVideo' component={ChangeIntroVideo} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='EnhancmentQuestions' component={EnhancmentQuestions}  />
+          <Stack.Screen name='AddLocation' component={AddLocation} />
+          <Stack.Screen name='AllowNotification' component={AllowNotification} />
+          <Stack.Screen name='PackagePlan' component={PackagePlan}  />
+          <Stack.Screen name='CongratulationsScreen' component={CongratulationsScreen}  />
+          <Stack.Screen name='MyAccount' component={MyAccount}  />
+          <Stack.Screen name='AccountDetails' component={AccountDetails} />
+          <Stack.Screen name='ChangePassword' component={ChangePassword}/>
+          <Stack.Screen name='ChangeIntroVideo' component={ChangeIntroVideo}/>
           <Stack.Screen name='VideoPlayer' component={VideoPlayer} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='SendFeedBack' component={SendFeedBack} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='SendFeedBack' component={SendFeedBack} />
 
 
           <Stack.Screen name='Resources' component={Resources} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='SelectedResourceDetails' component={SelectedResourceDetails} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='NotificationsScreen' component={NotificationsScreen} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='NotificationsScreen' component={NotificationsScreen} />
 
           {/* <Stack.Screen name='Testfile' component={Testfile} options={{ gestureEnabled: false, headerShown: false }} /> */}
 
 
           <Stack.Screen name='AdminTabBarContainer' component={AdminTabBarContainer} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='AddNewDate' component={AddDate} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='DateDetails' component={DateDetails} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='AdminAccountDetails' component={AdminAccountDetails} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='AdminChangePassword' component={AdminChangePassword} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='FlaggedUsers' component={FlaggedUsers} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='UserProfileDetails' component={UserProfileDetails} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='AddNewDate' component={AddDate} />
+          <Stack.Screen name='DateDetails' component={DateDetails}  />
+          <Stack.Screen name='AdminAccountDetails' component={AdminAccountDetails}   />
+          <Stack.Screen name='AdminChangePassword' component={AdminChangePassword}  />
+          <Stack.Screen name='FlaggedUsers' component={FlaggedUsers}  />
+          <Stack.Screen name='UserProfileDetails' component={UserProfileDetails}   />
           <Stack.Screen name='AddressPicker' component={AddressPicker} options={{ gestureEnabled: false, headerShown: false }} />
-          <Stack.Screen name='FlaggedUserDetails' component={FlaggedUSerDetails} options={{ gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name='FlaggedUserDetails' component={FlaggedUSerDetails}/>
           {/* <Stack.Screen name='DatePicker' component={TestDatePicker} options={{ gestureEnabled: false, headerShown: false }} /> */}
           {/* <Stack.Screen name='TestAddDate' component={TestAddDate} options={{ gestureEnabled: false, headerShown: false }} /> */}
           <Stack.Screen name='AdminNotifications' component={AdminNotifications} options={{ gestureEnabled: false, headerShown: false }} />

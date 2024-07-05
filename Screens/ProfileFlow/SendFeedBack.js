@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, Text, View, StatusBar, Dimensions, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, TouchableOpacity, StyleSheet, TextInput } from 'react-native'
+import { ActivityIndicator, Text, View, StatusBar, Dimensions, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, TouchableOpacity, StyleSheet, TextInput, SafeAreaView } from 'react-native'
 import customFonts from '../../assets/fonts/Fonts';
 import { Image } from 'expo-image';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,7 +10,7 @@ const SendFeedBack = ({ navigation }) => {
     const { height, width } = Dimensions.get('window');
 
     const [marginBottom, setmarginBottom] = useState(0);
-    const [marginTop, setmarginTop] = useState(0);
+    const [marginTop, setmarginTop] = useState(30);
     const [Subject, setSubject] = useState('');
     const [messageBody, setMessageBody] = useState('');
     const [subjectError, setSubjectError] = useState(false);
@@ -46,7 +46,7 @@ const SendFeedBack = ({ navigation }) => {
                         'Content-Type': 'application/json',
                         'Authorization': 'Bearer ' + d.token
                     },
-                    body: body
+                    body: JSON.stringify(body)
                 })
 
                 if (result) {
@@ -73,13 +73,13 @@ const SendFeedBack = ({ navigation }) => {
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
             console.log("Keyboard show")
             setmarginBottom(480);
-            setmarginTop(-10);
+            setmarginTop(0);
         });
 
         const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
             console.log("Keyboard hide")
             setmarginBottom(0);
-            setmarginTop(0);
+            setmarginTop(30);
         });
 
         return () => {
@@ -88,7 +88,7 @@ const SendFeedBack = ({ navigation }) => {
         };
     }, [])
     return (
-       
+        <SafeAreaView>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={{ alignItems: 'center', }}>
                     <StatusBar
@@ -96,23 +96,23 @@ const SendFeedBack = ({ navigation }) => {
                         backgroundColor="#FFFFFF"
                         translucent={false}
                     />
-                    <View style={{ width: 370 / 430 * width, height: height * 0.95, justifyContent: 'space-between', display: 'flex' }}>
+                    <View style={{ width: 370 / 430 * width, height: height * 0.88, justifyContent: 'space-between', display: 'flex' , marginTop: 0 }}>
                         <View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15, marginTop: 60 }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15,marginTop:marginTop}}>
                                 <TouchableOpacity
                                     onPress={() => {
                                         navigation.goBack()
                                     }}
                                 >
                                     <View style={{ height: 46 / 930 * height, width: 46 / 430 * width, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: '#E6E6E6', borderRadius: 6 }}>
-                                        <Image source={require('../../assets/images/backArrow.png')} style={{ height: 30, width: 30,resizeMode:'contain' }} />
+                                        <Image source={require('../../assets/images/backArrow.png')} style={{ height: 30, width: 30, resizeMode: 'contain' }} />
                                     </View>
                                 </TouchableOpacity>
                                 <Text style={{ fontWeight: '500', fontSize: 24, color: '#333333', fontFamily: customFonts.medium }}>
                                     Feedback
                                 </Text>
                             </View>
-                            <Text style={[styles.labelText, { marginTop: marginTop ? marginTop : 45 / 930 * height }]}>
+                            <Text style={[styles.labelText, { marginTop:10 }]}>
                                 Subject
                             </Text>
                             <TextInput
@@ -124,7 +124,7 @@ const SendFeedBack = ({ navigation }) => {
                                 style={styles.feedBackInput}
                                 placeholder='Enter feedback subject'
                             />
-                            <Text style={[styles.labelText, { marginTop: 30 / 930 * height }]}>
+                            <Text style={[styles.labelText, { marginTop:marginTop }]}>
                                 Body
                             </Text>
                             <TextInput
@@ -168,6 +168,7 @@ const SendFeedBack = ({ navigation }) => {
                     </View>
                 </View>
             </TouchableWithoutFeedback>
+        </SafeAreaView>
     )
 }
 

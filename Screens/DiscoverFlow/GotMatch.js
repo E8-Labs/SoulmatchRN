@@ -1,4 +1,4 @@
-import { View, Text, Dimensions, TouchableOpacity, SafeAreaView, Settings, ActivityIndicator } from 'react-native'
+import { View, Text, Dimensions, TouchableOpacity, SafeAreaView, Settings, ActivityIndicator, DeviceEventEmitter } from 'react-native'
 import React, { useState } from 'react';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import customFonts from '../../assets/fonts/Fonts';
@@ -6,6 +6,7 @@ import ApisPath from '../../lib/ApisPath/ApisPath';
 import colors from '../../assets/colors/Colors';
 import { Image } from 'expo-image';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BroadcastEvents } from '../../models/Constants';
 const { height, width } = Dimensions.get('window')
 
 export default function GotMatch({ navigation, route }) {
@@ -42,6 +43,7 @@ export default function GotMatch({ navigation, route }) {
 
           if (json.status === true) {
             console.log('chat created', json.data)
+            DeviceEventEmitter.emit(BroadcastEvents.EventCreateChat,json.data)
             navigation.navigate('ChatScreen', {
               data: {
                 chat: json.data,

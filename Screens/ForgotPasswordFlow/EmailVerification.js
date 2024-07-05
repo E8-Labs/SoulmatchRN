@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, Dimensions, TextInput, TouchableOpacity, SafeAreaView, StyleSheet } from 'react-native';
+import { View, Text, Dimensions, TextInput, TouchableOpacity, SafeAreaView, StyleSheet, ActivityIndicator } from 'react-native';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
 import customFonts from '../../assets/fonts/Fonts';
 import { Image } from 'expo-image';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ApisPath from '../../lib/ApisPath/ApisPath';
 
 const { height, width } = Dimensions.get("window");
 
@@ -18,7 +20,6 @@ export default function EmailVerification({ route, navigation }) {
     const input4Ref = useRef(null);
 
 
-    const [emailFocused, setEmailFocused] = useState(false)
     const [input1Foucused, setinput1Foucused] = useState(false)
     const [input2Foucused, setinput2Foucused] = useState(false)
     const [input3Foucused, setinput3Foucused] = useState(false)
@@ -29,6 +30,7 @@ export default function EmailVerification({ route, navigation }) {
     const [input3Vlaue, setinput3Vlaue] = useState("")
     const [input4Vlaue, setinput4Vlaue] = useState("")
     const [code, setCode] = useState(null)
+    const [showIndicator, setShowIndicator] = useState(false)
 
 
     const handelInputChange = (text, ref, inputVlaue) => {
@@ -69,20 +71,55 @@ export default function EmailVerification({ route, navigation }) {
         }
     }
 
-    useEffect(()=>{
-        setCode(input1Vlaue+input2Vlaue+input3Vlaue+input4Vlaue)
-    },[input1Vlaue,input2Vlaue,input3Vlaue,input4Vlaue])
+    useEffect(() => {
+        setCode(input1Vlaue + input2Vlaue + input3Vlaue + input4Vlaue)
+    }, [input1Vlaue, input2Vlaue, input3Vlaue, input4Vlaue])
 
-    const handleNext = () =>{
-        navigation.navigate('ResetPassword',{
-            user:{
-                email:email,
-                code:code
+
+    const resendCode = async () => {
+        setShowIndicator(true)
+        try {
+            console.log('sending reset code')
+
+            let body = JSON.stringify({ email: email })
+
+            const result = await fetch(ApisPath.ApiSendResetCode, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: body
+            })
+
+            if (result) {
+                setShowIndicator(false)
+                let json = await result.json();
+                if (json.status === true) {
+                    console.log('code sent successfuly')
+                   
+                } else {
+                    setError(json.message)
+                    console.log('code sent message', json.message)
+                }
+            }
+            // }
+
+        } catch (error) {
+            console.log('error finding in sending reset code', error)
+        }
+
+    }
+
+    const handleNext = () => {
+        navigation.navigate('ResetPassword', {
+            user: {
+                email: email,
+                code: code
             }
         })
     }
 
-   
+
 
     return (
         <SafeAreaView>
@@ -101,9 +138,9 @@ export default function EmailVerification({ route, navigation }) {
 
                     <Text style={[GlobalStyles.splashMeduimText, { marginTop: 10, width: width * 0.75 }]}>
                         Please enter the 4 digit code sent to your
-                        mail {email}
+                        email {email}
                     </Text>
-                    <View style={{ flexDirection: 'row', marginTop: 54 / 930 * height,justifyContent:'space-between' }}>
+                    <View style={{ flexDirection: 'row', marginTop: 54 / 930 * height, justifyContent: 'space-between' }}>
                         <View style={[styles.inputStyle, { borderColor: input1Foucused ? colors.blueColor : colors.greyText }]}>
                             <TextInput placeholder=""
                                 autoFocus={true}
@@ -174,14 +211,25 @@ export default function EmailVerification({ route, navigation }) {
                 </View>
 
                 <View style={{ alignItems: 'center', flexDirection: 'row', gap: 5, marginTop: 80 / 924 * height }}>
-                    <Text style={GlobalStyles.splashMeduimText}>If you didn't receive a code?</Text>
-                    <TouchableOpacity style={{}}
-                    // onPress={handleNext}
-                    >
-                        <Text style={{ color: colors.blueColor, fontSize: 14, fontWeight: '500', }}>
-                            Resend Code
-                        </Text>
-                    </TouchableOpacity>
+                    <Text style={GlobalStyles.splashMeduimText}>
+                        {showIndicator ? "Trying to resend code" : "If you didn't receive a code? "}
+
+                    </Text>
+
+                    {
+                        showIndicator ? (
+                            <ActivityIndicator color={colors.blueColor} size={'small'} />
+                        ) : (
+                            <TouchableOpacity style={{}}
+                                onPress={resendCode}
+                            >
+                                <Text style={{ color: colors.blueColor, fontSize: 14, fontWeight: '500', }}>
+                                    Resend Code
+                                </Text>
+                            </TouchableOpacity>
+                        )
+                    }
+
                 </View>
 
 
@@ -193,8 +241,8 @@ export default function EmailVerification({ route, navigation }) {
 const styles = StyleSheet.create({
     inputStyle: {
         backgroundColor: '#eeeeee',
-        height: 80/930*height,
-        width: 80/430*width,
+        height: 80 / 930 * height,
+        width: 80 / 430 * width,
         borderWidth: 1,
         borderColor: "#e6e6e6",
         borderRadius: 15,

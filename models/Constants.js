@@ -1,3 +1,4 @@
 export const BroadcastEvents = {
-    EventUpcomingDateAdded: "UpcomingDateAdded"
+    EventUpcomingDateAdded: "UpcomingDateAdded",
+    EventCreateChat: "EventCreateChat"
 }

@@ -151,7 +151,7 @@ const AddLocation = ({ navigation }) => {
                             <Text>City: {address.region}</Text>
                         )} */}
                         <View style={{ marginTop: 150 / 930 * height, display: 'flex', alignItems: 'center' }}>
-                            <Image source={require('../../assets/location.png')} />
+                            <Image source={require('../../assets/location.png')} style = {{height:160,width:160}} />
                             <Text style={{ fontWeight: '500', fontSize: 16, color: '#333333', marginTop: 20 / 930 * height }}>
                                 You need to enable location to use
                             </Text>

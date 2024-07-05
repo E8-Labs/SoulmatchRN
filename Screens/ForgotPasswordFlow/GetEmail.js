@@ -36,18 +36,13 @@ export default function GetEmail(props) {
                 setShowIndicator(true)
                 try {
                     console.log('sending reset code')
-                    const data =await AsyncStorage.getItem("USER")
-
-                    // if (data) {
-                    //     let d = JSON.parse(data)
+                    
                         let body = JSON.stringify({ email: email })
-                        // console.log('data from local is', d)
 
                         const result = await fetch(ApisPath.ApiSendResetCode, {
                             method: 'post',
                             headers: {
                                 'Content-Type': 'application/json',
-                                // 'Authorization': 'Bearer ' + d.token
                             },
                             body: body
                         })

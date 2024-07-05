@@ -59,6 +59,7 @@ export default function ResetPassword({ navigation, route }) {
                                 console.log('password reset', json.data)
                                 navigation.navigate("SuccessfullyPasswordChanged")
                             } else {
+                                setError(json.message)
                                 console.log('password reset messasge', json.message)
                             }
                         // }

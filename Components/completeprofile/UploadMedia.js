@@ -3,7 +3,7 @@ import {
     Dimensions, View, TouchableOpacity, Text, Modal, Settings, ActivityIndicator,
     FlatList, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform
 } from 'react-native'
-import * as VideoThumbnails from 'expo-video-thumbnails';
+import * as VideoThumbnail from 'expo-video-thumbnails';
 import * as ImagePicker from 'expo-image-picker';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import colors from '../../assets/colors/Colors';
@@ -37,13 +37,15 @@ const UploadMedia = ({ navigation, route }) => {
     const [showIndicator, setShowIndicator] = useState(false);
     const [showIndicator2, setShowIndicator2] = useState(false);
     const [caption, setCaption] = useState(null);
-    const [thumbnail, setThumnail] = useState(null);
+    const [thumb_url, setThumnail] = useState(null);
     const [modalHeight, setModalHeight] = useState(null)
     const [loading, setLoading] = useState(false)
 
     const [user, setUser] = useState(null)
     const data = route.params.data
     console.log('user data is', data)
+
+    
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -82,9 +84,9 @@ const UploadMedia = ({ navigation, route }) => {
     }, [])
 
 
-    const generateThumbnail = async (url) => {
+    const generatethumb_url = async (url) => {
         try {
-            const { uri } = await VideoThumbnails.getThumbnailAsync(
+            const { uri } = await VideoThumbnail.getThumbnailAsync(
                 url,
                 {
                     time: 15000,
@@ -115,7 +117,7 @@ const UploadMedia = ({ navigation, route }) => {
             console.log('Image url recieved is', ImageUrl)
             // setPopup(false)
             setPopup2(true)
-            let thumb = await generateThumbnail(ImageUrl)
+            let thumb = await generatethumb_url(ImageUrl)
             setThumnail(thumb)
             setselectedMedia(result.assets[0].uri)
             setselectedMediaType(result.assets[0].type)
@@ -148,7 +150,7 @@ const UploadMedia = ({ navigation, route }) => {
             console.log('Image url recieved is', ImageUrl)
             // setPopup(false)
             setPopup2(true)
-            let thumb = await generateThumbnail(ImageUrl)
+            let thumb = await generatethumb_url(ImageUrl)
             setThumnail(thumb)
             setselectedMedia(result.assets[0].uri)
             setselectedMediaType(result.assets[0].type)
@@ -175,10 +177,10 @@ const UploadMedia = ({ navigation, route }) => {
             uri: selectedMedia,
             type: selectedMediaType
         });
-        if (thumbnail) {
+        if (thumb_url) {
             formdata.append("thumbnail", {
                 name: "imageName",
-                uri: thumbnail,
+                uri: thumb_url,
                 type: 'image/jpeg'
             });
         }
@@ -208,29 +210,13 @@ const UploadMedia = ({ navigation, route }) => {
                     let json = await result.json();
                     console.log('json ', json)
                     if (json.status === true) {
-                        console.log('video uploaded')
+                        console.log('video uploaded', json.data.type)
                         setPopup2(false)
-
+                        setMedia([...media, json.data])
                         if (json.data.type === 'video') {
-                            // let thumb = await generateThumbnail(selectedMedia)
-                            // console.log("Thumb image is ", thumb)
-                            if (media === null) {
-                                setMedia([{ url: json.data.url, type: json.data.type, caption: json.data.caption, thumbnail: json.data.thumb_url }]);
-                            }
-                            else {
-                                setMedia([...media, { url: json.data.url, type: json.data.type, caption: json.data.caption, thumbnail: json.data.thumb_url }]);
-                            }
-
                             setCaption('')
                         }
                         else {
-                            if (media === null) {
-                                setMedia([{ url: json.data.url, type: json.data.type, caption: json.data.caption, thumbnail: null }]);
-                            }
-                            else {
-                                setMedia([...media, { url: json.data.url, type: json.data.type, caption: json.data.caption, thumbnail: null }]);
-                            }
-
                             setCaption('')
                         }
 
@@ -241,7 +227,7 @@ const UploadMedia = ({ navigation, route }) => {
             }
         } catch (error) {
             setShowIndicator(false)
-            console.log('error finding in upload media', error)
+            console.log('error in upload media', error)
         }
     }
 
@@ -284,6 +270,27 @@ const UploadMedia = ({ navigation, route }) => {
         }
 
     }
+
+    const handleVideoLoadStart = (uri) => {
+        console.log('video loading')
+        setLoadImage(prevState => ({ ...prevState, [uri]: true }));
+    };
+
+    const handleVideoLoadEnd = (uri) => {
+        console.log('video loaded')
+        setLoadImage(prevState => ({ ...prevState, [uri]: false }));
+    };
+
+    
+    const handleImageLoadStart = (uri) => {
+        console.log(`image loading `,uri)
+        setLoadImage2(prevState => ({ ...prevState, [uri]: true }));
+    };
+
+    const handleImageLoadEnd = (uri) => {
+        console.log('image loaded',uri)
+        setLoadImage2(prevState => ({ ...prevState, [uri]: false }));
+    };
 
     return (
         // <View> 
@@ -374,8 +381,6 @@ const UploadMedia = ({ navigation, route }) => {
                                                     borderWidth: 1, borderColor: colors.greyText, borderRadius: 10, marginTop: 30 / 930 * height, gap: 10
 
                                                 }}>
-
-
                                                     {
                                                         item.caption !== "null" ? <Text style={{ fontSize: 16, fontFamily: customFonts.regular, color: 'black' }}>
                                                             {item.caption}
@@ -384,11 +389,12 @@ const UploadMedia = ({ navigation, route }) => {
                                                     {
                                                         item.type === "image" ? (
                                                             <>
-                                                                <Image source={{ uri: item.url }}
-                                                                    onLoadStart={() => { setLoadImage2(true) }}
-                                                                    onLoadEnd={() => {
-                                                                        setLoadImage(false)
-                                                                    }}
+                                                                <Image source={{ uri: item.thumb_url }}
+                                                                     onLoadStart={() => {
+                                                                        console.log('Media data is ', item)
+                                                                        handleImageLoadStart(item.url)
+                                                                     }}
+                                                                     onLoadEnd={() => handleImageLoadEnd(item.url)}
                                                                     placeholder={blurhash}
                                                                     contentFit="cover"
                                                                     transition={1000}
@@ -396,9 +402,9 @@ const UploadMedia = ({ navigation, route }) => {
                                                                 />
 
                                                                 {
-                                                                    loadImage2 ? (
-                                                                        <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 150 }} />
-                                                                    ) : <></>
+                                                                    loadImage2[item.url] && (
+                                                                        <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100/930*height, left: 180/430*width }} />
+                                                                    )
                                                                 }
                                                             </>
 
@@ -415,17 +421,15 @@ const UploadMedia = ({ navigation, route }) => {
                                                                         }}
                                                                     >
                                                                         <Image source={{ uri: item.thumb_url }}
-                                                                            onLoadStart={() => { setLoadImage(true) }}
-                                                                            onLoadEnd={() => {
-                                                                                setLoadImage(false)
-                                                                            }}
+                                                                            onLoadStart={() => handleVideoLoadStart(item.thumb_url)}
+                                                                            onLoadEnd={() => handleVideoLoadEnd(item.thumb_url)}
                                                                             placeholder={blurhash}
                                                                             contentFit="cover"
                                                                             transition={1000}
                                                                             style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
                                                                         />
                                                                         {
-                                                                            !loadImage && (
+                                                                            !loadImage[item.thumb_url] && (
                                                                                 <Image source={require('../../assets/images/playIcon.png')}
                                                                                     style={{ height: 50, width: 50, position: 'absolute', bottom: 100 / 930 * height, left: 150 / 430 * width }}
                                                                                 />
@@ -435,7 +439,7 @@ const UploadMedia = ({ navigation, route }) => {
                                                                     </TouchableOpacity>
 
                                                                     {
-                                                                        loadImage ? (
+                                                                        loadImage[item.thumb_url] ? (
                                                                             <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 120, left: 160 }} />
                                                                         ) : <></>
                                                                     }
@@ -533,7 +537,7 @@ const UploadMedia = ({ navigation, route }) => {
 
                                     <View style={{ height: 0.1, borderWidth: 0.2, borderColor: '#E6E6E6', width: '100%', marginTop: 20 / 930 * height }}></View>
 
-                                    <Image source={{ uri: selectedMediaType === 'video' ? thumbnail : selectedMedia }} style={{ height: 140, width: 140, borderRadius: 10 }} />
+                                    <Image source={{ uri: selectedMediaType === 'video' ? thumb_url : selectedMedia }} style={{ height: 140, width: 140, borderRadius: 10 }} />
 
                                     <View style={{ width: width - 60, alignItems: 'flex-start', flexDirection: 'column', gap: 10 }}>
                                         <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, textAlign: 'left' }}>Caption</Text>

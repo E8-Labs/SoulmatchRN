@@ -21,17 +21,17 @@ export default function DiscoverMain(props) {
   const [loading, setLoading] = useState(false)
 
 
-  useFocusEffect(
-    React.useCallback(() => {
-      console.log("Use Focus Effect")
-      getDiscover()
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     console.log("Use Focus Effect")
+  //     getDiscover()
 
-    }, [])
-  );
+  //   }, [])
+  // );
 
-  // useEffect(() => {
-  //   getDiscover()
-  // }, [])
+  useEffect(() => {
+    getDiscover()
+  }, [])
 
   const getDiscover = async () => {
     console.log('getting discover users')

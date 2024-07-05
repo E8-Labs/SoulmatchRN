@@ -31,8 +31,8 @@ export default function DatesFilterPopup({ visible, close, closeWithouFilters, f
     const [endRat, setEndRat] = useState(100);
     const [categories, setCategories] = useState([]);
     const [openAddressPicker, setOpenAddressPicker] = useState(false);
-    const [city, setCity] = useState(false)
-    const [state, setState] = useState(false)
+    const [city, setCity] = useState(null)
+    const [state, setState] = useState(null)
 
 
     const budget = [
@@ -153,17 +153,25 @@ export default function DatesFilterPopup({ visible, close, closeWithouFilters, f
     }
 
     const resetFilters = () => {
-        let filters = {
-            minBudget: null,
-            maxBudget: null,
-            minRating: 0,
-            maxRating: 5,
-            category: -1,
-            budget: null,
-            city: null,
-            state: null
-        }
-        close(filters)
+        // let filters = {
+        //     minBudget: null,
+        //     maxBudget: null,
+        //     minRating: 0,
+        //     maxRating: 5,
+        //     category: -1,
+        //     budget: null,
+        //     city: null,
+        //     state: null
+        // }
+        setCity(null)
+        setState(null)
+        setStartRat(0)
+        setEndRat(100)
+        setMinBudget('')
+        setMaxBudget('')
+        setselectedCat(-1)
+        setselected('')
+        // close(filters)
     }
 
 

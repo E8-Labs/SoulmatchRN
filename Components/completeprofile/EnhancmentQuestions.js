@@ -186,7 +186,7 @@ const EnhancmentQuestions = ({ navigation, route }) => {
         } else {
             //console.log('can not upload text ', mediaSelected.text);
         }
-        formdata.append("questionId", item.id);
+        formdata.append("questionId", item.questionId);
         //console.log('trying to upload media', mediaSelected);
         try {
             const data = await AsyncStorage.getItem("USER");

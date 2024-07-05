@@ -203,9 +203,14 @@ const DateDetails = ({ navigation, route }) => {
                                     </Text>
                                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
                                         <Image source={require('../../../../assets/Images3/RatingStar.png')} style={{ height: 18, width: 17, resizeMode: 'contain' }} />
-                                        <Text style={[styles.RatingsValue, { height: 22 }]}>
-                                            {dateDetails.rating}
-                                        </Text>
+                                        {dateDetails.ratings ?
+                                            <Text style={[styles.RatingsValue, { height: 22 }]}>
+                                                {dateDetails.rating}
+                                            </Text> :
+                                            <Text style={[styles.RatingsValue, { height: 22 }]}>
+                                                0
+                                            </Text>
+                                        }
                                     </View>
                                 </View>
                             </View>

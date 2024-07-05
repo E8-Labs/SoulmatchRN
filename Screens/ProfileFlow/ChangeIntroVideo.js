@@ -178,13 +178,14 @@ export default function ChangeIntroVideo({ navigation, route }) {
                 })
                 // return
                 if (result) {
+                    setIsSaving(false)
                     console.log('api called')
                     setShowIndicator2(false)
                     console.log(result)
                     let json = await result.json();
                     console.log('json ', json)
                     if (json.status === true) {
-                        setIsSaving(false)
+                        
                         console.log('video uploaded')
                         setVideo(json.data.intro_video)
                         d.user = json.data
@@ -197,6 +198,7 @@ export default function ChangeIntroVideo({ navigation, route }) {
                 }
             }
         } catch (error) {
+            setIsSaving(false)
             console.log('error finding in video upload', error)
         }
     }

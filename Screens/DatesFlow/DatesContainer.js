@@ -54,11 +54,11 @@ export default function DatesContainer({ navigation }) {
         const listener = DeviceEventEmitter.addListener(BroadcastEvents.EventUpcomingDateAdded, (data) => {
             console.log('date object received from broad cast', data)
 
-            setUpComingDates(prevDate =>{
-                let d = prevDate
-                d.push(data)
-                return d
-        })
+        //     setUpComingDates(prevDate =>{
+        //         let d = prevDate
+        //         d.push(data)
+        //         return d
+        // })
             
         })
         return () => {

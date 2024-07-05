@@ -9,7 +9,7 @@ const CongratulationsScreen = ({ navigation }) => {
     return (
         <View style={{ display: 'flex', alignItems: 'center' }}>
             <View style={{ width:  width }}>
-                <View style={{marginLeft:20, marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
+                {/* <View style={{marginLeft:20, marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
                 <TouchableOpacity
                         style={GlobalStyles.backBtn}
                         onPress={() => navigation.pop()}
@@ -21,10 +21,10 @@ const CongratulationsScreen = ({ navigation }) => {
                     <Text style={{ fontWeight: '500', fontSize: 24, marginLeft: 20 / 430 * width,fontFamily:customFonts.meduim }}>
                         Complete your profile
                     </Text>
-                </View>
+                </View> */}
                 <View style={{ height: height, alignItems: 'center', justifyContent: 'center', gap: 40, paddingBottom: 40 }}>
                     <Image source={require('../../assets/congrats2.png')} style={{ height: 138 / 930 * height, width: 138 / 430 * width }} />
-                    <View style={{ gap: 10 }}>
+                    <View style={{ gap: 15 }}>
                         <Text style={{ fontWeight: '600', fontSize: 28, textAlign: 'center',fontFamily:customFonts.meduim }}>
                             Congrats!
                         </Text>

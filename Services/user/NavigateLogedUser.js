@@ -6,11 +6,13 @@ export const NavigateLogedUser = async (navigation, from) => {
   const user = await AsyncStorage.getItem("USER")
   if (user) {
     let d = JSON.parse(user)
-    console.log('user data available', d)
+    console.log('user data available',)
     try{
     let u = await getProfile()
+    console.log('u is', u)
     let data = u
     
+    console.log('user status is', data.status)
     // return
     if ( typeof data.role !== undefined && data.role === 'admin') {
       navigation.navigate("AdminTabBarContainer", {
@@ -20,6 +22,7 @@ export const NavigateLogedUser = async (navigation, from) => {
       })
       return
     }
+    
     else if (data.status === "suspended") {
       alert("Your account has been suspended by admin")
       return
@@ -27,6 +30,8 @@ export const NavigateLogedUser = async (navigation, from) => {
       alert("Your account has been blocked by admin")
       return
     } else if (data.status === "active") {
+
+      // console.log('user status is', data.status)
 
       if (data.profile_completion === 1) {
         console.log('profile_completion_comment is ', data)
@@ -162,8 +167,11 @@ export const NavigateLogedUser = async (navigation, from) => {
         console.log('profile_completion_comment', data.profile_completion_comment)
         navigation.replace('TabBarContainer');
       } else {
+
         console.log('there is no screen to navigate', data.profile_completion_comment)
       }
+    } else{
+      console.log('user status is', json.status)
     }
  
   }catch(e){

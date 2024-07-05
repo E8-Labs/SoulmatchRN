@@ -17,20 +17,20 @@ export default function SuccessfullyPasswordChanged(props) {
 
     return (
         <SafeAreaView>
-            <KeyboardAvoidingView
+            {/* <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={{ flex: 1, flexDirection: 'column', }}>
-                <TouchableWithoutFeedback style={GlobalStyles.container} onPress={Keyboard.dismiss}>
+                <TouchableWithoutFeedback style={GlobalStyles.container} onPress={Keyboard.dismiss}> */}
                     <View style={[GlobalStyles.container,]}>
                         {/* <View style={{ width: width - 40, marginTop: 50, alignItems: 'flex-start' }}>
                    
                     
                 </View> */}
-                        <View style={{ width: width - 40, alignItems: 'center' }}>
+                        <View style={{ width: width - 40, alignItems: 'center',marginTop:-100 }}>
                             <Image source={require('../../assets/images/congratsImage.png')}
                                 style={{ width: 205 / 430 * width, height: 198 / 930 * height, resizeMode: 'contain' }}
                             />
-                            <Text style={{ fontSize: 28, fontWeight: '700', marginTop: 30, fontFamily: customFonts.semibold }}>
+                            <Text style={{ fontSize: 28, fontWeight: '700', marginTop: 30, fontFamily: customFonts.semibold,marginTop:50 }}>
                                 Password changed!
                             </Text>
 
@@ -51,8 +51,8 @@ export default function SuccessfullyPasswordChanged(props) {
                         </View>
 
                     </View>
-                </TouchableWithoutFeedback>
-            </KeyboardAvoidingView>
+                {/* </TouchableWithoutFeedback>
+            </KeyboardAvoidingView> */}
         </SafeAreaView>
     )
 }

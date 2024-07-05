@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRef, useState,useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Dimensions, TextInput, TouchableWithoutFeedback, Keyboard, Settings, ActivityIndicator } from 'react-native'
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import ApisPath from '../../lib/ApisPath/ApisPath';
@@ -18,13 +18,16 @@ const ProfileEmailVerification = ({ navigation, route }) => {
     const [Code4, setCode4] = useState('');
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [btnPosition, setBtnPosition] = useState(height*0.61);
+    const [btnPosition, setBtnPosition] = useState(height * 0.61);
+    const [indicator, setIndicator] = useState(false)
 
     const code = Code1 + Code2 + Code3 + Code4
     console.log('code', code)
     //data getting from previous screen
     const user = route.params.user;
     user.code = code.toString()
+
+    // console.log('user from add email screen is ', user)
 
 
     const ProfileEmail = user.UserEmail;
@@ -54,6 +57,45 @@ const ProfileEmailVerification = ({ navigation, route }) => {
     const [input2, setInput2] = useState(false);
     const [input3, setInput3] = useState(false);
     const [input4, setInput4] = useState(false);
+
+
+    const resendCode = async () => {
+        try {
+            setIndicator(true)
+
+            const Apiurl = ApisPath.ApiSendVerificationEmail;
+
+            console.log('Email for verification is', user.email)
+            const response = await fetch(Apiurl, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json',
+
+                },
+                body: JSON.stringify({ "email": user.email })
+            });
+            // console.log('Btn is working')
+            // console.log('Auth token is', AuthToken);
+            if (response) {
+                setIndicator(false)
+                const Data = await response.json();
+                if (Data.status === true)
+                    console.log('Response is', Data);
+                navigation.navigate("ProfileEmailverification", {
+                    user: user
+                })
+            } else {
+                console.log('Error:', response.status, response.statusText);
+                const errorData = await response.json(); // If server returns error message in JSON
+                console.log('Error Data:', errorData);
+            }
+        }
+        // }
+        catch (error) {
+            setIndicator(false)
+            console.log('Error is', error)
+        }
+    }
 
     const handleBordercolor1 = (text, setState, ref) => {
         setState(text);
@@ -130,7 +172,7 @@ const ProfileEmailVerification = ({ navigation, route }) => {
 
     //code to pass data to Next Screen
 
-   
+
 
     const verifyEmail = async () => {
         if (code.length < 4) {
@@ -159,8 +201,8 @@ const ProfileEmailVerification = ({ navigation, route }) => {
 
                     if (json.status === true) {
                         navigation.navigate('CreatePassword', {
-                                user: user
-                            })
+                            user: user
+                        })
                         console.log('email verified ', json)
                     } else {
                         console.log('email verify message is', json.message)
@@ -174,29 +216,29 @@ const ProfileEmailVerification = ({ navigation, route }) => {
         }
     }
 
-    
-  useEffect(() => {
-    // console.log("Use Effect")
-    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-    //   console.log("Keyboard show")
-      setBtnPosition(height * 0.3);
-    });
 
-    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-    //   console.log("Keyboard hide")
-    setBtnPosition(height * 0.61);
-    });
+    useEffect(() => {
+        // console.log("Use Effect")
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+            //   console.log("Keyboard show")
+            setBtnPosition(height * 0.3);
+        });
 
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
-    
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+            //   console.log("Keyboard hide")
+            setBtnPosition(height * 0.61);
+        });
+
+        return () => {
+            keyboardDidShowListener.remove();
+            keyboardDidHideListener.remove();
+        };
+    }, []);
+
 
     return (
         <TouchableWithoutFeedback style={{ display: 'flex', alignItems: 'center', height: height }} onPress={Keyboard.dismiss} >
-            <View style={{ display: 'flex', alignItems: 'center'}}>
+            <View style={{ display: 'flex', alignItems: 'center' }}>
                 <View style={{ width: 370 / 430 * width }}>
                     <View style={{ marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
                         <TouchableOpacity onPress={() => {
@@ -225,11 +267,11 @@ const ProfileEmailVerification = ({ navigation, route }) => {
                             Please verify your email
                         </Text>
                         <Text style={{ fontWeight: '500', fontSize: 16, color: '#333333', marginTop: 30 / 930 * height }}>
-                            Please enter the 4 digit code sent to your mail {user.email}
+                            Please enter the 4 digit code sent to your email {user.email}
                         </Text>
                     </View>
                     {/* Code for Input Verification Code */}
-                    <View style={{ display: 'flex', height:btnPosition, flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <View style={{ display: 'flex', height: btnPosition, flexDirection: 'column', justifyContent: 'space-between' }}>
                         <View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 / 930 * height }}>
                                 <TextInput keyboardType='numeric'
@@ -330,13 +372,24 @@ const ProfileEmailVerification = ({ navigation, route }) => {
 
                             <View style={{ flexDirection: 'row', display: 'flex', justifyContent: 'center', marginTop: 40 / 930 * height }}>
                                 <Text style={{ textAlign: 'center', fontSize: 14, fontWeight: '400', color: '#666666' }}>
-                                    If you didn't recieve a code?
+                                    {indicator ? "Trying to resend code " : "If you didn't recieve a code?"}
                                 </Text>
-                                <TouchableOpacity style={{ marginLeft: 5 }}>
-                                    <Text style={{ color: '#0A74DA', fontWeight: '500', fontSize: 14, }}>
-                                        Resend code
-                                    </Text>
-                                </TouchableOpacity>
+
+                                {
+                                    indicator ? (
+                                        <ActivityIndicator color={colors.blueColor} size={'small'} />
+                                    ) : (
+                                        <TouchableOpacity style={{ marginLeft: 5 }}
+                                            onPress={resendCode}
+                                        >
+                                            <Text style={{ color: '#0A74DA', fontWeight: '500', fontSize: 14, }}>
+                                                Resend code
+                                            </Text>
+                                        </TouchableOpacity>
+                                    )
+                                }
+
+
                             </View>
                         </View>
                         <View style={{ display: 'flex', justifyContent: 'flex-start', marginTop: -50, alignItems: 'center', gap: 20 }}>

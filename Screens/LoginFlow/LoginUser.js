@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {
     View, Text, Dimensions, TextInput, TouchableOpacity, SafeAreaView, Keyboard, KeyboardAvoidingView,
-    TouchableWithoutFeedback, Platform, Settings, ActivityIndicator
+    TouchableWithoutFeedback, Platform,ActivityIndicator
 } from 'react-native';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
@@ -116,7 +116,7 @@ export default function LoginUser(props) {
             }
             else {
                 //get credentials here
-                await AsyncStorage.getItem("applelogin")
+              let cr =  await AsyncStorage.getItem("applelogin")
                 if (cr) {
                     credential = JSON.parse(cr)
                 }
@@ -228,19 +228,19 @@ export default function LoginUser(props) {
                             // check profile complition
                             let data = json.data.user
 
-                            if (data.role === "admin") {
-                                props.navigation.navigate("AdminTabBarContainer", {
-                                    from: 'Login'
-                                })
-                                return
-                            } else if(data.status === "active") {
+                            // if (data.role === "admin") {
+                            //     props.navigation.navigate("AdminTabBarContainer", {
+                            //         from: 'Login'
+                            //     })
+                            //     return
+                            // } else if(data.status === "active") {
                                 let from = "Login"
                                 try {
                                     await NavigateLogedUser(props.navigation, from)
                                 } catch (e) {
                                     console.log('error finding in navigate user', e)
                                 }
-                            }
+                            // }
 
 
                             // props.navigation.navigate('TabBarContainer')
@@ -389,7 +389,7 @@ export default function LoginUser(props) {
                                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 18 / 430 * width, marginTop: 50 / 924 * height }}>
                                     {
                                         indicator1 ? (
-                                            <ActivityIndicator size={'large'} />
+                                            <ActivityIndicator size={'large'} color={colors.blueColor}/>
                                         ) : (
                                             <TouchableOpacity onPress={GoogleLogin}>
 

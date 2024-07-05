@@ -399,11 +399,11 @@ export default function SelectedProfile({ navigation, route }) {
                                                             }}
                                                             style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
                                                         />
-                                                        {
+                                                        {/* {
                                                             loadImage2 ? (
                                                                 <ActivityIndicator size={'small'} color={colors.blueColor} style={{ marginTop: -200, height: 200 / 930 * height }} />
                                                             ) : <></>
-                                                        }
+                                                        } */}
                                                     </>
 
                                                 ) : (
@@ -433,11 +433,11 @@ export default function SelectedProfile({ navigation, route }) {
                                                                 />
                                                             </TouchableOpacity>
 
-                                                            {
+                                                            {/* {
                                                                 loadImage4 ? (
                                                                     <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 110, left: 175 }} />
                                                                 ) : <></>
-                                                            }
+                                                            } */}
                                                         </>
                                                     ) : null
                                                 )

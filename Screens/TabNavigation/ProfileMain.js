@@ -76,6 +76,7 @@ export default function ProfileMain(props) {
       <View style={{ height: height, width: width - 60, alignItems: 'center' }}>
         <View style={{
           flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 60, alignSelf: 'center',
+          marginTop:10/930*height
         }}>
           <Text style={{ fontSize: 26, fontWeight: '500' }}>Profile</Text>
           <TouchableOpacity

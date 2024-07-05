@@ -27,13 +27,13 @@ const CongratsScreen = ({ navigation }) => {
                     </Text>
                 </View>
                 <View style={{ marginTop: 200 / 930 * height, display: 'flex', alignItems: 'center' }}>
-                    <Image source={require('../../assets/congrats.png')} style={{ resizeMode: 'contain' }} />
+                    <Image source={require('../../assets/congrats.png')} style={{ resizeMode: 'contain',height:198,width:206 }} />
                 </View>
-                <View style = {{alignItems:'center',gap:10,marginTop:20}}>
+                <View style = {{alignItems:'center',gap:15,marginTop:50}}>
                     <Text style = {{fontSize:28,fontFamily:customFonts.semibold}}>
                         Congrats!
                     </Text>
-                    <Text>
+                    <Text style = {{fontSize:16,fontFamily:customFonts.regular}}>
                         Your account has been successfully created
                     </Text>
                 </View>

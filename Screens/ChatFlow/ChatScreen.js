@@ -227,6 +227,7 @@ export default function ChatScreen({ navigation, route }) {
 
     const fromCurrentUser = (message) => {
         if (currentUser && currentUser.user.id === message.userId) {
+            console.log('message from me')
             return true
         }
         return false

@@ -1,53 +1,106 @@
-import { View, Text, Dimensions, FlatList, TouchableOpacity, Settings, ActivityIndicator } from 'react-native'
+import {
+    View, Text, Dimensions, FlatList, TouchableOpacity, Settings, ActivityIndicator,
+    Animated, Easing, StyleSheet, TextInput, Keyboard,DeviceEventEmitter
+} from 'react-native'
 import { Image } from 'expo-image';
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import colors from '../../assets/colors/Colors';
 import customFonts from '../../assets/fonts/Fonts';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import ApisPath from '../../lib/ApisPath/ApisPath';
-import { useEffect } from 'react';
 import moment from 'moment';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BroadcastEvents } from '../../models/Constants';
 
 const placholder = require('../../assets/images/imagePlaceholder.webp')
 
 const { height, width } = Dimensions.get('window');
 const profile = require('../../assets/images/profileImage.png')
+const searchIcon = require('../../assets/images/searchIcon.png')
+const closeIcon = require('../../assets/images/close.png')
+
 
 export default function MessagesList({ navigation }) {
+
+    const searchWidth = useRef(new Animated.Value(0)).current; // Initial width of the search field
+    const searchOpacity = useRef(new Animated.Value(0)).current;
+    const textInputRef = useRef(null);
 
     const [messageList, setMesssageList] = useState([])
     const [loadImage, setLoadImage] = useState(false)
     const [showIndicator, setShowIndicator] = useState(false)
     const [user, setUser] = useState(false)
-    useFocusEffect(
-        useCallback(() => {
-            // getMessagesList()
-            // getLastMessage()
+    const [showKeyboard, setShowKeyboard] = useState(false)
+    const [search, setSearch] = useState('')
+    const [isSearching, setIsSearching] = useState(false)
+    const [filteredMessages, setFilteredMessages] = useState([]);
 
-        }, [])
-    )
+    useEffect(() => {
+        const listener = DeviceEventEmitter.addListener(BroadcastEvents.EventCreateChat, (data) => {
+            console.log('chat object received from broad cast', data)
+           getMessagesList()
+            
+
+        })
+        return () => {
+            listener.remove()
+        }
+    }, [])
+
+    useEffect(() => {
+        console.log("Fitlered messages chagned ", filteredMessages)
+    }, [filteredMessages])
 
     useEffect(() => {
         getMessagesList()
-
         console.log('rearranged messasges list is', messageList)
     }, [])
+
+
+    const searchUserName = (search) => {
+        setSearch(search);
+        setIsSearching(true);
+
+        if (search.trim() === '') {
+            setFilteredMessages(messageList); // Show all messages if search is empty
+        } else {
+            const filtered = messageList.filter((chat) => {
+                let user = chat.users[0]
+                if (user.first_name.toLowerCase().includes(search.toLowerCase()) || user.last_name.toLowerCase().includes(search.toLowerCase())) {
+                    return chat
+                }
+            }
+            );
+            console.log("Filtered chats are", filtered)
+            setFilteredMessages(filtered); // Update filtered messages
+        }
+    };
 
     const getLastMessageObject = (lastMsg) => {
         console.log('last message from chat screen is', lastMsg)
 
-        if (lastMsg) {
+        if (lastMsg ) {
             const index = messageList.findIndex(message => message.id === lastMsg.chatId)
             if (index !== -1) {
                 let chat = messageList[index];
                 console.log('chat found at  ', index)
-                if(typeof messageList[index] != 'undefined'){
+                // if (typeof messageList[index] != 'undefined') {
                     messageList[index].lastMessage = lastMsg
-                }
+                // }
             }
-            messageList.sort((a, b) => new Date(b.lastMessage.createdAt) - new Date(a.lastMessage.createdAt));
+            let at = 0
+            messageList.sort((a, b) => {
+                console.log(`-----------------${at}------------------`)
+                console.log("A ", a)
+                console.log("B ", b)
+                console.log('-----------------------------------')
+                at += 1
+                if(a.lastMessage && b.lastMessage){
+                    return new Date(b.lastMessage.createdAt) - new Date(a.lastMessage.createdAt)
+                }
+                return false
+            });
         }
     }
 
@@ -88,6 +141,7 @@ export default function MessagesList({ navigation }) {
                     if (json.status === true) {
                         console.log('get messages list is', json.data)
                         setMesssageList(json.data)
+                        setFilteredMessages(json.data)
 
                     } else {
                         console.log('json message is', json.message)
@@ -158,6 +212,45 @@ export default function MessagesList({ navigation }) {
     }
 
 
+    const handleSearchPress = () => {
+
+        if (isSearching) {
+            Keyboard.dismiss()
+            setSearch('')
+            textInputRef.current?.setNativeProps({ text: '' });
+            setShowKeyboard(false)
+        } else {
+            setShowKeyboard(true)
+            textInputRef.current?.focus()
+        }
+        setIsSearching(prev => !prev)
+
+        Animated.parallel([
+            Animated.timing(searchWidth, {
+                toValue: isSearching ? 0 : 260 / 430 * width, // Change 250 to the desired width of the search field
+                duration: 300,
+                easing: Easing.linear,
+                useNativeDriver: false,
+            }),
+            Animated.timing(searchOpacity, {
+                toValue: isSearching ? 0 : 1, // Change opacity for smooth transition
+                duration: 50,
+                delay: isSearching ? 300 : 30,
+                easing: Easing.linear,
+                useNativeDriver: false,
+            })
+        ]).start();
+    }
+
+    const renderEmptyListComponent = () => (
+        <View style={{ alignItems: 'center', width: width, height: height * 0.76, justifyContent: 'center' }}>
+            <Text style={{ fontSize: 18, fontFamily: customFonts.medium, color: 'grey' }}>
+                {isSearching ? 'No matches found' : 'No chats'}
+            </Text>
+        </View>
+    );
+
+
 
     return (
 
@@ -176,12 +269,47 @@ export default function MessagesList({ navigation }) {
                         justifyContent: 'space-between',
                     }}>
                         <Text style={{ fontSize: 23, fontFamily: customFonts.meduim }}>Messages</Text>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
-                            <TouchableOpacity>
-                                <Image source={require('../../assets/images/searchIcon.png')}
-                                    style={GlobalStyles.backBtnImage}
+                        <Animated.View style={[styles.searchContainer, { width: searchWidth, opacity: searchOpacity }]}>
+                            <View style={styles.searchInput}>
+                                <TextInput
+                                    style={{ width: 200 / 430 * width, backgroundColor: 'transparent' }}
+                                    ref={textInputRef}
+                                    autoCorrect={false} autoComplete='none'
+                                    spellCheck={false}
+                                    placeholder="Search"
+                                    placeholderTextColor="#aaa"
+                                    autoFocus={showKeyboard}
+                                    Value={search}
+                                    onChangeText={searchUserName}
+
+                                // onFocus={() => setShowKeyboard(true)}
                                 />
-                            </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        handleSearchPress()
+                                        // setSearch('')
+                                    }}
+                                >
+                                    <Image source={closeIcon}
+                                        style={{ height: 20, width: 20 }}
+                                    />
+                                </TouchableOpacity>
+
+                            </View>
+                        </Animated.View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
+                            {
+                                !isSearching &&
+                                <TouchableOpacity style={{ paddingBottom: 0 }}
+                                    onPress={() => {
+                                        handleSearchPress()
+                                    }}
+                                >
+                                    <Image source={searchIcon}
+                                        style={GlobalStyles.backBtnImage}
+                                    />
+                                </TouchableOpacity>
+                            }
                             <TouchableOpacity>
                                 <Image source={require('../../assets/images/moreIcon.png')}
                                     style={GlobalStyles.backBtnImage}
@@ -199,10 +327,10 @@ export default function MessagesList({ navigation }) {
                                 <ActivityIndicator color={colors.blueColor} size={'large'} />
                             </View>
                         ) : (
-                            messageList && messageList.length > 0 ? (
+                            filteredMessages && filteredMessages.length > 0 ? (
                                 <FlatList
                                     showsVerticalScrollIndicator={false}
-                                    data={messageList}
+                                    data={filteredMessages}
                                     renderItem={({ item }) => (
                                         <>
                                             <TouchableOpacity onPress={() => handleOnPress(item)} >
@@ -216,7 +344,7 @@ export default function MessagesList({ navigation }) {
                                                                 setLoadImage(false)
                                                             }}
                                                             style={{
-                                                                resizeMode: 'cover', height: 46 / 930 * height, width: 46 / 430 * width,
+                                                                resizeMode: 'cover', height: 46 / 930 * height, width: 46 / 930 * height,
                                                                 opacity: item.unread ? 100 : 0.8, borderRadius: 25
                                                             }}
                                                         />
@@ -265,9 +393,7 @@ export default function MessagesList({ navigation }) {
 
                                 />
                             ) : (
-                                <View style={{ alignItems: 'center', width: width, height: height * 0.76, justifyContent: 'center' }}>
-                                    <Text style={{ fontSize: 20 }}>No chats</Text>
-                                </View>
+                                renderEmptyListComponent()
                             )
 
                         )
@@ -277,3 +403,28 @@ export default function MessagesList({ navigation }) {
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    searchContainer: {
+        alignSelf: 'center',
+        overflow: 'hidden',
+        marginLeft: 10,
+        marginRight: 10,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: '#f0f0f0',
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 10,
+        width: 280 / 430 * width,
+        marginTop: 60 / 930 * height
+    },
+    searchInput: {
+        flex: 1,
+        height: 40,
+        flexDirection: 'row',
+        gap: 10,
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+})
