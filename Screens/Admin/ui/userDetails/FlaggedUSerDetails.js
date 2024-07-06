@@ -47,7 +47,7 @@ const FlaggedUSerDetails = ({ navigation, route }) => {
     }
 
     const routeData = route.params.DATA;
-    // console.log('Data recieved form previous screen is :', routeData.userDetails);
+    console.log('Data recieved form previous screen is :', routeData);
 
     let data = routeData.userDetails
 

@@ -37,7 +37,7 @@ const FlaggedUsers = ({ navigation }) => {
                     });
                     if (response.ok) {
                         const Result = await response.json();
-                        console.log('Apis responseis true');
+                        console.log('Apis response is :', Result.data);
                         // console.log('Response of api is :', Result);
                         setFlaggedUsers(Result.data);
                     } else {

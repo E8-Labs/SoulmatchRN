@@ -122,7 +122,7 @@ export default function LoginUser(props) {
                 }
             }
             //Call the api here
-            socialLogin({ first_name: `${credential.fullName.givenName}`,last_name: `${credential.fullName.familyName}`, email: credential.email, provider_name: "apple", provider_id: credential.user })
+            socialLogin({ first_name: credential.fullName.givenName,last_name: credential.fullName.familyName, email: credential.email, provider_name: "apple", provider_id: credential.user })
 
             console.log("Apple credentials ", credential)
         } catch (e) {
