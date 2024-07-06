@@ -100,7 +100,7 @@ const FlaggedUsers = ({ navigation }) => {
         if (flaggedUsers.length === 0) {
             return (
                 <View>
-                    <Text style={{ fontWeight: '500', fontSize: 20, fontFamily: customFonts.medium, textAlign: 'center', marginTop: 30 }}>
+                    <Text style={{ fontWeight: '500', fontSize: 20, fontFamily: customFonts.meduim, textAlign: 'center', marginTop: 30 }}>
                         No flagged users
                     </Text>
                 </View>
@@ -124,7 +124,7 @@ const FlaggedUsers = ({ navigation }) => {
                                 <Image source={require('../../../../assets/Images3/backIcon.png')} style={{ height: 18, width: 9, resizeMode: 'contain' }} />
                             </View>
                         </TouchableOpacity>
-                        <Text style={{ fontWeight: '500', fontSize: 24, fontFamily: customFonts.medium }}>
+                        <Text style={{ fontWeight: '500', fontSize: 24, fontFamily: customFonts.meduim }}>
                             Flagged users
                         </Text>
                     </View>
@@ -166,18 +166,18 @@ const FlaggedUsers = ({ navigation }) => {
                                                     }}>
                                                     <ActivityIndicator size={'small'} color={colors.blueColor} />
                                                 </View> : ''}
-                                            <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.medium, marginTop: 7 }}>
+                                            <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, marginTop: 7 }}>
                                                 {item.reportedUser.first_name} {item.reportedUser.last_name}
                                             </Text>
                                             <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                                                 <Image source={require('../../../../assets/Images3/location.png')} style={{ height: 14 / 930 * height, width: 14 / 430 * width }} />
-                                                <Text style={{ fontWeight: '400', fontSize: 12, fontFamily: customFonts.medium, color: '#333333' }}>
+                                                <Text style={{ fontWeight: '400', fontSize: 12, fontFamily: customFonts.meduim, color: '#333333' }}>
                                                     New York, NY
                                                 </Text>
                                             </View>
                                             <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                                                 <Image source={require('../../../../assets/Images3/crown2.png')} style={{ height: 15 / 930 * height, width: 15 / 430 * width }} />
-                                                <Text style={{ fontWeight: '500', fontSize: 12, fontFamily: customFonts.medium, color: '' }}>
+                                                <Text style={{ fontWeight: '500', fontSize: 12, fontFamily: customFonts.meduim, color: '' }}>
                                                     Monthly
                                                 </Text>
                                             </View>

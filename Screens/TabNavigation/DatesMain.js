@@ -82,7 +82,7 @@ export default function DatesMain(props) {
                 onChangeText={(e) => setSearchDates(e)}
                 style={{
                   width: 304 / 430 * width,
-                  fontSize: 14, fontWeight: '500', fontFamily: customFonts.medium
+                  fontSize: 14, fontWeight: '500', fontFamily: customFonts.meduim
                 }}
                 placeholder='Search' />
             </View>

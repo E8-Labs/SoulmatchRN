@@ -214,7 +214,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                                 <Image source={require('../../../../assets/Images3/CrossIcon.png')} style={{ height: 16, width: 16, resizeMode: 'contain' }} />
                             </View>
                         </TouchableOpacity>
-                        <Text style={{ fontWeight: '500', fontSize: 22, color: '#333333', fontFamily: customFonts.medium }}>
+                        <Text style={{ fontWeight: '500', fontSize: 22, color: '#333333', fontFamily: customFonts.meduim }}>
                             {ProfileData.first_name} {ProfileData.last_name}
                         </Text>
                     </View>
@@ -249,7 +249,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                             <View style={{ flexDirection: 'row', marginTop: 10, gap: 8, alignItems: 'center' }}>
                                 <Image source={require('../../../../assets/Images3/compatibility.png')} style={{ height: 56, width: 56, resizeMode: 'contain' }} />
                                 <View>
-                                    <Text style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.medium, color: '#666666' }}>
+                                    <Text style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.meduim, color: '#666666' }}>
                                         Compatibility score
                                     </Text>
                                     <Text style={{ fontWeight: '600', fontSize: 20, color: '#4D4D4D', fontFamily: customFonts.bold }}>
@@ -321,12 +321,12 @@ const UserProfileDetails = ({ navigation, route }) => {
                             </View>
 
                             <View style={{ marginTop: 22 / 930 * height, alignItems: 'flex-start', }}>
-                                <Text style={{ fontSize: 20, fontFamily: customFonts.medium }}>Photos & videos</Text>
+                                <Text style={{ fontSize: 20, fontFamily: customFonts.meduim }}>Photos & videos</Text>
                             </View>
                             <View>
                                 {UserMedia ?
-                                    <Text style={{ fontSize: 16, marginTop: 10, fontFamily: customFonts.semibold }}>
-                                        No Photo & Video Added
+                                    <Text style={{ fontSize: 14, marginTop: 10, fontFamily: customFonts.regular }}>
+                                        No photo & video added
                                     </Text> :
                                     <FlatList
                                         scrollEnabled={false}
@@ -337,7 +337,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                                                     <Text style={{ fontWeight: '400', fontSize: 16, fontFamily: customFonts.regular }}>
                                                         {
                                                             item.caption ?
-                                                                <Text style={{ fontWeight: '400', fontSize: 16, fontFamily: customFonts.medium }}>
+                                                                <Text style={{ fontWeight: '400', fontSize: 16, fontFamily: customFonts.meduim }}>
                                                                     {item.caption}
                                                                 </Text> : ""
 
@@ -406,13 +406,13 @@ const UserProfileDetails = ({ navigation, route }) => {
                             </View>
 
                             <View style={{ marginTop: 22 / 930 * height, alignItems: 'flex-start', }}>
-                                <Text style={{ fontSize: 20, fontFamily: customFonts.medium }}>Profile statement questions</Text>
+                                <Text style={{ fontSize: 20, fontFamily: customFonts.meduim }}>Profile statement questions</Text>
                             </View>
 
                             <View style={{ marginBottom: 20 }}>
                                 {QuestionAnswers ?
-                                    <Text style={{ fontSize: 16, marginTop: 10, fontFamily: customFonts.semibold }}>
-                                        No Answers Added
+                                    <Text style={{ fontSize: 14, marginTop: 10, fontFamily: customFonts.regular }}>
+                                        No answer added
                                     </Text> :
                                     <FlatList
                                         scrollEnabled={false}
@@ -488,7 +488,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                         <View style={{ height: 630 / 930 * height, borderTopRightRadius: 25, borderTopLeftRadius: 25, backgroundColor: 'white', width: width, position: 'absolute', bottom: 0, alignItems: 'center' }}>
                             <View style={{ width: width - 50 }}>
                                 <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', marginTop: 15 / 930 * height, alignItems: 'center' }}>
-                                    <Text style={{ fontSize: 20, fontWeight: '500', fontFamily: customFonts.medium }}>
+                                    <Text style={{ fontSize: 20, fontWeight: '500', fontFamily: customFonts.meduim }}>
                                         Delete
                                     </Text>
                                     <TouchableOpacity onPress={() => setOpenModal(false)} style={{ marginRight: 10 }}>
@@ -502,14 +502,14 @@ const UserProfileDetails = ({ navigation, route }) => {
                                 <Image source={ProfileData.profile_image ? { uri: ProfileData.profile_image } : placholder} style={{ height: 250, width: 250, resizeMode: 'cover', borderRadius: 10 }} />
                             </View>
 
-                            <Text style={{ fontWeight: '500', padding: 10, fontFamily: customFonts.medium, fontSize: 16, color: '#4D4D4D', marginTop: 15, textAlign: 'center' }}>
+                            <Text style={{ fontWeight: '500', padding: 10, fontFamily: customFonts.meduim, fontSize: 16, color: '#4D4D4D', marginTop: 15, textAlign: 'center' }}>
                                 Are you sure you want to delete {ProfileData.first_name} {ProfileData.last_name} account?
                             </Text>
 
                             <View style={{ width: width - 50, flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 }}>
                                 <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 1, }}>
                                     <TouchableOpacity onPress={() => setOpenModal(false)}>
-                                        <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.medium }}>
+                                        <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.meduim }}>
                                             Cancel
                                         </Text>
                                     </TouchableOpacity>
@@ -517,7 +517,7 @@ const UserProfileDetails = ({ navigation, route }) => {
 
                                 <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: '#E01F1F' }}>
                                     <TouchableOpacity onPress={handleDelete}>
-                                        <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.medium, color: 'white' }}>
+                                        <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.meduim, color: 'white' }}>
                                             Yes, Delete
                                         </Text>
                                     </TouchableOpacity>
@@ -537,7 +537,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                         <View style={{ height: 630 / 930 * height, borderTopRightRadius: 25, borderTopLeftRadius: 25, backgroundColor: 'white', width: width, position: 'absolute', bottom: 0, alignItems: 'center' }}>
                             <View style={{ width: width - 50 }}>
                                 <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', marginTop: 15 / 930 * height, alignItems: 'center' }}>
-                                    <Text style={{ fontSize: 20, fontWeight: '500', fontFamily: customFonts.medium }}>
+                                    <Text style={{ fontSize: 20, fontWeight: '500', fontFamily: customFonts.meduim }}>
                                         Suspend
                                     </Text>
                                     <TouchableOpacity onPress={() => setopenSuspendModal(false)} style={{ marginRight: 10 }}>
@@ -551,14 +551,14 @@ const UserProfileDetails = ({ navigation, route }) => {
                                 <Image source={ProfileData.profile_image ? { uri: ProfileData.profile_image } : placholder} style={{ height: 250, width: 250, resizeMode: 'cover', borderRadius: 10 }} />
                             </View>
 
-                            <Text style={{ fontWeight: '500', padding: 10, fontFamily: customFonts.medium, fontSize: 16, color: '#4D4D4D', marginTop: 15, textAlign: 'center' }}>
+                            <Text style={{ fontWeight: '500', padding: 10, fontFamily: customFonts.meduim, fontSize: 16, color: '#4D4D4D', marginTop: 15, textAlign: 'center' }}>
                                 Are you sure you want to suspend {ProfileData.first_name} {ProfileData.last_name}’s account?
                             </Text>
 
                             <View style={{ width: width - 50, flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 }}>
                                 <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 1, }}>
                                     <TouchableOpacity onPress={() => setopenSuspendModal(false)}>
-                                        <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.medium }}>
+                                        <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.meduim }}>
                                             Cancel
                                         </Text>
                                     </TouchableOpacity>
@@ -566,7 +566,7 @@ const UserProfileDetails = ({ navigation, route }) => {
 
                                 <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: '#E01F1F' }}>
                                     <TouchableOpacity onPress={handleSuspend}>
-                                        <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.medium, color: 'white' }}>
+                                        <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.meduim, color: 'white' }}>
                                             Yes, Suspend
                                         </Text>
                                     </TouchableOpacity>
@@ -599,7 +599,7 @@ const styles = StyleSheet.create({
     },
     viewText: {
         fontSize: 16,
-        fontFamily: customFonts.medium,
+        fontFamily: customFonts.meduim,
         textAlign: 'left',
         // width: 334 / 430 * width
     },

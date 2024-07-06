@@ -244,7 +244,7 @@ export default function MessagesList({ navigation }) {
 
     const renderEmptyListComponent = () => (
         <View style={{ alignItems: 'center', width: width, height: height * 0.76, justifyContent: 'center' }}>
-            <Text style={{ fontSize: 18, fontFamily: customFonts.medium, color: 'grey' }}>
+            <Text style={{ fontSize: 18, fontFamily: customFonts.meduim, color: 'grey' }}>
                 {isSearching ? 'No matches found' : 'No chats'}
             </Text>
         </View>

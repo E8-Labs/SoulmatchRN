@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as MailComposer from "expo-mail-composer"
 import colors from '../../../../assets/colors/Colors';
 import Apis from '../../apis/Apis';
+import { ShowMessage } from '../../../../Services/Snakbar/ShowMessage'
 
 const FlaggedUSerDetails = ({ navigation, route }) => {
     const { height, width } = Dimensions.get('window')
@@ -81,6 +82,7 @@ const FlaggedUSerDetails = ({ navigation, route }) => {
                 if (response.ok) {
                     const Result = await response.json();
                     console.log('Response of api is :', Result);
+                    ShowMessage("Reported user suspended successfully", colors.blueColor);
                     route.params.suspendedUserId(RepId);
                     setSusLoading(false);
                     navigation.pop();
@@ -121,6 +123,7 @@ const FlaggedUSerDetails = ({ navigation, route }) => {
                     setDelLoading(false);
                     const Result = await response.json();
                     console.log('Response is :', Result);
+                    ShowMessage("Reported user deleted successfully", colors.blueColor);
                     route.params.deletedUserId(RepId);
                     setOpenModal(false);
                     navigation.pop();
@@ -164,6 +167,7 @@ const FlaggedUSerDetails = ({ navigation, route }) => {
                     setDelLoading(false);
                     const Result = await response.json();
                     console.log('Response is :', Result);
+                    ShowMessage('User deleted successfully', colors.blueColor)
                     route.params.deletedUserId(RepId);
                     setOpenModal(false);
                     navigation.pop();
@@ -206,6 +210,7 @@ const FlaggedUSerDetails = ({ navigation, route }) => {
                     console.log('Response of api is :', Result);
                     const ignoredReport = { reportID }
                     console.log('Ignored report id is', ignoredReport)
+                    ShowMessage("Report ignored", colors.blueColor);
                     route.params.ignoredUserId(ignoredReport);
                     navigation.pop();
                 } else {
@@ -236,7 +241,7 @@ const FlaggedUSerDetails = ({ navigation, route }) => {
                                 <Image source={require('../../../../assets/Images3/CrossIcon.png')} style={{ height: 16, width: 16, resizeMode: 'contain' }} />
                             </View>
                         </TouchableOpacity>
-                        <Text style={{ fontWeight: '500', fontSize: 22, color: '#333333', fontFamily: customFonts.medium }}>
+                        <Text style={{ fontWeight: '500', fontSize: 22, color: '#333333', fontFamily: customFonts.meduim }}>
                             {data.reportedUser.first_name} {data.reportedUser.last_name}
                         </Text>
                     </View>
@@ -302,14 +307,14 @@ const FlaggedUSerDetails = ({ navigation, route }) => {
                                     </Text>
                                 </TouchableOpacity>
                             </View>
-                            <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.medium, marginTop: 20 }}>
+                            <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, marginTop: 20 }}>
                                 Flagger
                             </Text>
                             {/* Code for flagger details */}
                             <View style={{ borderWidth: 1, borderColor: '#E6E6E6', padding: 20, borderRadius: 10, marginTop: 20 }}>
                                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                                     <Image source={data.reportedUser.profile_image ? { uri: data.reportingUser.profile_image } : require('../../../../assets/Images3/imagePlaceholder.webp')} style={{ height: 46, width: 46, borderRadius: 23 }} />
-                                    <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.medium, color: '#333333' }}>
+                                    <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, color: '#333333' }}>
                                         {data.reportingUser.first_name} {data.reportingUser.last_name}
                                     </Text>
                                 </View>
@@ -318,15 +323,15 @@ const FlaggedUSerDetails = ({ navigation, route }) => {
                                         <ActivityIndicator style={{ width: 150 / 430 * width, }} size={'small'} color={colors.blueColor} /> :
                                         <View>
                                             <TouchableOpacity onPress={handleDeleteReportingUser}
-                                            style={{
-                                                height: 40 / 930 * height,
-                                                width: 150 / 430 * width,
-                                                borderWidth: 1,
-                                                borderColor: '#E01F1F',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                borderRadius: 10,
-                                            }}>
+                                                style={{
+                                                    height: 40 / 930 * height,
+                                                    width: 150 / 430 * width,
+                                                    borderWidth: 1,
+                                                    borderColor: '#E01F1F',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    borderRadius: 10,
+                                                }}>
                                                 <Text style={[styles.ReactionText, { color: '#E01F1F', }]}>
                                                     Delete
                                                 </Text>
@@ -351,7 +356,7 @@ const FlaggedUSerDetails = ({ navigation, route }) => {
                                 </View>
                             </View>
 
-                            <Text style={{ fontSize: 18, fontWeight: '600', fontFamily: customFonts.medium, color: '#333333', marginTop: 10 }}>
+                            <Text style={{ fontSize: 18, fontWeight: '600', fontFamily: customFonts.meduim, color: '#333333', marginTop: 10 }}>
                                 Comment
                             </Text>
 
@@ -412,7 +417,7 @@ const FlaggedUSerDetails = ({ navigation, route }) => {
                                                     justifyContent: 'center',
                                                     borderRadius: 10,
                                                 }}>
-                                                <Text style={{ color: '#E01F1F', fontWeight: '500', fontSize: 16, fontFamily: customFonts.medium }}>
+                                                <Text style={{ color: '#E01F1F', fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim }}>
                                                     Delete User
                                                 </Text>
                                             </TouchableOpacity>
@@ -433,7 +438,7 @@ const FlaggedUSerDetails = ({ navigation, route }) => {
                                                     justifyContent: 'center',
                                                     borderRadius: 10,
                                                 }}>
-                                                <Text style={{ color: '#000000', fontWeight: '500', fontSize: 16, fontFamily: customFonts.medium }}>
+                                                <Text style={{ color: '#000000', fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim }}>
                                                     Suspend User
                                                 </Text>
                                             </TouchableOpacity>
@@ -453,7 +458,7 @@ export default FlaggedUSerDetails;
 
 const styles = StyleSheet.create({
     ReactionText: {
-        fontWeight: customFonts.medium,
+        fontWeight: customFonts.meduim,
         fontWeight: '500',
         fontSize: 14
     }

@@ -1,6 +1,7 @@
 import ApisPath from "../../lib/ApisPath/ApisPath"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { getProfile } from "../ProfileServices/GetProfile"
+import { ShowMessage } from "../Snakbar/ShowMessage"
 
 export const NavigateLogedUser = async (navigation, from) => {
   const user = await AsyncStorage.getItem("USER")
@@ -15,20 +16,26 @@ export const NavigateLogedUser = async (navigation, from) => {
     console.log('user status is', data.status)
     // return
     if ( typeof data.role !== undefined && data.role === 'admin') {
-      navigation.navigate("AdminTabBarContainer", {
+      navigation.replace("AdminTabBarContainer", {
         data: {
           from: from
         }
       })
       return
     }
+    // Promo code is invalid
     
     else if (data.status === "suspended") {
-      alert("Your account has been suspended by admin")
+      ShowMessage("Your account has been suspended by admin")
+      if(from === 'Splash'){
+        navigation.navigate("LoginUser")
+      }
       return
-    } else if (data.status === "blocked") {
-      alert("Your account has been blocked by admin")
-      return
+    } else if (data.status === "deleted") {
+      ShowMessage("Your account has been deleted by admin")
+      if(from === 'Splash'){
+        navigation.navigate("LoginUser")
+      }      return
     } else if (data.status === "active") {
 
       // console.log('user status is', data.status)

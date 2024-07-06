@@ -6,6 +6,7 @@ import GlobalStyles from '../assets/styles/GlobalStyles'
 import colors from '../assets/colors/Colors'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import ApisPath from '../lib/ApisPath/ApisPath'
+import { ShowMessage } from '../Services/Snakbar/ShowMessage'
 
 const { height, width } = Dimensions.get('window')
 const likeImage = require('../assets/images/like.png');
@@ -65,6 +66,7 @@ export default function AddCommentPopup({ item, close }) {
 
                     if (json.status === true) {
                         console.log('comment successfuly send', json.data)
+                        ShowMessage("Comment added",colors.blueColor,)
                         close(true)
                     } else {
                         console.log('json message of send comment is ', json.message)

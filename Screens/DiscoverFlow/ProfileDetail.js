@@ -381,8 +381,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                     let tempFltr = await AsyncStorage.getItem("TempFilters")
                                     if (tempFltr) {
                                         let tempFilter = JSON.parse(tempFltr)
-                                        // let getDiscover = false
-                                        // closeModal()
+                                       setFilters(tempFilter)
                                         setOpenModalLocation(true)
                                         console.log('temp filters are ', tempFilter)
 

@@ -108,7 +108,7 @@ const SendFeedBack = ({ navigation }) => {
                                         <Image source={require('../../assets/images/backArrow.png')} style={{ height: 30, width: 30, resizeMode: 'contain' }} />
                                     </View>
                                 </TouchableOpacity>
-                                <Text style={{ fontWeight: '500', fontSize: 24, color: '#333333', fontFamily: customFonts.medium }}>
+                                <Text style={{ fontWeight: '500', fontSize: 24, color: '#333333', fontFamily: customFonts.meduim }}>
                                     Feedback
                                 </Text>
                             </View>
@@ -157,7 +157,7 @@ const SendFeedBack = ({ navigation }) => {
                                     <ActivityIndicator size={'large'} color={colors.blueColor} />
                                 ) : (
                                     <TouchableOpacity onPress={handleSendClick} style={{ height: 55 / 930 * height, backgroundColor: '#6050DC', borderRadius: 10, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                                        <Text style={{ color: '#ffffff', fontWeight: '500', fontSize: 18, fontFamily: customFonts.medium }}>
+                                        <Text style={{ color: '#ffffff', fontWeight: '500', fontSize: 18, fontFamily: customFonts.meduim }}>
                                             Send
                                         </Text>
                                     </TouchableOpacity>
@@ -177,7 +177,7 @@ export default SendFeedBack
 const styles = StyleSheet.create({
     labelText: {
         fontWeight: '500',
-        fontFamily: customFonts.medium,
+        fontFamily: customFonts.meduim,
         fontSize: 16,
         color: '#000'
     },

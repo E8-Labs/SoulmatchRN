@@ -9,6 +9,7 @@ import colors from '../../assets/colors/Colors';
 import customFonts from '../../assets/fonts/Fonts';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ShowMessage } from '../../Services/Snakbar/ShowMessage';
 
 export default function ChangePassword({ navigation, route }) {
     const { height, width } = Dimensions.get('window')
@@ -58,16 +59,8 @@ export default function ChangePassword({ navigation, route }) {
                     let json = await result.json()
                     if (json.status === true) {
                         console.log('password changed ')
-                        Alert.alert(
-                            'Password Changed',
-                            'Your password has been changed',
-                            
-                                [{
-                                    text: 'Go back',
-                                    onPress: () => navigation.goBack(),
-                                }],
-                                { cancelable: true }
-                            )
+                        ShowMessage("Password changed",colors.blueColor)
+                        navigation.goBack()
                        
                     } else {
                         setError(json.message)

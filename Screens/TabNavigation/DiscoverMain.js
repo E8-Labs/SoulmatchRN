@@ -97,7 +97,7 @@ export default function DiscoverMain(props) {
           <ActivityIndicator color={colors.blueColor} size={'large'} style={{ alignSelf: 'center', height: height }} />
         ) : (
           <ProfileDetail navigation={props.navigation} data={discovers} fromScreen={'Main'} filtersData={(data) => {
-            console.log('filters data is ', data.getDiscover)
+            console.log('filters data is ', data)
             if (data.getDiscover === true) {
               getDiscover()
             }

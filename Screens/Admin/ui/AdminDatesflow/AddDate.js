@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import colors from '../RangeSlider/Colors';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AddressPicker from '../Addresspicker/AddressPicker'
+import { ShowMessage } from '../../../../Services/Snakbar/ShowMessage'
 
 const AddDate = ({ navigation, route }) => {
     const routeData = route.params.DATA;
@@ -283,6 +284,8 @@ const AddDate = ({ navigation, route }) => {
                     const Result = await response.json();
                     if (Result.status === true) {
                         console.log("Response of api is", Result);
+                        ShowMessage("Date added successFully", colors.blueColor);
+
                         const newDateData = Result.data
                         console.log('new date data on add date screen is', newDateData)
                         // return
@@ -463,6 +466,8 @@ const AddDate = ({ navigation, route }) => {
                 if (response.ok) {
                     const UpdateData = await response.json();
                     console.log('Response of update api is :', UpdateData);
+                    ShowMessage("Date updated succesfully", colors.blueColor);
+
                     route.params.updateDate(UpdateData);
                     navigation.pop();
                 } else {
@@ -519,11 +524,11 @@ const AddDate = ({ navigation, route }) => {
                         </TouchableOpacity>
                         {
                             routeData.from === "AdminDates" ? (
-                                <Text style={{ fontWeight: '500', fontSize: 24, fontFamily: customFonts.medium }}>
+                                <Text style={{ fontWeight: '500', fontSize: 24, fontFamily: customFonts.meduim }}>
                                     Add new date
                                 </Text>
                             ) : (
-                                <Text style={{ fontWeight: '500', fontSize: 24, fontFamily: customFonts.medium }}>
+                                <Text style={{ fontWeight: '500', fontSize: 24, fontFamily: customFonts.meduim }}>
                                     Edit
                                 </Text>
                             )
@@ -538,7 +543,7 @@ const AddDate = ({ navigation, route }) => {
                                     Loading ?
                                         <ActivityIndicator size={'small'} color={colors.blueColor} /> :
                                         <TouchableOpacity onPress={handleSaveClick} style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                            <Text style={{ fontWeight: '500', fontFamily: customFonts.medium, fontSize: 14, color: '#6050DC' }}>
+                                            <Text style={{ fontWeight: '500', fontFamily: customFonts.meduim, fontSize: 14, color: '#6050DC' }}>
                                                 Save
                                             </Text>
                                         </TouchableOpacity>
@@ -550,7 +555,7 @@ const AddDate = ({ navigation, route }) => {
                                     loading2 ?
                                         <ActivityIndicator size={'small'} color={colors.blueColor} /> :
                                         <TouchableOpacity onPress={handleUpdate} style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                            <Text style={{ fontWeight: '500', fontFamily: customFonts.medium, fontSize: 14, color: '#6050DC' }}>
+                                            <Text style={{ fontWeight: '500', fontFamily: customFonts.meduim, fontSize: 14, color: '#6050DC' }}>
                                                 Update
                                             </Text>
                                         </TouchableOpacity>
@@ -563,7 +568,7 @@ const AddDate = ({ navigation, route }) => {
 
                 <View style={{ height: height * 0.85 }}>
                     <ScrollView showsVerticalScrollIndicator={false}>
-                        {/* <Text style={{ fontWeight: '500', fontFamily: customFonts.medium, fontSize: 16, marginTop: 18 }}>
+                        {/* <Text style={{ fontWeight: '500', fontFamily: customFonts.meduim, fontSize: 16, marginTop: 18 }}>
  Add Image
  </Text> */}
 
@@ -582,7 +587,7 @@ const AddDate = ({ navigation, route }) => {
                             </View>
                         }
 
-                        <Text style={{ fontWeight: '500', fontFamily: customFonts.medium, fontSize: 16, marginTop: 18 }}>
+                        <Text style={{ fontWeight: '500', fontFamily: customFonts.meduim, fontSize: 16, marginTop: 18 }}>
                             Business
                         </Text>
 
@@ -590,7 +595,7 @@ const AddDate = ({ navigation, route }) => {
                             <TextInput
                                 value={BusinessName}
                                 onChangeText={(Business) => setBusinessName(Business)}
-                                style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.medium, color: '#000000' }}
+                                style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.meduim, color: '#000000' }}
                                 placeholder='Enter business name'
                             />
                         </View>
@@ -639,7 +644,7 @@ const AddDate = ({ navigation, route }) => {
                             itemTextStyle={{
                                 color: '#000000',
                                 fontWeight: '500',
-                                fontFamily: customFonts.medium,
+                                fontFamily: customFonts.meduim,
                                 fontSize: 14
                             }
                             }
@@ -691,7 +696,7 @@ const AddDate = ({ navigation, route }) => {
 
                         <TouchableOpacity onPress={handlePickAddress}>
                             <View style={{ borderRadius: 10, borderColor: '#CCCCCC', padding: 8, borderWidth: 1 }}>
-                                <Text style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.medium }}>
+                                <Text style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.meduim }}>
                                     {
                                         longAddress ?
                                             <Text>
@@ -723,7 +728,7 @@ const AddDate = ({ navigation, route }) => {
                                 multiline
                                 placeholder='Enter description'
                                 textAlignVertical='top'
-                                style={{ fontWeight: '500', color: '#000000', fontSize: 14, fontFamily: customFonts.medium, height: 100 / 930 * height, }} />
+                                style={{ fontWeight: '500', color: '#000000', fontSize: 14, fontFamily: customFonts.meduim, height: 100 / 930 * height, }} />
                         </View>
                     </ScrollView>
                 </View>
@@ -792,13 +797,13 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#999999',
         fontWeight: '500',
-        fontFamily: customFonts.medium
+        fontFamily: customFonts.meduim
     },
     selectedTextStyle: {
         fontSize: 14,
         color: '#000000',
         fontWeight: '500',
-        fontFamily: customFonts.medium
+        fontFamily: customFonts.meduim
     },
     iconStyle: {
         width: 20,
@@ -810,7 +815,7 @@ const styles = StyleSheet.create({
     },
     Dropdownlabel: {
         fontWeight: '500',
-        fontFamily: customFonts.medium,
+        fontFamily: customFonts.meduim,
         fontSize: 16,
         color: '#00000',
         marginTop: 20 / 930 * height
@@ -819,7 +824,7 @@ const styles = StyleSheet.create({
         color: '#999999',
         fontWeight: '500',
         fontSize: 14,
-        fontFamily: customFonts.medium
+        fontFamily: customFonts.meduim
     },
     OperationTime: {
         fontSize: 16,

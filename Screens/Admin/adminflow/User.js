@@ -374,7 +374,7 @@ const User = ({ navigation }) => {
                         onRequestClose={() => setOpenModal(false)}
                     >
                         <View style={{ height: height, backgroundColor: '#00000050' }}>
-                            <View style={{ height: 550 / 930 * height, borderTopRightRadius: 25, borderTopLeftRadius: 25, backgroundColor: 'white', width: width, position: 'absolute', bottom: 0, alignItems: 'center' }}>
+                            <View style={{ height:height*0.52, borderTopRightRadius: 25, borderTopLeftRadius: 25, backgroundColor: 'white', width: width, position: 'absolute', bottom: 0, alignItems: 'center' }}>
                                 <View style={{ width: width - 50 }}>
                                     <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', marginTop: 15 / 930 * height, alignItems: 'center' }}>
                                         <Text style={{ fontSize: 20, fontWeight: '500', fontFamily: customFonts.meduim }}>
@@ -444,7 +444,7 @@ const User = ({ navigation }) => {
                                             onPress={() => {
                                                 setSelectedButton('');
                                                 setFilterUserAddress('');
-                                                setOpenModal(false);
+                                                // setOpenModal(false);
                                                 setNoMoreUsers(false);
                                                 setAdminUsers([]);
                                                 setApplyFilters(true);

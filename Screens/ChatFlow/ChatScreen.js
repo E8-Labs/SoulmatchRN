@@ -401,6 +401,7 @@ export default function ChatScreen({ navigation, route }) {
     };
 
     const blockUser = async () => {
+        console.log('trying to block')
         const data = await AsyncStorage.getItem("USER")
         setLoading(true)
         try {
@@ -829,7 +830,7 @@ export default function ChatScreen({ navigation, route }) {
 
                             </View>
                         </View>
-                    </View>ß
+                    </View>
                 </TouchableWithoutFeedback>
             </Modal>
 

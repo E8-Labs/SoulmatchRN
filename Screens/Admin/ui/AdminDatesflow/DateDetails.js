@@ -137,7 +137,7 @@ const DateDetails = ({ navigation, route }) => {
                                             <Image source={require('../../../../assets/Images3/backIcon.png')} style={{ height: 12, width: 6, resizeMode: 'contain' }} />
                                         </View>
                                     </TouchableOpacity>
-                                    <Text style={{ fontWeight: '500', fontSize: 22, fontFamily: customFonts.medium }}>
+                                    <Text style={{ fontWeight: '500', fontSize: 22, fontFamily: customFonts.meduim }}>
                                         {dateDetails.name}
                                     </Text>
                                 </View>
@@ -218,19 +218,19 @@ const DateDetails = ({ navigation, route }) => {
                             <Text style={{ fontWeight: '400', fontSize: 12, fontFamily: customFonts.regular, color: '#333333', marginTop: 15 }}>
                                 Hours of operation
                             </Text>
-                            <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.medium, color: '#333333' }}>
+                            <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, color: '#333333' }}>
                                 {moment(dateDetails.openTime, "HH:mm:ss").format("h:mm a")} - {moment(dateDetails.closeTime, "HH:mm:ss").format("h:mm a")}
                             </Text>
                             <Text style={{ fontWeight: '400', fontSize: 12, fontFamily: customFonts.regular, color: '#333333', marginTop: 8 }}>
                                 Description
                             </Text>
-                            <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.medium, color: '#333333', marginTop: 3 }}>
+                            <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, color: '#333333', marginTop: 3 }}>
                                 {dateDetails.description}
                             </Text>
-                            <Text style={{ fontWeight: '500', fontSize: 20, fontFamily: customFonts.medium, marginTop: 10 }}>
+                            <Text style={{ fontWeight: '500', fontSize: 20, fontFamily: customFonts.meduim, marginTop: 10 }}>
                                 Reviews
                             </Text>
-                            <Text style={{ fontWeight: '400', fontSize: 12, fontFamily: customFonts.medium }}>
+                            <Text style={{ fontWeight: '400', fontSize: 12, fontFamily: customFonts.meduim }}>
                                 108+Ratings . 10 Reviews
                             </Text>
 
@@ -251,7 +251,7 @@ const DateDetails = ({ navigation, route }) => {
                                         >
                                             {
                                                 () => (
-                                                    <Text style={{ fontSize: 12, fontFamily: customFonts.medium }}>
+                                                    <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>
                                                         4.8
                                                     </Text>
                                                 )
@@ -265,7 +265,7 @@ const DateDetails = ({ navigation, route }) => {
                                 <View style={{ padding: 16, width: 288 / 430 * width, borderRadius: 10, borderWidth: 1, borderColor: '#66666660' }}>
                                     <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
                                         <Image source={require('../../../../assets/Images3/olivia.png')} style={{ height: 46, width: 46, borderRadius: 50, resizeMode: 'contain' }} />
-                                        <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.medium, color: '#333333' }}>
+                                        <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, color: '#333333' }}>
                                             Olivia Williams
                                         </Text>
                                     </View>
@@ -307,10 +307,10 @@ const DateDetails = ({ navigation, route }) => {
                         style={{}}
                     >
                         <View style={{ height: height, backgroundColor: '#00000050' }}>
-                            <View style={{ height: 450 / 930 * height, borderTopRightRadius: 25, borderTopLeftRadius: 25, backgroundColor: 'white', width: width, position: 'absolute', bottom: 0, alignItems: 'center' }}>
+                            <View style={{ height: height * 0.4, borderTopRightRadius: 25, borderTopLeftRadius: 25, backgroundColor: 'white', width: width, position: 'absolute', bottom: 0, alignItems: 'center' }}>
                                 <View style={{ width: width - 50 }}>
                                     <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', marginTop: 15 / 930 * height, alignItems: 'center' }}>
-                                        <Text style={{ fontSize: 20, fontWeight: '500', fontFamily: customFonts.medium }}>
+                                        <Text style={{ fontSize: 20, fontWeight: '500', fontFamily: customFonts.meduim }}>
                                             Delete
                                         </Text>
                                         <TouchableOpacity onPress={() => setOpenModal(false)} style={{ marginRight: 10 }}>
@@ -324,14 +324,14 @@ const DateDetails = ({ navigation, route }) => {
                                     <Image source={require('../../../../assets/Images3/delete1.png')} style={{ height: 120, width: 120, resizeMode: 'contain' }} />
                                 </View>
 
-                                <Text style={{ fontWeight: '500', fontFamily: customFonts.medium, fontSize: 16, color: '#4D4D4D', marginTop: 15 }}>
+                                <Text style={{ fontWeight: '500', fontFamily: customFonts.meduim, fontSize: 16, color: '#4D4D4D', marginTop: 15 }}>
                                     Are you sure you want to delete date?
                                 </Text>
 
                                 <View style={{ width: width - 50, flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 }}>
                                     <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 1, }}>
                                         <TouchableOpacity onPress={() => setOpenModal(false)}>
-                                            <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.medium }}>
+                                            <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.meduim }}>
                                                 Cancel
                                             </Text>
                                         </TouchableOpacity>
@@ -344,7 +344,7 @@ const DateDetails = ({ navigation, route }) => {
                                             </View> :
                                             <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: '#E01F1F' }}>
                                                 <TouchableOpacity onPress={handleDeleteDate}>
-                                                    <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.medium, color: 'white' }}>
+                                                    <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.meduim, color: 'white' }}>
                                                         Yes, Delete
                                                     </Text>
                                                 </TouchableOpacity>
@@ -376,7 +376,7 @@ const styles = StyleSheet.create({
     RatingsValue: {
         fontWeight: '500',
         fontSize: 18,
-        fontFamily: customFonts.medium,
+        fontFamily: customFonts.meduim,
         color: '#333333',
         textAlign: 'center'
     }

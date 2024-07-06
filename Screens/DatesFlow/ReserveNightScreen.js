@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const { height, width } = Dimensions.get('window');
 const placholder = require('../../assets/images/imagePlaceholder.webp')
 import { BroadcastEvents } from '../../models/Constants';
+import { ShowMessage } from '../../Services/Snakbar/ShowMessage';
 
 
 export default function ReserveNightScreen({ navigation, route }) {
@@ -94,6 +95,7 @@ export default function ReserveNightScreen({ navigation, route }) {
           let json = await result.json()
           if (json.status === true) {
             console.log('book date data', json.data)
+            ShowMessage("Congrates date invite sent",colors.blueColor,"white")
             if (data.from === "ChatScreen") {
                 DeviceEventEmitter.emit(BroadcastEvents.EventUpcomingDateAdded,json.data)
                 navigation.pop(2)

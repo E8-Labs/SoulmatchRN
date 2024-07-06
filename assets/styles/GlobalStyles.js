@@ -118,7 +118,7 @@ const GlobalStyles = {
     SuspendDelBText: {
         fontWeight: '500',
         fontSize: 14,
-        fontFamily: customFonts.medium
+        fontFamily: customFonts.meduim
     }
 }
 

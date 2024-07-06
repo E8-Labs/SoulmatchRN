@@ -32,21 +32,24 @@ export default function MoreOptionsPopup({visible,close, handleMenu}) {
                                 height: 3
                             }, shadowRadius: 10, shadowOpacity: 0.3,
                             backgroundColor: 'white', position: 'absolute', top: 105/930*height, right: 30,gap:10/930*height,
-                            alignItems: 'flex-start', borderRadius: 10, justifyContent: 'space-between',padding:12/930*height
+                            alignItems: 'flex-start', borderRadius: 10, justifyContent: 'space-between',width:140/430*width,
+                            padding:20
                         }}>
 
-                            <TouchableOpacity onPress={()=>{
+                            <TouchableOpacity style = {{width:100/430*width}} onPress={()=>{
                                 handleMenu("InviteDate")
                             }}>
                                 <Text style={{ fontSize: 14, fontFamily: customFonts.regular }}>Invite to date</Text>
                             </TouchableOpacity>
 
-                            <TouchableOpacity onPress={()=>onpresshandle()}>
+                            <TouchableOpacity style = {{width:100/430*width}} onPress={()=>{
+                                handleMenu("Block")
+                            }}>
                                 <Text style={{ fontSize: 14, fontFamily: customFonts.regular }}>Block</Text>
                             </TouchableOpacity>
 
 
-                            <TouchableOpacity onPress={()=>{
+                            <TouchableOpacity style = {{width:100/430*width}} onPress={()=>{
                                 handleMenu("Report")
                             }}>
                                 <Text style={{ fontSize: 14, fontFamily: customFonts.regular }}>Report</Text>

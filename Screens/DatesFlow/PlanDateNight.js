@@ -15,6 +15,7 @@ import fonts from 'fonts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ApisPath from '../../lib/ApisPath/ApisPath';
 import { Image } from 'expo-image';
+import { ShowMessage } from '../../Services/Snakbar/ShowMessage';
 
 const { height, width } = Dimensions.get('window');
 const selectedImage = require('../../assets/images/selected.png');
@@ -138,6 +139,7 @@ export default function PlanDateNigth(props) {
                     let json = await result.json()
                     if(json.status === true){
                         console.log('invite sent via email ')
+                        ShowMessage("Congrates date invite sent",colors.blueColor)
                         props.navigation.goBack()
                     }else{
                         console.log('invite daye via email message is', json.message)

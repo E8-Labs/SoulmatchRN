@@ -29,7 +29,7 @@ const AdminAccountDetails = ({ navigation }) => {
                                             <Image source={require('../../../../assets/Images3/backIcon.png')} style={{ height: 18, width: 9, resizeMode: 'contain' }} />
                                         </View>
                                     </TouchableOpacity>
-                                    <Text style={{ fontWeight: '500', fontSize: 24, fontFamily: customFonts.medium }}>
+                                    <Text style={{ fontWeight: '500', fontSize: 24, fontFamily: customFonts.meduim }}>
                                         Account details
                                     </Text>
                                 </View>

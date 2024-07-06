@@ -368,7 +368,7 @@ const TestAddDate = ({ navigation, route }) => {
                             </View>
                         </TouchableOpacity>
 
-                        <Text style={{ fontWeight: '500', fontSize: 24, fontFamily: customFonts.medium }}>
+                        <Text style={{ fontWeight: '500', fontSize: 24, fontFamily: customFonts.meduim }}>
                             Add new date
                         </Text>
 
@@ -378,7 +378,7 @@ const TestAddDate = ({ navigation, route }) => {
                             <ActivityIndicator size={'small'} color={colors.blueColor} />
                         </View> :
                         <TouchableOpacity onPress={handleSaveClick} style={{ alignItems: 'center', justifyContent: 'center' }}>
-                            <Text style={{ fontWeight: '500', fontFamily: customFonts.medium, fontSize: 14, color: '#6050DC' }}>
+                            <Text style={{ fontWeight: '500', fontFamily: customFonts.meduim, fontSize: 14, color: '#6050DC' }}>
                                 Save
                             </Text>
                         </TouchableOpacity>
@@ -491,13 +491,13 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#999999',
         fontWeight: '500',
-        fontFamily: customFonts.medium
+        fontFamily: customFonts.meduim
     },
     selectedTextStyle: {
         fontSize: 14,
         color: '#999999',
         fontWeight: '500',
-        fontFamily: customFonts.medium
+        fontFamily: customFonts.meduim
     },
     iconStyle: {
         width: 20,
@@ -509,7 +509,7 @@ const styles = StyleSheet.create({
     },
     Dropdownlabel: {
         fontWeight: '500',
-        fontFamily: customFonts.medium,
+        fontFamily: customFonts.meduim,
         fontSize: 16,
         color: '#333333',
         marginTop: 20 / 930 * height
@@ -518,6 +518,6 @@ const styles = StyleSheet.create({
         color: '#999999',
         fontWeight: '500',
         fontSize: 14,
-        fontFamily: customFonts.medium
+        fontFamily: customFonts.meduim
     }
 });

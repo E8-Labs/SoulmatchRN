@@ -25,10 +25,14 @@ export default function InviteDateFromChatScreen({ navigation, route }) {
     const [error, setError] = useState(null)
     const [search, setSearch] = useState('')
 
-    // useEffect(() => {
-    //     getDates()
+    const [finalFilters, setFinalFilters] = useState({
+        category: -1
+    })
 
-    // }, [])
+   
+    useEffect(() => {
+        getDates("Final Filters Change")
+    }, [finalFilters])
     useEffect(() => {
 
         // Clear the previous timer
@@ -48,21 +52,57 @@ export default function InviteDateFromChatScreen({ navigation, route }) {
 
     }, [search]);
 
-    const getDates = async () => {
-        console.log('trying to get dates')
+    const getDates = async (from = "None") => {
+        console.log("-----------------------------------------------------------")
+        console.log("")
+        console.log('trying to get dates from ', from)
         setLoading(true)
+
         const data = await AsyncStorage.getItem("USER")
         try {
             if (data) {
                 let d = JSON.parse(data)
-
-                let path = ApisPath.ApiGetDates + "?allPlaces=true"
-
-                if (search != null) {
-                    path = path + `&search=${search}`
+                let apiUrl = null
+                let path = ApisPath.ApiGetDates+`?allPlaces=true`
+                let firstParamSplitter = "&"
+                if (typeof finalFilters.category !== 'undefined' && finalFilters.category !== -1) {
+                    console.log("Category is in api ", finalFilters.category)
+                    path = `${path}${firstParamSplitter}category=${finalFilters.category}`
+                    firstParamSplitter = "&"
                 }
+                if (search !== null) {
+                    path = `${path}${firstParamSplitter}search=${search}`
+                    firstParamSplitter = "&"
+                }
+                if (typeof finalFilters.minBudget !== 'undefined' && finalFilters.minBudget !== null) {
+                    path = `${path}${firstParamSplitter}minBudget=${finalFilters.minBudget}`
+                    firstParamSplitter = "&"
+                }
+                if (typeof finalFilters.maxBudget !== 'undefined' && finalFilters.maxBudget !== null) {
+                    path = `${path}${firstParamSplitter}maxBudget=${finalFilters.maxBudget}`
+                    firstParamSplitter = "&"
+                }
+                if (typeof finalFilters.minRating !== 'undefined' && finalFilters.minRating !== null) {
+                    path = `${path}${firstParamSplitter}minRating=${finalFilters.minRating}`
+                    firstParamSplitter = "&"
+                }
+                if (typeof finalFilters.maxRating !== 'undefined' && finalFilters.maxRating !== null) {
+                    path = `${path}${firstParamSplitter}maxRating=${finalFilters.maxRating}`
+                    firstParamSplitter = "&"
+                }
+                if (typeof finalFilters.city !== 'undefined' && finalFilters.city !== null) {
+                    path = `${path}${firstParamSplitter}city=${finalFilters.city}`
+                    firstParamSplitter = "&"
+                }
+                if (typeof finalFilters.state !== 'undefined' && finalFilters.state !== null) {
+                    path = `${path}${firstParamSplitter}state=${finalFilters.state}`
+                    firstParamSplitter = "&"
+                }
+                apiUrl = path;
+                console.log("Api path is ", apiUrl)
 
-                const result = await fetch(path, {
+
+                const result = await fetch(apiUrl, {
                     method: 'get',
                     headers: {
                         'Content-Type': 'application/json',
@@ -73,19 +113,22 @@ export default function InviteDateFromChatScreen({ navigation, route }) {
                 if (result) {
                     setLoading(false)
                     let json = await result.json()
+                    console.log("Api Filters Response is ", json)
                     if (json.status === true) {
                         console.log('get dates are', json.data)
                         setDate(json.data)
-
                     }
                     else {
                         console.log('json message is', json.message)
                     }
                 }
+
             }
         } catch (error) {
             console.log('error finding in get dates', error)
         }
+        console.log("")
+        console.log("-----------------------------------------------------------")
 
     }
     const handleContinue = () => {
@@ -102,7 +145,17 @@ export default function InviteDateFromChatScreen({ navigation, route }) {
             }
         })
     }
-    const closeModal = () => {
+    const closeModal = (filters) => {
+        if (filters) {
+            console.log('filters received from popup are', filters)
+
+            // setDateFilters(filters)
+            // setFinalFilters(filters)
+            setFinalFilters(prevFilters => ({
+                ...prevFilters,
+                ...filters
+            }));
+        }
         setOpenModal(false)
     }
 
@@ -140,7 +193,9 @@ export default function InviteDateFromChatScreen({ navigation, route }) {
 
 
                     </View>
-                    <DatesFilterPopup visible={openModal} close={closeModal} />
+                    <DatesFilterPopup visible={openModal} close={closeModal} closeWithouFilters={() => {
+                        setOpenModal(false)
+                    }} filters={finalFilters} />
                     <View style={{
                         width: width - 60 / 430 * width, backgroundColor: colors.greyText, paddingHorizontal: 16 / 930 * height, paddingVertical: 16 / 430 * width,
                         marginTop: 30 / 930 * height, borderRadius: 10
@@ -203,7 +258,7 @@ export default function InviteDateFromChatScreen({ navigation, route }) {
                                                         </View>
                                                         <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
                                                             <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Category</Text>
-                                                            <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{item.category}</Text>
+                                                            <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{item.Category.name}</Text>
                                                         </View>
 
                                                     </View>

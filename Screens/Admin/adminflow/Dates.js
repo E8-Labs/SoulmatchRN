@@ -62,7 +62,7 @@ const Dates = ({ navigation }) => {
         // Set a new timer
         timerRef.current = setTimeout(() => {
             console.log("Search timer clicked")
-            if (searchUser !== "")
+            if (searchUser !== null)
                 GetDates("searchUser");
         }, 500);
 
@@ -402,7 +402,7 @@ const Dates = ({ navigation }) => {
                 />
                 {/* Header code */}
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 60 }}>
-                    <Text style={[styles.header, { fontWeight: '500', fontSize: 24, fontFamily: customFonts.medium }]}>
+                    <Text style={[styles.header, { fontWeight: '500', fontSize: 24, fontFamily: customFonts.meduim }]}>
                         Dates
                     </Text>
                     <View style={[styles.header, { gap: 15 }]}>
@@ -417,8 +417,8 @@ const Dates = ({ navigation }) => {
 
                 {/* Search bar */}
                 <View style={{
-                    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', padding: 16,
-                    borderWidth: 1, borderRadius: 10, gap: 10, backgroundColor: '#ffffff', height: 45, borderColor: '#E6E6E6', marginTop: 20
+                    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 10/930*height,paddingHorizontal:10/430*width,
+                    borderWidth: 1, borderRadius: 10, gap: 10, backgroundColor: '#ffffff', borderColor: '#E6E6E6', marginTop: 20
                 }}>
                     <TouchableOpacity onPress={inputReference} style={{ width: 30 / 430 * width, height: 30 / 930 * height, alignItems: 'center', justifyContent: 'center' }}>
                         <Image source={require('../../../assets/Images3/searchIcon.png')}
@@ -430,8 +430,8 @@ const Dates = ({ navigation }) => {
                         onChangeText={(e) => setSearchUser(e)}
                         style={{
                             width: 304 / 430 * width,
-                            fontSize: 16, fontWeight: '500', fontFamily: customFonts.medium, color: '#000000'
-                        }}
+                            fontSize: 16, fontWeight: '500', fontFamily: customFonts.meduim, color: '#000000'
+                        }}meduim
                         placeholder='Search' />
                 </View>
 
@@ -449,11 +449,11 @@ const Dates = ({ navigation }) => {
                                 <TouchableOpacity onPress={() => handleDateDetails(item, index)} key={item.id} style={{ marginTop: 10 }}>
                                     <View style={{ borderWidth: 1, borderColor: '#E6E6E6', borderRadius: 10, padding: 12, width: 176 / 430 * width }}>
                                         <Image source={item.imageUrl ? { uri: item.imageUrl } : require('../../../assets/Images3/imagePlaceholder.webp')} style={{ height: 98 / 930 * height, width: 152 / 430 * width, borderRadius: 6, resizeMode: 'cover' }} />
-                                        <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.medium, marginTop: 7 }}>
+                                        <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, marginTop: 7 }}>
                                             {item.name}
                                         </Text>
                                         <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                            <Text style={{ fontSize: 12, fontWeight: '400', fontFamily: customFonts.medium, color: '#333333' }}>
+                                            <Text style={{ fontSize: 12, fontWeight: '400', fontFamily: customFonts.meduim, color: '#333333' }}>
                                                 Budget :
                                             </Text>
                                             <Text
@@ -462,11 +462,11 @@ const Dates = ({ navigation }) => {
                                                     fontFamily: customFonts.bold, color: '#333333'
                                                 }}>
                                                 {/* ${item.minBudget} - ${item.maxBudget} */}
-                                                {GetBudgetVal(item)}
+                                                {GetBudget(item)}
                                             </Text>
                                         </View>
                                         <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                            <Text style={{ fontSize: 12, fontWeight: '400', fontFamily: customFonts.medium, color: '#333333' }}>
+                                            <Text style={{ fontSize: 12, fontWeight: '400', fontFamily: customFonts.meduim, color: '#333333' }}>
                                                 Ratings :
                                             </Text>
                                             <Text style={{ fontWeight: '500', fontSize: 12, fontFamily: customFonts.bold, color: '#333333' }}>
@@ -474,10 +474,10 @@ const Dates = ({ navigation }) => {
                                             </Text>
                                         </View>
                                         <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                            <Text style={{ fontSize: 12, fontWeight: '400', fontFamily: customFonts.medium, color: '#333333' }}>
+                                            <Text style={{ fontSize: 12, fontWeight: '400', fontFamily: customFonts.meduim, color: '#333333' }}>
                                                 Category :
                                             </Text>
-                                            <Text style={{ fontWeight: '500', width: 50, fontSize: 12, fontFamily: customFonts.medium, color: '#333333', textAlign: 'right' }}>
+                                            <Text style={{ fontWeight: '500', width: 50, fontSize: 12, fontFamily: customFonts.meduim, color: '#333333', textAlign: 'right' }}>
                                                 {item.Category.name}
                                             </Text>
                                         </View>

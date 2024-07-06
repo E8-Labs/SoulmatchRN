@@ -166,7 +166,7 @@ const Dashboard = ({ navigation }) => {
                     translucent={false}
                 />
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 15 / 930 * height, marginTop: 60 }}>
-                    <Text style={{ fontWeight: '500', fontSize: 24, fontFamily: customFonts.medium }}>
+                    <Text style={{ fontWeight: '500', fontSize: 24, fontFamily: customFonts.meduim }}>
                         Dashboard
                     </Text>
                     <TouchableOpacity onPress={handleNotifications} style={{ width: 28, justifyContent: 'center' }}>
@@ -181,7 +181,7 @@ const Dashboard = ({ navigation }) => {
                         :
                         <View style={{ width: width - 50, height: height * 0.80 }}>
                             <ScrollView showsVerticalScrollIndicator={false}>
-                                <Text style={{ fontWeight: '500', fontSize: 18, fontFamily: customFonts.medium, marginTop: 20 }}>
+                                <Text style={{ fontWeight: '500', fontSize: 18, fontFamily: customFonts.meduim, marginTop: 20 }}>
                                     Revenue
                                 </Text>
 
@@ -190,7 +190,7 @@ const Dashboard = ({ navigation }) => {
                                 <View>
                                     <View style={{ width: 370 / 430 * width, borderWidth: 1, borderColor: '#00000020', borderRadius: 10, marginTop: 35, flexDirection: 'column', justifyContent: 'center', padding: 10 }}>
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 40 }}>
-                                            <Text style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.medium }}>
+                                            <Text style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.meduim }}>
                                                 Subscription
                                             </Text>
                                             <Dropdown2 />
@@ -243,7 +243,7 @@ const Dashboard = ({ navigation }) => {
                                 <View>
                                     <View style={{ width: 370 / 430 * width, borderWidth: 1, borderColor: '#00000020', borderRadius: 10, marginTop: 35, flexDirection: 'column', justifyContent: 'center', padding: 10 }}>
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 40 }}>
-                                            <Text style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.medium }}>
+                                            <Text style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.meduim }}>
                                                 Total revenue
                                             </Text>
                                             <View style={{ gap: 5, flexDirection: 'row' }}>
@@ -330,7 +330,7 @@ const Dashboard = ({ navigation }) => {
                                     </View>
                                 </View>
 
-                                <Text style={{ fontSize: 18, fontWeight: '500', fontFamily: customFonts.medium }}>
+                                <Text style={{ fontSize: 18, fontWeight: '500', fontFamily: customFonts.meduim }}>
                                     Users
                                 </Text>
 
@@ -344,7 +344,7 @@ const Dashboard = ({ navigation }) => {
                                                 <Text style={{
                                                     fontWeight: '500',
                                                     fontSize: 12,
-                                                    fontFamily: customFonts.medium,
+                                                    fontFamily: customFonts.meduim,
                                                     color: '#666666'
                                                 }}>
                                                     Paying users
@@ -370,7 +370,7 @@ const Dashboard = ({ navigation }) => {
                                                 <Text style={{
                                                     fontWeight: '500',
                                                     fontSize: 12,
-                                                    fontFamily: customFonts.medium,
+                                                    fontFamily: customFonts.meduim,
                                                     color: '#666666'
                                                 }}>
                                                     Free users
@@ -391,7 +391,7 @@ const Dashboard = ({ navigation }) => {
                                 <View>
                                     <View style={{ width: 370 / 430 * width, borderWidth: 1, borderColor: '#00000020', borderRadius: 10, marginTop: 35, flexDirection: 'column', justifyContent: 'center', padding: 10 }}>
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 40 }}>
-                                            <Text style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.medium }}>
+                                            <Text style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.meduim }}>
                                                 Users
                                             </Text>
 
@@ -490,18 +490,18 @@ const Dashboard = ({ navigation }) => {
                                             <View key={item.id} style={{ borderWidth: 1, marginLeft: 10, borderColor: '#E6E6E6', borderRadius: 10, padding: 8, width: 140 / 430 * width, alignItems: 'center', justifyContent: 'center' }}>
                                                 <Image source={item.profile_image ? { uri: item.profile_image } : require('../../../assets/Images3/imagePlaceholder.webp')} style={{ height: 96 / 930 * height, width: 126 / 430 * width, borderRadius: 5 }} />
                                                 <View style={{ flexDirection: 'column', width: '100%', gap: 7 }}>
-                                                    <Text style={{ fontWeight: '500', fontSize: 12, marginTop: 5, fontFamily: customFonts.medium, width: '100%' }}>
+                                                    <Text style={{ fontWeight: '500', fontSize: 12, marginTop: 5, fontFamily: customFonts.meduim, width: '100%' }}>
                                                         {item.first_name} {item.last_name}
                                                     </Text>
                                                     <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                                                         <Image source={require('../../../assets/Images3/location.png')} style={{ height: 12 / 930 * height, width: 12 / 430 * width }} />
-                                                        <Text style={{ fontWeight: '400', fontSize: 10, fontFamily: customFonts.medium, color: '#333333' }}>
+                                                        <Text style={{ fontWeight: '400', fontSize: 10, fontFamily: customFonts.meduim, color: '#333333' }}>
                                                             {item.city} {item.city ? ',' : ''} {item.state}
                                                         </Text>
                                                     </View>
                                                     <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                                                         <Image source={require('../../../assets/Images3/crown2.png')} style={{ height: 12 / 930 * height, width: 12 / 430 * width }} />
-                                                        <Text style={{ fontWeight: '500', fontSize: 12, fontFamily: customFonts.medium, color: '#FFC401' }}>
+                                                        <Text style={{ fontWeight: '500', fontSize: 12, fontFamily: customFonts.meduim, color: '#FFC401' }}>
                                                             {item.pkgName}
                                                         </Text>
                                                     </View>
@@ -513,7 +513,7 @@ const Dashboard = ({ navigation }) => {
 
                                 <View style={{ alignItems: 'center', marginTop: 10 }}>
                                     <TouchableOpacity onPress={haandleAllUsersClick} style={{ flexDirection: 'row', alignItems: 'center', gap: 7 }}>
-                                        <Text style={{ fontWeight: '500', fontFamily: customFonts.medium, fontSize: 13, color: '#6050DC' }}>
+                                        <Text style={{ fontWeight: '500', fontFamily: customFonts.meduim, fontSize: 13, color: '#6050DC' }}>
                                             View All Users
                                         </Text>
                                         <Image source={require('../../../assets/Images3/nextIcon.png')} style={{ height: 10, width: 6, resizeMode: 'contain' }} />
@@ -521,7 +521,7 @@ const Dashboard = ({ navigation }) => {
                                 </View>
 
                                 {/* Code for Dates */}
-                                <Text style={{ fontWeight: '500', fontSize: 18, fontFamily: customFonts.medium, marginTop: 10 }}>
+                                <Text style={{ fontWeight: '500', fontSize: 18, fontFamily: customFonts.meduim, marginTop: 10 }}>
                                     Dates
                                 </Text>
 
@@ -530,7 +530,7 @@ const Dashboard = ({ navigation }) => {
                                         <Image source={require('../../../assets/Images3/medal-star.png')} style={{ height: 24 / 930 * height, width: 24 / 430 * width }} />
                                     </View>
                                     <View>
-                                        <Text style={{ fontWeight: '500', fontSize: 12, fontFamily: customFonts.medium, color: '#666666', width: '' }}>
+                                        <Text style={{ fontWeight: '500', fontSize: 12, fontFamily: customFonts.meduim, color: '#666666', width: '' }}>
                                             Number of dates planned on the platform
                                         </Text>
                                         <Text style={{ fontWeight: '600', fontSize: 18, fontFamily: customFonts.bold }}>
@@ -546,7 +546,7 @@ const Dashboard = ({ navigation }) => {
                                         <Image source={require('../../../assets/Images3/like.png')} style={{ height: 24 / 930 * height, width: 24 / 430 * width }} />
                                     </View>
                                     <View>
-                                        <Text style={{ fontWeight: '500', fontSize: 12, fontFamily: customFonts.medium, color: '#666666', width: '' }}>
+                                        <Text style={{ fontWeight: '500', fontSize: 12, fontFamily: customFonts.meduim, color: '#666666', width: '' }}>
                                             Number of dates attended
                                         </Text>
                                         <Text style={{ fontWeight: '600', fontSize: 18, fontFamily: customFonts.bold }}>
@@ -564,7 +564,7 @@ const Dashboard = ({ navigation }) => {
                                         <Image source={require('../../../assets/Images3/heart-circle.png')} style={{ height: 24 / 930 * height, width: 24 / 430 * width }} />
                                     </View>
                                     <View>
-                                        <Text style={{ fontWeight: '500', fontSize: 12, fontFamily: customFonts.medium, color: '#666666', width: '' }}>
+                                        <Text style={{ fontWeight: '500', fontSize: 12, fontFamily: customFonts.meduim, color: '#666666', width: '' }}>
                                             Number of users that planned date nights
                                         </Text>
                                         <Text style={{ fontWeight: '600', fontSize: 18, fontFamily: customFonts.bold }}>
@@ -605,7 +605,7 @@ const styles = StyleSheet.create({
     selectedTextStyle: {
         fontSize: 13,
         fontWeight: '500',
-        fontFamily: customFonts.medium
+        fontFamily: customFonts.meduim
         // marginLeft: 8,
         // backgroundColor: 'red'
     },

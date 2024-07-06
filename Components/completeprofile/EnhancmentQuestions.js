@@ -186,8 +186,15 @@ const EnhancmentQuestions = ({ navigation, route }) => {
         } else {
             //console.log('can not upload text ', mediaSelected.text);
         }
-        formdata.append("questionId", item.questionId);
-        //console.log('trying to upload media', mediaSelected);
+
+        if (hasAnswer(item)) {
+            formdata.append("questionId", item.questionId);
+        }else{
+            formdata.append("questionId", item.id);
+        }
+
+        console.log('trying to upload media', item);
+        // return
         try {
             const data = await AsyncStorage.getItem("USER");
             if (data) {
@@ -203,16 +210,17 @@ const EnhancmentQuestions = ({ navigation, route }) => {
                 });
                 if (result) {
                     setShowIndicator(false);
+                    console.log('result is', result)
                     let json = await result.json();
                     if (json.status === true) {
-                        //console.log('media uploaded', json.data);
+                        console.log('question uploaded', json.data);
                         updateQuestionMedia(questions, json.data);
                         d.user.answers = json.data;
                         //console.log("Setting user data now.", d);
                         AsyncStorage.setItem("USER", JSON.stringify(d));
                     } else {
                         Alert.alert(json.message);
-                        //console.log('json message is', json.message);
+                        console.log('json message is', json.message);
                     }
                 }
             }

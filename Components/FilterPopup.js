@@ -57,7 +57,7 @@ export default function FilterPopup({ visible, close, addressPicker, filters }) 
 
     useFocusEffect(
         React.useCallback(() => {
-            getLocalTempFilters()
+            getLocalFilters()
         }, [])
     )
 
@@ -81,8 +81,8 @@ export default function FilterPopup({ visible, close, addressPicker, filters }) 
     }, [filters])
 
 
-    const getLocalTempFilters = async () => {
-        const tmpFltr = await AsyncStorage.getItem("TempFilters")
+    const getLocalFilters = async () => {
+        const tmpFltr = await AsyncStorage.getItem("FilterDiscovers")
         if (tmpFltr) {
             let tempFilter = JSON.parse(tmpFltr)
             console.log('temp filters from local are', tempFilter)
@@ -93,13 +93,13 @@ export default function FilterPopup({ visible, close, addressPicker, filters }) 
                 city: tempFilter.city,
                 state: tempFilter.state
             })
-            setStartAgeRange(tempFilter.min_age)
-            setEndAgeRange(tempFilter.max_age)
-            setStartHeight(tempFilter.min_height)
-            setEndHeight(tempFilter.max_height)
+            setStartAgeRange(tempFilter.minAge)
+            setEndAgeRange(tempFilter.maxAge)
+            setStartHeight(tempFilter.minHeight)
+            setEndHeight(tempFilter.maxHeight)
 
-            console.log("Temp filter Min", tempFilter.min_height)
-            console.log("Temp filter Max", tempFilter.max_height)
+            console.log("Temp filter Min", tempFilter.minHeight)
+            console.log("Temp filter Max", tempFilter.maxHeight)
             setselected({ name: tempFilter.gender })
 
         }
@@ -142,6 +142,9 @@ export default function FilterPopup({ visible, close, addressPicker, filters }) 
             state: state,
             city: city,
         }
+
+        console.log('filter for store in local ', filters)
+        // return
         AsyncStorage.setItem("FilterDiscovers", JSON.stringify(filters))
         let getDiscover = true
         close({  

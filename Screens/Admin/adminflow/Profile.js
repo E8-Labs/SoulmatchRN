@@ -85,7 +85,7 @@ const Profile = ({ navigation }) => {
                     translucent={false}
                 />
                 <View style={{ height: height * 0.9, marginTop: 60 }}>
-                    <Text style={{ fontWeight: '500', fontSize: 24, fontFamily: customFonts.medium }}>
+                    <Text style={{ fontWeight: '500', fontSize: 24, fontFamily: customFonts.meduim }}>
                         Profile
                     </Text>
                     <View>
@@ -117,7 +117,7 @@ const Profile = ({ navigation }) => {
                         <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', justifyContent: 'space-between', borderWidth: 1, padding: 14, borderRadius: 8, borderColor: '#E6E6E6' }}>
                             <View style={{ flexDirection: 'row', gap: 20 }}>
                                 <Image source={require('../../../assets/Images3/men.png')} style={{ height: 24, width: 24, resizeMode: 'contain' }} />
-                                <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.medium, color: '#333333' }}>
+                                <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, color: '#333333' }}>
                                     Account details
                                 </Text>
                             </View>
@@ -128,7 +128,7 @@ const Profile = ({ navigation }) => {
                         <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', justifyContent: 'space-between', borderWidth: 1, padding: 14, borderRadius: 8, borderColor: '#E6E6E6' }}>
                             <View style={{ flexDirection: 'row', gap: 20 }}>
                                 <Image source={require('../../../assets/Images3/lock.png')} style={{ height: 24, width: 24, resizeMode: 'contain' }} />
-                                <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.medium, color: '#333333' }}>
+                                <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, color: '#333333' }}>
                                     Change password
                                 </Text>
                             </View>
@@ -141,7 +141,7 @@ const Profile = ({ navigation }) => {
                         <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%', justifyContent: 'space-between', borderWidth: 1, padding: 14, borderRadius: 8, borderColor: '#E01F1F50' }}>
                             <View style={{ flexDirection: 'row', gap: 20, width: '100%' }}>
                                 <Image source={require('../../../assets/Images3/logout.png')} style={{ height: 24, width: 24, resizeMode: 'contain' }} />
-                                <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.medium, color: '#E01F1F' }}>
+                                <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, color: '#E01F1F' }}>
                                     Logout
                                 </Text>
                             </View>

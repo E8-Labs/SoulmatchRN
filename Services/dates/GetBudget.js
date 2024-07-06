@@ -7,7 +7,7 @@ export  const GetBudget = (item) =>{
         return "$$"
     }else if(item.minBudget === 50 && item.maxBudget === 80){
         return "$$$"
-    }else if(item.minBudget === 80 && item.maxBudget ===10000000){
+    }else if(item.minBudget === 80 ){
         return "$$$$"
     }
 }
