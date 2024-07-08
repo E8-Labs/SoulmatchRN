@@ -192,7 +192,6 @@ const Dates = ({ navigation }) => {
 
     const instantlyAddDate = (item) => {
         console.log('New Date from add date screen is ', item);
-        // newDate(getdate)
         setData(prevDate => [...prevDate, item])
     }
 

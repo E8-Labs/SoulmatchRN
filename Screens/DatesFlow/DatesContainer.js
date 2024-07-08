@@ -13,7 +13,7 @@ import ApisPath from '../../lib/ApisPath/ApisPath';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GetBudget } from '../../Services/dates/GetBudget';
 import DatesFilterPopup from '../../Components/DatesFilterPopup';
-import { BroadcastEvents } from '../../models/Constants';
+import { BroadcastEvents, placholder } from '../../models/Constants';
 
 const { height, width } = Dimensions.get('window')
 const searchIcon = require('../../assets/images/searchIcon.png')
@@ -55,13 +55,16 @@ export default function DatesContainer({ navigation }) {
             console.log('date object received from broad cast', data)
             console.log('prev upcoming dates are', upComingDates)
 
-            setUpComingDates([...upComingDates,data])
+            setUpComingDates(prevDates => [...prevDates, data]);
             
         })
         return () => {
             listener.remove()
         }
     }, [])
+
+
+
     
 
     useEffect(()=>{
@@ -87,20 +90,9 @@ export default function DatesContainer({ navigation }) {
 
 
     useEffect(() => {
-        // getDates()
         getDateCategories()
 
     }, [])
-
-
-
-    // useEffect(() => {
-    // console.log("Filters are ", filters);
-    // setFinalFilters(prevFilters => ({
-    // ...prevFilters,
-    // ...filters
-    // }));
-    // }, [filters])
 
     useEffect(() => {
         getDates("Final Filters Change")
@@ -151,7 +143,7 @@ export default function DatesContainer({ navigation }) {
             clearTimeout(timerRef.current);
         }
         setDateNights([])
-        setUpComingDates([])
+        // setUpComingDates([])
         SetRecommendedDates([])
         // setNoMoreUsers(false)
         // Set a new timer
@@ -403,7 +395,7 @@ export default function DatesContainer({ navigation }) {
                                 data={categories}
                                 keyExtractor={(item) => item.id.toString()}
                                 renderItem={({ item }) => (
-                                    <View style={{ alignItems: 'center', marginLeft: 8 }}>
+                                    <View style={{ alignItems: 'center', marginLeft: 20/430*width }}>
                                         <TouchableOpacity onPress={() => {
 
                                             setFinalFilters(prevState => ({
@@ -434,7 +426,7 @@ export default function DatesContainer({ navigation }) {
 
                                 <>
                                     <View style={{
-                                        width: width - 60 / 430 * width, flexDirection: 'row', flexDirection: 'row', alignItems: 'center',
+                                        width: width - 40 / 430 * width, flexDirection: 'row', flexDirection: 'row', alignItems: 'center',
                                         justifyContent: 'space-between', marginTop: 24 / 930 * height, marginBottom: 20 / 930 * height
                                     }}>
                                         <Text style={{ fontSize: 18, fontFamily: customFonts.meduim }}>Date nights</Text>
@@ -464,7 +456,7 @@ export default function DatesContainer({ navigation }) {
                                                     >
                                                         <View style={{
                                                             alignItems: 'center', padding: 12, borderWidth: 1, borderColor: colors.greyText, borderRadius: 10,
-                                                            marginLeft: 15 / 430 * width, flexDirection: 'column', gap: 10 / 930 * height
+                                                            marginLeft: 20 / 430 * width, flexDirection: 'column', gap: 10 / 930 * height
                                                         }}>
                                                             <Image source={{ uri: item.imageUrl }}
                                                                 style={{ height: 98 / 930 * height, width: 158 / 430 * width, borderRadius: 10, resizeMode: 'cover' }}
@@ -502,7 +494,7 @@ export default function DatesContainer({ navigation }) {
                                     }
 
                                     <View style={{
-                                        width: width - 60 / 430 * width, flexDirection: 'row', flexDirection: 'row', alignItems: 'center',
+                                        width: width - 40 / 430 * width, flexDirection: 'row', flexDirection: 'row', alignItems: 'center',
                                         justifyContent: 'space-between', marginTop: 24 / 930 * height, marginBottom: 20 / 930 * height
                                     }}>
                                         <Text style={{ fontSize: 18, fontFamily: customFonts.meduim }}>Recommended</Text>
@@ -530,7 +522,7 @@ export default function DatesContainer({ navigation }) {
                                                     >
                                                         <View style={{
                                                             alignItems: 'center', padding: 12, borderWidth: 1, borderColor: colors.greyText, borderRadius: 10,
-                                                            marginLeft: 15 / 430 * width, flexDirection: 'column', gap: 10 / 930 * height
+                                                            marginLeft: 20 / 430 * width, flexDirection: 'column', gap: 10 / 930 * height
                                                         }}>
                                                             <Image source={{ uri: item.imageUrl }}
                                                                 style={{ height: 98 / 930 * height, width: 158 / 430 * width, borderRadius: 10, resizeMode: 'cover' }}
@@ -602,12 +594,12 @@ export default function DatesContainer({ navigation }) {
                                                             <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, }}>{item.datePlace.name}</Text>
                                                         </View>
                                                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, alignSelf: 'flex-start' }}>
-                                                            <Image source={{ uri: item.dateUser.profile_image }}
+                                                            <Image source={item.dateUser?{ uri: item.dateUser.profile_image }:placholder}
                                                                 style={{
                                                                     height: 40 / 930 * height, width: 40 / 930 * height, borderRadius: 20, resizeMode: 'cover'
                                                                 }}
                                                             />
-                                                            <Text style={{ fontSize: 18, color: '' }}>{item.dateUser.first_name}</Text>
+                                                            <Text style={{ fontSize: 18, color: '' }}>{item.dateUser&&item.dateUser.first_name}</Text>
                                                         </View>
 
 

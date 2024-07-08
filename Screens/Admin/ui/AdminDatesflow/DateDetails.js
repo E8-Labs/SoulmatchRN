@@ -26,7 +26,8 @@ const DateDetails = ({ navigation, route }) => {
 
     const From = router.from;
     console.log("I am comming from :", From);
-    const UserDateDetails = router.DateDetails;
+    // const UserDateDetails = router.DateDetails;
+    const [UserDateDetails, setUserDateDetails] = useState({})
     console.log("UserDate details are :", UserDateDetails);
 
     useEffect(() => {
@@ -38,7 +39,13 @@ const DateDetails = ({ navigation, route }) => {
     }, [])
 
     useEffect(() => {
+        console.log("Data of router.DateDetails ", UserDateDetails)
+        setUserDateDetails(router.DateDetails)
+    }, [router.DateDetails])
+
+    useEffect(() => {
         console.log("Data of date updated ", dateDetails)
+        setUserDateDetails(dateDetails)
     }, [dateDetails])
 
     // useFocusEffect(

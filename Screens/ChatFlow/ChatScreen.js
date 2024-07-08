@@ -25,6 +25,7 @@ import { Ionicons } from '@expo/vector-icons';
 import VoiceMessagePlayer from '../../Components/VoiceMessagePlayer'
 import { ImageViewer } from '../../Components/ImageViewer'
 import { getProfile } from '../../Services/ProfileServices/GetProfile'
+import { placholder } from '../../models/Constants'
 
 
 
@@ -433,6 +434,7 @@ export default function ChatScreen({ navigation, route }) {
                 }
             }
         } catch (e) {
+            setLoading(false)
             console.log('error finding in block user', e)
         }
 
@@ -741,13 +743,13 @@ export default function ChatScreen({ navigation, route }) {
                                 // })
                             }}>
                                 <View style={{ alignItems: 'center', flexDirection: 'row', gap: 12 / 430 * width }}>
-                                    <Image source={{ uri: chat.users[0].profile_image }}
+                                    <Image source={chat.users[0]?{ uri: chat.users[0].profile_image }:placholder}
                                         style={{ height: 46 / 930 * height, width: 46 / 930 * height, borderRadius: 25 }}
                                     />
                                     <Text numberOfLines={1} style={{
                                         fontSize: 20, fontFamily: customFonts.meduim, width: 170 / 430 * width,
                                     }}>
-                                        {chat.users[0].first_name} {chat.users[0].last_name}
+                                        {chat.users[0]&&chat.users[0].first_name} {chat.users[0]&&chat.users[0].last_name}
                                     </Text>
                                 </View>
                             </TouchableOpacity>
@@ -775,13 +777,13 @@ export default function ChatScreen({ navigation, route }) {
                     setOpenModal3(true);
                 } else if (menu === "Report") {
                     navigation.navigate('ReportChat', {
-                        userId: chat.users[0].id
+                        userId:  chat.users[0]&&chat.users[0].id
                     });
                     closeModal2();
                 } else if (menu === "InviteDate") {
                     navigation.navigate('InviteDateFromChatScreen', {
                         data: {
-                            userId: chat.users[0].id
+                            userId: chat.users[0] &&chat.users[0].id
                         }
                     });
                     closeModal2();
@@ -800,8 +802,8 @@ export default function ChatScreen({ navigation, route }) {
                             backgroundColor: 'white', justifyContent: 'space-between', gap: 15 / 930 * height,
                             alignItems: 'flex-start', borderRadius: 10, paddingHorizontal: 25, paddingVertical: 25,
                         }}>
-                            <Text style={{ fontSize: 20, fontFamily: customFonts.meduim }}>Block {chat.users[0].first_name} {chat.users[0].last_name}?</Text>
-                            <Text style={{ fontSize: 14, fontFamily: customFonts.regular }}>Are you sure you want to block {chat.users[0].first_name} {chat.users[0].last_name}?</Text>
+                            <Text style={{ fontSize: 20, fontFamily: customFonts.meduim }}>Block {chat.users[0]&&chat.users[0].first_name} {chat.users[0]&&chat.users[0].last_name}?</Text>
+                            <Text style={{ fontSize: 14, fontFamily: customFonts.regular }}>Are you sure you want to block {chat.users[0]&&chat.users[0].first_name} {chat.users[0]&&chat.users[0].last_name}?</Text>
                             <View style={{ flexDirection: 'row', alignItems: 'center', width: 320 / 430 * width, justifyContent: 'space-between', alignSelf: 'center', marginTop: 10 }}>
                                 <TouchableOpacity onPress={() => { setOpenModal3(false) }}
                                     style={{
