@@ -17,7 +17,7 @@ const GetInterest = ({ navigation, route }) => {
 
     const { height, width } = Dimensions.get('window');
     const [MinAge, setMinAge] = useState(1);
-    const [MaxAge, setMaxAge] = useState(33);
+    const [MaxAge, setMaxAge] = useState(32);
     const [SelectMen, setSelectMen] = useState(false);
     const [SelectWomen, setSelectWomen] = useState(false);
     const [SelectBoth, setSelectBoth] = useState(false);

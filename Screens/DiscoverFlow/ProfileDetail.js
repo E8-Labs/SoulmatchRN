@@ -587,9 +587,9 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                                         marginTop: 22 / 930 * height,
                                                     }}>
                                                         {
-                                                            item.caption ? (
+                                                            item.caption!== "null"  ? (
                                                                 <Text style={{ fontSize: 16, fontFamily: customFonts.regular }}>{item.caption}</Text>
-                                                            ) : null
+                                                            ) : ""
                                                         }
                                                         {/* {
                                             item.hashtage ? (
