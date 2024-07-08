@@ -125,6 +125,19 @@ const DateDetails = ({ navigation, route }) => {
         }
     }
     // return
+
+
+    const formatTime = (time) => {
+        // Check if the time format is in 12-hour format (e.g., "9:35 PM")
+        if (moment(time, ["h:mm A", "h:mm A"], true).isValid()) {
+            return moment(time, ["h:mm A", "h:mm A"]).format("h:mm A");
+        }
+        // Check if the time format is in 24-hour format (e.g., "21:35:00")
+        if (moment(time, "HH:mm:ss", true).isValid()) {
+            return moment(time, "HH:mm:ss").format("h:mm A");
+        }
+        return time;
+    };
     return (
         <SafeAreaView>
             <View style={{ display: 'flex', alignItems: 'center', height: height }}>
@@ -161,32 +174,7 @@ const DateDetails = ({ navigation, route }) => {
                                         height: 240 / 930 * height, width: 370 / 430 * width, borderRadius: 10, resizeMode: 'cover'
                                     }} />
                             </View>
-                            {/* <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 25 }}>
- <Text style={styles.Budget}>
- Budget
- </Text>
- <Text style={styles.Budget}>
- Category
- </Text>
- <Text style={styles.Budget}>
- Ratings
- </Text>
- </View>
- <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
- <Text style={styles.RatingsValue}>
- {GetBudget(dateDetails)}
- </Text>
- <Text style={styles.RatingsValue}>
- {dateDetails.Category ? dateDetails.Category.name : ""}
- </Text>
- <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
- <Image source={require('../../../../assets/Images3/RatingStar.png')} style={{ height: 18, width: 17, resizeMode: 'contain' }} />
- <Text style={[styles.RatingsValue, { height: 26 }]}>
- 5.0
- </Text>
- </View>
- </View> */}
-
+                      
                             <View style={{ marginTop: 25, flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View>
                                     <Text style={styles.Budget}>
@@ -226,7 +214,7 @@ const DateDetails = ({ navigation, route }) => {
                                 Hours of operation
                             </Text>
                             <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, color: '#333333' }}>
-                                {moment(dateDetails.openTime, "HH:mm:ss").format("h:mm a")} - {moment(dateDetails.closeTime, "HH:mm:ss").format("h:mm a")}
+                            {formatTime(dateDetails.openTime)} - {formatTime(dateDetails.closeTime)}            
                             </Text>
                             <Text style={{ fontWeight: '400', fontSize: 12, fontFamily: customFonts.regular, color: '#333333', marginTop: 8 }}>
                                 Description

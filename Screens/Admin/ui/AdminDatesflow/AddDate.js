@@ -12,6 +12,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import AddressPicker from '../Addresspicker/AddressPicker'
 import { ShowMessage } from '../../../../Services/Snakbar/ShowMessage'
 
+import moment from 'moment'
+
 const AddDate = ({ navigation, route }) => {
     const routeData = route.params.DATA;
     // const test = route.params.newDate('Hello')
@@ -100,8 +102,11 @@ const AddDate = ({ navigation, route }) => {
             setCityName(DateData.address);
             setlatitude(DateData.latitude);
             setlongitude(DateData.longitude);
-            // setDate(DateData.openTime)
-            // setDate2(DateData.closeTime)
+            let openTime = formatTimeWithDate(DateData.openTime)
+            let closeTime = formatTimeWithDate(DateData.closeTime)
+            
+            setDate(new Date(openTime))
+            setDate2(new Date(closeTime))
         }
     }, [])
 
@@ -110,6 +115,17 @@ const AddDate = ({ navigation, route }) => {
         console.log("Value of open time :", SelOpenTime);
     }, [SelOpenTime])
 
+
+    const formatTimeWithDate = (timeString) => {
+        const currentDate = moment();
+        // Combine current date with provided time string
+        const combinedDateTime = moment(currentDate.format('YYYY-MM-DD') + ' ' + timeString, 'YYYY-MM-DD h:mm A');
+    
+        // Format the combined datetime in ISO format
+        const formattedDateTime = combinedDateTime.utc().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+    
+        return formattedDateTime;
+      }
 
     const handleBackClick = () => {
         navigation.pop()

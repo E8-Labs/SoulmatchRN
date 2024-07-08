@@ -48,6 +48,19 @@ export default function SelectedDateDetails({ navigation, route }) {
         navigation.pop()
     }
 
+
+    const formatTime = (time) => {
+        // Check if the time format is in 12-hour format (e.g., "9:35 PM")
+        if (moment(time, ["h:mm A", "h:mm A"], true).isValid()) {
+            return moment(time, ["h:mm A", "h:mm A"]).format("h:mm A");
+        }
+        // Check if the time format is in 24-hour format (e.g., "21:35:00")
+        if (moment(time, "HH:mm:ss", true).isValid()) {
+            return moment(time, "HH:mm:ss").format("h:mm A");
+        }
+        return time;
+    };
+
     return (
         <SafeAreaView>
             <View style={{ alignItems: 'center', height: height, width: width }}>
@@ -118,7 +131,7 @@ export default function SelectedDateDetails({ navigation, route }) {
                                     Hours of operation
                                 </Text>
                                 <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, marginTop: 5 / 930 * height }}>
-                                    {moment(data.openTime, "HH:mm:ss").format("h:mm A")} - {moment(data.closeTime, "HH:mm:ss").format("h:mm A")}
+                                   {formatTime(data.openTime)} - {formatTime(data.closeTime)}
                                 </Text>
 
                                 <Text style={{ fontSize: 12, fontFamily: customFonts.regular, marginTop: 20 / 930 * height }}>
