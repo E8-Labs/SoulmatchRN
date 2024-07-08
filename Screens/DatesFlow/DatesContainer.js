@@ -56,7 +56,7 @@ export default function DatesContainer({ navigation }) {
             console.log('prev upcoming dates are', upComingDates)
 
             setUpComingDates(prevDates => [...prevDates, data]);
-            
+
         })
         return () => {
             listener.remove()
@@ -65,11 +65,11 @@ export default function DatesContainer({ navigation }) {
 
 
 
-    
 
-    useEffect(()=>{
+
+    useEffect(() => {
         console.log('upcoming dates after update', upComingDates)
-    },[upComingDates])
+    }, [upComingDates])
 
 
 
@@ -307,14 +307,10 @@ export default function DatesContainer({ navigation }) {
     }
 
     return (
-
-        <SafeAreaView style={{ alignItems: 'center', height: height, backgroundColor: 'white' }}>
-            {/* <View style={{
- backgroundColor: 'red',width: width,
- }}> */}
+        <View>
             <View style={{
-                alignItems: 'flex-end', flexDirection: 'row', height: 50 / 930 * height, width: width, alignSelf: 'center',
-                justifyContent: 'space-between', paddingLeft: 20,
+                alignItems: 'flex-end', flexDirection: 'row', height: 110 / 930 * height, width: width, alignSelf: 'center',
+                justifyContent: 'space-between', paddingLeft: 20, backgroundColor: '#fff'
             }}>
                 <Text style={{ fontSize: 23, fontFamily: customFonts.meduim, paddingBottom: 10 }}>Dates</Text>
 
@@ -382,8 +378,8 @@ export default function DatesContainer({ navigation }) {
                 </View>
             </View>
 
-            {/* </View> */}
-            <View style={{ alignItems: 'center', height: height * 0.75, backgroundColor: 'transparent' }}>
+
+            <View style={{ alignItems: 'center', height: height * 0.78, backgroundColor: 'white' }}>
                 <ScrollView style={{}} showsVerticalScrollIndicator={false}>
 
                     <View style={{ alignItems: 'center' }}>
@@ -395,7 +391,7 @@ export default function DatesContainer({ navigation }) {
                                 data={categories}
                                 keyExtractor={(item) => item.id.toString()}
                                 renderItem={({ item }) => (
-                                    <View style={{ alignItems: 'center', marginLeft: 20/430*width }}>
+                                    <View style={{ alignItems: 'center', marginLeft: 20 / 430 * width }}>
                                         <TouchableOpacity onPress={() => {
 
                                             setFinalFilters(prevState => ({
@@ -594,12 +590,12 @@ export default function DatesContainer({ navigation }) {
                                                             <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, }}>{item.datePlace.name}</Text>
                                                         </View>
                                                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, alignSelf: 'flex-start' }}>
-                                                            <Image source={item.dateUser?{ uri: item.dateUser.profile_image }:placholder}
+                                                            <Image source={item.dateUser ? { uri: item.dateUser.profile_image } : placholder}
                                                                 style={{
                                                                     height: 40 / 930 * height, width: 40 / 930 * height, borderRadius: 20, resizeMode: 'cover'
                                                                 }}
                                                             />
-                                                            <Text style={{ fontSize: 18, color: '' }}>{item.dateUser&&item.dateUser.first_name}</Text>
+                                                            <Text style={{ fontSize: 18, color: '' }}>{item.dateUser && item.dateUser.first_name}</Text>
                                                         </View>
 
 
@@ -647,7 +643,7 @@ export default function DatesContainer({ navigation }) {
 
                 </ScrollView>
             </View>
-        </SafeAreaView>
+        </View>
     )
 }
 
