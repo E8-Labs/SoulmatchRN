@@ -44,7 +44,7 @@ export default function ChatScreen({ navigation, route }) {
     const data = route.params.data
     let chat = data.chat
 
-    // console.log('data from messages list screen', data)
+    console.log('user from messages list screen', data.chat)
 
     const [currentUser, setCurrentUser] = useState(null)
     const [openModal, setOpenModal] = useState(false);
@@ -61,7 +61,7 @@ export default function ChatScreen({ navigation, route }) {
     const [recordingPopup, setRecordingPopup] = useState(false);
     const [visible, setIsVisible] = useState(false);
     const [imageUrl, setImageUrl] = useState(null)
-    const [user,setUser] = useState(null)
+    const [user, setUser] = useState(null)
 
     // useEffect(()=>{
     //     console.log("Image url changed ", imageUrl)
@@ -88,22 +88,22 @@ export default function ChatScreen({ navigation, route }) {
             if (permissionResponse.status !== 'granted') {
                 await requestPermission();
             }
-            else{
+            else {
                 if (recording) {
                     console.warn('Recording is already in progress');
                     return;
                 }
-    
+
                 setRecordingPopup(true);
                 await Audio.setAudioModeAsync({
                     allowsRecordingIOS: true,
                     playsInSilentModeIOS: true,
                 });
-    
+
                 const { recording } = await Audio.Recording.createAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY);
                 setRecording(recording);
             }
-            
+
         } catch (err) {
             console.error('Failed to start recording', err);
         }
@@ -119,7 +119,7 @@ export default function ChatScreen({ navigation, route }) {
         console.log("Recorded message ", uri)
 
         let time = moment().toISOString();
-        let media = {voice: uri}
+        let media = { voice: uri }
         sendMedia(media, true)
         // const newMessage = { userId: currentUser.user.id, timestamp: time, content: "", voice: uri, id: `${chat.id}-${messages.length}` };
         // setMessages(prevMesg => [...prevMesg, newMessage]);
@@ -228,7 +228,7 @@ export default function ChatScreen({ navigation, route }) {
 
     const fromCurrentUser = (message) => {
         if (currentUser && currentUser.user.id === message.userId) {
-            console.log('message from me')
+            // console.log('message from me')
             return true
         }
         return false
@@ -276,19 +276,19 @@ export default function ChatScreen({ navigation, route }) {
     const sendMedia = async (selectedMedia, voice = false) => {
         let time = moment().toISOString();
         let newMessage = {}
-         if(voice){
+        if (voice) {
             console.log("Sending Voice message")
             newMessage = {
                 userId: currentUser.user.id, timestamp: time, image_url: null,
                 thumb_url: null, voice: selectedMedia.voice, id: `${chat.id}-${messages.length}`
             };
-         }
-         else{
+        }
+        else {
             newMessage = {
                 userId: currentUser.user.id, timestamp: time, image_url: selectedMedia.media,
                 thumb_url: selectedMedia.thumbnail, image_width: 200, image_height: 200, id: `${chat.id}-${messages.length}`
             };
-         }
+        }
 
         setMessages(prevMesg => [...prevMesg, newMessage]);
 
@@ -300,14 +300,14 @@ export default function ChatScreen({ navigation, route }) {
 
                 formdata.append("chatId", chat.id);
                 formdata.append("timestamp", time);
-                if(voice){
+                if (voice) {
                     formdata.append("media", {
                         name: "voice.m4a",
                         uri: selectedMedia.voice,
                         type: "audio/m4a",
                     });
                 }
-                else{
+                else {
                     formdata.append("media", {
                         name: "media.jpg",
                         uri: selectedMedia.media,
@@ -332,7 +332,7 @@ export default function ChatScreen({ navigation, route }) {
                 })
 
                 if (result) {
-                    
+
                     let json = await result.json();
                     console.log("Media Message Sent ", json)
                     if (json.status === true) {
@@ -396,7 +396,7 @@ export default function ChatScreen({ navigation, route }) {
             }
             setOpenModal(false);
             sendMedia(selectedMedia);
-        }else{
+        } else {
             setOpenModal(false)
         }
     };
@@ -490,9 +490,9 @@ export default function ChatScreen({ navigation, route }) {
         const type = getMessageType(item)
         if (fromCurrentUser(item)) {
             if (type === "voice") {
-                console.log('voice uri is', item.timestamp)
+                // console.log('voice uri is', item.timestamp)
                 return (
-                    <VoiceMessagePlayer uri={item.voice} timestamp={item.timestamp}/>
+                    <VoiceMessagePlayer uri={item.voice} timestamp={item.timestamp} />
                 )
             }
             if (getMessageType(item) === "text") {
@@ -559,7 +559,7 @@ export default function ChatScreen({ navigation, route }) {
                         }}>
                             <TouchableOpacity
                                 onPress={() => {
-                                   setImageUrl(item.image_url)
+                                    setImageUrl(item.image_url)
                                     setOpenImage(true)
                                 }}
                             >
@@ -582,8 +582,8 @@ export default function ChatScreen({ navigation, route }) {
                                     ) : null
                                 }
                             </TouchableOpacity>
-                            
-                            <ImageViewer swipeToCloseEnabled={true}  visible = {imageUrl !== null}  close = {()=>{setImageUrl(null)}} url = {imageUrl}/>
+
+                            <ImageViewer swipeToCloseEnabled={true} visible={imageUrl !== null} close={() => { setImageUrl(null) }} url={imageUrl} />
                             <Text style={{
                                 fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right',
                                 paddingTop: 10 / 430 * width
@@ -599,7 +599,7 @@ export default function ChatScreen({ navigation, route }) {
             if (type === "voice") {
                 // console.log('voice uri is', item.createdAt)
                 return (
-                    <VoiceMessagePlayer uri={item.voice} timestamp={item.createdAt} fromMe = {false} />
+                    <VoiceMessagePlayer uri={item.voice} timestamp={item.createdAt} fromMe={false} />
                 )
             }
             if (getMessageType(item) === "text") {
@@ -664,7 +664,7 @@ export default function ChatScreen({ navigation, route }) {
                         }}>
                             <TouchableOpacity
                                 onPress={() => {
-                                   setImageUrl(item.image_url)
+                                    setImageUrl(item.image_url)
                                     setOpenImage(true)
                                 }}
                             >
@@ -686,7 +686,7 @@ export default function ChatScreen({ navigation, route }) {
                                     ) : null
                                 }
                             </TouchableOpacity>
-                            <ImageViewer swipeToCloseEnabled={true} visible = {imageUrl !== null}  close = {()=>{setImageUrl(null)}} url = {imageUrl}/>
+                            <ImageViewer swipeToCloseEnabled={true} visible={imageUrl !== null} close={() => { setImageUrl(null) }} url={imageUrl} />
                             <Text style={{
                                 fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right',
                                 paddingTop: 10 / 430 * width, width: 200, paddingRight: 5
@@ -700,14 +700,14 @@ export default function ChatScreen({ navigation, route }) {
         }
     }
 
-    const handleGoBack = () =>{
+    const handleGoBack = () => {
         if (data.from === "Match") {
             navigation.pop(2)
             return
         }
-        console.log('last message is ', messages[messages.length-1])
+        console.log('last message is ', messages[messages.length - 1])
         // return
-        route.params.LastMessage(messages[messages.length-1])
+        route.params.LastMessage(messages[messages.length - 1])
         navigation.goBack()
     }
 
@@ -726,7 +726,7 @@ export default function ChatScreen({ navigation, route }) {
                     <View style={{ alignItems: 'center', flexDirection: 'row', width: width - 50 / 430 * width, justifyContent: 'space-between' }}>
                         <View style={{ alignItems: 'center', flexDirection: 'row', gap: 15 / 430 * width }}>
                             <TouchableOpacity onPress={() => {
-                               handleGoBack()
+                                handleGoBack()
                             }}>
                                 <View style={GlobalStyles.backBtn}>
                                     <Image source={require('../../assets/images/backArrow.png')}
@@ -743,13 +743,13 @@ export default function ChatScreen({ navigation, route }) {
                                 // })
                             }}>
                                 <View style={{ alignItems: 'center', flexDirection: 'row', gap: 12 / 430 * width }}>
-                                    <Image source={chat.users[0]?{ uri: chat.users[0].profile_image }:placholder}
+                                    <Image source={chat.users[0] ? { uri: chat.users[0].profile_image } : placholder}
                                         style={{ height: 46 / 930 * height, width: 46 / 930 * height, borderRadius: 25 }}
                                     />
                                     <Text numberOfLines={1} style={{
                                         fontSize: 20, fontFamily: customFonts.meduim, width: 170 / 430 * width,
                                     }}>
-                                        {chat.users[0]&&chat.users[0].first_name} {chat.users[0]&&chat.users[0].last_name}
+                                        {chat.users[0] && chat.users[0].first_name} {chat.users[0] && chat.users[0].last_name}
                                     </Text>
                                 </View>
                             </TouchableOpacity>
@@ -777,13 +777,13 @@ export default function ChatScreen({ navigation, route }) {
                     setOpenModal3(true);
                 } else if (menu === "Report") {
                     navigation.navigate('ReportChat', {
-                        userId:  chat.users[0]&&chat.users[0].id
+                        userId: chat.users[0] && chat.users[0].id
                     });
                     closeModal2();
                 } else if (menu === "InviteDate") {
                     navigation.navigate('InviteDateFromChatScreen', {
                         data: {
-                            userId: chat.users[0] &&chat.users[0].id
+                            userId: chat.users[0] && chat.users[0].id
                         }
                     });
                     closeModal2();
@@ -802,8 +802,8 @@ export default function ChatScreen({ navigation, route }) {
                             backgroundColor: 'white', justifyContent: 'space-between', gap: 15 / 930 * height,
                             alignItems: 'flex-start', borderRadius: 10, paddingHorizontal: 25, paddingVertical: 25,
                         }}>
-                            <Text style={{ fontSize: 20, fontFamily: customFonts.meduim }}>Block {chat.users[0]&&chat.users[0].first_name} {chat.users[0]&&chat.users[0].last_name}?</Text>
-                            <Text style={{ fontSize: 14, fontFamily: customFonts.regular }}>Are you sure you want to block {chat.users[0]&&chat.users[0].first_name} {chat.users[0]&&chat.users[0].last_name}?</Text>
+                            <Text style={{ fontSize: 20, fontFamily: customFonts.meduim }}>Block {chat.users[0] && chat.users[0].first_name} {chat.users[0] && chat.users[0].last_name}?</Text>
+                            <Text style={{ fontSize: 14, fontFamily: customFonts.regular }}>Are you sure you want to block {chat.users[0] && chat.users[0].first_name} {chat.users[0] && chat.users[0].last_name}?</Text>
                             <View style={{ flexDirection: 'row', alignItems: 'center', width: 320 / 430 * width, justifyContent: 'space-between', alignSelf: 'center', marginTop: 10 }}>
                                 <TouchableOpacity onPress={() => { setOpenModal3(false) }}
                                     style={{
@@ -887,120 +887,135 @@ export default function ChatScreen({ navigation, route }) {
                         </>
                     ) : null
                 }
-                <View style={{
-                    flexDirection: 'row', alignItems: 'center', height: 90 / 930 * height, backgroundColor: 'transparent',
-                    width: width, justifyContent: 'center', paddingHorizontal: 10, gap: 8
-                }}>
-                    <TouchableOpacity onPress={() => {
-                        setOpenModal(true)
-                    }}>
-                        <Image source={openModal ? activeAdd : add}
-                            style={{ height: 24, width: 24 }}
-                        />
-                    </TouchableOpacity>
-                    <View style={{
-                        width: 246 / 430 * width, backgroundColor: '#f5f5f5', paddingVertical: 10, borderRadius: 10,
-                        paddingHorizontal: 16,
-                    }}>
-                        <TextInput placeholder='Send message....' value={message}
-                            multiline
-                            onChangeText={(item) => {
-                                setMessage(item)
-                            }}
-                        />
-                    </View>
-                    <TouchableOpacity
-                        onPress={recording ? stopRecording : startRecording}
-                    >
-                        <Image source={require('../../assets/images/micIcon.png')}
-                            style={{ height: 24, width: 24, tintColor: recording ? colors.blueColor : 'black' }}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => sendMessage(message)}
-                    >
-                        <Image source={message ? activeImage : inactiveImage}
-                            style={{ height: 52, width: 52, }}
-                        />
-                    </TouchableOpacity>
 
-                    {/* record voice popup */}
-                    <Modal
-                        animationType="fade"
-                        transparent={true}
-                        visible={recordingPopup}
-                        onRequestClose={() => { }}>
-                        <View style={styles.centeredView}>
-                            <View style={styles.modalView}>
-                                <TouchableOpacity style={styles.stopButton} >
-                                    <Image source={require('../../assets/images/recordinAnimations.gif')}
-                                        style={{ height: 50, width: 80 }}
-                                    />
-                                </TouchableOpacity>
-                                <Text style={styles.modalText}>Recording...</Text>
-                                <TouchableOpacity style={{ marginTop: 20 }}
-                                    onPress={() => {
-                                        stopRecording()
+                {
+                    chat.users[0]&&chat.users[0].blockedMe ? (
+                        <View style={{ height: 70 / 930 * height, alignItems: 'center', justifyContent: 'center' }}>
+                            <Text style={{ fontSize: 14, fontFamily: customFonts.meduim, color: colors.blueColor }}>
+                                You can not send message because
+                            </Text>
+                            <Text style={{ fontSize: 14, fontFamily: customFonts.meduim, color: colors.blueColor }}>
+                                {chat.users[0] ? chat.users[0].first_name : ''} blocked you
+                            </Text>
+                        </View>
+                    ) : (
+                        <View style={{
+                            flexDirection: 'row', alignItems: 'center', height: 90 / 930 * height, backgroundColor: 'transparent',
+                            width: width, justifyContent: 'center', paddingHorizontal: 10, gap: 8
+                        }}>
+                            <TouchableOpacity onPress={() => {
+                                setOpenModal(true)
+                            }}>
+                                <Image source={openModal ? activeAdd : add}
+                                    style={{ height: 24, width: 24 }}
+                                />
+                            </TouchableOpacity>
+                            <View style={{
+                                width: 246 / 430 * width, backgroundColor: '#f5f5f5', paddingVertical: 10, borderRadius: 10,
+                                paddingHorizontal: 16,
+                            }}>
+                                <TextInput placeholder='Send message....' value={message}
+                                    multiline
+                                    onChangeText={(item) => {
+                                        setMessage(item)
                                     }}
-                                >
-                                    <Image source={require('../../assets/images/micIcon.png')}
-                                        style={{ height: 30, width: 30, tintColor: 'red' }}
-                                    />
-                                </TouchableOpacity>
+                                />
                             </View>
+                            <TouchableOpacity
+                                onPress={recording ? stopRecording : startRecording}
+                            >
+                                <Image source={require('../../assets/images/micIcon.png')}
+                                    style={{ height: 24, width: 24, tintColor: recording ? colors.blueColor : 'black' }}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => sendMessage(message)}
+                            >
+                                <Image source={message ? activeImage : inactiveImage}
+                                    style={{ height: 52, width: 52, }}
+                                />
+                            </TouchableOpacity>
+
+                            {/* record voice popup */}
+                            <Modal
+                                animationType="fade"
+                                transparent={true}
+                                visible={recordingPopup}
+                                onRequestClose={() => { }}>
+                                <View style={styles.centeredView}>
+                                    <View style={styles.modalView}>
+                                        <TouchableOpacity style={styles.stopButton} >
+                                            <Image source={require('../../assets/images/recordinAnimations.gif')}
+                                                style={{ height: 50, width: 80 }}
+                                            />
+                                        </TouchableOpacity>
+                                        <Text style={styles.modalText}>Recording...</Text>
+                                        <TouchableOpacity style={{ marginTop: 20 }}
+                                            onPress={() => {
+                                                stopRecording()
+                                            }}
+                                        >
+                                            <Image source={require('../../assets/images/micIcon.png')}
+                                                style={{ height: 30, width: 30, tintColor: 'red' }}
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
+
+                                </View>
+                            </Modal>
+
+
+                            <Modal
+                                visible={openModal}
+                                transparent={true}
+                                animationType='fade'
+                            >
+                                <TouchableWithoutFeedback onPress={() => {
+                                    setOpenModal(false)
+                                }}>
+                                    <View style={{ height: height, width: width, }}>
+                                        <View style={{
+                                            shadowColor: colors.blueColor, shadowOffset: {
+                                                width: 3,
+                                                height: 3
+                                            }, shadowRadius: 10, shadowOpacity: 0.3,
+                                            height: 100 / 930 * height, width: 180 / 430 * width, backgroundColor: 'white', position: 'absolute', bottom: 75, left: 30,
+                                            alignItems: 'center', borderRadius: 10, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 15 / 430 * width,
+                                        }}>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center', gap: 10 / 930 * height }}>
+                                                <TouchableOpacity onPress={() => {
+                                                    captureMedia()
+                                                }}>
+                                                    <Image source={require('../../assets/images/camera.png')}
+                                                        style={{ height: 52 / 930 * height, width: 52 / 930 * height, }}
+                                                    />
+                                                </TouchableOpacity>
+                                                <Text style={{ fontSize: 14 / 930 * height, fontFamily: customFonts.regular }}>Camera</Text>
+                                            </View>
+                                            <View style={{ flexDirection: 'column', alignItems: 'center', gap: 10 / 930 * height }}>
+                                                <TouchableOpacity onPress={() => {
+                                                    pickMedia()
+                                                }}>
+                                                    <Image source={require('../../assets/images/gallery.png')}
+                                                        style={{ height: 52 / 930 * height, width: 52 / 930 * height, }}
+                                                    />
+                                                </TouchableOpacity>
+                                                <Text style={{ fontSize: 14 / 930 * height, fontFamily: customFonts.regular }}>Gallery</Text>
+                                            </View>
+                                        </View>
+                                    </View>
+                                </TouchableWithoutFeedback>
+                            </Modal>
+
+
+
+
+
 
                         </View>
-                    </Modal>
+                    )
+                }
 
-
-                    <Modal
-                        visible={openModal}
-                        transparent={true}
-                        animationType='fade'
-                    >
-                        <TouchableWithoutFeedback onPress={() => {
-                            setOpenModal(false)
-                        }}>
-                            <View style={{ height: height, width: width, }}>
-                                <View style={{
-                                    shadowColor: colors.blueColor, shadowOffset: {
-                                        width: 3,
-                                        height: 3
-                                    }, shadowRadius: 10, shadowOpacity: 0.3,
-                                    height: 100 / 930 * height, width: 180 / 430 * width, backgroundColor: 'white', position: 'absolute', bottom: 75, left: 30,
-                                    alignItems: 'center', borderRadius: 10, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 15 / 430 * width,
-                                }}>
-                                    <View style={{ flexDirection: 'column', alignItems: 'center', gap: 10 / 930 * height }}>
-                                        <TouchableOpacity onPress={() => {
-                                            captureMedia()
-                                        }}>
-                                            <Image source={require('../../assets/images/camera.png')}
-                                                style={{ height: 52 / 930 * height, width: 52 / 930 * height, }}
-                                            />
-                                        </TouchableOpacity>
-                                        <Text style={{ fontSize: 14 / 930 * height, fontFamily: customFonts.regular }}>Camera</Text>
-                                    </View>
-                                    <View style={{ flexDirection: 'column', alignItems: 'center', gap: 10 / 930 * height }}>
-                                        <TouchableOpacity onPress={() => {
-                                            pickMedia()
-                                        }}>
-                                            <Image source={require('../../assets/images/gallery.png')}
-                                                style={{ height: 52 / 930 * height, width: 52 / 930 * height, }}
-                                            />
-                                        </TouchableOpacity>
-                                        <Text style={{ fontSize: 14 / 930 * height, fontFamily: customFonts.regular }}>Gallery</Text>
-                                    </View>
-                                </View>
-                            </View>
-                        </TouchableWithoutFeedback>
-                    </Modal>
-
-
-                   
-
-                    
-                   
-                </View>
             </KeyboardAvoidingView>
         </View>
     )

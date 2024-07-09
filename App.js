@@ -1,4 +1,4 @@
-import { useCallback, useEffect ,useState} from 'react';
+import { useCallback, useEffect ,useState,useRef} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Dimensions ,Platform,Settings} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -75,10 +75,12 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import ApisPath from './lib/ApisPath/ApisPath';
-import colors from './assets/colors/Colors';
+// import * as Linking from 'expo-linking';
+
 
 import { useFonts, Poppins_400Regular as PoppinsRegular, 
-  Poppins_500Medium as PoppinsMedium, Poppins_700Bold as PoppinsBold, Poppins_600SemiBold as PoppinsSemiBold } from '@expo-google-fonts/poppins';
+  Poppins_500Medium as PoppinsMedium, Poppins_700Bold as PoppinsBold, Poppins_600SemiBold as PoppinsSemiBold }
+ from '@expo-google-fonts/poppins';
 
 
 const { screenHeight, screenWidth } = Dimensions.get('window');
@@ -102,19 +104,13 @@ import AdminNotifications from './Screens/Admin/ui/Dashboarddetails/AdminNotific
 import VideoPlayer from './Components/VideoPlayer';
 import SendFeedBack from './Screens/ProfileFlow/SendFeedBack';
 import User from './Screens/Admin/adminflow/User';
+import SubscriptionPlan from './Components/createprofile/SubscriptionPlan';
  
 
 
 export default function App() {
 
-  // const [fontsLoaded, fontError] = useFonts({
-  //   "PoppinsRegular": require('./assets/fonts/Poppins/Poppins-Regular.ttf'),
-  //   "PoppinsBold": require('./assets/fonts/Poppins/Poppins-Bold.ttf'),
-  //   "PoppinsMedium": require('./assets/fonts/Poppins/Poppins-Medium.ttf'),
-  //   "PoppinsSemiBold": require('./assets/fonts/Poppins/Poppins-SemiBold.ttf'),
-
-  // })
-
+  
   let [fontsLoaded] = useFonts({
     PoppinsRegular,
     PoppinsMedium,
@@ -126,6 +122,29 @@ export default function App() {
 
 
   const [expoPushToken, setExpoPushToken] = useState('');
+
+  const navigationRef = useRef();
+
+  useEffect(() => {
+    const subscription = Notifications.addNotificationResponseReceivedListener(response => {
+      const data = response.notification.request.content.data;
+      if (data.type) {
+        switch (data.notification_type) {
+          case 'Like':
+            navigationRef.current?.navigate("LikesList");
+            break;
+          case 'Message':
+            navigationRef.current?.navigate("MessagesList");
+            break;
+          default:
+            console.warn('Unknown notification type');
+        }
+      }
+    });
+
+    return () => subscription.remove();
+  }, []);
+
 
   useEffect(()=>{
     getNotificationPermission()
@@ -263,8 +282,9 @@ async function registerForPushNotificationsAsync() {
 
     return (
 
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="SplashMainScreen" screenOptions={{ headerShown: false }}>
+      <NavigationContainer ref={navigationRef} //linking={Linking.makeUrl('/')}
+      >
+        <Stack.Navigator initialRouteName="SubscriptionPlan" screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Testfile" component={Testfile} options={{ gestureEnabled: false }} />
           <Stack.Screen name="SplashMainScreen" component={SplashMainScreen} options={{ gestureEnabled: false }} />
           <Stack.Screen name="SlideContainer" component={SlideContainer} options={{ gestureEnabled: false, headerShown: false }}/>
@@ -291,6 +311,7 @@ async function registerForPushNotificationsAsync() {
           <Stack.Screen name="PlanDateNight" component={PlanDateNight} />
           <Stack.Screen name="InviteDateFromChatScreen" component={InviteDateFromChatScreen}  />
           <Stack.Screen name="SelectedProfile" component={SelectedProfile}/>
+          <Stack.Screen name="SubscriptionPlan" component={SubscriptionPlan}/>
 
           {/* <Stack.Screen name='Signin' component={Signin} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='Signup' component={Signup} options={{ gestureEnabled: false, headerShown: false }} /> */}

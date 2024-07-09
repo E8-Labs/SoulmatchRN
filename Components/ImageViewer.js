@@ -2,7 +2,7 @@ import ImageView from "react-native-image-viewing";
 
 
 export const ImageViewer = ({visible,close,url}) => {
-console.log("Image Url in viewer ", url)
+// console.log("Image Url in viewer ", url)
     return (
 
 
