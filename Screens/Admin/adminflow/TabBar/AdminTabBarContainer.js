@@ -179,56 +179,57 @@ export default function AdminTabBarContainer(props) {
     const responseListener = useRef();
 
 
+   
     useEffect(() => {
         const subscription = Notifications.addNotificationResponseReceivedListener(response => {
-            const data = response.notification.request.content.data;
-
-            alert("notification data is", data)
-
-            if (data.notification_type) {
-                switch (data.notification_type) {
-                    case 'Like':
-                        props.navigation.navigate("LikesList");
-                        break;
-                    case 'Message':
-                        props.navigation.navigate("ChatScreen", {
-                            data: {
-                                chat: data.additional,
-                                from: 'Notification'
-                            }
-                        });
-                        break;
-                    case 'Match':
-                        props.navigation.navigate("GotMatch", {
-                            data: {
-                                user: additional
-                            }
-                        });
-                        break;
-                    case 'DateInvite':
-                        props.navigation.navigate("NotificationsScreen");
-                        break;
-                    case 'Dislike':
-                        props.navigation.navigate("NotificationsScreen");
-                        break;
-                    case 'NewUser':
-                        props.navigation.navigate("NotificationsScreen");
-                        break;
-                    case 'DateInviteToAdmin':
-                        props.navigation.navigate("NotificationsScreen");
-                        break;
-                    case 'ReportedUser':
-                        props.navigation.navigate("NotificationsScreen");
-                        break;
-
-                    default:
-                        console.warn('Unknown notification type');
-                }
+            const notData = response.notification.request.content.data;
+            
+            console.log("notification data is", notData);
+            let data = notData.notification;
+            let additionalData = notData.additional;
+            if (data && data.type) {
+                handleNotification(data, additionalData);
             }
         });
 
         return () => subscription.remove();
     }, []);
+
+    const handleNotification = (data, additionalData) => {
+        switch (data.type) {
+            case 'Like':
+                props.navigation.navigate("LikesList");
+                break;
+            case 'Message':
+                props.navigation.navigate("ChatScreen", {
+                    data: {
+                        chat: additionalData,
+                        from: 'Notification', 
+                    },
+                    LastMessage: () => { console.log("Here") }
+                });
+                break;
+            case 'Match':
+                props.navigation.navigate("GotMatch", {
+                    data: {
+                        user: additionalData
+                    }
+                });
+                break;
+            case 'DateInvite':
+            case 'Dislike':
+            case 'NewUser':
+            case 'DateInviteToAdmin':
+            case 'ReportedUser':
+                props.navigation.navigate("NotificationsScreen");
+                break;
+            default:
+                console.warn('Unknown notification type');
+        }
+        // Clear the notification response after handling
+        Notifications.dismissAllNotificationsAsync();
+    };
+
 
 
     useEffect(() => {

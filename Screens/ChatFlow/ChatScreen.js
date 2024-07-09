@@ -889,17 +889,20 @@ export default function ChatScreen({ navigation, route }) {
                 }
 
                 {
-                    chat.users[0]&&chat.users[0].blockedMe ? (
+                    chat.users[0] && chat.users[0].blockedMe ? (
                         <View style={{ height: 70 / 930 * height, alignItems: 'center', justifyContent: 'center' }}>
                             <Text style={{ fontSize: 14, fontFamily: customFonts.meduim, color: colors.blueColor }}>
-                                You can not send message because
+                                This user has blocked you
                             </Text>
+                        </View>
+                    ) : (chat.users[0] && chat.users[0].blockedByMe ? (
+                        <View style={{ height: 70 / 930 * height, alignItems: 'center', justifyContent: 'center' }}>
                             <Text style={{ fontSize: 14, fontFamily: customFonts.meduim, color: colors.blueColor }}>
-                                {chat.users[0] ? chat.users[0].first_name : ''} blocked you
+                                You have blocked this user
                             </Text>
                         </View>
                     ) : (
-                        <View style={{
+                        < View style={{
                             flexDirection: 'row', alignItems: 'center', height: 90 / 930 * height, backgroundColor: 'transparent',
                             width: width, justifyContent: 'center', paddingHorizontal: 10, gap: 8
                         }}>
@@ -1013,11 +1016,11 @@ export default function ChatScreen({ navigation, route }) {
 
 
                         </View>
-                    )
+                    ))
                 }
 
-            </KeyboardAvoidingView>
-        </View>
+            </KeyboardAvoidingView >
+        </View >
     )
 }
 const styles = StyleSheet.create({
