@@ -128,7 +128,10 @@ export default function App() {
   useEffect(() => {
     const subscription = Notifications.addNotificationResponseReceivedListener(response => {
       const data = response.notification.request.content.data;
-      if (data.type) {
+
+      alert("notification data is",data)
+
+      if (data.notification_type) {
         switch (data.notification_type) {
           case 'Like':
             navigationRef.current?.navigate("LikesList");
