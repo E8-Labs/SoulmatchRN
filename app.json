@@ -33,7 +33,11 @@
               "plurawlapp.com"
             ]
           },
-          
+          {
+            "CFBundleURLSchemes": [
+              "http://192.168.10.2:8081"
+            ]
+          },
           {
             "CFBundleURLSchemes": [
               "com.googleusercontent.apps.532960006063-0lrmd4ktecke70t7ncjr2v7vapt230h6"

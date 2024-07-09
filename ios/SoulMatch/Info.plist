@@ -38,6 +38,17 @@
 			<key>CFBundleURLSchemes</key>
 			<array/>
 		</dict>
+    
+    <dict>
+                <key>CFBundleTypeRole</key>
+                <string>Editor</string>
+                <key>CFBundleURLName</key>
+                <string>Device</string>
+                <key>CFBundleURLSchemes</key>
+                <array>
+                    <string>http://192.168.10.2:8081</string>
+                </array>
+            </dict>
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
