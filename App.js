@@ -125,86 +125,86 @@ export default function App() {
 
   const navigationRef = useRef();
 
-  useEffect(() => {
-    const subscription = Notifications.addNotificationResponseReceivedListener(response => {
-      const data = response.notification.request.content.data;
+  // useEffect(() => {
+  //   const subscription = Notifications.addNotificationResponseReceivedListener(response => {
+  //     const data = response.notification.request.content.data;
 
-      alert("notification data is",data)
+  //     alert("notification data is",data)
 
-      if (data.notification_type) {
-        switch (data.notification_type) {
-          case 'Like':
-            navigationRef.current?.navigate("LikesList");
-            break;
-          case 'Message':
-            navigationRef.current?.navigate("MessagesList");
-            break;
-          default:
-            console.warn('Unknown notification type');
-        }
-      }
-    });
+  //     if (data.notification_type) {
+  //       switch (data.notification_type) {
+  //         case 'Like':
+  //           navigationRef.current?.navigate("LikesList");
+  //           break;
+  //         case 'Message':
+  //           navigationRef.current?.navigate("ChatScreen");
+  //           break;
+  //         default:
+  //           console.warn('Unknown notification type');
+  //       }
+  //     }
+  //   });
 
-    return () => subscription.remove();
-  }, []);
-
-
-  useEffect(()=>{
-    getNotificationPermission()
-  },[])
-  const updateProfile = async (token) => {
-    console.log('trying to update profile', token)
-    const data = await AsyncStorage.getItem("USER")
-    try {
-        if (data) {
-            let d = JSON.parse(data)
-            let body = JSON.stringify({
-                fcm_token: token
-            })
-            console.log('boddy is ', body)
-            // return
-
-            const result = await fetch(ApisPath.ApiUpdateProfile, {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + d.token
-                },
-                body: body
-            })
-            if (result) {
-                let json = await result.json()
-                if (json.status === true) {
-                    // console.log('updated profile data is', json.data)
-                    d.user=json.data
-                               AsyncStorage.setItem("USER",JSON.stringify(d))
-
-                    // navigation.navigate("CongratulationsScreen")
-                } else {
-                    console.log('json message is', json.message)
-                }
-            }
-        }
-
-    } catch (error) {
-        console.log('error finding in update profile', error)
-    }
-}
+  //   return () => subscription.remove();
+  // }, []);
 
 
-  const getNotificationPermission = () => {
+//   useEffect(()=>{
+//     getNotificationPermission()
+//   },[])
+//   const updateProfile = async (token) => {
+//     console.log('trying to update profile', token)
+//     const data = await AsyncStorage.getItem("USER")
+//     try {
+//         if (data) {
+//             let d = JSON.parse(data)
+//             let body = JSON.stringify({
+//                 fcm_token: token
+//             })
+//             console.log('boddy is ', body)
+//             // return
 
-    console.log('enter in function')
-    registerForPushNotificationsAsync().then(
-        (token) => {
-            if (token) {
-                setExpoPushToken(token)
-            }
-            console.log('token', token)
-            updateProfile(token)
-        }
-    );
-}
+//             const result = await fetch(ApisPath.ApiUpdateProfile, {
+//                 method: 'post',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                     'Authorization': 'Bearer ' + d.token
+//                 },
+//                 body: body
+//             })
+//             if (result) {
+//                 let json = await result.json()
+//                 if (json.status === true) {
+//                     // console.log('updated profile data is', json.data)
+//                     d.user=json.data
+//                                AsyncStorage.setItem("USER",JSON.stringify(d))
+
+//                     // navigation.navigate("CongratulationsScreen")
+//                 } else {
+//                     console.log('json message is', json.message)
+//                 }
+//             }
+//         }
+
+//     } catch (error) {
+//         console.log('error finding in update profile', error)
+//     }
+// }
+
+
+//   const getNotificationPermission = () => {
+
+//     console.log('enter in function')
+//     registerForPushNotificationsAsync().then(
+//         (token) => {
+//             if (token) {
+//                 setExpoPushToken(token)
+//             }
+//             console.log('token', token)
+//             updateProfile(token)
+//         }
+//     );
+// }
 
 
 async function registerForPushNotificationsAsync() {
@@ -282,12 +282,11 @@ async function registerForPushNotificationsAsync() {
       </View>
     )
   } else {
-
     return (
 
       <NavigationContainer ref={navigationRef} //linking={Linking.makeUrl('/')}
       >
-        <Stack.Navigator initialRouteName="SubscriptionPlan" screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName="SplashMainScreen" screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Testfile" component={Testfile} options={{ gestureEnabled: false }} />
           <Stack.Screen name="SplashMainScreen" component={SplashMainScreen} options={{ gestureEnabled: false }} />
           <Stack.Screen name="SlideContainer" component={SlideContainer} options={{ gestureEnabled: false, headerShown: false }}/>
@@ -305,7 +304,7 @@ async function registerForPushNotificationsAsync() {
           <Stack.Screen name="DiscoverGotMatch" component={DiscoverGotMatch} options={{ gestureEnabled: false }} />
           <Stack.Screen name="GotMatch" component={GotMatch} options={{ gestureEnabled: false }} />
           <Stack.Screen name="MessagesList" component={MessagesList} options={{ gestureEnabled: false }} />
-          <Stack.Screen name="ChatScreen" component={ChatScreen} options={{ gestureEnabled: false }} />
+          <Stack.Screen name="ChatScreen" component={ChatScreen} options={{ gestureEnabled: true }} />
           <Stack.Screen name="ReportChat" component={ReportChat}/>
           <Stack.Screen name="DatesContainer" component={DatesContainer} options={{ gestureEnabled: false }} />
           <Stack.Screen name="SelectedDateDetails" component={SelectedDateDetails} />

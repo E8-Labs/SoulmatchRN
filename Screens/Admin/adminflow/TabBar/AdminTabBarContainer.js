@@ -1,11 +1,16 @@
 import React, { useEffect ,useState,useRef } from "react";
 import { View, Text, ImageBackground, StyleSheet, TouchableOpacity, Dimensions, Platform,  } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
 import Dashboard from "../Dashboard";
 import User from "../User";
 import Dates from "../Dates";
 import Profile from "../Profile";
 import { Image } from "expo-image";
+
+import { UpdateProfile } from "../../../../Services/ProfileServices/UpdateProfile";
 
 //code of screens used
 
@@ -163,7 +168,196 @@ function MyTabBar({ state, descriptors, navigation }) {
 
 
 
-export default function AdminTabBarContainer() {
+export default function AdminTabBarContainer(props) {
+
+
+
+    const [expoPushToken, setExpoPushToken] = useState('');
+    const [channels, setChannels] = useState([]);
+    const [notification, setNotification] = useState(undefined);
+    const notificationListener = useRef();
+    const responseListener = useRef();
+
+
+    useEffect(() => {
+        const subscription = Notifications.addNotificationResponseReceivedListener(response => {
+            const data = response.notification.request.content.data;
+
+            alert("notification data is", data)
+
+            if (data.notification_type) {
+                switch (data.notification_type) {
+                    case 'Like':
+                        props.navigation.navigate("LikesList");
+                        break;
+                    case 'Message':
+                        props.navigation.navigate("ChatScreen", {
+                            data: {
+                                chat: data.additional,
+                                from: 'Notification'
+                            }
+                        });
+                        break;
+                    case 'Match':
+                        props.navigation.navigate("GotMatch", {
+                            data: {
+                                user: additional
+                            }
+                        });
+                        break;
+                    case 'DateInvite':
+                        props.navigation.navigate("NotificationsScreen");
+                        break;
+                    case 'Dislike':
+                        props.navigation.navigate("NotificationsScreen");
+                        break;
+                    case 'NewUser':
+                        props.navigation.navigate("NotificationsScreen");
+                        break;
+                    case 'DateInviteToAdmin':
+                        props.navigation.navigate("NotificationsScreen");
+                        break;
+                    case 'ReportedUser':
+                        props.navigation.navigate("NotificationsScreen");
+                        break;
+
+                    default:
+                        console.warn('Unknown notification type');
+                }
+            }
+        });
+
+        return () => subscription.remove();
+    }, []);
+
+
+    useEffect(() => {
+        getNotificationPermission()
+    }, [])
+
+    useEffect(() => {
+        registerForPushNotificationsAsync().then(
+            (token) => token && setExpoPushToken(token)
+        );
+
+
+
+        if (Platform.OS === 'android') {
+            Notifications.getNotificationChannelsAsync().then((value) =>
+                setChannels(value ?? [])
+            );
+        }
+
+        notificationListener.current =
+            Notifications.addNotificationReceivedListener((notification) => {
+                setNotification(notification);
+            });
+
+        responseListener.current =
+            Notifications.addNotificationResponseReceivedListener((response) => {
+                console.log(response);
+            });
+
+        return () => {
+            if (notificationListener.current) {
+                Notifications.removeNotificationSubscription(notificationListener.current);
+            }
+            if (responseListener.current) {
+                Notifications.removeNotificationSubscription(responseListener.current);
+            }
+        };
+    }, []);
+
+
+    const getNotificationPermission = async () => {
+
+        console.log('enter in function')
+        registerForPushNotificationsAsync().then(
+            async (token) => {
+                if (token) {
+                    setExpoPushToken(token)
+                }
+                console.log('token', token)
+                // Alert.alert("fcm token is ",token )
+                let body = JSON.stringify({
+                    fcm_token: token
+                })
+                try {
+                    await UpdateProfile(body);
+                } catch (error) {
+                    console.error('Error updating profile:', error);
+                    setError('Failed to update profile.');
+                }
+            }
+        );
+    }
+
+
+
+
+    async function schedulePushNotification() {
+        await Notifications.scheduleNotificationAsync({
+            content: {
+                title: "You've got mail! 📬",
+                body: 'Here is the notification body',
+                data: { data: 'goes here', test: { test1: 'more data' } },
+            },
+            trigger: { seconds: 2 },
+        });
+    }
+
+    async function registerForPushNotificationsAsync() {
+        let token;
+
+        if (Platform.OS === 'android') {
+            await Notifications.setNotificationChannelAsync('default', {
+                name: 'default',
+                importance: Notifications.AndroidImportance.MAX,
+                vibrationPattern: [0, 250, 250, 250],
+                lightColor: '#FF231F7C',
+            });
+        }
+
+        if (Device.isDevice) {
+            const { status: existingStatus } = await Notifications.getPermissionsAsync();
+            let finalStatus = existingStatus;
+            if (existingStatus !== 'granted') {
+                const { status } = await Notifications.requestPermissionsAsync();
+                finalStatus = status;
+            }
+            if (finalStatus !== 'granted') {
+                alert('Failed to get push token for push notification!');
+                return;
+            }
+            // Learn more about projectId:
+            // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
+            // EAS projectId is used here.
+            try {
+                const projectId =
+                    Constants?.expoConfig?.extra?.eas?.projectId ??
+                    Constants?.easConfig?.projectId;
+                if (!projectId) {
+                    throw new Error('Project ID not found');
+                }
+                token = (
+                    await Notifications.getExpoPushTokenAsync({
+                        projectId,
+                    })
+                ).data;
+                console.log(token);
+            } catch (e) {
+                token = `${e}`;
+            }
+        } else {
+            //   alert('Must use physical device for Push Notifications');
+        }
+
+        return token;
+    }
+
+
+
+
 
     return (
 

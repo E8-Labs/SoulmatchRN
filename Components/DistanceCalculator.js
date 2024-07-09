@@ -26,7 +26,7 @@ const DistanceCalculator = ({ userId, lat, lang }) => {
             // let lat = data[currentIndex] ? data[currentIndex].lat : ''
             // let lang = data[currentIndex] ? data[currentIndex].lang : ''
             let location = { myLat: localLat, myLang: localLong, otherLat: lat, otherLang: lang }
-            console.log('user data fro local is', location)
+            // console.log('user data fro local is', location)
             // return
             let distance = 0
             if (localLong !== null && localLat !== null && lat !== null && lang !== null) {

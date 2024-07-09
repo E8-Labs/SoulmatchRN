@@ -34,12 +34,12 @@ export default function ProfileMain(props) {
     setError(null);
     try {
       const data = await getProfile();
-      setUser(data); 
+      setUser(data);
       setProfileImg(data.profile_image);
-      console.log('image is',data.profile_image)
+      console.log('image is', data.profile_image)
       setMedia(data.media);
-      
-     
+
+
     } catch (err) {
       setError(err);
     } finally {
@@ -76,7 +76,7 @@ export default function ProfileMain(props) {
       <View style={{ height: height, width: width - 60, alignItems: 'center' }}>
         <View style={{
           flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 60, alignSelf: 'center',
-          marginTop:10/930*height
+          marginTop: 10 / 930 * height
         }}>
           <Text style={{ fontSize: 26, fontWeight: '500' }}>Profile</Text>
           <TouchableOpacity
@@ -108,10 +108,10 @@ export default function ProfileMain(props) {
           style={{ height: 110 / 930 * height, width: 110 / 930 * height, borderRadius: 55, marginTop: 25 / 930 * height }}
         />
         {
-          
+
           loadImage && (
-            <View style = {{height: 110 / 930 * height, width: 110 / 930 * height,marginTop:-60/930*height}}>
-               <ActivityIndicator size={'small'} color={colors.blueColor} style={{ }} />
+            <View style={{ height: 110 / 930 * height, width: 110 / 930 * height, marginTop: -60 / 930 * height }}>
+              <ActivityIndicator size={'small'} color={colors.blueColor} style={{}} />
             </View>
           )
         }
@@ -254,6 +254,26 @@ export default function ProfileMain(props) {
                     />
                     <Text style={styles.text}>
                       Send Feedback
+                    </Text>
+                  </View>
+                  <Image source={require('../../assets/images/farwordArrowIcon.png')}
+                    style={styles.arrowIcon}
+                  />
+
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  // props.navigation.navigate("SendFeedBack")
+                }}
+              >
+                <View style={styles.mainView}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                    <Image source={require('../../assets/images/account.png')}
+                      style={styles.imageStyle}
+                    />
+                    <Text style={styles.text}>
+                      Profile Boost
                     </Text>
                   </View>
                   <Image source={require('../../assets/images/farwordArrowIcon.png')}
