@@ -83,7 +83,7 @@ const AddAge = ({ navigation, route }) => {
                 {
                     data.from !== "Profile" ? (
                 <View style={{ flexDirection: 'row', marginTop: 40 / 930 * height, justifyContent: 'space-between', display: 'flex', alignItems: 'center' }}>
-                    <Image source={require('../../assets/ageicon.png')} style={{ height: 56, width: 56, resizeMode: 'contain' }} />
+                    <Image source={require('../../assets/ageiconsvg.svg')} style={{ height: 56, width: 56, resizeMode: 'contain' }} />
                     <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
                     <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
                     <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
