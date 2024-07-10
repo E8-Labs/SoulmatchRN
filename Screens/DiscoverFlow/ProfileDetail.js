@@ -381,7 +381,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                     let tempFltr = await AsyncStorage.getItem("TempFilters")
                                     if (tempFltr) {
                                         let tempFilter = JSON.parse(tempFltr)
-                                       setFilters(tempFilter)
+                                        setFilters(tempFilter)
                                         setOpenModalLocation(true)
                                         console.log('temp filters are ', tempFilter)
 
@@ -429,72 +429,72 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                     {
                         currentIndex !== data.length ? (
 
-                            <View style={{ height: fromScreen === "Main" ? height * 0.755 : height * 0.85 }} >
+                            <View style={{ height: fromScreen === "Main" ? height * 0.755 : height * 0.85, alignItems: 'center', }} >
 
                                 <ScrollView style={{}} showsVerticalScrollIndicator={false}>
-
-                                    <Image source={data[currentIndex] ? { uri: data[currentIndex].profile_image } : ''}
-                                        onLoadStart={() => handleImageLoadStart(data[currentIndex] ? data[currentIndex].profile_image : '')}
-                                        onLoadEnd={() => handleImageLoadEnd(data[currentIndex] ? data[currentIndex].profile_image : '')}
-                                        placeholder={blurhash}
-                                        contentFit="cover"
-                                        transition={300}
-                                        style={{ opacity: imageLoading[data[currentIndex]] ? 0 : 1, backgroundColor: 'grey', minHeight: height * 0.6, width: width - 40, borderRadius: 10, }}
-                                    />
-                                    {
-                                        imageLoading[data[currentIndex] ? data[currentIndex].profile_image : ''] ? (
-                                            <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop: -550 / 930 * height, height: height * 0.6, width: width - 40, }} />
-                                        ) : <></>
-                                    }
-                                    <View
-                                        style={{
-                                            width: '80%', flexDirection: 'row', top: height * 0.52,
-                                            justifyContent: 'space-between', position: 'absolute', alignSelf: 'center'
-                                        }}>
+                                    <View style = {{width:width-30,}}>
+                                        <Image source={data[currentIndex] ? { uri: data[currentIndex].profile_image } : ''}
+                                            onLoadStart={() => handleImageLoadStart(data[currentIndex] ? data[currentIndex].profile_image : '')}
+                                            onLoadEnd={() => handleImageLoadEnd(data[currentIndex] ? data[currentIndex].profile_image : '')}
+                                            placeholder={blurhash}
+                                            contentFit="cover"
+                                            transition={300}
+                                            style={{ opacity: imageLoading[data[currentIndex]] ? 0 : 1, backgroundColor: 'grey', minHeight: height * 0.6, width: width - 30, borderRadius: 10, }}
+                                        />
                                         {
-                                            LikeIndicator ? (
-                                                <ActivityIndicator size={'large'} color={colors.blueColor} />
-                                            ) : (
-                                                <TouchableOpacity
-                                                    style={{
-                                                        width: 56 / 930 * height, height: 56 / 930 * height, backgroundColor: '#fff', elevation: 5, borderRadius: 30,
-                                                        justifyContent: 'center', alignItems: 'center',
-                                                    }}
-                                                    onPress={() => {
-                                                        handleLike()
-
-                                                    }}
-                                                >
-                                                    <Image
-                                                        source={unlikeImage}
-                                                        style={{ width: 34, height: 34, }}
-                                                    />
-                                                </TouchableOpacity>
-                                            )
+                                            imageLoading[data[currentIndex] ? data[currentIndex].profile_image : ''] ? (
+                                                <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop: -550 / 930 * height, height: height * 0.6, width: width - 40, }} />
+                                            ) : <></>
                                         }
+                                        <View
+                                            style={{
+                                                width: '80%', flexDirection: 'row', top: height * 0.52,
+                                                justifyContent: 'space-between', position: 'absolute', alignSelf: 'center'
+                                            }}>
+                                            {
+                                                LikeIndicator ? (
+                                                    <ActivityIndicator size={'large'} color={colors.blueColor} />
+                                                ) : (
+                                                    <TouchableOpacity
+                                                        style={{
+                                                            width: 56 / 930 * height, height: 56 / 930 * height, backgroundColor: '#fff', elevation: 5, borderRadius: 30,
+                                                            justifyContent: 'center', alignItems: 'center',
+                                                        }}
+                                                        onPress={() => {
+                                                            handleLike()
 
-                                        {
-                                            rejecIndicator ? (
-                                                <ActivityIndicator size={'large'} color={colors.blueColor} />
-                                            ) : (
-                                                <TouchableOpacity onPress={() => {
-                                                    handleReject()
-                                                }}
-                                                    style={{
-                                                        width: 56 / 930 * height, height: 56 / 930 * height, backgroundColor: '#fff', elevation: 5, borderRadius: 30,
-                                                        justifyContent: 'center', alignItems: 'center',
+                                                        }}
+                                                    >
+                                                        <Image
+                                                            source={unlikeImage}
+                                                            style={{ width: 34, height: 34, }}
+                                                        />
+                                                    </TouchableOpacity>
+                                                )
+                                            }
+
+                                            {
+                                                rejecIndicator ? (
+                                                    <ActivityIndicator size={'large'} color={colors.blueColor} />
+                                                ) : (
+                                                    <TouchableOpacity onPress={() => {
+                                                        handleReject()
                                                     }}
-                                                >
-                                                    <Image
-                                                        source={require('../../assets/images/close.png')}
-                                                        style={{ width: 34, height: 34 }}
-                                                    />
-                                                </TouchableOpacity>
-                                            )
-                                        }
+                                                        style={{
+                                                            width: 56 / 930 * height, height: 56 / 930 * height, backgroundColor: '#fff', elevation: 5, borderRadius: 30,
+                                                            justifyContent: 'center', alignItems: 'center',
+                                                        }}
+                                                    >
+                                                        <Image
+                                                            source={require('../../assets/images/close.png')}
+                                                            style={{ width: 34, height: 34 }}
+                                                        />
+                                                    </TouchableOpacity>
+                                                )
+                                            }
 
-                                    </View>
-                                    {/* <View style={{
+                                        </View>
+                                        {/* <View style={{
                                         width: width - 30, padding: 20, shadowColor: '#000',
                                         shadowOffset: {
                                             width: 0,
@@ -516,313 +516,314 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                         </View> 
                                     </View> */}
 
-                                    <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 30 / 930 * height }}>
+                                        <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 30 / 930 * height,width:width-40,paddingLeft:30 }}>
 
-                                        <View style={styles.viewStyle}>
-                                            <Image source={getGenderIcon()}
-                                                style={styles.viewImage}
-                                            />
-                                            <Text style={styles.viewText}>{data[currentIndex] ? data[currentIndex].gender : ''}</Text>
-                                        </View>
+                                            <View style={styles.viewStyle}>
+                                                <Image source={getGenderIcon()}
+                                                    style={styles.viewImage}
+                                                />
+                                                <Text style={styles.viewText}>{data[currentIndex] ? data[currentIndex].gender : ''}</Text>
+                                            </View>
 
-                                        <View style={styles.viewStyle}>
-                                            <Image source={require('../../assets/images/cake.png')}
-                                                style={styles.viewImage}
-                                            />
-                                            <Text style={styles.viewText}>{data[currentIndex] ? data[currentIndex].age : ''} years old</Text>
-                                        </View>
-                                        <View style={styles.viewStyle}>
-                                            <Image source={require('../../assets/images/scale.png')}
-                                                style={styles.viewImage}
-                                            />
-                                            <Text style={styles.viewText}>
-                                                {data[currentIndex] ? ((data[currentIndex].height_feet * 12 + data[currentIndex].height_inches) * 2.54) : 0} cm</Text>
-                                        </View>
-                                        <View style={styles.viewStyle}>
-                                            <Image source={require('../../assets/images/location.png')}
-                                                style={styles.viewImage}
-                                            />
-                                            {
-                                                data[currentIndex] && (
-                                                    <DistanceCalculator userId={data[currentIndex].id} lat={data[currentIndex].lat} lang={data[currentIndex].lang} />
-                                                )
-                                            }
-                                            {/* <Text style={styles.viewText}>{calculateDistance()} miles</Text> */}
-                                        </View>
-                                        <View style={styles.viewStyle}>
-                                            <Image source={require('../../assets/images/eduCap.png')}
-                                                style={styles.viewImage}
-                                            />
-                                            <Text style={styles.viewText}>{data[currentIndex] ? data[currentIndex].school : ''}</Text>
-                                        </View>
-                                        <View style={styles.viewStyle}>
-                                            <Image source={require('../../assets/images/bag.png')}
-                                                style={styles.viewImage}
-                                            />
-                                            <Text style={styles.viewText}>
-                                                {data[currentIndex] ? (data[currentIndex].job_title) : ''} <Text style={styles.viewText}>
-                                                    at {data[currentIndex] ? (data[currentIndex].company) : ''}
+                                            <View style={styles.viewStyle}>
+                                                <Image source={require('../../assets/images/cake.png')}
+                                                    style={styles.viewImage}
+                                                />
+                                                <Text style={styles.viewText}>{data[currentIndex] ? data[currentIndex].age : ''} years old</Text>
+                                            </View>
+                                            <View style={styles.viewStyle}>
+                                                <Image source={require('../../assets/images/scale.png')}
+                                                    style={styles.viewImage}
+                                                />
+                                                <Text style={styles.viewText}>
+                                                    {data[currentIndex] ? ((data[currentIndex].height_feet * 12 + data[currentIndex].height_inches) * 2.54) : 0} cm</Text>
+                                            </View>
+                                            <View style={styles.viewStyle}>
+                                                <Image source={require('../../assets/images/location.png')}
+                                                    style={styles.viewImage}
+                                                />
+                                                {
+                                                    data[currentIndex] && (
+                                                        <DistanceCalculator userId={data[currentIndex].id} lat={data[currentIndex].lat} lang={data[currentIndex].lang} />
+                                                    )
+                                                }
+                                                {/* <Text style={styles.viewText}>{calculateDistance()} miles</Text> */}
+                                            </View>
+                                            <View style={styles.viewStyle}>
+                                                <Image source={require('../../assets/images/eduCap.png')}
+                                                    style={styles.viewImage}
+                                                />
+                                                <Text style={styles.viewText}>{data[currentIndex] ? data[currentIndex].school : ''}</Text>
+                                            </View>
+                                            <View style={styles.viewStyle}>
+                                                <Image source={require('../../assets/images/bag.png')}
+                                                    style={styles.viewImage}
+                                                />
+                                                <Text style={styles.viewText}>
+                                                    {data[currentIndex] ? (data[currentIndex].job_title) : ''} <Text style={styles.viewText}>
+                                                        at {data[currentIndex] ? (data[currentIndex].company) : ''}
+                                                    </Text>
                                                 </Text>
-                                            </Text>
+                                            </View>
+                                            <View style={styles.viewStyle}>
+                                                <Image source={require('../../assets/images/rankingStar.png')}
+                                                    style={styles.viewImage}
+                                                />
+                                                <Text style={styles.viewText}>{data[currentIndex] ? data[currentIndex].zodiac : ''} </Text>
+                                            </View>
                                         </View>
-                                        <View style={styles.viewStyle}>
-                                            <Image source={require('../../assets/images/rankingStar.png')}
-                                                style={styles.viewImage}
-                                            />
-                                            <Text style={styles.viewText}>{data[currentIndex] ? data[currentIndex].zodiac : ''} </Text>
+                                        <View style={{ marginTop: 22 / 930 * height, alignItems: 'flex-start', width:width-40,alignSelf:'center'}}>
+                                            <Text style={{ fontSize: 20, fontFamily: customFonts.meduim }}>Photos & videos</Text>
                                         </View>
-                                    </View>
-                                    <View style={{ marginTop: 22 / 930 * height, alignItems: 'flex-start', }}>
-                                        <Text style={{ fontSize: 20, fontFamily: customFonts.meduim }}>Photos & videos</Text>
-                                    </View>
 
-                                    {
-                                        data[currentIndex] ? data[currentIndex].media.length > 0 ? (
-                                            <FlatList
-                                                scrollEnabled={false}
-                                                data={data[currentIndex] ? data[currentIndex].media : ''}
-                                                renderItem={({ item }) => (
-                                                    <View key={item.id} style={{
-                                                        borderWidth: 1, borderColor: colors.greyText, padding: 16, borderRadius: 10, width: width - 30,
-                                                        marginTop: 22 / 930 * height,
-                                                    }}>
-                                                        {
-                                                            item.caption!== "null"  ? (
-                                                                <Text style={{ fontSize: 16, fontFamily: customFonts.regular }}>{item.caption}</Text>
-                                                            ) : ""
-                                                        }
-                                                        {/* {
+                                        {
+                                            data[currentIndex] ? data[currentIndex].media.length > 0 ? (
+                                                <FlatList
+                                                    scrollEnabled={false}
+                                                    data={data[currentIndex] ? data[currentIndex].media : ''}
+                                                    renderItem={({ item }) => (
+                                                        <View key={item.id} style={{
+                                                            borderWidth: 1, borderColor: colors.greyText, padding: 16, borderRadius: 10, width: width - 40,
+                                                            marginTop: 22 / 930 * height,alignSelf:'center',alignItems:'center'
+                                                        }}>
+                                                            {
+                                                                item.caption !== "null" ? (
+                                                                    <Text style={{ fontSize: 16, fontFamily: customFonts.regular }}>{item.caption}</Text>
+                                                                ) : ""
+                                                            }
+                                                            {/* {
                                             item.hashtage ? (
                                                 <Text style={{ fontSize: 16, fontFamily: customFonts.regular }}>{item.hashtage}</Text>
                                             ) : null
                                         } */}
-                                                        {
-                                                            item.type === "image" ? (
-                                                                <>
-                                                                    <Image source={{ uri: item.url }}
-                                                                        onLoadStart={() => { setLoadImage2(true) }}
+                                                            {
+                                                                item.type === "image" ? (
+                                                                    <>
+                                                                        <Image source={{ uri: item.url }}
+                                                                            onLoadStart={() => { setLoadImage2(true) }}
+                                                                            onLoadEnd={() => {
+                                                                                setLoadImage2(false)
+                                                                            }}
+                                                                            placeholder={blurhash}
+                                                                            contentFit="cover"
+                                                                            transition={1000}
+                                                                            style={{ height: 230 / 930 * height, width: width-60, borderRadius: 10, marginTop: 8 }}
+                                                                        />
+
+                                                                        {
+                                                                            loadImage2 ? (
+                                                                                <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 150 }} />
+                                                                            ) : <></>
+                                                                        }
+                                                                    </>
+
+                                                                ) : (
+                                                                    item.type === "video" ? (
+                                                                        <>
+                                                                            <TouchableOpacity
+                                                                                onPress={() => {
+                                                                                    let routeData = {
+                                                                                        navigate: 'VideoPlayer',
+                                                                                        url: item.url
+                                                                                    }
+                                                                                    onMenuClick(routeData)
+                                                                                }}
+                                                                            >
+                                                                                <Image source={{ uri: item.thumb_url }}
+                                                                                    onLoadStart={() => { setLoadImage4(true) }}
+                                                                                    onLoadEnd={() => {
+                                                                                        setLoadImage4(false)
+                                                                                    }}
+                                                                                    placeholder={blurhash}
+                                                                                    contentFit="cover"
+                                                                                    transition={1000}
+                                                                                    style={{ height: 230 / 930 * height, width:width-60, borderRadius: 10, marginTop: 8 }}
+                                                                                />
+                                                                                {
+                                                                                    !loadImage4 && (
+                                                                                        <Image source={require('../../assets/images/playIcon.png')}
+                                                                                            style={{ height: 50, width: 50, position: 'absolute', bottom: 100 / 930 * height, left: 150 / 430 * width }}
+                                                                                        />
+                                                                                    )
+                                                                                }
+
+                                                                            </TouchableOpacity>
+
+                                                                            {
+                                                                                loadImage4 ? (
+                                                                                    <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 120, left: 160 }} />
+                                                                                ) : <></>
+                                                                            }
+                                                                        </>
+                                                                    ) : ''
+                                                                )
+                                                            }
+
+                                                        </View>
+                                                    )}
+                                                />
+                                            ) : (
+                                                <Text style={{ fontSize: 14, fontFamily: customFonts.meduim, marginTop: 10, }}>
+                                                    No media uploaded
+                                                </Text>
+                                            )
+
+                                                : ""
+                                        }
+
+
+
+                                        <View style={{ marginTop: 22 / 930 * height, alignItems: 'flex-start', width:width-40,alignSelf:'center' }}>
+                                            <Text style={{ fontSize: 20, fontFamily: customFonts.meduim }}>Profile statement questions</Text>
+                                        </View>
+
+                                        {
+                                            data[currentIndex] ? data[currentIndex].answers.length > 0 ? (
+
+                                                <FlatList
+
+                                                    style={{ marginBottom: 50, }}
+                                                    scrollEnabled={false}
+                                                    data={data[currentIndex] ? data[currentIndex].answers : ''}
+                                                    renderItem={({ item, index }) => (
+                                                        <View key={item.id} style={{
+                                                            borderWidth: 1, borderColor: colors.greyText, padding: 16, borderRadius: 10, width: width - 40,
+                                                            marginTop: 22 / 930 * height,alignSelf:'center'
+                                                        }}>
+                                                            <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, color: '#000' }}>
+                                                                {item.title}
+                                                            </Text>
+                                                            <Text style={{ fontSize: 16, fontFamily: customFonts.regular, color: '#4D4D4D' }}>
+                                                                {item.text}
+                                                            </Text>
+                                                            {
+                                                                item.answerImage ? (<>
+                                                                    <Image
+                                                                        source={{ uri: item.answerImage }}
+                                                                        style={{ height: 230 / 930 * height, width:width-60, borderRadius: 10, marginTop: 8 }}
                                                                         onLoadEnd={() => {
-                                                                            setLoadImage2(false)
+                                                                            setLoadImage3(false)
+                                                                        }}
+                                                                        onLoadStart={() => {
+                                                                            setLoadImage3(true)
                                                                         }}
                                                                         placeholder={blurhash}
                                                                         contentFit="cover"
                                                                         transition={1000}
-                                                                        style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
                                                                     />
 
                                                                     {
-                                                                        loadImage2 ? (
-                                                                            <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 150 }} />
+                                                                        loadImage3 ? (
+                                                                            <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 180 / 430 * width }} />
                                                                         ) : <></>
                                                                     }
+                                                                    <TouchableOpacity style={{
+                                                                        alignSelf: 'flex-end', position: 'absolute', bottom: 26, right: 40 / 430 * width, backgroundColor: '#fff',
+                                                                        borderRadius: 30,
+                                                                    }}
+                                                                        onPress={() => {
+                                                                            handleOnpress(item)
+                                                                        }}
+                                                                    >
+                                                                        <View style={GlobalStyles.likeBtn}>
+                                                                            <Image source={selected.includes(item.id) ? likeImage : unlikeImage} style={{ height: 27, width: 27, backgroundColor: 'transparent' }} />
+                                                                        </View>
+                                                                    </TouchableOpacity>
                                                                 </>
+                                                                ) : (
+                                                                    item.answerVideo ? (
+                                                                        <>
+                                                                            <TouchableOpacity
+                                                                                onPress={() => {
+                                                                                    let routeData = {
+                                                                                        navigate: 'VideoPlayer',
+                                                                                        url: item.answerVideo
+                                                                                    }
+                                                                                    onMenuClick(routeData)
 
-                                                            ) : (
-                                                                item.type === "video" ? (
-                                                                    <>
-                                                                        <TouchableOpacity
-                                                                            onPress={() => {
-                                                                                let routeData = {
-                                                                                    navigate: 'VideoPlayer',
-                                                                                    url: item.url
-                                                                                }
-                                                                                onMenuClick(routeData)
-                                                                            }}
-                                                                        >
-                                                                            <Image source={{ uri: item.thumb_url }}
-                                                                                onLoadStart={() => { setLoadImage4(true) }}
-                                                                                onLoadEnd={() => {
-                                                                                    setLoadImage4(false)
                                                                                 }}
-                                                                                placeholder={blurhash}
-                                                                                contentFit="cover"
-                                                                                transition={1000}
-                                                                                style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
-                                                                            />
+                                                                            >
+                                                                                <Image source={{ uri: item.videoThumbnail }}
+                                                                                    style={{ height: 230 / 930 * height, width:width-60, borderRadius: 10, marginTop: 8 }}
+                                                                                    onLoadEnd={() => {
+                                                                                        setLoadImage5(false)
+                                                                                    }} onLoadStart={() => { setLoadImage5(true) }}
+                                                                                    placeholder={blurhash}
+                                                                                    contentFit="cover"
+                                                                                    transition={1000}
+                                                                                />
+                                                                                <Image source={require('../../assets/images/playIcon.png')}
+                                                                                    style={{ height: 50, width: 50, position: 'absolute', bottom: 100 / 930 * height, left: 150 / 430 * width }}
+                                                                                />
+                                                                            </TouchableOpacity>
                                                                             {
-                                                                                !loadImage4 && (
-                                                                                    <Image source={require('../../assets/images/playIcon.png')}
-                                                                                        style={{ height: 50, width: 50, position: 'absolute', bottom: 100 / 930 * height, left: 150 / 430 * width }}
-                                                                                    />
-                                                                                )
+                                                                                loadImage5 ? (
+                                                                                    <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 120, left: 160 }} />
+                                                                                ) : <></>
                                                                             }
 
-                                                                        </TouchableOpacity>
 
-                                                                        {
-                                                                            loadImage4 ? (
-                                                                                <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 120, left: 160 }} />
-                                                                            ) : <></>
-                                                                        }
-                                                                    </>
-                                                                ) : ''
-                                                            )
-                                                        }
+                                                                        </>
 
-                                                    </View>
-                                                )}
-                                            />
-                                        ) : (
-                                            <Text style={{ fontSize: 14, fontFamily: customFonts.meduim, marginTop: 10, }}>
-                                                No media uploaded
-                                            </Text>
-                                        )
+                                                                    ) : (
+                                                                        <>
 
-                                            : ""
-                                    }
+                                                                            <View style={{
+                                                                                marginTop: 8, marginBottom: 8, width: 345 / 430 * width, backgroundColor: '#F5F5F5',
+                                                                                borderRadius: 10, paddingVertical: 10, paddingHorizontal: 16, alignItems: 'center'
+                                                                            }}>
+                                                                                <Text style={{ fontSize: 14, fontFamily: customFonts.regular, color: '#000', textAlign: 'left', width: 320 / 430 * width, }}>
+                                                                                    {item.answerText}
+                                                                                </Text>
 
-
-
-                                    <View style={{ marginTop: 22 / 930 * height, alignItems: 'flex-start', }}>
-                                        <Text style={{ fontSize: 20, fontFamily: customFonts.meduim }}>Profile statement questions</Text>
-                                    </View>
-
-                                    {
-                                        data[currentIndex] ? data[currentIndex].answers.length > 0 ? (
-
-                                            <FlatList
-
-                                                style={{ marginBottom: 50 }}
-                                                scrollEnabled={false}
-                                                data={data[currentIndex] ? data[currentIndex].answers : ''}
-                                                renderItem={({ item, index }) => (
-                                                    <View key={item.id} style={{
-                                                        borderWidth: 1, borderColor: colors.greyText, padding: 16, borderRadius: 10, width: width - 30,
-                                                        marginTop: 22 / 930 * height,
-                                                    }}>
-                                                        <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, color: '#000' }}>
-                                                            {item.title}
-                                                        </Text>
-                                                        <Text style={{ fontSize: 16, fontFamily: customFonts.regular, color: '#4D4D4D' }}>
-                                                            {item.text}
-                                                        </Text>
-                                                        {
-                                                            item.answerImage ? (<>
-                                                                <Image
-                                                                    source={{ uri: item.answerImage }}
-                                                                    style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
-                                                                    onLoadEnd={() => {
-                                                                        setLoadImage3(false)
-                                                                    }}
-                                                                    onLoadStart={() => {
-                                                                        setLoadImage3(true)
-                                                                    }}
-                                                                    placeholder={blurhash}
-                                                                    contentFit="cover"
-                                                                    transition={1000}
-                                                                />
-
-                                                                {
-                                                                    loadImage3 ? (
-                                                                        <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 180 / 430 * width }} />
-                                                                    ) : <></>
-                                                                }
-                                                                <TouchableOpacity style={{
-                                                                    alignSelf: 'flex-end', position: 'absolute', bottom: 26, right: 40 / 430 * width, backgroundColor: '#fff',
-                                                                    borderRadius: 30,
-                                                                }}
-                                                                    onPress={() => {
-                                                                        handleOnpress(item)
-                                                                    }}
-                                                                >
-                                                                    <View style={GlobalStyles.likeBtn}>
-                                                                        <Image source={selected.includes(item.id) ? likeImage : unlikeImage} style={{ height: 27, width: 27, backgroundColor: 'transparent' }} />
-                                                                    </View>
-                                                                </TouchableOpacity>
-                                                            </>
-                                                            ) : (
-                                                                item.answerVideo ? (
-                                                                    <>
-                                                                        <TouchableOpacity
-                                                                            onPress={() => {
-                                                                                let routeData = {
-                                                                                    navigate: 'VideoPlayer',
-                                                                                    url: item.answerVideo
-                                                                                }
-                                                                                onMenuClick(routeData)
-
-                                                                            }}
-                                                                        >
-                                                                            <Image source={{ uri: item.videoThumbnail }}
-                                                                                style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
-                                                                                onLoadEnd={() => {
-                                                                                    setLoadImage5(false)
-                                                                                }} onLoadStart={() => { setLoadImage5(true) }}
-                                                                                placeholder={blurhash}
-                                                                                contentFit="cover"
-                                                                                transition={1000}
-                                                                            />
-                                                                            <Image source={require('../../assets/images/playIcon.png')}
-                                                                                style={{ height: 50, width: 50, position: 'absolute', bottom: 100 / 930 * height, left: 150 / 430 * width }}
-                                                                            />
-                                                                        </TouchableOpacity>
-                                                                        {
-                                                                            loadImage5 ? (
-                                                                                <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 120, left: 160 }} />
-                                                                            ) : <></>
-                                                                        }
-
-
-                                                                    </>
-
-                                                                ) : (
-                                                                    <>
-
-                                                                        <View style={{
-                                                                            marginTop: 8, marginBottom: 8, width: 345 / 430 * width, backgroundColor: '#F5F5F5',
-                                                                            borderRadius: 10, paddingVertical: 10, paddingHorizontal: 16, alignItems: 'center'
-                                                                        }}>
-                                                                            <Text style={{ fontSize: 14, fontFamily: customFonts.regular, color: '#000', textAlign: 'left', width: 320 / 430 * width, }}>
-                                                                                {item.answerText}
-                                                                            </Text>
-
-                                                                        </View>
-                                                                        <TouchableOpacity style={{ alignSelf: 'flex-end', marginRight: 20 / 430 * width }}
-                                                                            onPress={() => {
-                                                                                handleOnpress(item)
-                                                                            }}
-                                                                        >
-                                                                            <View style={GlobalStyles.likeBtn}>
-                                                                                <Image source={selected.includes(item.id) ? likeImage : unlikeImage} style={GlobalStyles.likeBtnImage} />
                                                                             </View>
-                                                                        </TouchableOpacity>
-                                                                    </>
+                                                                            <TouchableOpacity style={{ alignSelf: 'flex-end', marginRight: 20 / 430 * width }}
+                                                                                onPress={() => {
+                                                                                    handleOnpress(item)
+                                                                                }}
+                                                                            >
+                                                                                <View style={GlobalStyles.likeBtn}>
+                                                                                    <Image source={selected.includes(item.id) ? likeImage : unlikeImage} style={GlobalStyles.likeBtnImage} />
+                                                                                </View>
+                                                                            </TouchableOpacity>
+                                                                        </>
+                                                                    )
                                                                 )
-                                                            )
-                                                            // (  
-                                                            //    
-                                                            // )
-                                                        }
+                                                                // (  
+                                                                //    
+                                                                // )
+                                                            }
 
-                                                    </View>
-                                                )}
-                                            />
-                                        ) : (
-                                            <Text style={{ marginBottom: 30, fontSize: 14, fontFamily: customFonts.meduim, marginTop: 10 }}>No answer added</Text>
-                                        )
+                                                        </View>
+                                                    )}
+                                                />
+                                            ) : (
+                                                <Text style={{ marginBottom: 30, fontSize: 14, fontFamily: customFonts.meduim, marginTop: 10 }}>No answer added</Text>
+                                            )
 
 
-                                            : ''
-                                    }
+                                                : ''
+                                        }
 
-                                    <Modal
-                                        visible={openCommentPopup}
-                                        transparent={true}
-                                        animationType='fade'
-                                    >
-                                        {/* <View>
+                                        <Modal
+                                            visible={openCommentPopup}
+                                            transparent={true}
+                                            animationType='fade'
+                                        >
+                                            {/* <View>
                                             <Text>hellloorjnerifh</Text>
                                         </View> */}
-                                        <AddCommentPopup item={commentedAnswer} close={(data) => {
-                                            console.log('modal close here', data)
-                                            if (data === true) {
-                                                console.log('profile liked and now animate')
-                                                handleNext()
-                                            }
-                                            setOpenCommentPopup(false)
-                                        }} />
+                                            <AddCommentPopup item={commentedAnswer} close={(data) => {
+                                                console.log('modal close here', data)
+                                                if (data === true) {
+                                                    console.log('profile liked and now animate')
+                                                    handleNext()
+                                                }
+                                                setOpenCommentPopup(false)
+                                            }} />
 
-                                    </Modal>
+                                        </Modal>
+                                    </View>
                                 </ScrollView>
                             </View>
                         ) : (

@@ -58,7 +58,7 @@ const AddressPicker = ({ backButtonPressed, PickAddress, inputReference }) => {
                     setCityName(city);
                 }
                 if (component.types.includes('administrative_area_level_1')) {
-                    state = component.long_name;
+                    state = component.short_name;
                     // console.log('State from component :', state);
                     setStateName(state);
                 }

@@ -95,7 +95,7 @@ export default function ReserveNightScreen({ navigation, route }) {
           let json = await result.json()
           if (json.status === true) {
             console.log('book date data', json.data)
-            ShowMessage("Congrates date invite sent",colors.blueColor,"white")
+            ShowMessage("Congrats, date invite is sent",colors.blueColor,"white")
             if (data.from === "ChatScreen") {
                 DeviceEventEmitter.emit(BroadcastEvents.EventUpcomingDateAdded,json.data)
                 navigation.pop(2)

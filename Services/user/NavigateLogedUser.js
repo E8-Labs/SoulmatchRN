@@ -177,13 +177,22 @@ export const NavigateLogedUser = async (navigation, from) => {
 
         try {
           const customerInfo = await Purchases.getCustomerInfo();
-          console.log("Customer on Tabbar", customerInfo.entitlements.active["premium"])
+          console.log("Customer on splash ", customerInfo.entitlements.active["premium"])
           if (typeof customerInfo.entitlements.active["premium"] != "undefined") {
             console.log("User subscribed to plan ", customerInfo.entitlements.active["premium"]);
-            navigation.replace('TabBarContainer');
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'TabBarContainer' }],
+            });
+            // navigation.replace('TabBarContainer');
           }
           else{
-              props.navigation.navigate("SubscriptionPlan")
+              console.log('user plan is not active ') 
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'SubscriptionPlan' }],
+              });
+              // navigation.replace("SubscriptionPlan")
           }
           // access latest customerInfo
         } catch (e) {

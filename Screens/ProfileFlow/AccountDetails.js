@@ -33,6 +33,9 @@ export default function AccountDetails({ navigation, route }) {
     const [image, setImage] = useState(user.profile_image !== null ? user.profile_image : '');
     const [loadImage, setLoadImage] = useState(false);
 
+
+   
+
     useEffect(() => {
         // console.log("Use Effect")
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {

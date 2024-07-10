@@ -39,6 +39,11 @@ const GetInterest = ({ navigation, route }) => {
         },
         {
             id: 3,
+            name: 'Non-binary',
+            value: 'Non-binary'
+        },
+        {
+            id: 4,
             name: 'Both',
             value: 'both'
         },
@@ -110,7 +115,7 @@ const GetInterest = ({ navigation, route }) => {
 
     return (
         <View style={{ display: 'flex', alignItems: 'center' }}>
-            <View style={{ width: 370 / 430 * width }}>
+            <View style={{ width: width - 40, }}>
                 <View style={{ marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
                     <TouchableOpacity onPress={() => {
                         navigation.goBack()
@@ -122,7 +127,7 @@ const GetInterest = ({ navigation, route }) => {
                         </View>
                     </TouchableOpacity>
                     <Text style={{ fontWeight: '500', fontSize: 24, marginLeft: 20 / 430 * width }}>
-                    {data.from === "Profile"? "Interests": "Complete your profile"}
+                        {data.from === "Profile" ? "Interests" : "Complete your profile"}
 
                     </Text>
                 </View>
@@ -157,7 +162,7 @@ const GetInterest = ({ navigation, route }) => {
                     Interested in
                 </Text>
 
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 / 930 * height }}>
+                <View style={{ justifyContent: 'center', flexDirection: 'row', marginTop: 20 / 930 * height, gap: 17 / 430 * width, flexWrap: 'wrap', width: width - 40 }}>
 
                     {
                         interestedGenders.map((item) => (
@@ -166,7 +171,7 @@ const GetInterest = ({ navigation, route }) => {
                                     borderWidth: 1, borderColor: SelectMen ? '' : '#CCCCCC75', borderRadius: 10,
                                     backgroundColor: SelectedGender === item.value ? '#6050DC' : 'transparent'
                                 }}>
-                                <View style={{ height: 52 / 930 * height, width: 110 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
+                                <View style={{ height: 52 / 930 * height, width: 80 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
                                     <Text style={{ fontWeight: '500', fontSize: 14, color: SelectedGender === item.value ? 'white' : '#333333' }}>
                                         {item.name}
                                     </Text>
@@ -175,30 +180,8 @@ const GetInterest = ({ navigation, route }) => {
                         ))
                     }
 
-                    {/* 
-                    <TouchableOpacity onPress={handleMenClick} style={{ borderWidth: 1, borderColor: SelectMen ? '' : '#CCCCCC75', borderRadius: 10, backgroundColor: SelectMen ? '#6050DC' : 'transparent' }}>
-                        <View style={{ height: 52 / 930 * height, width: 110 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
-                            <Text style={{ fontWeight: '500', fontSize: 14, color: SelectMen ? 'white' : '#333333' }}>
-                                Men
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleWomenClick} style={{ borderWidth: 1, borderColor: SelectWomen ? '' : '#CCCCCC75', borderRadius: 10, backgroundColor: SelectWomen ? '#6050DC' : 'transparent' }}>
-                        <View style={{ height: 52 / 930 * height, width: 110 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
-                            <Text style={{ fontWeight: '500', fontSize: 14, color: SelectWomen ? 'white' : '#333333' }}>
-                                Women
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleBothClick} style={{ borderWidth: 1, borderColor: SelectWomen ? '' : '#CCCCCC75', borderRadius: 10, backgroundColor: SelectBoth ? '#6050DC' : 'transparent' }}>
-                        <View style={{ height: 52 / 930 * height, width: 110 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
-                            <Text style={{ fontWeight: '500', fontSize: 14, color: SelectBoth ? 'white' : '#333333' }}>
-                                Both
-                            </Text>
-                        </View>
-                    </TouchableOpacity> */}
                 </View>
-                <Text style={{textAlign:'center', fontWeight: '500', fontSize: 18, color:  colors.greyLightText, marginTop: 20 / 930 * height }}>
+                <Text style={{ textAlign: 'center', fontWeight: '500', fontSize: 18, color: colors.greyLightText, marginTop: 20 / 930 * height, alignSelf: 'flex-start' }}>
                     Age range
                 </Text>
 
@@ -219,7 +202,7 @@ const GetInterest = ({ navigation, route }) => {
                                     initialSelectedIndex={MinAge - 1}
                                     items={SelectMinAge.map(name => ({ label: name, value: '' }))}
                                     onChange={({ item }) => {
-                                        setMinAge(item.label-17)
+                                        setMinAge(item.label - 17)
                                         setError(null)
                                     }} />
                             </View>
@@ -239,7 +222,7 @@ const GetInterest = ({ navigation, route }) => {
                                     initialSelectedIndex={MaxAge - 1}
                                     items={SelectMaxAge.map(name => ({ label: name, value: '' }))}
                                     onChange={({ item }) => {
-                                        setMaxAge(item.label-17)
+                                        setMaxAge(item.label - 17)
                                         setError(null)
                                     }} />
                             </View>
@@ -252,23 +235,25 @@ const GetInterest = ({ navigation, route }) => {
 
                 {
                     loading ? (
-                        <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop:data.from === "Profile" ? 150 / 930 * height:50 / 930 * height}} />
+                        <ActivityIndicator size={'large'} color={colors.blueColor} style={{ marginTop: data.from === "Profile" ? 150 / 930 * height : 50 / 930 * height }} />
                     ) : (
-                        <TouchableOpacity onPress={handleNext}
-                            style={{
-                                backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width,
-                                display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10, marginTop: data.from === "Profile" ? 150 / 930 * height:50 / 930 * height
-                            }}>
-                            {
-                                data.from === "Profile" ? (
-                                    <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>Save</Text>
+                        <View style = {{width:width-40,alignItems:'center'}}>
+                            <TouchableOpacity onPress={handleNext}
+                                style={{
+                                    backgroundColor: '#6050DC', height: 54 / 930 * height, width: 370 / 430 * width,
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 10, marginTop: data.from === "Profile" ? 150 / 930 * height : 50 / 930 * height
+                                }}>
+                                {
+                                    data.from === "Profile" ? (
+                                        <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>Save</Text>
 
-                                ) : (
-                                    <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>Next</Text>
+                                    ) : (
+                                        <Text style={{ color: 'white', fontWeight: '500', fontSize: 18 }}>Next</Text>
 
-                                )
-                            }
-                        </TouchableOpacity>
+                                    )
+                                }
+                            </TouchableOpacity>
+                        </View>
                     )
                 }
 

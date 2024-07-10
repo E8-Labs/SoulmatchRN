@@ -187,11 +187,11 @@ export default function SubscriptionPlan({navigation}) {
                   </Text>
                 </View>
                 {/* <View style={{ width: '50%', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}> */}
-                <TouchableOpacity >
+                {/* <TouchableOpacity > */}
                   <View style={{ height: 32 / 930 * height, width: 32 / 930 * height, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#00000020', borderRadius: 50 }}>
                     <Image source={require('../../assets/forward.png')} style={{ height: 20 / 930 * height, width: 20 / 430 * width, }} />
                   </View>
-                </TouchableOpacity>
+                {/* </TouchableOpacity> */}
                 {/* </View> */}
               </View>
             </View>

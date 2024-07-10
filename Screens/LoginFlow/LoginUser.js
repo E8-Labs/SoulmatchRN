@@ -22,6 +22,9 @@ const eyeslash = require('../../assets/images/eye-slash.png')
 
 export default function LoginUser(props) {
 
+
+    
+
     const [selected, setSelected] = useState(false);
     const [email, setEmail] = useState("");
     const [emailFocused, setEmailFocused] = useState(false);
@@ -31,6 +34,9 @@ export default function LoginUser(props) {
     const [showPassword, setShowPassword] = useState(false);
     const [indicator, setIndicator] = useState(false);
     const [indicator1, setIndicator1] = useState(false);
+
+    const [firstName,setFistName] = useState('')
+    const [lastName,setLastName] = useState('')
 
 
     GoogleSignin.configure({
@@ -170,6 +176,14 @@ export default function LoginUser(props) {
     //     }
     // }
 
+    const getName = (fullName) =>{
+        
+        const nameParts = fullName.split(' ')
+         setFistName(nameParts[0])
+         setLastName(nameParts[1])
+
+    };
+
     const GoogleLogin = async () => {
         console.log("trying to login google")
         try {
@@ -177,7 +191,9 @@ export default function LoginUser(props) {
             const userInfo = await GoogleSignin.signIn();
             console.log("user info from google", userInfo)
 
-            socialLogin({ first_name: userInfo.user.name, email: userInfo.user.email, provider_name: "google", provider_id: userInfo.user.id, profile_image: userInfo.user.photo, })
+            getName(userInfo.user.name)
+
+            socialLogin({ first_name: firstName,last_name:lastName, email: userInfo.user.email, provider_name: "google", provider_id: userInfo.user.id, profile_image: userInfo.user.photo, })
 
             console.log("Trying to signin with google ")
 

@@ -139,7 +139,7 @@ export default function PlanDateNigth(props) {
                     let json = await result.json()
                     if(json.status === true){
                         console.log('invite sent via email ')
-                        ShowMessage("Congrates date invite sent",colors.blueColor)
+                        ShowMessage("Congrats, date invite is sent",colors.blueColor)
                         props.navigation.goBack()
                     }else{
                         console.log('invite daye via email message is', json.message)

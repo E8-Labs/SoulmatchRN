@@ -557,7 +557,7 @@ export default function DatesContainer({ navigation }) {
 
 
 
-                                    <View style={{ width: width - 60 / 430 * width, alignItems: 'flex-start', marginTop: 22 / 930 * height, marginBottom: 22 / 930 * height }}>
+                                    <View style={{ width: width - 60 / 430 * width, alignItems: 'flex-start', marginTop: 22 / 930 * height, marginBottom: 50 / 930 * height }}>
                                         <Text style={{ fontSize: 18, fontFamily: customFonts.meduim }}>Upcoming Dates</Text>
                                     </View>
 
@@ -618,7 +618,7 @@ export default function DatesContainer({ navigation }) {
                                                     You don't have any upcoming dates planned
                                                 </Text>
 
-                                                <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 40 / 930 * height, marginBottom: isSearching ? 100 : 0 }]}
+                                                <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 40 / 930 * height, marginBottom: isSearching ? 100/930*height : 100/930*height }]}
                                                     onPress={() => {
                                                         navigation.navigate("PlanDateNight")
                                                     }}

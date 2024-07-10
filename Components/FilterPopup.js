@@ -133,17 +133,20 @@ export default function FilterPopup({ visible, close, addressPicker, filters }) 
         //     return
         // }
 
-        const filters = {
+        let filters = {
             minAge: startAgeRange,
             maxAge: endAgeRange,
             minHeight: startHeight * .96,
             maxHeight: endHeight * .96,
-            gender: selected.name,
+           
             state: state,
             city: city,
         }
+        if(typeof selected.name != "undefined"){
+            filters.gender = selected.name
+        }
 
-        console.log('filter for store in local ', filters)
+        console.log('filter applied ', filters)
         // return
         AsyncStorage.setItem("FilterDiscovers", JSON.stringify(filters))
         let getDiscover = true
@@ -217,7 +220,7 @@ export default function FilterPopup({ visible, close, addressPicker, filters }) 
                 <View style={{ marginTop: 0, height: height, width: width, backgroundColor: '#00000050', justifyContent: 'flex-end' }}>
                     <View style={{ height: modalHeight, backgroundColor: 'white', borderRadius: 20, alignItems: 'center', paddingHorizontal: 30 / 430 * height, paddingVertical: 25 / 930 * height, }}>
                         <View style={{ marginTop: marginTop, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 60 }}>
-                            <Text style={{ fontSize: 20, fontFamily: customFonts.meduim }}> Filter</Text>
+                            <Text style={{ fontSize: 20, fontFamily: customFonts.meduim }}> Filters</Text>
 
                             <TouchableOpacity onPress={close}>
                                 <Image source={require('../assets/images/close.png')}
