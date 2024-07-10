@@ -246,7 +246,7 @@ const UserProfileDetails = ({ navigation, route }) => {
 
                             {/* Compatibility score */}
 
-                            <View style={{ flexDirection: 'row', marginTop: 10, gap: 8, alignItems: 'center' }}>
+                            {/* <View style={{ flexDirection: 'row', marginTop: 10, gap: 8, alignItems: 'center' }}>
                                 <Image source={require('../../../../assets/Images3/compatibility.png')} style={{ height: 56, width: 56, resizeMode: 'contain' }} />
                                 <View>
                                     <Text style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.meduim, color: '#666666' }}>
@@ -256,9 +256,9 @@ const UserProfileDetails = ({ navigation, route }) => {
                                         85%
                                     </Text>
                                 </View>
-                            </View>
-
-                            <View style={styles.viewStyle}>
+                            </View> */}
+                        
+                            <View style={[styles.viewStyle, {marginTop: 30}]}>
                                 <Image source={getGenderIcon()}
                                     style={styles.viewImage}
                                 />
@@ -278,7 +278,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                                 <Image source={require('../../../../assets/Images3/ruler.png')}
                                     style={styles.viewImage}
                                 />
-                                <Text style={styles.viewText}>{ProfileData.height_feet} feet {ProfileData.height_inches} inches</Text>
+                                <Text style={styles.viewText}>{ProfileData.height_inches * 2.54} cm</Text>
                             </View>
 
                             <View style={styles.viewStyle}>
