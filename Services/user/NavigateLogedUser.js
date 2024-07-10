@@ -2,12 +2,15 @@ import ApisPath from "../../lib/ApisPath/ApisPath"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { getProfile } from "../ProfileServices/GetProfile"
 import { ShowMessage } from "../Snakbar/ShowMessage"
+import Purchases from "react-native-purchases"
+import { ApiKeys } from "../../keys"
 
 export const NavigateLogedUser = async (navigation, from) => {
   const user = await AsyncStorage.getItem("USER")
   if (user) {
     let d = JSON.parse(user)
     console.log('user data available',)
+    await Purchases.configure({ apiKey: ApiKeys.RevenueCatApiKey, appUserID: `${d.user.id}` });
     try{
     let u = await getProfile()
     console.log('u is', u)
@@ -171,13 +174,28 @@ export const NavigateLogedUser = async (navigation, from) => {
 
         // if last condition runs then profile complition comment will 11
 
+
+        try {
+          const customerInfo = await Purchases.getCustomerInfo();
+          console.log("Customer on Tabbar", customerInfo.entitlements.active["premium"])
+          if (typeof customerInfo.entitlements.active["premium"] != "undefined") {
+            console.log("User subscribed to plan ", customerInfo.entitlements.active["premium"]);
+            navigation.replace('TabBarContainer');
+          }
+          else{
+              props.navigation.navigate("SubscriptionPlan")
+          }
+          // access latest customerInfo
+        } catch (e) {
+          // Error fetching customer info
+        }
         console.log('profile_completion_comment', data.profile_completion_comment)
-        if(data.subscription.isSubscribed){
-          navigation.replace('TabBarContainer');
-        }
-        else{
-          navigation.replace('SubscriptionPlan');
-        }
+        // if(data.subscription.isSubscribed){
+        //   navigation.replace('TabBarContainer');
+        // }
+        // else{
+        //   navigation.replace('SubscriptionPlan');
+        // }
         
       } else {
 

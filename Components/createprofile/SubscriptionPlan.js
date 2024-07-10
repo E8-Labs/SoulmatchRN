@@ -18,7 +18,6 @@ export default function SubscriptionPlan({navigation}) {
 
   useEffect(() => {
     initializePurchases();
-
   }, []);
 
   const fetchProducts = async () => {
@@ -85,6 +84,10 @@ export default function SubscriptionPlan({navigation}) {
         console.log("Original date ", date);
         await UpdateProfile(JSON.stringify({ originalPurchaseDate: date }))
         console.log("Profile updated")
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'TabBarContainer' }],
+        });
 
       }
     } catch (e) {

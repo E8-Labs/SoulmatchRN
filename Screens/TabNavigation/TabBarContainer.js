@@ -15,6 +15,7 @@ import DatesContainer from "../DatesFlow/DatesContainer";
 import MessagesList from "../ChatFlow/MessagesList";
 import { getProfile } from "../../Services/ProfileServices/GetProfile";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Purchases from "react-native-purchases";
 
 const Tab = createBottomTabNavigator()
 
@@ -238,9 +239,22 @@ export default function TabBarContainer(props) {
                 let data = JSON.parse(userData)
                 if(data){
                     console.log('user profile on dashboard is', data.user.subscription)
-                    if(data.user.subscription.isSubscribed){
-                        props.navigation.navigate("SubscriptionPlan")
-                    }
+                    // if(!data.user.subscription.isSubscribed){
+                    //     props.navigation.navigate("SubscriptionPlan")
+                    // }
+                    try {
+                        const customerInfo = await Purchases.getCustomerInfo();
+                        console.log("Customer on Tabbar", customerInfo.entitlements.active["premium"])
+                        if (typeof customerInfo.entitlements.active["premium"] != "undefined") {
+                          console.log("User subscribed to plan ", customerInfo.entitlements.active["premium"]);
+                        }
+                        else{
+                            props.navigation.navigate("SubscriptionPlan")
+                        }
+                        // access latest customerInfo
+                      } catch (e) {
+                        // Error fetching customer info
+                      }
                 }
             }catch(e) {
                 console.log('error in get profile', e)
