@@ -9,7 +9,8 @@ import { getProfile } from '../../Services/ProfileServices/GetProfile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const { height, width } = Dimensions.get('window');
 const placholder = require('../../assets/images/imagePlaceholder.webp')
-
+ 
+// This is a comment
 export default function ProfileMain(props) {
 
   const [user, setUser] = useState(null)
