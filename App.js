@@ -106,7 +106,8 @@ import SendFeedBack from './Screens/ProfileFlow/SendFeedBack';
 import User from './Screens/Admin/adminflow/User';
 import SubscriptionPlan from './Components/createprofile/SubscriptionPlan';
  
-
+// import dotenv from 'dotenv'
+// dotenv.config();
 
 export default function App() {
 

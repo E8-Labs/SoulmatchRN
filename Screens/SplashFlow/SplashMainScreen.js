@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getProfile } from "../../Services/ProfileServices/GetProfile";
 import {NavigateLogedUser} from '../../Services/user/NavigateLogedUser'
 import customFonts from "../../assets/fonts/Fonts";
+import Purchases from 'react-native-purchases';
 
 const SplashMainScreen = (props) => {
     const { height, width } = Dimensions.get('window')
@@ -29,6 +30,40 @@ const SplashMainScreen = (props) => {
         checkUserDetails()
 
     })
+
+
+    // const initializePurchases = async () => {
+    //     Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
+    
+    //     try {
+    //       if (Platform.OS === 'ios') {
+    //         const data = await AsyncStorage.getItem("USER");
+    //         let user = null;
+    //         if (data) {
+    //           let d = JSON.parse(data);
+    //           user = d.user;
+    //           await Purchases.configure({ apiKey: RevenueCatApiKey, appUserID: `${user.id}` });
+    //           console.log("Initialized user with id:", user.id);
+    
+    //           try {
+    //             const customerInfo = await Purchases.getCustomerInfo();
+    //             if (typeof customerInfo.entitlements.active["premium"] != "undefined") {
+    //               console.log("User subscribed to plan ", customerInfo.entitlements.active["premium"]);
+    //             } 
+    //             // access latest customerInfo
+    //           } catch (e) {
+    //            // Error fetching customer info
+    //           }
+    //           fetchProducts();
+    //         }
+    //       } else if (Platform.OS === 'android') {
+    //         await Purchases.configure({ apiKey: RevenueCatApiKey });
+    //         fetchProducts();
+    //       }
+    //     } catch (error) {
+    //       console.error('Failed to initialize purchases:', error);
+    //     }
+    //   };
 
 
     return (

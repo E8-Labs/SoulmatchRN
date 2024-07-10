@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Button, Text } from 'react-native';
-import { initializePurchases, getAvailablePurchases, purchaseItem } from '../../Services/InAppPurchases';
-import * as InAppPurchases from 'expo-in-app-purchases';
+import { View, Button, Text, Platform } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Purchases from 'react-native-purchases';
 
+import {UpdateProfile} from '../../Services/ProfileServices/UpdateProfile'
+import { ApiKeys } from '../../keys';
 
-
-
-
-
+const RevenueCatApiKey = ApiKeys.RevenueCatApiKey;
 
 export default function SubscriptionPlan() {
   const [products, setProducts] = useState([]);
@@ -18,57 +17,84 @@ export default function SubscriptionPlan() {
   }, []);
 
   const fetchProducts = async () => {
-    const availableProducts = await getAvailablePurchases();
-    setProducts(availableProducts);
-  };
-
-
- 
-
-// Function to handle purchase results
-const handlePurchase = async (purchase) => {
-    const receipt = purchase.transactionReceipt;
-  
-    // Send the receipt to your server to verify and store the originalTransactionId or purchaseToken
-    await axios.post('https://your-server.com/store-receipt', { receipt });
-  
-    // Finish the transaction
-    await InAppPurchases.finishTransactionAsync(purchase, true);
-  };
-  
-  // Function to initialize purchases and set up the listener
-  const initializePurchases = async () => {
     try {
-      await InAppPurchases.connectAsync();
-      InAppPurchases.setPurchaseListener(({ responseCode, results }) => {
-        if (responseCode === InAppPurchases.IAPResponseCode.OK) {
-          results.forEach((purchase) => {
-            if (!purchase.acknowledged) {
-              handlePurchase(purchase);
-            }
-          });
-        }
-      });
-      fetchProducts();
-    } catch (error) {
-      console.error('Failed to connect to in-app purchases main screen', error);
+      console.log("Loading products...");
+      const offerings = await Purchases.getOfferings();
+      // console.log("Offerings:", offerings);
+
+      if (offerings.current && offerings.current.availablePackages.length > 0) {
+        const availableProducts = offerings.current.availablePackages.map(pkg => pkg.product);
+        // console.log("Available products:", availableProducts);
+        setProducts(availableProducts);
+      } else {
+        console.log("No available products found");
+      }
+    } catch (e) {
+      console.log("Error getting offerings:", e);
     }
   };
-  
-  // Call this function when your app starts
-//   initializePurchases();
 
+  const initializePurchases = async () => {
+    Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
 
-  
+    try {
+      if (Platform.OS === 'ios') {
+        const data = await AsyncStorage.getItem("USER");
+        let user = null;
+        if (data) {
+          let d = JSON.parse(data);
+          user = d.user;
+          await Purchases.configure({ apiKey: RevenueCatApiKey, appUserID: `${user.id}` });
+          console.log("Initialized user with id:", user.id);
+
+          try {
+            const customerInfo = await Purchases.getCustomerInfo();
+            // console.log("Customer ", customerInfo.entitlements.active["premium"])
+            if (typeof customerInfo.entitlements.active["premium"] != "undefined") {
+              console.log("User subscribed to plan ", customerInfo.entitlements.active["premium"]);
+            } 
+            // access latest customerInfo
+          } catch (e) {
+           // Error fetching customer info
+          }
+          fetchProducts();
+        }
+      } else if (Platform.OS === 'android') {
+        await Purchases.configure({ apiKey: RevenueCatApiKey });
+        fetchProducts();
+      }
+    } catch (error) {
+      console.error('Failed to initialize purchases:', error);
+    }
+  };
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>In-App Subscriptions</Text>
       {products.map((product) => (
         <Button
-          key={product.productId}
-          title={`Buy ${product.title} for ${product.price}`}
-          onPress={() => purchaseItem(product.productId)}
+          key={product.identifier}
+          title={`Buy ${product.title} for ${product.priceString}`}
+          onPress={async () => {
+            try {
+              console.log("Subscribing to", product.identifier);
+              const { customerInfo } = await Purchases.purchaseProduct(product.identifier);
+              if (customerInfo.entitlements.active["premium"]) {
+                console.log("User subscribed to premium");
+                let p = customerInfo.entitlements.active["premium"]
+                let date = p.originalPurchaseDateMillis;
+                console.log("Original date ", date);
+                await UpdateProfile(JSON.stringify({originalPurchaseDate: date}))
+                console.log("Profile updated")
+
+              }
+            } catch (e) {
+              console.log("Exception during purchase:", e);
+              if (!e.userCancelled) {
+                // Handle other errors
+              }
+            }
+          }}
         />
       ))}
     </View>

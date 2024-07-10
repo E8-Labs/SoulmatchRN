@@ -172,7 +172,13 @@ export const NavigateLogedUser = async (navigation, from) => {
         // if last condition runs then profile complition comment will 11
 
         console.log('profile_completion_comment', data.profile_completion_comment)
-        navigation.replace('TabBarContainer');
+        if(data.subscription.isSubscribed){
+          navigation.replace('TabBarContainer');
+        }
+        else{
+          navigation.replace('SubscriptionPlan');
+        }
+        
       } else {
 
         console.log('there is no screen to navigate', data.profile_completion_comment)

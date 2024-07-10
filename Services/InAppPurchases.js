@@ -4,6 +4,10 @@ import { getProductsAsync, IAPResponseCode, purchaseItemAsync, setPurchaseListen
 } from 'expo-in-app-purchases';
 import { Alert } from 'react-native';
 
+
+
+export const RevenueCatApiKey = ""
+
 const initializePurchases = async () => {
 try {
   await connectAsync();

@@ -76,10 +76,10 @@ const UploadImage = ({ navigation }) => {
                 {/* Add Image */}
                 <View style={{ display: 'flex', height: height * 0.68, flexDirection: 'column', justifyContent: 'space-between' }}>
                     <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center',backgroundColor:'transparent' }}>
-                        {image ? 
+{image ? 
                             <Image source={{ uri: image }} style={{ width: 200 / 430 * width, height: 200 / 930 * height, resizeMode: 'cover', marginTop: 50 / 930 * height, borderRadius: 100 }} /> :
                             <TouchableOpacity  style = {{backgroundColor:'transparent'}} onPress={pickImage}  >
-                                <Image source={require('../../assets/uploadimage.png')} style={{height:146,width:146, resizeMode: 'contain', marginTop: 50 / 930 * height }} />
+                                <Image source={require('../../assets/uploadimagesvg.svg')} style={{height:146,width:146, resizeMode: 'contain', marginTop: 50 / 930 * height }} />
                             </TouchableOpacity>
                          } 
 

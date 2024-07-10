@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, Dimensions, TouchableOpacity, ScrollView, Linking, Easing, ActivityIndicator } from 'react-native'
+import { View, Text, SafeAreaView, Dimensions, TouchableOpacity, ScrollView, Linking, Easing, ActivityIndicator, Modal } from 'react-native'
 import React, { useState } from 'react'
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import customFonts from '../../assets/fonts/Fonts';
@@ -9,6 +9,7 @@ import moment from 'moment';
 
 import { Image } from 'expo-image';
 import { GetBudget } from '../../Services/dates/GetBudget';
+import RatingPopup from '../../Components/RatingPopup';
 
 const { height, width } = Dimensions.get('window');
 
@@ -19,6 +20,7 @@ export default function SelectedDateDetails({ navigation, route }) {
     console.log('selected date details are ', data)
     const [loading, setLoading] = useState(false)
     const [invitedDate,setInvitedDate] = useState({})
+    const [showRatingPopup,setShowRatingPopup] = useState(false)
 
 
     const getInvitedDate = (date) =>{
@@ -151,10 +153,21 @@ export default function SelectedDateDetails({ navigation, route }) {
                                 >
                                     https://soulmatch-c7991c.webflow.io/
                                 </Text> */}
-
-                                <Text style={{ fontSize: 20, fontFamily: customFonts.meduim, marginTop: 20 / 930 * height }}>
+                                <View style = {{
+                                    flexDirection:'row',alignItems:'center',justifyContent:'space-between',width:width-60,
+                                }}>
+                                      <Text style={{ fontSize: 20, fontFamily: customFonts.meduim, marginTop: 20 / 930 * height }}>
                                     Reviews
                                 </Text>
+                                <TouchableOpacity style = {[GlobalStyles.reqtengularBtn,{width:100/430*width,height:40/930*height}]}
+                                    onPress={()=>{
+                                        setShowRatingPopup(true)
+                                    }}
+                                >
+                                    <Text style = {[GlobalStyles.btnText,{fontSize:14}]}>Review</Text>
+                                </TouchableOpacity>
+                                </View>
+                              
                                 <Text style={{ fontSize: 12, fontFamily: customFonts.regular, marginTop: 5 / 930 * height }}>
                                     108+Ratings . 10 Reviews
                                 </Text>
@@ -228,6 +241,21 @@ export default function SelectedDateDetails({ navigation, route }) {
                                 <Text style={GlobalStyles.btnText}>Reserve a date night</Text>
                             </TouchableOpacity>
                         </View>
+
+
+                        {/* rating popup */}
+
+                        <Modal 
+                            visible = {showRatingPopup}
+                            transparent = {true}
+                            animationType='slide'
+                        >
+                            <RatingPopup close = {()=>{
+                                setShowRatingPopup(false)
+                            }} />
+
+
+                        </Modal>
                     </ScrollView>
                 </View>
             </View>

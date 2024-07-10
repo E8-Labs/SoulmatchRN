@@ -115,6 +115,8 @@ PODS:
   - libwebp/webp (1.3.2):
     - libwebp/sharpyuv
   - NWWebSocket (0.5.4)
+  - PurchasesHybridCommon (11.1.1):
+    - RevenueCat (= 4.43.2)
   - pusher-websocket-react-native (1.3.1):
     - PusherSwift (~> 10.1.5)
     - React
@@ -1280,12 +1282,16 @@ PODS:
     - React-logger (= 0.74.1)
     - React-perflogger (= 0.74.1)
     - React-utils (= 0.74.1)
+  - RevenueCat (4.43.2)
   - RNCAsyncStorage (1.23.1):
     - React-Core
   - RNDateTimePicker (8.1.0):
     - React-Core
   - RNGoogleSignin (11.0.1):
     - GoogleSignIn (~> 7.0.0)
+    - React-Core
+  - RNPurchases (7.28.0):
+    - PurchasesHybridCommon (= 11.1.1)
     - React-Core
   - RNScreens (3.29.0):
     - DoubleConversion
@@ -1409,6 +1415,7 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
+  - RNPurchases (from `../node_modules/react-native-purchases`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -1423,7 +1430,9 @@ SPEC REPOS:
     - libdav1d
     - libwebp
     - NWWebSocket
+    - PurchasesHybridCommon
     - PusherSwift
+    - RevenueCat
     - SDWebImage
     - SDWebImageAVIFCoder
     - SDWebImageSVGCoder
@@ -1595,6 +1604,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/datetimepicker"
   RNGoogleSignin:
     :path: "../node_modules/@react-native-google-signin/google-signin"
+  RNPurchases:
+    :path: "../node_modules/react-native-purchases"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNSVG:
@@ -1640,6 +1651,7 @@ SPEC CHECKSUMS:
   libdav1d: 23581a4d8ec811ff171ed5e2e05cd27bad64c39f
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   NWWebSocket: 040d22f23438cc09aaeabf537beff67699c3c76d
+  PurchasesHybridCommon: 73f4f2c6e4ec3487b4219bf60e1661100fb85da3
   pusher-websocket-react-native: e40c49a1e4ec96d4157375aebcf44943f0f8f62f
   PusherSwift: cad631bad86cfff4b8458dce1310a7774e469b1f
   RCT-Folly: 02617c592a293bd6d418e0a88ff4ee1f88329b47
@@ -1690,9 +1702,11 @@ SPEC CHECKSUMS:
   React-runtimescheduler: e2152ed146b6a35c07386fc2ac4827b27e6aad12
   React-utils: 3285151c9d1e3a28a9586571fc81d521678c196d
   ReactCommon: f42444e384d82ab89184aed5d6f3142748b54768
+  RevenueCat: 3d934653b7e8b09af88fd47e9e84cfaf5d0a89ba
   RNCAsyncStorage: 826b603ae9c0f88b5ac4e956801f755109fa4d5c
   RNDateTimePicker: 6dfc4acb94e520ccb1f1697e9d4cd64fd0817314
   RNGoogleSignin: 24d3b3261f78b0fae0aa013f8ab6f8d25e369b0c
+  RNPurchases: 1663e39aecc5d8730d97e349419cfd223c1c04ff
   RNScreens: 23dad53fc9db1da2c93e647ae33fd7ce2bd49d60
   RNSVG: 43b64ed39c14ce830d840903774154ca0c1f27ec
   SDWebImage: dfe95b2466a9823cf9f0c6d01217c06550d7b29a

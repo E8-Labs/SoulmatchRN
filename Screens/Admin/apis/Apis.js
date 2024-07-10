@@ -13,7 +13,8 @@ const Apis = {
     DeleteDate: `${BasePath}api/admin/dates/delete_date_place`,
     FlaggedUsers: `${BasePath}api/admin/reported_users`,
     IgnoreReport: `${BasePath}api/admin/ignore_flagged`,
-    GetProfile: `${BasePath}api/users/get_profile`
+    GetProfile: `${BasePath}api/users/get_profile`,
+    
 }
 
 export default Apis;
