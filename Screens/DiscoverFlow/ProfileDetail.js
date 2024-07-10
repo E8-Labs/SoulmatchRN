@@ -494,7 +494,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                         }
 
                                     </View>
-                                    <View style={{
+                                    {/* <View style={{
                                         width: width - 30, padding: 20, shadowColor: '#000',
                                         shadowOffset: {
                                             width: 0,
@@ -513,8 +513,8 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                                 <Text style={{ fontSize: 14, fontFamily: customFonts.meduim, color: colors.greyLightText }}>Compatibility score</Text>
                                                 <Text style={{ fontSize: 20, fontFamily: customFonts.semibold, color: '#4D4D4D' }}>85%</Text>
                                             </View>
-                                        </View>
-                                    </View>
+                                        </View> 
+                                    </View> */}
 
                                     <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 30 / 930 * height }}>
 
@@ -536,7 +536,7 @@ export default function ProfileDetail({ navigation, fromScreen, data, onMenuClic
                                                 style={styles.viewImage}
                                             />
                                             <Text style={styles.viewText}>
-                                                {data[currentIndex] ? data[currentIndex].height_feet * 12 + data[currentIndex].height_inches : ''} cm</Text>
+                                                {data[currentIndex] ? ((data[currentIndex].height_feet * 12 + data[currentIndex].height_inches) * 2.54) : 0} cm</Text>
                                         </View>
                                         <View style={styles.viewStyle}>
                                             <Image source={require('../../assets/images/location.png')}

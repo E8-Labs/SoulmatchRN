@@ -13,6 +13,8 @@ import DatesMain from "./DatesMain";
 import ProfileMain from "./ProfileMain";
 import DatesContainer from "../DatesFlow/DatesContainer";
 import MessagesList from "../ChatFlow/MessagesList";
+import { getProfile } from "../../Services/ProfileServices/GetProfile";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Tab = createBottomTabNavigator()
 
@@ -228,7 +230,25 @@ export default function TabBarContainer(props) {
 
     //     return () => subscription.remove();
     // }, []);
+    useEffect(()=>{
+        const getUserProfile =async() =>{
+            console.log('trying to get pro')
+            try{
+                let userData = await AsyncStorage.getItem("USER")
+                let data = JSON.parse(userData)
+                if(data){
+                    console.log('user profile on dashboard is', data.user.subscription)
+                    if(data.user.subscription.isSubscribed){
+                        props.navigation.navigate("SubscriptionPlan")
+                    }
+                }
+            }catch(e) {
+                console.log('error in get profile', e)
+            }
+        }
 
+        getUserProfile()
+     },[])
 
     useEffect(() => {
         const subscription = Notifications.addNotificationResponseReceivedListener(response => {

@@ -252,7 +252,7 @@ export default function SelectedDateDetails({ navigation, route }) {
                         >
                             <RatingPopup close = {()=>{
                                 setShowRatingPopup(false)
-                            }} />
+                            }} place={data} />
 
 
                         </Modal>

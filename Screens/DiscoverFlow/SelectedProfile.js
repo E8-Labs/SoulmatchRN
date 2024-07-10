@@ -282,7 +282,7 @@ export default function SelectedProfile({ navigation, route }) {
                             </TouchableOpacity>
 
                         </View>
-                        <View style={{
+                        {/* <View style={{
                             width: width - 30, padding: 20, shadowColor: '#000',
                             shadowOffset: {
                                 width: 0,
@@ -301,8 +301,8 @@ export default function SelectedProfile({ navigation, route }) {
                                     <Text style={{ fontSize: 14, fontFamily: customFonts.meduim, color: colors.greyLightText }}>Compatibility score</Text>
                                     <Text style={{ fontSize: 20, fontFamily: customFonts.semibold, color: '#4D4D4D' }}>85%</Text>
                                 </View>
-                            </View>
-                        </View>
+                            </View> 
+                        </View> */}
 
                         <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 30 / 930 * height }}>
 
@@ -390,7 +390,7 @@ export default function SelectedProfile({ navigation, route }) {
                                             {
                                                 item.type === "image" ? (
                                                     <>
-                                                        <Image source={{ uri: item.url }}
+                                                        <Image source={{ uri: item.thumb_url }}
                                                             onLoadStart={() => {
                                                                 setLoadImage2(true)
                                                             }}

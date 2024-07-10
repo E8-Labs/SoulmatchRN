@@ -66,7 +66,7 @@ export default function DiscoverMain(props) {
         setLoading(false)
         let json = await result.json();
         if (json.status === true) {
-          console.log('discover users are ', json.data)
+          // console.log('discover users are ', json.data)
           setDiscovers(json.data)
         } else {
           console.log('json message is', json.message)
