@@ -19,31 +19,31 @@ export default function SelectedDateDetails({ navigation, route }) {
 
     console.log('selected date details are ', data)
     const [loading, setLoading] = useState(false)
-    const [invitedDate,setInvitedDate] = useState({})
-    const [showRatingPopup,setShowRatingPopup] = useState(false)
+    const [invitedDate, setInvitedDate] = useState({})
+    const [showRatingPopup, setShowRatingPopup] = useState(false)
 
 
-    const getInvitedDate = (date) =>{
+    const getInvitedDate = (date) => {
         console.log('invited date on date details screen is  ', date)
         setInvitedDate(date)
     }
 
 
-    const reserveDate = () =>{
+    const reserveDate = () => {
 
         navigation.navigate("ReserveNightScreen", {
-            data:{
-                date:data,
-                from:"DateScreen",
-                userId:'',
+            data: {
+                date: data,
+                from: "DateScreen",
+                userId: '',
             },
-            invitedDate:getInvitedDate
+            invitedDate: getInvitedDate
 
         })
     }
 
-    const handleBackPress = () =>{
-        if(Object.keys(invitedDate).length !== 0){
+    const handleBackPress = () => {
+        if (Object.keys(invitedDate).length !== 0) {
             console.log('invited date is', invitedDate)
             route.params.selectedDate(invitedDate)
         }
@@ -63,13 +63,42 @@ export default function SelectedDateDetails({ navigation, route }) {
         return time;
     };
 
+    const getDuration = (date) =>{
+console.log('given date is', date)
+        const currentDate = moment()
+
+        const duration = moment.duration(currentDate.diff(date));
+        
+        const months = duration.months();
+        const days = duration.days();
+        const hours = duration.hours();
+        const minutes = duration.minutes();
+        
+        let difference;
+        
+        if (months > 0) {
+            difference = `${months} months`;
+        } else if (days > 0) {
+            difference = `${days} days`;
+        } else if (hours > 0) {
+            difference = `${hours} hours`;
+        } else {
+            difference = `${minutes} minutes`;
+        }
+        
+        console.log(`Difference: ${difference}`);
+
+        return difference
+
+    }
+
     return (
         <SafeAreaView>
             <View style={{ alignItems: 'center', height: height, width: width }}>
                 <View style={{ width: width - 60 / 430 * width, flexDirection: 'row', alignItems: 'center', gap: 20 / 430 * width }}>
                     <TouchableOpacity onPress={() => {
                         handleBackPress()
-                     }}>
+                    }}>
                         <View style={GlobalStyles.backBtn}>
                             <Image source={require('../../assets/images/backArrow.png')}
                                 style={GlobalStyles.backBtnImage}
@@ -96,7 +125,7 @@ export default function SelectedDateDetails({ navigation, route }) {
                             />
                             {
                                 loading ? (
-                                    <View style = {{height:150/930*height,marginTop:-150}}>
+                                    <View style={{ height: 150 / 930 * height, marginTop: -150 }}>
                                         <ActivityIndicator color={colors.blueColor} size={'small'} style={{}} />
                                     </View>
                                 ) : null
@@ -121,7 +150,7 @@ export default function SelectedDateDetails({ navigation, route }) {
                                         <Image source={require('../../assets/images/star.png')}
                                             style={{ height: 12, width: 12 }}
                                         />
-                                        <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>5.0</Text>
+                                        <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>{data.rating}</Text>
 
                                     </View>
 
@@ -133,7 +162,7 @@ export default function SelectedDateDetails({ navigation, route }) {
                                     Hours of operation
                                 </Text>
                                 <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, marginTop: 5 / 930 * height }}>
-                                   {formatTime(data.openTime)} - {formatTime(data.closeTime)}
+                                    {formatTime(data.openTime)} - {formatTime(data.closeTime)}
                                 </Text>
 
                                 <Text style={{ fontSize: 12, fontFamily: customFonts.regular, marginTop: 20 / 930 * height }}>
@@ -153,89 +182,107 @@ export default function SelectedDateDetails({ navigation, route }) {
                                 >
                                     https://soulmatch-c7991c.webflow.io/
                                 </Text> */}
-                                <View style = {{
-                                    flexDirection:'row',alignItems:'center',justifyContent:'space-between',width:width-60,
+                                <View style={{
+                                    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 60,
                                 }}>
-                                      <Text style={{ fontSize: 20, fontFamily: customFonts.meduim, marginTop: 20 / 930 * height }}>
-                                    Reviews
-                                </Text>
-                                <TouchableOpacity style = {[GlobalStyles.reqtengularBtn,{width:100/430*width,height:40/930*height}]}
-                                    onPress={()=>{
-                                        setShowRatingPopup(true)
-                                    }}
-                                >
-                                    <Text style = {[GlobalStyles.btnText,{fontSize:14}]}>Review</Text>
-                                </TouchableOpacity>
+                                    <Text style={{ fontSize: 20, fontFamily: customFonts.meduim, marginTop: 20 / 930 * height }}>
+                                        Reviews
+                                    </Text>
+                                    <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { width: 100 / 430 * width, height: 40 / 930 * height }]}
+                                        onPress={() => {
+                                            setShowRatingPopup(true)
+                                        }}
+                                    >
+                                        <Text style={[GlobalStyles.btnText, { fontSize: 14 }]}>Review</Text>
+                                    </TouchableOpacity>
                                 </View>
-                              
+
                                 <Text style={{ fontSize: 12, fontFamily: customFonts.regular, marginTop: 5 / 930 * height }}>
-                                    108+Ratings . 10 Reviews
+                                    108+Ratings . {data.totalReviews} Reviews
                                 </Text>
 
-                                <View style={{ flexDirection: 'row', alignItems: 'center', width: width - 60 / 430 * width, justifyContent: 'space-between', marginTop: 22 / 930 * height }}>
-                                    <View style={{
-                                        paddingHorizontal: 16, height: 198 / 930 * height, borderRadius: 10, borderWidth: 1, borderColor: colors.greyText,
-                                        alignItems: 'center', justifyContent: 'center'
-                                    }}>
+                                <ScrollView
+                                    horizontal
+                                    showsHorizontalScrollIndicator = {false}
+                                >
+                                    <View style={{ flexDirection: 'row', alignItems: 'center',  gap:15, marginTop: 22 / 930 * height }}>
+                                        <View style={{
+                                            paddingHorizontal: 16, height: 198 / 930 * height, borderRadius: 10, borderWidth: 1, borderColor: colors.greyText,
+                                            alignItems: 'center', justifyContent: 'center'
+                                        }}>
 
-                                        <AnimatedCircularProgress
-                                            size={50}
-                                            width={8}
-                                            fill={10}
-                                            lineCap='round'
-                                            tintColor="#E9C600"
-                                            backgroundColor="#D7D7D7"
-                                            rotation={40 - 180}
-                                            arcSweepAngle={460 - 180}
-                                        // rotation={33-180}
-                                        // arcSweepAngle={480-180}
-                                        >
-                                            {
-                                                () => (
-                                                    <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>
-                                                        4.0
-                                                    </Text>
-                                                )
-                                            }
-                                        </AnimatedCircularProgress>
-                                        <Image source={require('../../assets/images/star.png')}
-                                            style={{
-                                                height: 13, width: 13, resizeMode: 'contain', tintColor: '#E9C600',
-                                                position: 'relative', bottom: 17 / 930 * height
-                                            }}
-                                        />
-                                        <Text style={{ fontSize: 10, fontFamily: customFonts.regular }}>of 5 stars</Text>
-                                    </View>
-                                    <View style={{
-                                        paddingHorizontal: 16 / 430 * width, borderRadius: 10, borderWidth: 1, borderColor: colors.greyText,
-                                        alignItems: 'flex-start', paddingVertical: 16 / 930 * height, flexDirection: 'column', gap: 8, height: 195 / 930 * height
-                                    }}>
-                                        <View style={{ flexDirection: 'row', alignItems: 'center', width: 230 / 430 * width, gap: 12 }}>
-                                            <Image source={require('../../assets/images/profileImage.png')}
-                                                style={{ height: 46 / 930 * height, width: 46 / 930 * height, borderRadius: 25 }}
+                                            <AnimatedCircularProgress
+                                                size={50}
+                                                width={8}
+                                                fill={data.rating * 20}
+                                                lineCap='round'
+                                                tintColor="#E9C600"
+                                                backgroundColor="#D7D7D7"
+                                                rotation={40 - 180}
+                                                arcSweepAngle={460 - 180}
+                                            // rotation={33-180}
+                                            // arcSweepAngle={480-180}
+                                            >
+                                                {
+                                                    () => (
+                                                        <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>
+                                                            {data.rating}
+                                                        </Text>
+                                                    )
+                                                }
+                                            </AnimatedCircularProgress>
+                                            <Image source={require('../../assets/images/star.png')}
+                                                style={{
+                                                    height: 13, width: 13, resizeMode: 'contain', tintColor: '#E9C600',
+                                                    position: 'relative', bottom: 17 / 930 * height
+                                                }}
                                             />
-                                            <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>Olivia Williams</Text>
+                                            <Text style={{ fontSize: 10, fontFamily: customFonts.regular }}>of 5 stars</Text>
                                         </View>
-                                        <View style={{ flexDirection: 'row', alignItems: 'center', width: 230 / 430 * width, gap: 12 }}>
+                                        {
+                                            data.reviews.length > 0 && (
+                                                data.reviews.map((item) => (
+                                                    <View style={{
+                                                        paddingHorizontal: 16 / 430 * width, borderRadius: 10, borderWidth: 1, borderColor: colors.greyText,
+                                                        alignItems: 'flex-start', paddingVertical: 16 / 930 * height, flexDirection: 'column', gap: 8,
+                                                        height: 195 / 930 * height
+                                                    }}>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center', width: 230 / 430 * width, gap: 12 }}>
+                                                            <Image source={{uri:item.user.profile_image}}
+                                                                style={{ height: 46 / 930 * height, width: 46 / 930 * height, borderRadius: 25 }}
+                                                            />
+                                                            <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>
+                                                                {item.user.first_name} {item.user.last_name}
+                                                            </Text>
+                                                        </View>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center', width: 230 / 430 * width, gap: 12 }}>
 
-                                            <StarRatingDisplay
-                                                starSize={18}
-                                                color='#FFC403'
-                                                rating={3}
+                                                            <StarRatingDisplay
+                                                                starSize={18}
+                                                                color='#FFC403'
+                                                                rating={item.rating}
 
-                                            />
+                                                            />
 
-                                            <Text style={{ fontSize: 12, fontFamily: customFonts.regular, color: '#666666' }}>2 days ago</Text>
-                                        </View>
-                                        <Text numberOfLines={4} style={{ fontSize: 14 / 930 * height, fontFamily: customFonts.regular, width: 230 / 430 * width }}>Absolutely divine! The flavors,presentation,and service were impeccable.A must- visit for any food enthusiastThe flavors,presentation,and service were impeccable.A must- visit for any food enthusiast</Text>
+                                                            <Text style={{ fontSize: 12, fontFamily: customFonts.regular, color: '#666666' }}>
+                                                                {getDuration(item.createdAt)} days ago
+                                                            </Text>
+                                                        </View>
+                                                        <Text numberOfLines={4} style={{ fontSize: 14 / 930 * height, fontFamily: customFonts.regular, width: 230 / 430 * width }}>{item.review}</Text>
+
+                                                    </View>
+                                                ))
+                                            )
+                                        }
 
                                     </View>
-                                </View>
+                                </ScrollView>
                             </View>
+
 
                             <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 30 / 930 * height }]}
                                 onPress={() => {
-                                   reserveDate()
+                                    reserveDate()
                                 }}
                             >
                                 <Text style={GlobalStyles.btnText}>Reserve a date night</Text>
@@ -245,12 +292,12 @@ export default function SelectedDateDetails({ navigation, route }) {
 
                         {/* rating popup */}
 
-                        <Modal 
-                            visible = {showRatingPopup}
-                            transparent = {true}
+                        <Modal
+                            visible={showRatingPopup}
+                            transparent={true}
                             animationType='slide'
                         >
-                            <RatingPopup close = {()=>{
+                            <RatingPopup close={() => {
                                 setShowRatingPopup(false)
                             }} place={data} />
 

@@ -29,6 +29,7 @@ export default function EmailVerification({ route, navigation }) {
     const [input2Vlaue, setinput2Vlaue] = useState("")
     const [input3Vlaue, setinput3Vlaue] = useState("")
     const [input4Vlaue, setinput4Vlaue] = useState("")
+    const [error, setError] = useState(null)
     const [code, setCode] = useState(null)
     const [showIndicator, setShowIndicator] = useState(false)
 
@@ -96,7 +97,7 @@ export default function EmailVerification({ route, navigation }) {
                 let json = await result.json();
                 if (json.status === true) {
                     console.log('code sent successfuly')
-                   
+
                 } else {
                     setError(json.message)
                     console.log('code sent message', json.message)
@@ -111,6 +112,10 @@ export default function EmailVerification({ route, navigation }) {
     }
 
     const handleNext = () => {
+        if (!code) {
+            setError("Enter Code")
+            return
+        }
         navigation.navigate('ResetPassword', {
             user: {
                 email: email,
@@ -119,12 +124,48 @@ export default function EmailVerification({ route, navigation }) {
         })
     }
 
+    const hideEmail = (email) => {
+        let splitEmail = email.split('@')
+        console.log('first characters of email ', splitEmail[0])
+        console.log('last characters of email ', splitEmail[1])
+
+        let firstPart = splitEmail[0]
+        let secondPart = splitEmail[1]
+        let halfLenght = firstPart.length / 2
+
+        let hiddenPart = ''
+        let visiblePart = ''
+
+        for (let i = 0; i < firstPart.length; i++) {
+            if (i < halfLenght) {
+                visiblePart = visiblePart + firstPart[i]
+            } else {
+                hiddenPart = hiddenPart + "."
+            }
+        }
+
+        let hiddenEmail = visiblePart + hiddenPart + "@" + secondPart
+
+        console.log('hidden email is', hiddenEmail)
+
+        return hiddenEmail
+
+    };
+
+
+    const getBtnColor = () =>{
+        if(input1Vlaue && input2Vlaue && input3Vlaue&& input4Vlaue ){
+            return colors.blueColor
+        }else{
+            return colors.lightColor
+        }
+    }
 
 
     return (
         <SafeAreaView>
             <View style={[GlobalStyles.container, { justifyContent: 'flex-start' }]}>
-                <View style={{ width: width - 40, marginTop: 0, alignSelf: 'center' }}>
+                <View style={{ width: width - 50, marginTop: 20, alignSelf: 'center' }}>
                     <TouchableOpacity onPress={() => navigation.goBack()} style={{ alignSelf: 'flex-start' }}>
                         <View style={GlobalStyles.backBtn}>
                             <Image source={require('../../assets/images/backArrow.png')}
@@ -138,7 +179,7 @@ export default function EmailVerification({ route, navigation }) {
 
                     <Text style={[GlobalStyles.splashMeduimText, { marginTop: 10, width: width * 0.75 }]}>
                         Please enter the 4 digit code sent to your
-                        email {email}
+                        email {hideEmail(email)}
                     </Text>
                     <View style={{ flexDirection: 'row', marginTop: 54 / 930 * height, justifyContent: 'space-between' }}>
                         <View style={[styles.inputStyle, { borderColor: input1Foucused ? colors.blueColor : colors.greyText }]}>
@@ -153,6 +194,7 @@ export default function EmailVerification({ route, navigation }) {
                                 onChangeText={(text) => {
                                     handelInputChange(text, input2Ref, setinput1Vlaue)
                                     handleBorderColor1(text)
+                                    setError(null)
                                 }}
                             />
                         </View>
@@ -168,6 +210,7 @@ export default function EmailVerification({ route, navigation }) {
                                 onChangeText={(text) => {
                                     handelInputChange(text, input3Ref, setinput2Vlaue)
                                     handleBorderColor2(text)
+                                    setError(null)
                                 }}
                             />
                         </View>
@@ -182,6 +225,7 @@ export default function EmailVerification({ route, navigation }) {
                                 onChangeText={(text) => {
                                     handelInputChange(text, input4Ref, setinput3Vlaue)
                                     handleBorderColor3(text)
+                                    setError(null)
                                 }}
                             />
                         </View>
@@ -195,12 +239,16 @@ export default function EmailVerification({ route, navigation }) {
                                 onChangeText={(text) => {
                                     handelInputChange(text, null, setinput4Vlaue)
                                     handleBorderColor4(text)
+                                    setError(null)
                                 }}
                             />
                         </View>
                     </View>
+                    {
+                        error && <Text style={[GlobalStyles.errorText, { marginTop: 20 }]}>{error}</Text>
+                    }
 
-                    <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 60 / 924 * height }]}
+                    <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 60 / 924 * height ,backgroundColor:getBtnColor()}]}
                         onPress={handleNext}
                     >
                         <Text style={GlobalStyles.btnText}>

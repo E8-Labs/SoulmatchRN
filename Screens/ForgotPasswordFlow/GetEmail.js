@@ -83,7 +83,7 @@ export default function GetEmail(props) {
                 style={{ flex: 1, flexDirection: 'column', }}>
                 <TouchableWithoutFeedback style={GlobalStyles.container} onPress={Keyboard.dismiss}>
                     <View style={[GlobalStyles.container, { justifyContent: 'flex-start' }]}>
-                        <View style={{ width: width - 40, marginTop: 0, alignSelf: 'center' }}>
+                        <View style={{ width: width - 50, marginTop: 20, alignSelf: 'center' }}>
                             <TouchableOpacity style={{ alignSelf: 'flex-start' }} onPress={() => props.navigation.goBack()}>
                                 <View style={GlobalStyles.backBtn}>
                                     <Image source={require('../../assets/images/backArrow.png')}

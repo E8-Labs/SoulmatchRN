@@ -12,6 +12,7 @@ import colors from '../../assets/colors/Colors';
 import { getProfile } from '../../Services/ProfileServices/GetProfile';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import customFonts from '../../assets/fonts/Fonts';
 
 const blurhash = '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
@@ -288,7 +289,7 @@ const EnhancmentQuestions = ({ navigation, route }) => {
     };
 
     const deleteAnswer = async (item) => {
-        if (hasAnswer(item)) {
+        // if (hasAnswer(item)) {
             const data = await AsyncStorage.getItem("USER");
             try {
                 if (data) {
@@ -314,6 +315,7 @@ const EnhancmentQuestions = ({ navigation, route }) => {
                             updateQuestionMedia(questions, json.data);
                             d.user.answers = json.data;
                             AsyncStorage.setItem("USER", JSON.stringify(d));
+                            setShowAlert(null)
                             //console.log('user data after deleting answer ', d);
                         } else {
                             //console.log('answer delete message ', json.message);
@@ -323,9 +325,9 @@ const EnhancmentQuestions = ({ navigation, route }) => {
             } catch (e) {
                 //console.log('error finding in delete answer', e);
             }
-        } else {
-            return;
-        }
+        // } else {
+        //     return;
+        // }
     };
 
     const handleNext = async () => {
@@ -425,7 +427,10 @@ const EnhancmentQuestions = ({ navigation, route }) => {
                                         <View style={{ height: 105 / 930 * height, width: 345 / 430 * width, marginBottom: 9 / 930 * height }}>
                                             <TouchableOpacity
                                                 onPress={() => {
-                                                    deleteAnswer(item);
+                                                    if(hasAnswer(item)){
+                                                        setShowAlert(item)
+                                                    }
+                                                   
                                                 }}
                                             >
                                                 <Image source={hasAnswer(item) ? radioActive : radioInactive}
@@ -525,13 +530,13 @@ const EnhancmentQuestions = ({ navigation, route }) => {
                 <Modal
                     transparent={true}
                     visible={showAlert !== null}
-                    animationType='fade'
+                    animationType='slide'
                 >
                     <View style={{ height: height, width: width, backgroundColor: '#00000050', alignItems: 'center', padding: 20, justifyContent: 'center' }}>
-                        <View style={{ width: width - 30, height: 200, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff', borderRadius: 10, }}>
-                            <Text>Are you sure you want to delete answer</Text>
+                        <View style={{ width: width - 40, height: 200, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff', borderRadius: 10, }}>
+                            <Text style = {{fontSize:20,fontFamily:customFonts.meduim,textAlign:'center'}}>Are you sure you want to delete answer</Text>
                             <View style={{
-                                width: width - 60, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+                                width: width - 70, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
                                 marginTop: 50
                             }}>
                                 <TouchableOpacity style={{

@@ -21,6 +21,7 @@ const ProfileEmailVerification = ({ navigation, route }) => {
     const [btnPosition, setBtnPosition] = useState(height * 0.61);
     const [indicator, setIndicator] = useState(false)
 
+
     const code = Code1 + Code2 + Code3 + Code4
     console.log('code', code)
     //data getting from previous screen
@@ -214,14 +215,43 @@ const ProfileEmailVerification = ({ navigation, route }) => {
                 console.log('error finding in verify email', e)
             }
         }
-    }
+    };
+
+
+        const hideEmail = (email) =>{
+            let splitEmail = email.split('@')
+            console.log('first characters of email ', splitEmail[0])
+            console.log('last characters of email ', splitEmail[1])
+
+            let firstPart = splitEmail[0]
+            let secondPart = splitEmail[1]
+            let halfLenght = firstPart.length/2
+
+            let hiddenPart = ''
+            let visiblePart = ''
+
+            for(let i = 0; i < firstPart.length;i++){
+                if(i<halfLenght){
+                    visiblePart = visiblePart+firstPart[i]
+                }else{
+                    hiddenPart = hiddenPart+"."
+                }
+            }
+
+            let hiddenEmail = visiblePart+hiddenPart+"@"+secondPart
+
+            console.log('hidden email is', hiddenEmail)
+
+            return hiddenEmail
+
+        };
 
 
     useEffect(() => {
         // console.log("Use Effect")
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
             //   console.log("Keyboard show")
-            setBtnPosition(height * 0.3);
+            setBtnPosition(height * 0.28);
         });
 
         const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
@@ -262,12 +292,12 @@ const ProfileEmailVerification = ({ navigation, route }) => {
                         <View style={{ height: 4 / 930 * height, width: 68 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
                         <View style={{ height: 4 / 930 * height, width: 68 / 430 * width, backgroundColor: '#cccccc', borderRadius: 10 }} />
                     </View>
-                    <View style={{ marginTop: 40 / 930 * height }}>
+                    <View style={{ marginTop: 25 / 930 * height }}>
                         <Text style={{ fontWeight: '500', fontSize: 20 }}>
                             Please verify your email
                         </Text>
                         <Text style={{ fontWeight: '500', fontSize: 16, color: '#333333', marginTop: 30 / 930 * height }}>
-                            Please enter the 4 digit code sent to your email {user.email}
+                            Please enter the 4 digit code sent to your email {hideEmail(user.email)}
                         </Text>
                     </View>
                     {/* Code for Input Verification Code */}

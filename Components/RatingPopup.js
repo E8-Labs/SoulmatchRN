@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import { View, Button, Dimensions, Image, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Button, Dimensions, Image, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import customFonts from '../assets/fonts/Fonts';
 import GlobalStyles from '../assets/styles/GlobalStyles';
 import ApisPath from '../lib/ApisPath/ApisPath';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import colors from '../assets/colors/Colors';
 
 const { height, width } = Dimensions.get('window')
 
 const RatingPopup = ({ close, place }) => {
 
-    const [rating,setRating] = useState(0)
-    const [review,setReview] = useState(null)
+    const [rating, setRating] = useState(0)
+    const [review, setReview] = useState(null)
     const [loading, setLoading] = useState(false)
 
     const ratingCompleted = (rating) => {
@@ -20,9 +21,9 @@ const RatingPopup = ({ close, place }) => {
     }
 
 
-    const RateBusiness = async ()=>{
+    const RateBusiness = async () => {
         let url = ApisPath.ApiReviewDatePlace
-        let data = {placeId: place.id, rating: rating, review: review}
+        let data = { placeId: place.id, rating: rating, review: review }
         setLoading(true)
         const userData = await AsyncStorage.getItem("USER")
         let user = JSON.parse(userData)
@@ -73,31 +74,39 @@ const RatingPopup = ({ close, place }) => {
                     placeholder='Enter review'
                     style={[GlobalStyles.textInput, { width: width - 100, height: 150 / 930 * height }]}
                     multiline
-                    onChangeText={(text)=>{
+                    onChangeText={(text) => {
                         setReview(text)
                     }}
                 // maxLength={200}
                 />
                 {/* <View style={{ height: 80 / 930 * height }} > */}
 
-                    <Rating
-                        type='star'
-                        style = {{marginTop:15/930*height,marginBottom:15/930*height}}
-                        ratingCount={5}
-                        imageSize={30}
-                        startingValue={1}
-                        fractions={1}
-                        showRating = {false}
-                        onFinishRating={ratingCompleted}
+                <Rating
+                    type='star'
+                    style={{ marginTop: 15 / 930 * height, marginBottom: 15 / 930 * height }}
+                    ratingCount={5}
+                    imageSize={30}
+                    startingValue={1}
+                    fractions={1}
+                    showRating={false}
+                    onFinishRating={ratingCompleted}
 
-                    />
+                />
                 {/* </View> */}
 
-                <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { width: width - 100 }]}
-                    onPress={RateBusiness}
-                >
-                    <Text style={GlobalStyles.btnText}>Rate</Text>
-                </TouchableOpacity>
+                {
+                    loading ? (
+                        <ActivityIndicator size={'large'} color={colors.blueColor} />
+                    ) : (
+                        <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { width: width - 100 }]}
+                            onPress={RateBusiness}
+                        >
+                            <Text style={GlobalStyles.btnText}>Rate</Text>
+                        </TouchableOpacity>
+                    )
+                }
+
+
 
             </View>
         </View>

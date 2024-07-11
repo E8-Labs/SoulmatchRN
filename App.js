@@ -228,7 +228,7 @@ async function registerForPushNotificationsAsync() {
             finalStatus = status;
         }
         if (finalStatus !== 'granted') {
-            alert('Failed to get push token for  notification!');
+            // alert('Failed to get push token for  notification!');
             return;
         } else{
           // console.log('object', object)

@@ -38,13 +38,13 @@ const SlideContainer = (props) => {
             id: 3,
             image: require("../../../assets/images/splashImage3.png"),
             mainText: 'Local date ideas',
-            subText: "Unique local businesses for your dates, supporting your community while nurturing your relationship"
+            subText: "Unique local businesses for your dates, supporting your community while nurturing your relationship."
         },
         {
             id: 4,
             image: require("../../../assets/images/splashImage4.png"),
             mainText: 'Strengthen your bond',
-            subText: "Experience activities and workshops curated to help you grow closer"
+            subText: "Experience activities and workshops curated to help you grow closer."
         },
 
 
@@ -88,7 +88,8 @@ const SlideContainer = (props) => {
 
     return (
         <View style={GlobalStyles.container}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: width - 40, marginTop: 50 / 924 * height }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: width - 40, marginTop: 50 / 924 * height ,
+                alignItems:'center'}}>
                 {currentIndex > 0 ? (
                     <TouchableOpacity onPress={handleBack}>
                         <View style={GlobalStyles.backBtn}>
@@ -101,7 +102,7 @@ const SlideContainer = (props) => {
                     <View style={{height:46/930*height,width:46/930*height}}></View>
                 )
                 }
-                <TouchableOpacity style={{ alignSelf: 'flex-end' }}
+                <TouchableOpacity style={{  }}
                     onPress={() => {
                         props.navigation.navigate("LoginUser")
                     }}

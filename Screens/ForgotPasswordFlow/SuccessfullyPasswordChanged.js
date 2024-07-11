@@ -39,9 +39,14 @@ export default function SuccessfullyPasswordChanged(props) {
                             </Text>
 
                             <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 50 / 924 * height }]}
-                                onPress={() => props.navigation.push("LoginUser", {
-                                    forScreen: "Password"
-                                })}
+                                onPress={() =>
+                                    props.navigation.reset({
+                                        index: 0,
+                                        routes: [{ name: 'LoginUser' }],
+                                      })
+                                    // props.navigation.replace("LoginUser", {
+                                    // forScreen: "Password"
+                                }
                             >
                                 <Text style={GlobalStyles.btnText}>
                                     Continue

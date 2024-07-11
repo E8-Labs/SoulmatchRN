@@ -16,9 +16,10 @@ const { height, width } = Dimensions.get("window");
 
 export default function DiscoverMain(props) {
 
-
+const MatchLimit = 5
   const [discovers, setDiscovers] = useState([]);
   const [loading, setLoading] = useState(false)
+  const [exceedeMatches, setExceedeMatches] = useState(false)
 
 
   // useFocusEffect(
@@ -40,12 +41,17 @@ export default function DiscoverMain(props) {
     // try {
     if (data) {
       let d = JSON.parse(data)
-
+      console.log('user matches are', d.user.totalMatches)
+      if (d.user.totalMatches >= MatchLimit) {
+        setExceedeMatches(true)
+        setLoading(false)
+        return
+      }
       let filters = await AsyncStorage.getItem("FilterDiscovers")
 
       let body = ''
       let discoverFilter = ''
-      
+
       if (filters) {
         discoverFilter = JSON.parse(filters)
         console.log('filters from local on discover screen', discoverFilter)
@@ -66,10 +72,13 @@ export default function DiscoverMain(props) {
         setLoading(false)
         let json = await result.json();
         if (json.status === true) {
-          // console.log('discover users are ', json.data)
+          console.log('discover users are ', json.data)
           setDiscovers(json.data)
         } else {
           console.log('json message is', json.message)
+          // if(json.message === "You've exceeded the maximum match limit"){
+          //   setExceedeMatches(true)
+          // }
         }
       }
     } else {
@@ -96,20 +105,45 @@ export default function DiscoverMain(props) {
         loading ? (
           <ActivityIndicator color={colors.blueColor} size={'large'} style={{ alignSelf: 'center', height: height }} />
         ) : (
-          <ProfileDetail navigation={props.navigation} data={discovers} fromScreen={'Main'} filtersData={(data) => {
+          <ProfileDetail exceedeMatches={exceedeMatches} navigation={props.navigation} data={discovers} fromScreen={'Main'} filtersData={(data) => {
             console.log('filters data is ', data)
             if (data.getDiscover === true) {
               getDiscover()
             }
           }}
-          LastProfileSwiped={()=>{
-            setDiscovers([])
-            getDiscover()
-          }}
+            ProfileMatched={async () => {
+              const data = await AsyncStorage.getItem("USER")
+              if (data) {
+                let d = JSON.parse(data)
+                d.user.totalMatches += 1
+                console.log('user matches are', d.user.totalMatches)
+                if (d.user.totalMatches >= MatchLimit) {
+                  setExceedeMatches(true)
+                }
+                AsyncStorage.setItem("USER",JSON.stringify(d))
+              }
+            }}
+          LastProfileSwiped={() => {
+              setDiscovers([])
+              getDiscover()
+            }}
 
             onMenuClick={(data) => {
               if (data.navigate === 'LikesList') {
-                props.navigation.navigate("LikesList")
+                props.navigation.navigate("LikesList",{
+                  ProfileMatched: async () => {
+                    const data = await AsyncStorage.getItem("USER")
+                    if (data) {
+                      let d = JSON.parse(data)
+                      d.user.totalMatches += 1
+                      console.log('user matches are', d.user.totalMatches)
+                      if (d.user.totalMatches >= MatchLimit) {
+                        setExceedeMatches(true)
+                      }
+                      AsyncStorage.setItem("USER",JSON.stringify(d))
+                    }
+                  }
+                })
               } else if (data.navigate === 'GotMatch') {
                 props.navigation.navigate("GotMatch", {
                   data: data

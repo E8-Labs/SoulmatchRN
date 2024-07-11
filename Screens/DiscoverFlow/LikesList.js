@@ -16,7 +16,7 @@ const unlikeImage = require('../../assets/images/unLike.png')
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
-export default function LikesList(props) {
+export default function LikesList({navigation,route}) {
 
   const [selected, setSelected] = useState('')
   const [likes, setLikes] = useState([])
@@ -74,7 +74,7 @@ export default function LikesList(props) {
     try {
       if (user) {
         let d = JSON.parse(user)
-        
+        console.log('matches are', d.user.totalMatches)
         // return
         let body = JSON.stringify({
           user_id: item.id,
@@ -104,8 +104,8 @@ export default function LikesList(props) {
               console.log('liked user profile is', match)
             if(json.match === true){
               
-
-              props.navigation.navigate("GotMatch",{
+              route.params.ProfileMatched()
+              navigation.navigate("GotMatch",{
                 data:{
                   navigate: 'GotMatch',
                   user: match
@@ -188,7 +188,7 @@ export default function LikesList(props) {
 
         <View style={{ flexDirection: 'row', gap: 20, margin: 20, width: width - 60, alignItems: 'center' }}>
           <TouchableOpacity onPress={() => {
-            props.navigation.goBack()
+            navigation.goBack()
           }}>
             <View style={GlobalStyles.backBtn}>
               <Image source={require('../../assets/images/backArrow.png')}
@@ -215,7 +215,7 @@ export default function LikesList(props) {
                         <View style={{ width: width - 60, borderWidth: 1, borderColor: colors.greyText, borderRadius: 10, padding: 13, marginTop: 13 / 930 * height }}>
                           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                             <TouchableOpacity onPress={() => {
-                              props.navigation.navigate("SelectedProfile", {
+                              navigation.navigate("SelectedProfile", {
                                 data:{
                                   user:item,
                                   from:'LikesList'

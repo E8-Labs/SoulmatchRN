@@ -11,7 +11,7 @@ const AddName = ({ navigation, route }) => {
     //code for focused input
 
     const [focusInput1, setFocusInput1] = useState(false);
-    const [marginTop, setMarginTop] = useState(height * 0.49);
+    const [marginTop, setMarginTop] = useState(height * 0.48);
 
     const handleInputfocus1 = () => {
         setFocusInput1(true)
@@ -73,7 +73,7 @@ const AddName = ({ navigation, route }) => {
 
     const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
     //   console.log("Keyboard hide")
-      setMarginTop(height * 0.49);
+      setMarginTop(height * 0.48);
     });
 
     return () => {
