@@ -245,7 +245,7 @@ export default function TabBarContainer(props) {
                     try {
                         const customerInfo = await Purchases.getCustomerInfo();
                         // console.log("Customer on Tabbar", customerInfo.entitlements.active["premium"])
-                        if (typeof customerInfo.entitlements.active["premium"] === "undefined") {
+                        if (typeof customerInfo.entitlements.active["premium"] != "undefined") {
                           console.log("User subscribed to plan ", customerInfo.entitlements.active["premium"]);
                         }
                         else{
