@@ -7,6 +7,8 @@ import customFonts from '../../assets/fonts/Fonts'
 import colors from '../../assets/colors/Colors'
 import ApisPath from '../../lib/ApisPath/ApisPath'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ContentLoader, { Rect, Circle } from 'react-content-loader/native';
+
 const { height, width } = Dimensions.get('window')
 
 const placholder = require('../../assets/images/imagePlaceholder.webp')
@@ -16,7 +18,7 @@ const unlikeImage = require('../../assets/images/unLike.png')
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
-export default function LikesList({navigation,route}) {
+export default function LikesList({ navigation, route }) {
 
   const [selected, setSelected] = useState('')
   const [likes, setLikes] = useState([])
@@ -29,7 +31,7 @@ export default function LikesList({navigation,route}) {
 
 
   const getProfiles = async () => {
-    const data =await AsyncStorage.getItem("USER")
+    const data = await AsyncStorage.getItem("USER")
 
     setShowIndicator(true)
     try {
@@ -94,25 +96,25 @@ export default function LikesList({navigation,route}) {
           if (json.status === true) {
             console.log('profile liked', json)
             setSelected(prev => [...prev, item.id])
-              let match = ""
-              likes.forEach((user)=>{
-                
-                if(user.id === item.id){
-                    match = user
-                }
-              })
-              console.log('liked user profile is', match)
-            if(json.match === true){
-              
+            let match = ""
+            likes.forEach((user) => {
+
+              if (user.id === item.id) {
+                match = user
+              }
+            })
+            console.log('liked user profile is', match)
+            if (json.match === true) {
+
               route.params.ProfileMatched()
-              navigation.navigate("GotMatch",{
-                data:{
+              navigation.navigate("GotMatch", {
+                data: {
                   navigate: 'GotMatch',
                   user: match
                 }
               })
             }
-           
+
           } else {
             console.log('json message', json.message)
           }
@@ -132,42 +134,42 @@ export default function LikesList({navigation,route}) {
 
     const user = await AsyncStorage.getItem("USER")
     try {
-        if (user) {
-            let d = JSON.parse(user)
+      if (user) {
+        let d = JSON.parse(user)
 
-            let body = JSON.stringify({
-                user_id: item.id,
-                status: "rejected"
-            })
+        let body = JSON.stringify({
+          user_id: item.id,
+          status: "rejected"
+        })
 
-            const result = await fetch(ApisPath.ApiLikeProfile, {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + d.token
-                },
-                body: body
-            })
-            if (result) {
-                let json = await result.json()
-                if (json.status === true) {
-                    console.log('profile disliked', json.data)
-                    setSelected(prev => prev.filter(id => id !== item.id))
-                    
-                    
-                } else {
-                    console.log('json message', json.message)
-                }
-            }
+        const result = await fetch(ApisPath.ApiLikeProfile, {
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + d.token
+          },
+          body: body
+        })
+        if (result) {
+          let json = await result.json()
+          if (json.status === true) {
+            console.log('profile disliked', json.data)
+            setSelected(prev => prev.filter(id => id !== item.id))
+
+
+          } else {
+            console.log('json message', json.message)
+          }
         }
+      }
     } catch (error) {
-        console.log('error finding in like profile', error)
+      console.log('error finding in like profile', error)
     }
 
 
     console.log('Rejected:', item.id);
 
-};
+  };
 
 
 
@@ -182,6 +184,38 @@ export default function LikesList({navigation,route}) {
       likeUserProfile(item)
     }
   }
+
+  const height = 900; // Adjust height as needed to fit all items
+  const width = 430; // Adjust width as needed
+  const itemCount = 9; // Number of times to repeat the circle and rectangle
+
+  const circleRadius = 30;
+  const circleX = 60; // X position of the circle
+  const circleYStart = 30; // Y position of the first circle
+  const rectX = 100; // X position of the rectangle
+  const rectYStart = 20; // Y position of the first rectangle
+  const gapBetweenItems = 80; // Vertical gap between each circle-rectangle pair
+
+
+  const renderItems = () => {
+    return Array.from({ length: itemCount }).map((_, index) => (
+      <React.Fragment key={index}>
+        <Circle 
+          cx={circleX} 
+          cy={circleYStart + index * gapBetweenItems} 
+          r={circleRadius} 
+        />
+        <Rect 
+          x={rectX} 
+          y={circleYStart + index * gapBetweenItems - circleRadius +25} 
+          rx={5} 
+          ry={5} 
+          width={200} 
+          height={10} 
+        />
+      </React.Fragment>
+    ));
+  };
   return (
     <SafeAreaView>
       <View style={{ width: width, height: height, alignItems: 'center' }}>
@@ -202,7 +236,17 @@ export default function LikesList({navigation,route}) {
         <View style={{ height: height * 0.8 }}>
           {
             showIndidator ? (
-              <ActivityIndicator size={'large'} style={{ height: height * 0.7 }} color={colors.blueColor} />
+              <ContentLoader
+                height={height}
+                width={width}
+                speed={1}
+                backgroundColor={'#D5D0F6'}
+                foregroundColor={'#ececec'}
+              // viewBox="0 0 380 70"
+             
+              >
+                 {renderItems()}
+              </ContentLoader>
             ) : (
               <>
                 {
@@ -216,9 +260,9 @@ export default function LikesList({navigation,route}) {
                           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                             <TouchableOpacity onPress={() => {
                               navigation.navigate("SelectedProfile", {
-                                data:{
-                                  user:item,
-                                  from:'LikesList'
+                                data: {
+                                  user: item,
+                                  from: 'LikesList'
                                 }
                               })
                             }}>
@@ -236,10 +280,10 @@ export default function LikesList({navigation,route}) {
                                 />
                                 {
                                   loadImage ? (
-                                    <ActivityIndicator size={'small'} color={colors.blueColor} style={{ marginLeft: -50/430*width, }} />
+                                    <ActivityIndicator size={'small'} color={colors.blueColor} style={{ marginLeft: -50 / 430 * width, }} />
                                   ) : <></>
                                 }
-                                <Text numberOfLines={2} style={{ fontSize: 16, fontFamily: customFonts.meduim,width:200/430*width }}>
+                                <Text numberOfLines={2} style={{ fontSize: 16, fontFamily: customFonts.meduim, width: 200 / 430 * width }}>
                                   {item.first_name} {item.last_name}
                                 </Text>
                               </View>

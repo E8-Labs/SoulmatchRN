@@ -16,7 +16,7 @@ const { height, width } = Dimensions.get("window");
 
 export default function DiscoverMain(props) {
 
-const MatchLimit = 5
+const MatchLimit = 3
   const [discovers, setDiscovers] = useState([]);
   const [loading, setLoading] = useState(false)
   const [exceedeMatches, setExceedeMatches] = useState(false)
@@ -161,6 +161,10 @@ const MatchLimit = 5
               } else if (data.navigate === 'AddressPicker') {
                 props.navigation.navigate('AddressPicker', {
                   PickAddress: pickAddress
+                })
+              } else if (data.navigate === 'ViewMyMatchesScreen') {
+                props.navigation.navigate("ViewMyMatchesScreen", {
+                  data: data
                 })
               }
             }}

@@ -14,6 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GetBudget } from '../../Services/dates/GetBudget';
 import DatesFilterPopup from '../../Components/DatesFilterPopup';
 import { BroadcastEvents, placholder } from '../../models/Constants';
+import DatesLoadingIndicator from '../../Services/dates/DatesLoadingIndicator';
 
 const { height, width } = Dimensions.get('window')
 const searchIcon = require('../../assets/images/searchIcon.png')
@@ -162,12 +163,15 @@ export default function DatesContainer({ navigation }) {
 
     //search bar timer code
 
+    useEffect(()=> {
+        console.log("Loading changed ", loading)
+    }, [loading])
     const getDates = async (from = "None") => {
         console.log("-----------------------------------------------------------")
         console.log("")
         console.log('trying to get dates from ', from)
         setLoading(true)
-
+       
         const data = await AsyncStorage.getItem("USER")
         try {
             if (data) {
@@ -417,7 +421,7 @@ export default function DatesContainer({ navigation }) {
                         </View>
                         {
                             loading ? (
-                                <ActivityIndicator size={'large'} color={colors.blueColor} style={{ height: height * 0.8, alignSelf: 'center' }} />
+                                <DatesLoadingIndicator />
                             ) : (
 
                                 <>

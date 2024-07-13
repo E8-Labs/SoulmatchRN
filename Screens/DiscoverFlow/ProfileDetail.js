@@ -369,7 +369,13 @@ export default function ProfileDetail(props) {
 
                     {
                         exceedeMatches ? (
-                            <DiscoverGotMatch />
+                            <DiscoverGotMatch  viewMatches = {(name)=>{
+                                let routeData = {
+                                    navigate: name,
+                                    user: data[currentIndex]
+                                }
+                                onMenuClick(routeData)
+                            }} />
                         ) : (
                             currentIndex !== data.length ? (
 

@@ -39,6 +39,7 @@
     "moment": "^2.30.1",
     "node-modules": "^1.0.1",
     "react": "18.2.0",
+    "react-content-loader": "^7.0.2",
     "react-native": "0.74.1",
     "react-native-chart-kit": "^6.12.0",
     "react-native-circular-progress": "^1.4.0",

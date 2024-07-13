@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { GetBudget } from '../../../Services/dates/GetBudget'
 import { DateFilterpoupAdmin } from '../ui/AdminDatesflow/DateFilterpoupAdmin'
 import DatesFilterPopup from '../../../Components/DatesFilterPopup'
+import DatesLoadingIndicator from '../../../Services/dates/DatesLoadingIndicator'
 
 const Dates = ({ navigation }) => {
     const timerRef = useRef(null);
@@ -393,14 +394,14 @@ const Dates = ({ navigation }) => {
     return (
         <View style={{ display: 'flex', alignItems: 'center', height: height }}>
             {/*change if the screen is irResponsive height: height s*/}
-            <View style={{ width: width - 50 }}>
+            <View style={{ width: width - 50,alignItems:'center' }}>
                 <StatusBar
                     barStyle="dark-content"
                     backgroundColor="#FFFFFF"
                     translucent={false}
                 />
                 {/* Header code */}
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 60 }}>
+                <View style={{width:width-50, flexDirection: 'row', justifyContent: 'space-between', marginTop: 60 }}>
                     <Text style={[styles.header, { fontWeight: '500', fontSize: 24, fontFamily: customFonts.meduim }]}>
                         Dates
                     </Text>
@@ -416,7 +417,7 @@ const Dates = ({ navigation }) => {
 
                 {/* Search bar */}
                 <View style={{
-                    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 10/930*height,paddingHorizontal:10/430*width,
+                    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 10 / 930 * height, paddingHorizontal: 10 / 430 * width,
                     borderWidth: 1, borderRadius: 10, gap: 10, backgroundColor: '#ffffff', borderColor: '#E6E6E6', marginTop: 20
                 }}>
                     <TouchableOpacity onPress={inputReference} style={{ width: 30 / 430 * width, height: 30 / 930 * height, alignItems: 'center', justifyContent: 'center' }}>
@@ -430,16 +431,18 @@ const Dates = ({ navigation }) => {
                         style={{
                             width: 304 / 430 * width,
                             fontSize: 16, fontWeight: '500', fontFamily: customFonts.meduim, color: '#000000'
-                        }}meduim
+                        }} meduim
                         placeholder='Search' />
                 </View>
 
                 {/* Grid view */}
 
                 {Loading ?
-                    <View style={{ height: height * 0.7, alignItems: 'center', justifyContent: 'center' }}>
-                        <ActivityIndicator size={'large'} color={colors.blueColor} />
-                    </View> :
+                    (
+                        <View style={{ width: width }}>
+                            <DatesLoadingIndicator from='admin' />
+                        </View>
+                    ) :
                     <ScrollView
                         style={{ height: height - 300, marginTop: 30 }}
                         showsVerticalScrollIndicator={false} >

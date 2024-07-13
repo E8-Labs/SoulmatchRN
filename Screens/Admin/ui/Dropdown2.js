@@ -27,7 +27,6 @@ const local_data = [
 ];
 
 const Dropdown2 = _props => {
-  const [country, setCountry] = useState('1');
   //   console.warn('Package selected is', country)
 
   return (

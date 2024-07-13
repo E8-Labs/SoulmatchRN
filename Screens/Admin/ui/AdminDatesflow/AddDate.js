@@ -607,7 +607,7 @@ const AddDate = ({ navigation, route }) => {
                             Business
                         </Text>
 
-                        <View style={{ borderWidth: 1, borderColor: '#CCCCCC', borderRadius: 10, padding: 16, justifyContent: 'center', marginTop: 3 }}>
+                        <View style={{ borderWidth: 1, borderColor: '#CCCCCC', borderRadius: 10, padding: 16, justifyContent: 'center', marginTop: 5 }}>
                             <TextInput
                                 value={BusinessName}
                                 onChangeText={(Business) => setBusinessName(Business)}
@@ -617,7 +617,7 @@ const AddDate = ({ navigation, route }) => {
                         </View>
 
                         <Text style={styles.Dropdownlabel}>
-                            Categories
+                            Category
                         </Text>
                         {/*<CategoryDropdown style={{ marginTop: 15 }} onCategoryChange={handleCategoryChange} />*/}
 
@@ -670,12 +670,12 @@ const AddDate = ({ navigation, route }) => {
                         />
 
                         <Text style={styles.Dropdownlabel}>
-                            Hours of operation {DateData.openTime}
+                            Hours of Operation
                         </Text>
 
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: 300 / 430 * width, alignSelf: 'center' }}>
                             <View style={{ alignItems: 'center', flexDirection: 'column', gap: 10, marginTop: 20 }}>
-                                <Text style={{ fontSize: 16 }}>Open Time</Text>
+                                <Text style={{ fontSize: 16 }}>Opening Time</Text>
                                 <DateTimePicker
                                     testID="dateTimePicker"
                                     value={date}
@@ -688,7 +688,7 @@ const AddDate = ({ navigation, route }) => {
                             </View>
 
                             <View style={{ alignItems: 'center', flexDirection: 'column', gap: 10, marginTop: 20 }}>
-                                <Text style={{ fontSize: 16 }}>Close Time</Text>
+                                <Text style={{ fontSize: 16 }}>Closing Time</Text>
                                 <DateTimePicker
                                     testID="dateTimePicker"
                                     value={date2}
@@ -711,7 +711,7 @@ const AddDate = ({ navigation, route }) => {
                         </Text>
 
                         <TouchableOpacity onPress={handlePickAddress}>
-                            <View style={{ borderRadius: 10, borderColor: '#CCCCCC', padding: 8, borderWidth: 1 }}>
+                            <View style={{ borderRadius: 10, borderColor: '#CCCCCC', padding: 20, borderWidth: 1 }}>
                                 <Text style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.meduim }}>
                                     {
                                         longAddress ?
@@ -723,7 +723,7 @@ const AddDate = ({ navigation, route }) => {
                                                     <Text>
                                                         {DateData.address}
                                                     </Text> :
-                                                    <Text>
+                                                    <Text style = {{color:"#00000050"}} >
                                                         Enter Address
                                                     </Text>
                                                 }
@@ -802,7 +802,8 @@ const { height, width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     dropdown: {
-        padding: 8,
+        paddingHorizontal: 10,
+        paddingVertical: 15,
         width: width - 50,
         borderRadius: 5,
         paddingHorizontal: 8,
@@ -834,7 +835,8 @@ const styles = StyleSheet.create({
         fontFamily: customFonts.meduim,
         fontSize: 16,
         color: '#00000',
-        marginTop: 20 / 930 * height
+        marginTop: 20 / 930 * height,
+        marginBottom:5
     },
     OperationTime: {
         color: '#999999',

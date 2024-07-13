@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useFocusEffect } from '@react-navigation/native'
 import { DateFilterpoupAdmin } from '../ui/AdminDatesflow/DateFilterpoupAdmin'
 import colors from '../../../assets/colors/Colors'
-
+import DatesLoadingIndicator from '../../../Services/dates/DatesLoadingIndicator'
 
 
 
@@ -88,11 +88,11 @@ const User = ({ navigation }) => {
             console.log('trying to get users', AdminUsers.length)
             const data = await AsyncStorage.getItem("USER")
             if (data) {
+                setLoading(true);
                 let d = JSON.parse(data)
 
                 const AuthToken = d.token
                 let path = `${Apis.GetAdminUsers}?offset=${AdminUsers.length}`
-                setLoading(true);
 
                 if (search) {
                     path = `${path}&search=${search}`
@@ -250,14 +250,14 @@ const User = ({ navigation }) => {
     return (
         <View style={{ display: 'flex', alignItems: 'center', height: height }}>
             {/*change if the screen is irResponsive height: height s*/}
-            <View style={{ width: width - 50 }}>
+            <View style={{ width: width - 50,alignItems:'center' }}>
                 <StatusBar
                     barStyle="dark-content"
                     backgroundColor="#FFFFFF"
                     translucent={false}
                 />
                 {/* Header code */}
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20, marginTop: 60 }}>
+                <View style={{width:width-50, flexDirection: 'row', justifyContent: 'space-between', marginTop: 20, marginTop: 60 }}>
                     <Text style={[styles.header, { fontWeight: '500', fontSize: 24, fontFamily: customFonts.meduim }]}>
                         Users
                     </Text>
@@ -270,7 +270,7 @@ const User = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <View style={{ flexDirection: 'row', gap: 3 }}>
+                <View style={{ flexDirection: 'row', gap: 3 ,alignSelf:'flex-start'}}>
                     <Text style={{ fontWeight: '500', fontSize: 12, fontFamily: customFonts.meduim }}>
                         Total:
                     </Text>
@@ -357,9 +357,7 @@ const User = ({ navigation }) => {
                             </TouchableOpacity>
                         ))}
                         {Loading && (
-                            <View style={{ justifyContent: 'center', alignItems: 'center', width: width - 50, height: height * 0.60, }}>
-                                <ActivityIndicator size={'large'} color={'#6050DC'} />
-                            </View>
+                           <DatesLoadingIndicator from='admin' />
                         )}
                     </View>
                 </ScrollView>
@@ -401,7 +399,7 @@ const User = ({ navigation }) => {
                                         </TouchableOpacity>
 
                                     </View>
-                                    <Text style={{ fontSize: 14, fontWeight: '400', fontFamily: customFonts.regular, color: '#666666', marginTop: 25 / 930 * height }}>
+                                    <Text style={{ fontSize: 14, fontWeight: '400', fontFamily: customFonts.regular, color: '#000', marginTop: 25 / 930 * height }}>
                                         Premium
                                     </Text>
                                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 20 / 930 * height }}>
@@ -421,11 +419,11 @@ const User = ({ navigation }) => {
                                             </TouchableOpacity>
                                         ))}
                                     </View>
-                                    <View style={{ height: 0.1, borderWidth: 0.2, borderColor: '#E6E6E6', marginTop: 22 / 930 * height }}></View>
+                                    <View style={{ height: 0.1, borderWidth: 0.2, borderColor: '#E6E6E6', marginTop: 22 / 930 * height,marginBottom:22/930*height }}></View>
                                     <Text style={{ fontSize: 16, fontWeight: '600', fontFamily: customFonts.semibold, color: '#333333' }}>
                                         City/State
                                     </Text>
-                                    <View style={{ borderRadius: 7, borderColor: '#CCCCCC', padding: 8, borderWidth: 1, marginTop: 5, height: 50, justifyContent: 'center' }}>
+                                    <View style={{ borderRadius: 7, borderColor: '#CCCCCC', padding: 8, borderWidth: 1, marginTop: 10, height: 50, justifyContent: 'center' }}>
                                         <TouchableOpacity
                                             onPress={handleAddressPicker}
                                             style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.meduim, color: '#999999' }}>
@@ -433,7 +431,7 @@ const User = ({ navigation }) => {
                                                 <Text style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.meduim, color: '#000000' }}>
                                                     {filterUserCity} {filterUserState}
                                                 </Text> :
-                                                <Text style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.meduim, color: '#000000' }}>
+                                                <Text style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.meduim, color: '#00000050' }}>
                                                     City/State
                                                 </Text>
                                             }
@@ -450,8 +448,8 @@ const User = ({ navigation }) => {
                                                 setApplyFilters(true);
                                             }}
                                             style={{
-                                                height: 40 / 930 * height,
-                                                width: 150 / 430 * width,
+                                                height: 48 / 930 * height,
+                                                width: 175 / 430 * width,
                                                 borderWidth: 2,
                                                 borderColor: '#000000',
                                                 alignItems: 'center',
@@ -470,8 +468,8 @@ const User = ({ navigation }) => {
                                         <TouchableOpacity
                                             onPress={ApplyFilters}
                                             style={{
-                                                height: 40 / 930 * height,
-                                                width: 150 / 430 * width,
+                                                height: 48 / 930 * height,
+                                                width: 175 / 430 * width,
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
                                                 borderRadius: 10,

@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, SafeAreaView, Dimensions, Settings, FlatList, SectionList } from 'react-native'
+import { View, Text, TouchableOpacity, SafeAreaView, Dimensions, ActivityIndicator, FlatList, SectionList } from 'react-native'
 import React, { useEffect, useState } from 'react';
 import { Image } from 'expo-image';
 import ApisPath from '../../lib/ApisPath/ApisPath';
@@ -32,12 +32,12 @@ export default function NotificationsScreen({ navigation }) {
   const getNotifications = async () => {
     console.log('trying to get notifications')
     setLoading(true)
-    const data =await AsyncStorage.getItem("USER")
+    const data = await AsyncStorage.getItem("USER")
 
     try {
       if (data) {
         let d = JSON.parse(data)
-        const result = await fetch(ApisPath.ApiGetNotifications, {
+        const result = await fetch(ApisPath.ApiGetNotifications + `?offset=${notifications.length}`, {
           method: 'get',
           headers: {
             'Content-Type': 'application/json',
@@ -49,8 +49,8 @@ export default function NotificationsScreen({ navigation }) {
           let json = await result.json()
           if (json.status === true) {
             console.log('user notifications are', json.data)
-            setNotifications(json.data)
-            formateNotifications(json.data)
+            setNotifications([...notifications, ...json.data])
+            formateNotifications([...notifications, ...json.data])
 
           } else {
             console.log('json message is', json.message)
@@ -124,7 +124,7 @@ export default function NotificationsScreen({ navigation }) {
       return not
     } else if (item.notification_type === 'Match') {
       let not = {
-        image: item.fromUser.profile_image,
+        image: item.fromUser !== null ? item.fromUser.profile_image : placholder,
         message: "Congratulations! New match.",
         time: item.createdAt,
         read: item.is_read,
@@ -135,7 +135,7 @@ export default function NotificationsScreen({ navigation }) {
 
     } else if (item.notification_type === 'Message') {
       let not = {
-        image: item.fromUser.profile_image,
+        image: item.fromUser !== null ? item.fromUser.profile_image : placholder,
         message: `${item.fromUser.first_name} ${item.fromUser.last_name} sent you a message.`,
         time: item.createdAt,
         read: item.is_read,
@@ -169,7 +169,7 @@ export default function NotificationsScreen({ navigation }) {
     }
     else if (item.notification_type === 'NewUser') {
       let not = {
-        image: item.fromUser.profile_image,
+        image: item.fromUser !== null ? item.fromUser.profile_image : placholder,
         message: 'New user registered.',
         time: item.createdAt,
         read: item.is_read,
@@ -180,7 +180,7 @@ export default function NotificationsScreen({ navigation }) {
 
     } else if (item.notification_type === 'DateInviteToAdmin') {
       let not = {
-        image:inviteNotImage,
+        image: inviteNotImage,
         message: 'New date scheduled.',
         time: item.createdAt,
         read: item.is_read,
@@ -189,9 +189,9 @@ export default function NotificationsScreen({ navigation }) {
       // console.log('notification type data is', not)
       return not
 
-    }else if (item.notification_type === 'ReportedUser') {
+    } else if (item.notification_type === 'ReportedUser') {
       let not = {
-        image: item.fromUser.profile_image,
+        image: item.fromUser !== null ? item.fromUser.profile_image : placholder,
         message: 'New user reported.',
         time: item.createdAt,
         read: item.is_read,
@@ -208,7 +208,7 @@ export default function NotificationsScreen({ navigation }) {
 
 
   const renderItem = (item) => {
-    console.log('trying to render items')
+    console.log('trying to render items', item.fromUser != null ? item.fromUser.profile_image : placholder)
     let not = getNotificationType(item)
     console.log('notification object is', not)
     // return
@@ -222,25 +222,25 @@ export default function NotificationsScreen({ navigation }) {
 
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, }}>
             <Image source={
-              not.type === "Like" || not.type === "Dislike" || not.type === "DateInvite" || not.type === "NewUser" || not.type === "DateInviteToAdmin"  || 
-              not.type === "DateInviteToAdmin" || not.type === "ReportedUser"  ? (
-              not.image
-            ) : (
-              { uri: not.image }
-            )}
+              not.type === "Like" || not.type === "Dislike" || not.type === "DateInvite" || not.type === "NewUser" || not.type === "DateInviteToAdmin" ||
+                not.type === "DateInviteToAdmin" || not.type === "ReportedUser" ? (
+                not.image
+              ) : (
+                { uri: not.image }
+              )}
               style={{ height: 46 / 930 * height, width: 46 / 930 * height, borderRadius: 23 }}
             />
             <Text style={{ fontSize: 14, width: 250 / 930 * height }}>{not.message}
             </Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, alignSelf: 'center' }}>
-            {
+            {/* {
               not.read === false ? (
                 <Image source={require('../../assets/images/unread.png')}
                   style={{ height: 6, width: 6 }}
                 />
               ) : null
-            }
+            } */}
 
             <Text>{moment(item.createdAt).format("hh:mm a")}</Text>
           </View>
@@ -251,7 +251,7 @@ export default function NotificationsScreen({ navigation }) {
 
   }
 
- 
+
 
 
   return (
@@ -269,11 +269,11 @@ export default function NotificationsScreen({ navigation }) {
           </TouchableOpacity>
           <Text style={{ fontSize: 24, fontFamily: customFonts.meduim }}>Notifications</Text>
         </View>
-        <View style = {{height:height*0.85}}>
+        <View style={{ height: height * 0.85 }}>
           {
             sections && sections.length > 0 ? (
               <SectionList
-                showsVerticalScrollIndicator = {false}
+                showsVerticalScrollIndicator={false}
                 sections={sections}
                 style={{ backgroundColor: 'transparent', }}
                 keyExtractor={(item, index) => index.toString()}
@@ -283,7 +283,7 @@ export default function NotificationsScreen({ navigation }) {
                 renderSectionHeader={({ section: { title } }) => (
                   // sections.data ? (
                   <View style={{
-                    width: width - 40, flexDirection: 'row', height:60, paddingTop: 30/930*height, backgroundColor: '#fff', alignItems: 'center',
+                    width: width - 40, flexDirection: 'row', height: 60, paddingTop: 30 / 930 * height, backgroundColor: '#fff', alignItems: 'center',
                     gap: 10,
                   }}>
                     <Text style={{ fontSize: 14, color: '#999999' }}>{title}</Text>
@@ -296,10 +296,24 @@ export default function NotificationsScreen({ navigation }) {
                     <Text>No notifications</Text>
                   </View>
                 )}
+                onEndReached={getNotifications}
+                onEndReachedThreshold={.1}
+                ListFooterComponent={() => {
+                  return (
+
+                    <View style={{ height: 60, width: "90%", alignItems: 'center', justifyContent: 'center' }}>
+                      {
+                        loading && (
+                          <ActivityIndicator size={'large'} style={{ alignSelf: 'center' }} color={colors.blueColor} />
+                        )
+                      }
+                    </View>
+                  )
+                }}
               />
             ) : (
-              <View style={{ padding: 10,height:height*0.8,justifyContent:'center' }}>
-                <Text style = {{fontSize:20}}>No notifications</Text>
+              <View style={{ padding: 10, height: height * 0.8, justifyContent: 'center' }}>
+                <Text style={{ fontSize: 20 }}>No notifications</Text>
               </View>
             )
           }

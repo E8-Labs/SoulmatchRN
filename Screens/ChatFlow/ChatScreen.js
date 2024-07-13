@@ -507,13 +507,14 @@ export default function ChatScreen({ navigation, route }) {
                             </Text>
                             <View style={styles.rightArrow}></View>
                             <View style={styles.rightArrowOverlap}></View>
-                            <Text style={{
-                                fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right',
-                                paddingRight: 10 / 430 * width, color: 'white'
-                            }}>
-                                {moment(item.createdAt).format('h:mm')}
-                            </Text>
+
                         </View>
+                        <Text style={{
+                            fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right',
+                            paddingRight: 20 / 430 * width, color: 'grey', paddingTop: 3
+                        }}>
+                            {moment(item.createdAt).format('h:mm')}
+                        </Text>
                     </View>
                 )
             }
@@ -614,13 +615,14 @@ export default function ChatScreen({ navigation, route }) {
                             </Text>
                             <View style={styles.leftArrow}></View>
                             <View style={styles.leftArrowOverlap}></View>
-                            <Text style={{
-                                fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right',
-                                paddingRight: 10 / 430 * width, color: 'black'
-                            }}>
-                                {moment(item.createdAt).format('h:mm')}
-                            </Text>
+
                         </View>
+                        <Text style={{
+                            fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right',
+                            paddingLeft: 20 / 430 * width, color: 'grey',paddingTop:3
+                        }}>
+                            {moment(item.createdAt).format('h:mm')}
+                        </Text>
                     </View>
                 )
             } else if (getMessageType(item) === "video") {
@@ -687,7 +689,7 @@ export default function ChatScreen({ navigation, route }) {
                                 }
                             </TouchableOpacity>
                             <ImageViewer swipeToCloseEnabled={true} visible={imageUrl !== null} close={() => { setImageUrl(null) }} url={imageUrl} />
-                            <View style={{flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', width: imageWidth}}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', width: imageWidth }}>
                                 <Text style={{
                                     fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right',
                                     paddingTop: 10 / 430 * width, paddingRight: 5

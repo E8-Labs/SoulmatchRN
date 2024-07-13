@@ -105,6 +105,8 @@ import VideoPlayer from './Components/VideoPlayer';
 import SendFeedBack from './Screens/ProfileFlow/SendFeedBack';
 import User from './Screens/Admin/adminflow/User';
 import SubscriptionPlan from './Components/createprofile/SubscriptionPlan';
+import ProfileBoostScreen from './Screens/ProfileFlow/ProfileBoostScreen';
+import ViewMyMatchesScreen from './Screens/DiscoverFlow/ViewMyMatchesScreen';
  
 // import dotenv from 'dotenv'
 // dotenv.config();
@@ -348,6 +350,8 @@ async function registerForPushNotificationsAsync() {
           <Stack.Screen name='ChangeIntroVideo' component={ChangeIntroVideo}/>
           <Stack.Screen name='VideoPlayer' component={VideoPlayer} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='SendFeedBack' component={SendFeedBack} />
+          <Stack.Screen name='ProfileBoostScreen' component={ProfileBoostScreen} />
+          <Stack.Screen name='ViewMyMatchesScreen' component={ViewMyMatchesScreen} />
 
 
           <Stack.Screen name='Resources' component={Resources} options={{ gestureEnabled: false, headerShown: false }} />

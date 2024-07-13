@@ -265,7 +265,7 @@ export default function ProfileMain(props) {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  // props.navigation.navigate("SendFeedBack")
+                  props.navigation.navigate("ProfileBoostScreen")
                 }}
               >
                 <View style={styles.mainView}>
@@ -274,7 +274,7 @@ export default function ProfileMain(props) {
                       style={styles.imageStyle}
                     />
                     <Text style={styles.text}>
-                      Profile Boost
+                      Boost Profile
                     </Text>
                   </View>
                   <Image source={require('../../assets/images/farwordArrowIcon.png')}

@@ -6,7 +6,7 @@ import { Image } from 'expo-image';
 
 const { height, width } = Dimensions.get('window')
 
-export default function DiscoverGotMatch() {
+export default function DiscoverGotMatch({viewMatches}) {
     return (
         <View style={[GlobalStyles.container,{height:height*0.78,}]}>
             <Image source={require('../assets/images/matchLogo.png')}
@@ -22,7 +22,11 @@ export default function DiscoverGotMatch() {
             }}>
                 You’re not able to discover other users if you already have a match.
             </Text>
-            <TouchableOpacity style = {[GlobalStyles.reqtengularBtn,{marginTop:40}]}>
+            <TouchableOpacity style = {[GlobalStyles.reqtengularBtn,{marginTop:40}]}
+                onPress={()=>{
+                    viewMatches("ViewMyMatchesScreen")
+                }}
+            >
                 <Text style = {GlobalStyles.btnText}>
                     View my match
                 </Text>

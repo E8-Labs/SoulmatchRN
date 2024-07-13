@@ -131,7 +131,7 @@ const FlaggedUsers = ({ navigation }) => {
 
                     {/* code for calling flagged user in flatlist */}
                     {loading ?
-                        <View style={{ justifyContent: 'center', height: height * 0.8, justifyContent: 'center', alignItems: 'center', width: width - 50 }}>
+                        <View style={{ justifyContent: 'center', height: height * 0.9, justifyContent: 'center', alignItems: 'center', width: width - 50 }}>
                             <ActivityIndicator size={'large'} color={'#6050DC'} />
                         </View> :
                         <View style={{ flexDirection: 'row', width: width * 0.9, display: 'flex', justifyContent: 'space-between' }}>

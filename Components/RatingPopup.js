@@ -9,7 +9,7 @@ import colors from '../assets/colors/Colors';
 
 const { height, width } = Dimensions.get('window')
 
-const RatingPopup = ({ close, place }) => {
+const RatingPopup = ({ close, place ,addReview}) => {
 
     const [rating, setRating] = useState(0)
     const [review, setReview] = useState(null)
@@ -42,6 +42,7 @@ const RatingPopup = ({ close, place }) => {
             console.log(json)
             if (json.status === true) {
                 console.log('Business rated', json.data)
+                addReview(json.data)
                 close(true)
             } else {
                 console.log('Error rating business ', json.message)

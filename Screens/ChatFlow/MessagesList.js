@@ -1,6 +1,6 @@
 import {
     View, Text, Dimensions, FlatList, TouchableOpacity, Settings, ActivityIndicator,
-    Animated, Easing, StyleSheet, TextInput, Keyboard,DeviceEventEmitter
+    Animated, Easing, StyleSheet, TextInput, Keyboard, DeviceEventEmitter
 } from 'react-native'
 import { Image } from 'expo-image';
 import React, { useCallback, useState, useEffect, useRef } from 'react'
@@ -11,6 +11,7 @@ import ApisPath from '../../lib/ApisPath/ApisPath';
 import moment from 'moment';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ContentLoader, { Rect, Circle } from 'react-content-loader/native';
 import { BroadcastEvents } from '../../models/Constants';
 
 const placholder = require('../../assets/images/imagePlaceholder.webp')
@@ -39,8 +40,8 @@ export default function MessagesList({ navigation }) {
     useEffect(() => {
         const listener = DeviceEventEmitter.addListener(BroadcastEvents.EventCreateChat, (data) => {
             console.log('chat object received from broad cast', data)
-           getMessagesList()
-            
+            getMessagesList()
+
 
         })
         return () => {
@@ -80,13 +81,13 @@ export default function MessagesList({ navigation }) {
     const getLastMessageObject = (lastMsg) => {
         console.log('last message from chat screen is', lastMsg)
 
-        if (lastMsg ) {
+        if (lastMsg) {
             const index = messageList.findIndex(message => message.id === lastMsg.chatId)
             if (index !== -1) {
                 let chat = messageList[index];
                 console.log('chat found at  ', index)
                 // if (typeof messageList[index] != 'undefined') {
-                    messageList[index].lastMessage = lastMsg
+                messageList[index].lastMessage = lastMsg
                 // }
             }
             let at = 0
@@ -96,7 +97,7 @@ export default function MessagesList({ navigation }) {
                 console.log("B ", b)
                 console.log('-----------------------------------')
                 at += 1
-                if(a.lastMessage && b.lastMessage){
+                if (a.lastMessage && b.lastMessage) {
                     return new Date(b.lastMessage.createdAt) - new Date(a.lastMessage.createdAt)
                 }
                 return false
@@ -250,6 +251,47 @@ export default function MessagesList({ navigation }) {
         </View>
     );
 
+    const height = 900; // Adjust height as needed to fit all items
+    const width = 430; // Adjust width as needed
+    const itemCount = 9; // Number of times to repeat the circle and rectangle
+
+    const circleRadius = 30;
+    const circleX = 50; // X position of the circle
+    const circleYStart = 30; // Y position of the first circle
+    const rectX = 90; // X position of the rectangle
+    const rectYStart = 20; // Y position of the first rectangle
+    const gapBetweenItems = 80; // Vertical gap between each circle-rectangle pair
+
+
+
+    const renderItems = () => {
+        return Array.from({ length: itemCount }).map((_, index) => (
+            <React.Fragment key={index}>
+                <Circle
+                    cx={circleX}
+                    cy={circleYStart + index * gapBetweenItems}
+                    r={circleRadius}
+                />
+                <Rect
+                    x={rectX}
+                    y={circleYStart + index * gapBetweenItems - circleRadius + 10}
+                    rx={5}
+                    ry={5}
+                    width={200}
+                    height={10}
+                />
+                <Rect
+                    x={rectX}
+                    y={circleYStart + index * gapBetweenItems - circleRadius + 35}
+                    rx={5}
+                    ry={5}
+                    width={100}
+                    height={10}
+                />
+            </React.Fragment>
+        ));
+    };
+
 
 
     return (
@@ -323,9 +365,17 @@ export default function MessagesList({ navigation }) {
                 <View style={{ flexDirection: 'column', alignItems: 'center', width: width, height: height * 0.76, paddingBottom: 10, backgroundColor: 'white' }}>
                     {
                         showIndicator ? (
-                            <View style={{ alignItems: 'center', width: width, height: height * 0.76, justifyContent: 'center' }}>
-                                <ActivityIndicator color={colors.blueColor} size={'large'} />
-                            </View>
+                            <ContentLoader
+                                height={height}
+                                width={width}
+                                speed={1}
+                                backgroundColor={'#D5D0F6'}
+                                foregroundColor={'#ececec'}
+                            // viewBox="0 0 380 70"
+
+                            >
+                                {renderItems()}
+                            </ContentLoader>
                         ) : (
                             filteredMessages && filteredMessages.length > 0 ? (
                                 <FlatList
