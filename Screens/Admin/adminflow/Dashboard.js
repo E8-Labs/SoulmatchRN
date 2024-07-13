@@ -782,7 +782,7 @@ const Dashboard = ({ navigation }) => {
                                             Number of users that planned date nights
                                         </Text>
                                         <Text style={{ fontWeight: '600', fontSize: 18, fontFamily: customFonts.bold }}>
-                                            21,215
+                                            {ApiResponse.unique_users_planned_dates}
                                         </Text>
                                     </View>
                                 </View>

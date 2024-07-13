@@ -7,6 +7,7 @@ import { UpdateProfile } from '../../Services/ProfileServices/UpdateProfile'
 import { ApiKeys } from '../../keys';
 import customFonts from '../../assets/fonts/Fonts';
 import colors from '../../assets/colors/Colors';
+import ContentLoader, {Rect, Circle} from 'react-content-loader/native';
 
 const RevenueCatApiKey = ApiKeys.RevenueCatApiKey;
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, Text, ImageBackground, StyleSheet, TouchableOpacity, Dimensions, Platform, Alert, } from "react-native";
+import { View, Text, ImageBackground, StyleSheet, TouchableOpacity, Dimensions, Platform, Alert, AppState} from "react-native";
 import { Image } from "expo-image";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as Device from 'expo-device';
@@ -242,27 +242,34 @@ export default function TabBarContainer(props) {
                     // if(!data.user.subscription.isSubscribed){
                     //     props.navigation.navigate("SubscriptionPlan")
                     // }
-                    try {
-                        const customerInfo = await Purchases.getCustomerInfo();
-                        // console.log("Customer on Tabbar", customerInfo.entitlements.active["premium"])
-                        if (typeof customerInfo.entitlements.active["premium"] === "undefined") {
-                          console.log("User subscribed to plan ", customerInfo.entitlements.active["premium"]);
-                        }
-                        else{
-                            props.navigation.navigate("SubscriptionPlan")
-                        }
-                        // access latest customerInfo
-                      } catch (e) {
-                        // Error fetching customer info
-                      }
+                    // try {
+                    //     const customerInfo = await Purchases.getCustomerInfo();
+                    //     Purchases.addCustomerInfoUpdateListener((info) => {
+                    //         console.log("Listner info user ", info)
+                    //         checkSubscriptionStatus(info)
+                    //     });
+                    //     console.log("Customer on Tabbar", customerInfo.entitlements.active["premium"])
+                    //     checkSubscriptionStatus(customerInfo)
+                    //     // access latest customerInfo
+                    //   } catch (e) {
+                    //     // Error fetching customer info
+                    //   }
+                    refreshSubscriptionStatus()
                 }
             }catch(e) {
                 console.log('error in get profile', e)
             }
         }
-
         getUserProfile()
+        const subscription = AppState.addEventListener('change', handleAppStateChange);
+
+        return () => {
+            subscription.remove();
+        };
+        
      },[])
+
+     
 
     useEffect(() => {
         const subscription = Notifications.addNotificationResponseReceivedListener(response => {
@@ -278,6 +285,37 @@ export default function TabBarContainer(props) {
 
         return () => subscription.remove();
     }, []);
+
+
+    const handleAppStateChange = async (nextAppState) => {
+        console.log("Appstate changed ", nextAppState)
+        if (nextAppState === 'active') {
+            await refreshSubscriptionStatus();
+        }
+    };
+
+    function checkSubscriptionStatus(info){
+        if (typeof info.entitlements.active["premium"] != "undefined") {
+            console.log("User subscribed to plan Tabbar", info.entitlements.active["premium"]);
+          }
+          else{
+            console.log("User not subscribed")
+              props.navigation.navigate("SubscriptionPlan")
+          }
+    }
+
+    const refreshSubscriptionStatus = async () => {
+        try {
+            const customerInfo = await Purchases.getCustomerInfo();
+            Purchases.addCustomerInfoUpdateListener((info) => {
+                console.log("Listner info user ", info);
+                checkSubscriptionStatus(info);
+            });
+            checkSubscriptionStatus(customerInfo);
+        } catch (e) {
+            console.error('Error fetching customer info', e);
+        }
+    };
 
     const handleNotification = (data, additionalData) => {
         switch (data.type) {

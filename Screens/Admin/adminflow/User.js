@@ -34,6 +34,7 @@ const User = ({ navigation }) => {
     const [filterUserAddress, setFilterUserAddress] = useState('');
     const [openFilterModal, setOpenFilterModal] = useState(false);
     const [imgLoading, setImgLoading] = useState(false)
+    const [totalUsers, setTotalUsers] = useState(0)
 
     //code for img loading
     const handleImageLoadStart = (uri) => {
@@ -131,6 +132,7 @@ const User = ({ navigation }) => {
                 if (response.ok) {
                     const Result = await response.json();
                     const newUsers = Result.data;
+                    setTotalUsers(Result.totalUsers)
                     // console.log("#############################################################")
                     // console.log("Data from server ", newUsers)
                     // console.log("#############################################################")
@@ -275,7 +277,7 @@ const User = ({ navigation }) => {
                         Total:
                     </Text>
                     <Text style={{ fontWeight: '500', fontSize: 12, fontFamily: customFonts.meduim, color: '#666666' }}>
-                        12,999
+                    {totalUsers}
                     </Text>
                 </View>
 
