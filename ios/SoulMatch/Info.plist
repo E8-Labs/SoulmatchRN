@@ -29,9 +29,15 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>plurawlapp.com</string>
+				<string>http://192.168.10.2:8081</string>
 			</array>
 		</dict>
+    <dict>
+      <key>CFBundleURLSchemes</key>
+      <array>
+        <string>plurawlapp.com</string>
+      </array>
+    </dict>
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Dimensions, View, TouchableOpacity, Text, Image, Modal, Platform } from 'react-native'
+import { Dimensions, View, TouchableOpacity, Text, Image, Modal, Platform, Alert } from 'react-native'
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import customFonts from '../../assets/fonts/Fonts';
 import { ApiKeys } from '../../keys';
@@ -9,6 +9,7 @@ import { UpdateProfile } from '../../Services/ProfileServices/UpdateProfile'
 
 import ContentLoader, { Rect, Circle } from 'react-content-loader/native';
 import colors from '../../assets/colors/Colors';
+import ApisPath from '../../lib/ApisPath/ApisPath';
 
 
 const { height, width } = Dimensions.get('window');
@@ -48,8 +49,38 @@ export default function ProfileBoostScreen({ navigation }) {
     ]
 
     useEffect(() => {
-        // initializePurchases();
+        initializePurchases();
     }, []);
+
+
+    const notifyServer = async (receipt, productid) => {
+        try {
+            let userData = await AsyncStorage.getItem("USER")
+            let user = JSON.parse(userData)
+            const response = await fetch(ApisPath.ApiValidatePurchase, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': "Bearer " + user.token
+                },
+                body: JSON.stringify({
+                    originalPurchaseDate: receipt,
+                    productId: productid,
+                }),
+            });
+
+            const data = await response.json();
+            console.log('data is ', data )
+            if (data.status) {
+                Alert.alert(`Purchase successfull`)
+                
+            } else {
+                Alert.alert("Purchase validation failed", "The server could not validate your purchase.");
+            }
+        } catch (error) {
+            console.error("Error notifying server:", error);
+        }
+    };
 
     const fetchProducts = async () => {
         try {
@@ -94,7 +125,7 @@ export default function ProfileBoostScreen({ navigation }) {
                     } catch (e) {
                         // Error fetching customer info
                     }
-                    fetchProducts();
+                    // fetchProducts();
                 }
             } else if (Platform.OS === 'android') {
                 await Purchases.configure({ apiKey: RevenueCatApiKey });
@@ -106,23 +137,50 @@ export default function ProfileBoostScreen({ navigation }) {
     };
 
     const buyProduct = async (product) => {
-
+        const productId = product.identifier
         try {
             console.log("Subscribing to", product.identifier);
-            const { customerInfo } = await Purchases.purchaseProduct(product.identifier);
-            if (customerInfo.entitlements.active["premium"]) {
-                console.log("User subscribed to premium");
-                let p = customerInfo.entitlements.active["premium"]
-                let date = p.originalPurchaseDateMillis;
-                console.log("Original date ", date);
-                await UpdateProfile(JSON.stringify({ originalPurchaseDate: date }))
-                console.log("Profile updated")
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'TabBarContainer' }],
-                });
 
+            const { customerInfo, productIdentifier } = await Purchases.purchaseProduct(productId);
+            console.log(`Purchased product: ${productIdentifier}`);
+            
+            if (productIdentifier === productId) {
+                // Send the purchase data to the server
+                // const receiptInfo = await Purchases.getPurchaserInfo();
+                
+                // const receipt = customerInfo.entitlements.active[productId];
+                
+                const latestTransaction = customerInfo.nonSubscriptionTransactions
+                    .filter(txn => txn.productId === productId)
+                    .reduce((latest, current) => {
+                        // console.log("Latest")
+                        // console.log(latest)
+                        // console.log("Current")
+                        // console.log(current)
+                        return current.purchaseDateMillis > latest.purchaseDateMillis ? current : latest
+                    })
+                    const receipt = latestTransaction.purchaseDateMillis
+                console.log("#####################################")
+                console.log(receipt)
+                console.log("#####################################")
+                await notifyServer(receipt);
             }
+
+
+            // const { customerInfo } = await Purchases.purchaseProduct(product.identifier);
+            // if (customerInfo.entitlements.active["premium"]) {
+            //     console.log("User subscribed to premium");
+            //     let p = customerInfo.entitlements.active["premium"]
+            //     let date = p.originalPurchaseDateMillis;
+            //     console.log("Original date ", date);
+            //     await UpdateProfile(JSON.stringify({ originalPurchaseDate: date }))
+            //     console.log("Profile updated")
+            //     navigation.reset({
+            //         index: 0,
+            //         routes: [{ name: 'TabBarContainer' }],
+            //     });
+
+            // }
         } catch (e) {
             console.log("Exception during purchase:", e);
             if (!e.userCancelled) {
