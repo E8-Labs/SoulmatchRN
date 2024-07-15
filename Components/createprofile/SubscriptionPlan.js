@@ -132,7 +132,7 @@ export default function SubscriptionPlan({ navigation }) {
             Complete your profile
           </Text>
 
-          <TouchableOpacity style={{ marginLeft: 10 }}
+          <TouchableOpacity style={{ marginLeft: 30/430*width}}
             onPress={logoutUser}
           >
             <Text style={{ color: colors.blueColor, fontSize: 16, fontFamily: customFonts.meduim }}>Logout</Text>

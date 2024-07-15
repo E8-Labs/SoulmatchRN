@@ -390,7 +390,7 @@ export default function SelectedProfile({ navigation, route }) {
                                             {
                                                 item.type === "image" ? (
                                                     <>
-                                                        <Image source={{ uri: item.thumb_url }}
+                                                        <Image source={{ uri: item.thumb_url?thumb_url:item.url }}
                                                             onLoadStart={() => {
                                                                 setLoadImage2(true)
                                                             }}

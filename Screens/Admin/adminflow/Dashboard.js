@@ -37,13 +37,16 @@ const Dashboard = ({ navigation }) => {
     const [monthlyUser, setMonthlyUser] = useState([])
     const [yearlyUser, setYearlyUser] = useState([])
 
-    const [userDate,setUserDate] = useState([])
+    const [userDate, setUserDate] = useState([])
+
+    const [revBoostData, setRevBoostData] = useState([])
+    const [revBoostDate, setRevBoostDate] = useState([])
 
     const [subDuration, setSubDuration] = useState('1')
     const [revDuration, setRevDuration] = useState('1')
     const [userDuration, setUserDuration] = useState('1')
+    const [boostRev, setBoostRev] = useState("1")
 
-    const [country, setCountry] = useState('1')
 
     const handleNotifications = () => {
         navigation.navigate('NotificationsScreen')
@@ -89,11 +92,11 @@ const Dashboard = ({ navigation }) => {
     const Revenue_Status = [
         {
             value: '1',
-            lable: 'Profile boost',
+            lable: 'Subscription',
         },
         {
             value: '2',
-            lable: 'Free',
+            lable: 'Profile boost',
         },
     ]
 
@@ -125,13 +128,26 @@ const Dashboard = ({ navigation }) => {
                     setApiResponse(Result.data);
                     setRecentUsers(Result.data.recent_users);
 
+                    let boostdate = []
+                    let boostdata = []
+
+                    Result.data.boostRevenue.forEach((item) => {
+                        boostdate.push(item.date)
+                        boostdata.push(item.totalRevenue)
+                    })
+                    console.log('boost data is', boostdata)
+                    console.log('boost date is', boostdate)
+
+                    setRevBoostData(boostdata)
+                    setRevBoostDate(boostdate)
+
 
                     console.log('subscriptions data is', Result.data.subscriptionsData)
                     let sub = Result.data.subscriptionsData
-
                     formateRevData(Result.data.revenueData)
                     formateSubData(sub)
                     formateUserData(Result.data.payingAndFree)
+
 
                 } else {
                     console.log('Api response is not ok');
@@ -146,7 +162,7 @@ const Dashboard = ({ navigation }) => {
 
     }
 
-    const formateUserData = (user) =>{
+    const formateUserData = (user) => {
         let userDate = [];
         let monthly = [];
         let weekly = [];
@@ -233,7 +249,15 @@ const Dashboard = ({ navigation }) => {
         rev.weekly.forEach((item, index) => {
             // if (index % 4 === 0) {
             weeklyDate.push(item.date);
+            // if(item.totalRevenue === 2399.84){
+
+            //     weeklyRev.push(item.totalRevenue/1000+"k")
+            //     console.log('total revenue is', item.totalRevenue/1000+"k")
+
+            // }else{
             weeklyRev.push(item.totalRevenue)
+
+            // }
             // }
         });
         console.log('Value of subscription is :', weeklyDate);
@@ -286,6 +310,14 @@ const Dashboard = ({ navigation }) => {
         let labels = [];
         let datasets = [{ data: [] }];
 
+        if (boostRev === "2") {
+            labels = revBoostDate.map(date => moment(date, 'MM-YYYY').format('MMM'));
+            datasets = [{ data: revBoostData }];
+            let data = { labels, datasets }
+            console.log('boost revenue data is', data)
+            return data
+        }
+
         if (revDuration === "1") {
             labels = weeklyRevnueDate.map(date => moment(date, 'MM-YYYY').format('MMM'));
             datasets = [{ data: weeklyRevnue }];
@@ -335,6 +367,15 @@ const Dashboard = ({ navigation }) => {
                 data: [10, 20, 30], // Custom values for each month
             },
         ],
+    };
+
+    const formatYValue = (value) => {
+        if (value >= 1000) {
+            console.log('y label value is', value)
+            return (value / 1000).toFixed(1) + 'k';
+        }
+        console.log('y label value is less then 1000')
+        return value.toString();
     };
 
     return (
@@ -414,8 +455,8 @@ const Dashboard = ({ navigation }) => {
                                                         propsForBackgroundLines: {
                                                             strokeDasharray: '',
                                                             strokeWidth: 1, // Remove inner lines by setting strokeWidth to 0
-                                                            stroke:colors.greyText
-                                                        
+                                                            stroke: colors.greyText
+
                                                         },
                                                         propsForLabels: {
                                                             fontSize: 12,
@@ -434,7 +475,10 @@ const Dashboard = ({ navigation }) => {
                                                     // showValuesOnTopOfBars={true}
                                                     segments={5} // Number of horizontal grid lines
                                                     yAxisSuffix="" // Suffix for Y-axis values
-                                                    formatYLabel={(value) => `${value * 100}`} // Custom format for Y-axis labels
+                                                    formatYLabel={(value) => {
+                                                        // console.log('y labal value is', value)
+                                                        `${value * 100}`
+                                                    }} // Custom format for Y-axis labels
                                                 />
                                             </View>
                                         </View>
@@ -452,13 +496,13 @@ const Dashboard = ({ navigation }) => {
                                             <View style={{ gap: 5, flexDirection: 'row' }}>
                                                 {/*add dropdown*/}
                                                 <Dropdown
-                                                    style={[styles.dropdown,{width:120/430*width}]}
+                                                    style={[styles.dropdown, { width: 120 / 430 * width }]}
                                                     selectedTextStyle={styles.selectedTextStyle}
                                                     placeholderStyle={styles.placeholderStyle}
                                                     //   imageStyle={styles.imageStyle}
                                                     iconStyle={styles.iconStyle}
                                                     maxHeight={200}
-                                                    value={country}
+                                                    value={boostRev}
                                                     data={Revenue_Status}
                                                     valueField="value"
                                                     labelField="lable"
@@ -466,27 +510,33 @@ const Dashboard = ({ navigation }) => {
                                                     placeholder="Select country"
                                                     //   searchPlaceholder="Search..."
                                                     onChange={e => {
-                                                        setCountry(e.value);
+                                                        setBoostRev(e.value);
                                                     }}
                                                 />
-                                                <Dropdown
-                                                    style={styles.dropdown}
-                                                    selectedTextStyle={styles.selectedTextStyle}
-                                                    placeholderStyle={styles.placeholderStyle}
-                                                    //   imageStyle={styles.imageStyle}
-                                                    iconStyle={styles.iconStyle}
-                                                    maxHeight={200}
-                                                    value={revDuration}
-                                                    data={local_data}
-                                                    valueField="value"
-                                                    labelField="lable"
-                                                    //   imageField="image"
-                                                    placeholder="Select country"
-                                                    //   searchPlaceholder="Search..."
-                                                    onChange={e => {
-                                                        setRevDuration(e.value);
-                                                    }}
-                                                />
+
+                                                {
+                                                    boostRev !== "2" && (
+                                                        <Dropdown
+                                                            style={styles.dropdown}
+                                                            selectedTextStyle={styles.selectedTextStyle}
+                                                            placeholderStyle={styles.placeholderStyle}
+                                                            //   imageStyle={styles.imageStyle}
+                                                            iconStyle={styles.iconStyle}
+                                                            maxHeight={200}
+                                                            value={revDuration}
+                                                            data={local_data}
+                                                            valueField="value"
+                                                            labelField="lable"
+                                                            //   imageField="image"
+                                                            placeholder="Select country"
+                                                            //   searchPlaceholder="Search..."
+                                                            onChange={e => {
+                                                                setRevDuration(e.value);
+                                                            }}
+                                                        />
+                                                    )
+                                                }
+
                                             </View>
                                         </View>
 
@@ -519,7 +569,7 @@ const Dashboard = ({ navigation }) => {
                                                     },
                                                 }}
                                                 yAxisLabel=""
-                                                yLabelsOffset={35} // Offset to adjust the position of Y-axis labels
+                                                yLabelsOffset={30} // Offset to adjust the position of Y-axis labels
                                                 verticalLabelRotation={0}
                                                 xLabelsOffset={0}
                                                 fromZero={true}
@@ -530,7 +580,13 @@ const Dashboard = ({ navigation }) => {
                                                 // showValuesOnTopOfBars={true}
                                                 segments={5} // Number of horizontal grid lines
                                                 yAxisSuffix="" // Suffix for Y-axis values
-                                                formatYLabel={(value) => `${value * 100}`} // Custom format for Y-axis labels
+                                                formatYLabel={(value) => {
+                                                    console.log(`Formatting value: ${value}`);
+                                                    if (value >= 1000) {
+                                                        return (value / 1000).toFixed(1) + 'k';
+                                                    }
+                                                    return value.toString();
+                                                }} // Custom format for Y-axis labels
                                             />
                                             {/* </View> */}
                                         </View>
@@ -605,7 +661,7 @@ const Dashboard = ({ navigation }) => {
 
                                             <View style={{ gap: 5, flexDirection: 'row' }}>
                                                 {/*add dropdown*/}
-                                                <Dropdown
+                                                {/* <Dropdown
                                                     style={styles.dropdown}
                                                     selectedTextStyle={styles.selectedTextStyle}
                                                     placeholderStyle={styles.placeholderStyle}
@@ -622,7 +678,7 @@ const Dashboard = ({ navigation }) => {
                                                     onChange={e => {
                                                         setUserPaymentStatus(e.value);
                                                     }}
-                                                />
+                                                /> */}
                                                 <Dropdown
                                                     style={styles.dropdown}
                                                     selectedTextStyle={styles.selectedTextStyle}
