@@ -646,8 +646,7 @@ const AddDate = ({ navigation, route }) => {
 
                         < Dropdown
                             style={styles.dropdown}
-                            selectedTextStyle={styles.selectedTextStyle}
-                            placeholderStyle={styles.placeholderStyle}
+                            placeholderStyle = {styles.placeholderStyle}
                             // imageStyle={styles.imageStyle}
                             iconStyle={styles.iconStyle}
                             maxHeight={200}
@@ -657,7 +656,6 @@ const AddDate = ({ navigation, route }) => {
                             labelField="lable"
                             // imageField="image"
                             placeholder={Budget}
-                            searchPlaceholder="Select budget"
                             itemTextStyle={{
                                 color: '#000000',
                                 fontWeight: '500',

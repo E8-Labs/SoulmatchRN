@@ -36,9 +36,6 @@ const actProfile = require('../../assets/images/activeProfile.png');
 const profile = require('../../assets/images/profile.png');
 
 
-
-
-
 const getBgImage = (index) => {
     if (index === 0) {
         return tab1
@@ -162,10 +159,6 @@ function MyTabBar({ state, descriptors, navigation }) {
         </View>
     );
 }
-
-
-
-
 
 export default function TabBarContainer(props) {
 

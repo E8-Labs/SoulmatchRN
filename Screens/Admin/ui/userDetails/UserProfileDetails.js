@@ -51,7 +51,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                 // const AuthToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxMTYsIm5hbWUiOiJBZG1pbiBQbHVyYXdsIiwiZW1haWwiOiJhZG1pbkBwbHVyYXdsLmNvbSIsInBhc3N3b3JkIjoiJDJiJDEwJE4uRHcyZTloZ2FvSy9BbzAxVmk2dGVla0xUMXVBdi9ycEhBTXdCblpaVDd3WUhTWmNLMnFlIiwicHJvZmlsZV9pbWFnZSI6bnVsbCwiY29tcGFueSI6bnVsbCwidGl0bGUiOm51bGwsImluZHVzdHJ5IjpudWxsLCJjaXR5IjpudWxsLCJzdGF0ZSI6bnVsbCwiZ2VuZGVyIjpudWxsLCJyYWNlIjpudWxsLCJsZ2J0cSI6bnVsbCwidmV0ZXJhbiI6bnVsbCwiZmNtX3Rva2VuIjpudWxsLCJkZXZpY2VfaWQiOiIiLCJwcm92aWRlcl9pZCI6bnVsbCwicHJvdmlkZXJfbmFtZSI6bnVsbCwicm9sZSI6ImFkbWluIiwicG9pbnRzIjowLCJlbmNfa2V5IjpudWxsLCJlbmNfaXYiOm51bGwsImNvdW50cmllcyI6bnVsbCwicHJvbm91bnMiOm51bGwsImRvYiI6bnVsbCwiY3JlYXRlZEF0IjoiMjAyNC0wNS0wMlQxMTo1NzozMy4wMDBaIiwidXBkYXRlZEF0IjoiMjAyNC0wNS0wMlQxMTo1NzozMy4wMDBaIn0sImlhdCI6MTcxNDY0Mzk1NSwiZXhwIjoxNzQ2MTc5OTU1fQ._iU0mPQUIjHIj8GvT_YvooVfditUOX3Grs9V8PmSGy0"
                 try {
                     const response = await fetch(ApiUrl, {
-                        'method': 'post',
+                        'method': 'get',
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': 'Bearer ' + AuthToken
@@ -66,7 +66,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                             setUserMedia(Result.data.media);
                             setQuestionAnswers(Result.data.answers);
                             console.log('user media is ', Result.data)
-                        }else{
+                        } else {
                             console.log('user status is not ok', Result.message)
                         }
 
@@ -319,7 +319,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                                 <Image source={require('../../../../assets/Images3/teacher.png')}
                                     style={styles.viewImage}
                                 />
-                                <Text style={styles.viewText}>
+                                <Text style={styles.viewTe4xt}>
                                     {ProfileData.school}
                                 </Text>
                             </View>
@@ -445,10 +445,10 @@ const UserProfileDetails = ({ navigation, route }) => {
                                         renderItem={({ item, index }) => (
                                             <View key={item.id} style={{ marginTop: 15 }}>
                                                 <View style={{ borderWidth: 1, borderColor: '#E6E6E6', borderRadius: 10, padding: 15, justifyContent: 'center' }}>
-                                                    <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.semibold }}>
+                                                    <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.meduim }}>
                                                         {item.title}
                                                     </Text>
-                                                    <Text style={{ fontSize: 16, fontFamily: customFonts.regular }}>
+                                                    <Text style={{ fontSize: 14, fontFamily: customFonts.regular }}>
                                                         {item.text}
                                                     </Text>
                                                     {item.answerText ? (
@@ -510,14 +510,15 @@ const UserProfileDetails = ({ navigation, route }) => {
                         onRequestClose={() => setOpenModal(false)}
                         style={{}}
                     >
-                        <View style={{ height: 630 / 930 * height, borderTopRightRadius: 25, borderTopLeftRadius: 25, backgroundColor: 'white', width: width, position: 'absolute', bottom: 0, alignItems: 'center' }}>
+                        <View style={{ height: height * 0.6, borderTopRightRadius: 25, borderTopLeftRadius: 25, backgroundColor: 'white', width: width, position: 'absolute', bottom: 0, alignItems: 'center' }}>
                             <View style={{ width: width - 50 }}>
                                 <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', marginTop: 15 / 930 * height, alignItems: 'center' }}>
                                     <Text style={{ fontSize: 20, fontWeight: '500', fontFamily: customFonts.meduim }}>
                                         Delete
                                     </Text>
                                     <TouchableOpacity onPress={() => setOpenModal(false)} style={{ marginRight: 10 }}>
-                                        <Image source={require('../../../../assets/Images3/CrossIcon.png')} style={{ height: 20 / 930 * height, width: 20 / 430 * width, resizeMode: 'contain', }} />
+                                        <Image source={require('../../../../assets/Images3/CrossIcon.png')}
+                                            style={{ height: 20 / 930 * height, width: 20 / 930 * height, resizeMode: 'contain', }} />
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -528,25 +529,27 @@ const UserProfileDetails = ({ navigation, route }) => {
                             </View>
 
                             <Text style={{ fontWeight: '500', padding: 10, fontFamily: customFonts.meduim, fontSize: 16, color: '#4D4D4D', marginTop: 15, textAlign: 'center' }}>
-                                Are you sure you want to delete {ProfileData.first_name} {ProfileData.last_name} account?
+                                Are you sure you want to delete {ProfileData.first_name} {ProfileData.last_name}'s account?
                             </Text>
 
                             <View style={{ width: width - 50, flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 }}>
-                                <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 1, }}>
-                                    <TouchableOpacity onPress={() => setOpenModal(false)}>
+                                <TouchableOpacity onPress={() => setOpenModal(false)}>
+
+                                    <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 1, }}>
                                         <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.meduim }}>
                                             Cancel
                                         </Text>
-                                    </TouchableOpacity>
-                                </View>
+                                    </View>
+                                </TouchableOpacity>
 
-                                <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: '#E01F1F' }}>
-                                    <TouchableOpacity onPress={handleDelete}>
+                                <TouchableOpacity onPress={handleDelete}>
+                                    <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: '#E01F1F' }}>
                                         <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.meduim, color: 'white' }}>
                                             Yes, Delete
                                         </Text>
-                                    </TouchableOpacity>
-                                </View>
+                                    </View>
+                                </TouchableOpacity>
+
                             </View>
 
                         </View>
@@ -559,7 +562,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                         onRequestClose={() => setopenSuspendModal(false)}
                         style={{}}
                     >
-                        <View style={{ height: 630 / 930 * height, borderTopRightRadius: 25, borderTopLeftRadius: 25, backgroundColor: 'white', width: width, position: 'absolute', bottom: 0, alignItems: 'center' }}>
+                        <View style={{ height: height * 0.6, borderTopRightRadius: 25, borderTopLeftRadius: 25, backgroundColor: 'white', width: width, position: 'absolute', bottom: 0, alignItems: 'center' }}>
                             <View style={{ width: width - 50 }}>
                                 <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', marginTop: 15 / 930 * height, alignItems: 'center' }}>
                                     <Text style={{ fontSize: 20, fontWeight: '500', fontFamily: customFonts.meduim }}>
@@ -581,21 +584,24 @@ const UserProfileDetails = ({ navigation, route }) => {
                             </Text>
 
                             <View style={{ width: width - 50, flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 }}>
-                                <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 1, }}>
-                                    <TouchableOpacity onPress={() => setopenSuspendModal(false)}>
+                                <TouchableOpacity onPress={() => setopenSuspendModal(false)}>
+                                    <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 1, }}>
+
                                         <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.meduim }}>
                                             Cancel
                                         </Text>
-                                    </TouchableOpacity>
-                                </View>
 
-                                <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: '#E01F1F' }}>
-                                    <TouchableOpacity onPress={handleSuspend}>
+                                    </View>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={handleSuspend}>
+
+                                    <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: '#E01F1F' }}>
                                         <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.meduim, color: 'white' }}>
                                             Yes, Suspend
                                         </Text>
-                                    </TouchableOpacity>
-                                </View>
+                                    </View>
+                                </TouchableOpacity>
+
                             </View>
 
                         </View>
@@ -623,7 +629,7 @@ const styles = StyleSheet.create({
         resizeMode: 'contain'
     },
     viewText: {
-        fontSize: 16,
+        fontSize: 14,
         fontFamily: customFonts.meduim,
         textAlign: 'left',
         // width: 334 / 430 * width

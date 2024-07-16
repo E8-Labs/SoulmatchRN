@@ -18,7 +18,7 @@ import DiscoverGotMatch from '../../Components/DiscoverGotMatch';
 import { getDistance } from 'geolib';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DistanceCalculator from '../../Components/DistanceCalculator';
-
+import Apis from '../Admin/apis/Apis';
 
 const { height, width } = Dimensions.get('window')
 
@@ -34,42 +34,53 @@ const nonBinary = require('../../assets/images/nonBinaryIcon.png');
 export default function SelectedProfile({ navigation, route }) {
 
     const data = route.params.data
-    let user = data.user
-    console.log('user data from prev screen', user)
+    console.log('user data from prev screen', data)
 
-    const [totalInches, setTotalInches] = useState(null)
     const [selected, setSelected] = useState('');
-    const [like, setLike] = useState(false);
     const [loadImage, setLoadImage] = useState(false)
     const [loadImage2, setLoadImage2] = useState(false)
     const [loadImage4, setLoadImage4] = useState(false)
     const [loadImage3, setLoadImage3] = useState(false)
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [openModal, setOpenModal] = useState(false);
-    const [questions, setQuestions] = useState([]);
-    const [LocalUser, setLocalUser] = useState([]);
-    const [isPlaying, setIsPlaying] = useState(true);
-    const [duration, setDuration] = useState(0);
-    const videoRef = React.useRef(null);
-    const [video, setVideo] = useState(null);
-    const [loadVideo2, setLoadVideo2] = useState(false);
-    const [status2, setStatus2] = React.useState({});
-    const [isPlaying2, setIsPlaying2] = useState(true);
-    const [duration2, setDuration2] = useState(0);
-    const videoRef2 = React.useRef(null);
-    const [loadVideo, setLoadVideo] = useState(false);
-    const [status, setStatus] = React.useState({});
-    const ref = useRef(null);
-    // console.log("data from prev screen", data)
-
-    const formatDuration = (durationMillis) => {
-        const totalSeconds = Math.floor(durationMillis / 1000);
-        const minutes = Math.floor(totalSeconds / 60);
-        const seconds = totalSeconds % 60;
-        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-    }
-
-
+    const [user, setUser] = useState(false)
+    useEffect(() => {
+        const getUserDetail = async () => {
+            console.log('trying to get user profile from id', data.user.id)
+            // const ApiUrl = `https://plurawlapp.com/soulmatch/api/users/get_profile?userid=${ID}`;
+            const ApiUrl = Apis.GetProfile + `?userid=${data.user.id}`;
+            console.log('api url is', ApiUrl)
+            const d = await AsyncStorage.getItem("USER");
+            if (d) {
+                const data = JSON.parse(d);
+                const AuthToken = data.token;
+                // const AuthToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxMTYsIm5hbWUiOiJBZG1pbiBQbHVyYXdsIiwiZW1haWwiOiJhZG1pbkBwbHVyYXdsLmNvbSIsInBhc3N3b3JkIjoiJDJiJDEwJE4uRHcyZTloZ2FvSy9BbzAxVmk2dGVla0xUMXVBdi9ycEhBTXdCblpaVDd3WUhTWmNLMnFlIiwicHJvZmlsZV9pbWFnZSI6bnVsbCwiY29tcGFueSI6bnVsbCwidGl0bGUiOm51bGwsImluZHVzdHJ5IjpudWxsLCJjaXR5IjpudWxsLCJzdGF0ZSI6bnVsbCwiZ2VuZGVyIjpudWxsLCJyYWNlIjpudWxsLCJsZ2J0cSI6bnVsbCwidmV0ZXJhbiI6bnVsbCwiZmNtX3Rva2VuIjpudWxsLCJkZXZpY2VfaWQiOiIiLCJwcm92aWRlcl9pZCI6bnVsbCwicHJvdmlkZXJfbmFtZSI6bnVsbCwicm9sZSI6ImFkbWluIiwicG9pbnRzIjowLCJlbmNfa2V5IjpudWxsLCJlbmNfaXYiOm51bGwsImNvdW50cmllcyI6bnVsbCwicHJvbm91bnMiOm51bGwsImRvYiI6bnVsbCwiY3JlYXRlZEF0IjoiMjAyNC0wNS0wMlQxMTo1NzozMy4wMDBaIiwidXBkYXRlZEF0IjoiMjAyNC0wNS0wMlQxMTo1NzozMy4wMDBaIn0sImlhdCI6MTcxNDY0Mzk1NSwiZXhwIjoxNzQ2MTc5OTU1fQ._iU0mPQUIjHIj8GvT_YvooVfditUOX3Grs9V8PmSGy0"
+                try {
+                    const response = await fetch(ApiUrl, {
+                        'method': 'get',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + AuthToken
+                        }
+                    });
+                    console.log('respone is', response)
+                    if (response) {
+                        const Result = await response.json();
+                        console.log("Apis response is :", Result.data.email);
+                        if (Result.status === true) {
+                           setUser(Result.data)
+                            console.log('user media is ', Result.data)
+                        }else{
+                            console.log('user status is not ok', Result.message)
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error occured in api response is :', error);
+                }
+            } else {
+                console.log('data is not awailable')
+            }
+        };
+        getUserDetail();
+    }, []);
 
     const handleLike = async () => {
 
@@ -181,19 +192,6 @@ export default function SelectedProfile({ navigation, route }) {
         }
     }
 
-    // const heightInInches = () => {
-    //     let addon = 36
-    //     let inches = parseInt(0.6 * value + addon);
-
-    //     let heightFeet = parseInt(inches / 12);
-    //     let heightInches = parseInt(inches % 12);
-    //     return `${Math.round(heightFeet)}'${Math.round(heightInches)}"`
-    // };
-
-    const closeModal = () => {
-        setOpenModal(false)
-    }
-
     const getGenderIcon = () => {
         if (user === null) {
             return
@@ -263,7 +261,7 @@ export default function SelectedProfile({ navigation, route }) {
                                 }}
                             >
                                 <Image
-                                    source={unlikeImage}
+                                    source={user&&user.isLiked === true ? likeImage:unlikeImage}
                                     style={{ width: 40, height: 40, }}
                                 />
                             </TouchableOpacity>
@@ -368,7 +366,7 @@ export default function SelectedProfile({ navigation, route }) {
                         </View>
 
                         {
-                            user.media.length > 0 ? (
+                            user&&user.media.length > 0 ? (
                                 <FlatList
                                     scrollEnabled={false}
                                     data={user.media}
@@ -460,7 +458,7 @@ export default function SelectedProfile({ navigation, route }) {
                         </View>
 
                         {
-                            user.answers.length > 0 ? (
+                            user&&user.answers.length > 0 ? (
                                 <FlatList
                                     scrollEnabled={false}
                                     data={user.answers}

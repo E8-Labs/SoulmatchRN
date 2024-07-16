@@ -131,7 +131,7 @@ export default function NotificationsScreen({ navigation }) {
     } else if (item.notification_type === 'Message') {
       let not = {
         image: item.fromUser !== null ? item.fromUser.profile_image : placholder,
-        message: `${item.fromUser.first_name} ${item.fromUser.last_name} sent you a message.`,
+        message: `${item.fromUser !== null ?item.fromUser.first_name:''} ${item.fromUser !== null ?item.fromUser.last_name:''} sent you a message.`,
         time: item.createdAt,
         read: item.is_read,
         type: item.notification_type
@@ -205,8 +205,20 @@ export default function NotificationsScreen({ navigation }) {
     if(item.notification_type === 'NewUser'){
       navigation.navigate("UserProfileDetails",{
         DATA: {
-          UserDetails: item
+          UserDetails: item.from
       },
+      })
+    } else  if(item.notification_type === 'ReportedUser'){
+      navigation.navigate("UserProfileDetails",{
+        DATA: {
+          UserDetails: item.from
+      },
+      })
+    } else if(item.notification_type === "Match"){
+      navigation.navigate("SelectedProfile",{
+        data:{
+          user:item.fromUser
+        }
       })
     }
   }
