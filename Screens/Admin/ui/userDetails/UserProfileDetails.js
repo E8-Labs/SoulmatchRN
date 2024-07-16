@@ -40,8 +40,10 @@ const UserProfileDetails = ({ navigation, route }) => {
     //api call for user details
     useEffect(() => {
         const UserDetail = async () => {
+            console.log('trying to get user profile from id', ID)
             // const ApiUrl = `https://plurawlapp.com/soulmatch/api/users/get_profile?userid=${ID}`;
             const ApiUrl = Apis.GetProfile + `?userid=${ID}`;
+            console.log('api url is', ApiUrl)
             const d = await AsyncStorage.getItem("USER");
             if (d) {
                 const data = JSON.parse(d);
@@ -49,23 +51,31 @@ const UserProfileDetails = ({ navigation, route }) => {
                 // const AuthToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxMTYsIm5hbWUiOiJBZG1pbiBQbHVyYXdsIiwiZW1haWwiOiJhZG1pbkBwbHVyYXdsLmNvbSIsInBhc3N3b3JkIjoiJDJiJDEwJE4uRHcyZTloZ2FvSy9BbzAxVmk2dGVla0xUMXVBdi9ycEhBTXdCblpaVDd3WUhTWmNLMnFlIiwicHJvZmlsZV9pbWFnZSI6bnVsbCwiY29tcGFueSI6bnVsbCwidGl0bGUiOm51bGwsImluZHVzdHJ5IjpudWxsLCJjaXR5IjpudWxsLCJzdGF0ZSI6bnVsbCwiZ2VuZGVyIjpudWxsLCJyYWNlIjpudWxsLCJsZ2J0cSI6bnVsbCwidmV0ZXJhbiI6bnVsbCwiZmNtX3Rva2VuIjpudWxsLCJkZXZpY2VfaWQiOiIiLCJwcm92aWRlcl9pZCI6bnVsbCwicHJvdmlkZXJfbmFtZSI6bnVsbCwicm9sZSI6ImFkbWluIiwicG9pbnRzIjowLCJlbmNfa2V5IjpudWxsLCJlbmNfaXYiOm51bGwsImNvdW50cmllcyI6bnVsbCwicHJvbm91bnMiOm51bGwsImRvYiI6bnVsbCwiY3JlYXRlZEF0IjoiMjAyNC0wNS0wMlQxMTo1NzozMy4wMDBaIiwidXBkYXRlZEF0IjoiMjAyNC0wNS0wMlQxMTo1NzozMy4wMDBaIn0sImlhdCI6MTcxNDY0Mzk1NSwiZXhwIjoxNzQ2MTc5OTU1fQ._iU0mPQUIjHIj8GvT_YvooVfditUOX3Grs9V8PmSGy0"
                 try {
                     const response = await fetch(ApiUrl, {
-                        'method': 'get',
+                        'method': 'post',
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': 'Bearer ' + AuthToken
                         }
                     });
-                    if (response.ok) {
+                    console.log('respone is', response)
+                    if (response) {
                         const Result = await response.json();
                         console.log("Apis response is :", Result.data.email);
-                        setProfileData(Result.data);
-                        setUserMedia(Result.data.media);
-                        setQuestionAnswers(Result.data.answers);
-                        console.log('user media is ', Result.data.media)
+                        if (Result.status === true) {
+                            setProfileData(Result.data);
+                            setUserMedia(Result.data.media);
+                            setQuestionAnswers(Result.data.answers);
+                            console.log('user media is ', Result.data)
+                        }else{
+                            console.log('user status is not ok', Result.message)
+                        }
+
                     }
                 } catch (error) {
                     console.error('Error occured in api response is :', error);
                 }
+            } else {
+                console.log('data is not awailable')
             }
         };
         UserDetail();
@@ -193,9 +203,14 @@ const UserProfileDetails = ({ navigation, route }) => {
         }
     }
 
-    //test code for video thumnail
-
-
+    const getHeightInches = () => {
+        if (ProfileData.height_inches % 12 > 0) {
+            let inches = ProfileData.height_inches % 12 + " inches"
+            return inches
+        } else {
+            return ""
+        }
+    }
 
     return (
         <SafeAreaView>
@@ -257,8 +272,8 @@ const UserProfileDetails = ({ navigation, route }) => {
                                     </Text>
                                 </View>
                             </View> */}
-                        
-                            <View style={[styles.viewStyle, {marginTop: 30}]}>
+
+                            <View style={[styles.viewStyle, { marginTop: 30 }]}>
                                 <Image source={getGenderIcon()}
                                     style={styles.viewImage}
                                 />
@@ -266,6 +281,16 @@ const UserProfileDetails = ({ navigation, route }) => {
                                     {ProfileData.gender}
                                 </Text>
                             </View>
+
+                            <View style={[styles.viewStyle, { marginTop: 5 }]}>
+                                <Image source={require('../../../../assets/images/emailIcon.png')}
+                                    style={styles.viewImage}
+                                />
+                                <Text style={styles.viewText}>
+                                    {ProfileData.email}
+                                </Text>
+                            </View>
+
 
                             <View style={styles.viewStyle}>
                                 <Image source={require('../../../../assets/Images3/cake.png')}
@@ -278,7 +303,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                                 <Image source={require('../../../../assets/Images3/ruler.png')}
                                     style={styles.viewImage}
                                 />
-                                <Text style={styles.viewText}>{ProfileData.height_inches * 2.54} cm</Text>
+                                <Text style={styles.viewText}> {ProfileData.height_feet} feets {getHeightInches()}</Text>
                             </View>
 
                             <View style={styles.viewStyle}>
@@ -286,7 +311,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                                     style={styles.viewImage}
                                 />
                                 <Text style={styles.viewText}>
-                                    <DistanceCalculator userId={ProfileData.id} lat={ProfileData.lat} lang={ProfileData.lang} />
+                                    {ProfileData.city ? ProfileData.city : 'N/A'}, {ProfileData.state ? ProfileData.state : 'N/A'}
                                 </Text>
                             </View>
 
@@ -324,7 +349,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                                 <Text style={{ fontSize: 20, fontFamily: customFonts.meduim }}>Photos & videos</Text>
                             </View>
                             <View>
-                                {UserMedia ?
+                                {UserMedia.length === 0 ?
                                     <Text style={{ fontSize: 14, marginTop: 10, fontFamily: customFonts.regular }}>
                                         No photo & video added
                                     </Text> :
@@ -334,10 +359,10 @@ const UserProfileDetails = ({ navigation, route }) => {
                                         renderItem={({ item, index }) => (
                                             <View key={item.id} style={{ marginTop: 15 }}>
                                                 <View style={{ borderWidth: 1, borderColor: '#E6E6E6', borderRadius: 10, padding: 15, justifyContent: 'center' }}>
-                                                    <Text style={{ fontWeight: '400', fontSize: 16, fontFamily: customFonts.regular }}>
+                                                    <Text style={{ fontSize: 16, fontFamily: customFonts.regular }}>
                                                         {
-                                                            item.caption ?
-                                                                <Text style={{ fontWeight: '400', fontSize: 16, fontFamily: customFonts.meduim }}>
+                                                            item.caption !== "null" ?
+                                                                <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>
                                                                     {item.caption}
                                                                 </Text> : ""
 
@@ -376,7 +401,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                                                                             })
                                                                         }}
                                                                     >
-                                                                        <Image source={{ uri: item.videoThumbnail }}
+                                                                        <Image source={{ uri: item.thumb_url }}
                                                                             style={{ height: 230 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 8 }}
                                                                             onLoadEnd={() => {
                                                                                 setLoadVideo(false)
@@ -410,7 +435,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                             </View>
 
                             <View style={{ marginBottom: 20 }}>
-                                {QuestionAnswers ?
+                                {QuestionAnswers.length === 0 ?
                                     <Text style={{ fontSize: 14, marginTop: 10, fontFamily: customFonts.regular }}>
                                         No answer added
                                     </Text> :
@@ -423,7 +448,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                                                     <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.semibold }}>
                                                         {item.title}
                                                     </Text>
-                                                    <Text style={{ fontWeight: '400', fontSize: 16, fontFamily: customFonts.regular }}>
+                                                    <Text style={{ fontSize: 16, fontFamily: customFonts.regular }}>
                                                         {item.text}
                                                     </Text>
                                                     {item.answerText ? (

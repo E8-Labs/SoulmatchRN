@@ -610,8 +610,9 @@ const AddDate = ({ navigation, route }) => {
                         <View style={{ borderWidth: 1, borderColor: '#CCCCCC', borderRadius: 10, padding: 16, justifyContent: 'center', marginTop: 5 }}>
                             <TextInput
                                 value={BusinessName}
+                                placeholderTextColor={"#999999"}
                                 onChangeText={(Business) => setBusinessName(Business)}
-                                style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.meduim, color: '#000000' }}
+                                style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.meduim, }}
                                 placeholder='Enter business name'
                             />
                         </View>
@@ -711,7 +712,7 @@ const AddDate = ({ navigation, route }) => {
                         </Text>
 
                         <TouchableOpacity onPress={handlePickAddress}>
-                            <View style={{ borderRadius: 10, borderColor: '#CCCCCC', padding: 20, borderWidth: 1 }}>
+                            <View style={{ borderRadius: 10, borderColor: '#CCCCCC', padding: 15, borderWidth: 1 }}>
                                 <Text style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.meduim }}>
                                     {
                                         longAddress ?

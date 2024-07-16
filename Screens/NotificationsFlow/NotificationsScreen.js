@@ -92,12 +92,7 @@ export default function NotificationsScreen({ navigation }) {
     console.log('yesterday notifications are ', yesterday)
     console.log('earlier notifications are ', earlier)
 
-
-    const section = [
-
-
-
-    ];
+    const section = [];
     if (today.length > 0) {
       section.push({ title: 'Today', data: today },)
     }
@@ -206,6 +201,16 @@ export default function NotificationsScreen({ navigation }) {
     }
   }
 
+  const onpressHandle =(item) =>{
+    if(item.notification_type === 'NewUser'){
+      navigation.navigate("UserProfileDetails",{
+        DATA: {
+          UserDetails: item
+      },
+      })
+    }
+  }
+
 
   const renderItem = (item) => {
     console.log('trying to render items', item.fromUser != null ? item.fromUser.profile_image : placholder)
@@ -214,7 +219,11 @@ export default function NotificationsScreen({ navigation }) {
     // return
 
     return (
-      <TouchableOpacity>
+      <TouchableOpacity 
+        onPress={()=>{
+          onpressHandle(item)
+        }}
+      >
         <View style={{
           flexDirection: 'row', alignItems: 'cemter', justifyContent: 'space-between',
           marginTop: 25 / 930 * height,
@@ -250,9 +259,6 @@ export default function NotificationsScreen({ navigation }) {
     )
 
   }
-
-
-
 
   return (
     <SafeAreaView style={{ backgroundColor: 'white' }}>
