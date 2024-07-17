@@ -74,10 +74,11 @@ export default function ViewMyMatchesScreen({ navigation }) {
                         <DatesLoadingIndicator from='admin' />
                     ) : (
                         <FlatList
-                            style={{ marginTop: 50 }}
+                            style={{ marginTop: 50,height:height*0.8 }}
                             numColumns={2}
+                            showsVerticalScrollIndicator = {false}
                             data={myMatch}
-                            scrollEnabled={false}
+                            scrollEnabled={true}
                             renderItem={({ item }) => (
                                 <TouchableOpacity onPress={()=>{
                                     navigation.navigate("SelectedProfile",{

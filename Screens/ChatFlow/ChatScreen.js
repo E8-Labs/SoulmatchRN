@@ -51,7 +51,7 @@ export default function ChatScreen({ navigation, route }) {
     const [openModal3, setOpenModal3] = useState(false);
     const [openModal2, setOpenModal2] = useState(false);
     const [message, setMessage] = useState('');
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState([]); 
     const [thumbnail, setThumnail] = useState(null);
     const [loading, setLoading] = useState(false)
     const [recording, setRecording] = useState();

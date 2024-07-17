@@ -249,6 +249,22 @@ const User = ({ navigation }) => {
         }
     }
 
+    const getSubscriptionPlan = (item) =>{
+        let sub = item
+        if(sub.isSubscribed === true){
+            if(sub.subscriptionDetails.plan === "WeeklySubsciptionSoulmatch0623"){
+                return "Weelky"
+            } else if(sub.subscriptionDetails.plan === "MonthlySubsciptionSoulmatch0623"){
+                return "Monthly"
+            } else if(sub.subscriptionDetails.plan === "YearlySubsciptionSoulmatch0623"){
+                return "Yearly"
+            }
+        }else{
+            return "N/A"
+        }
+    }
+
+
     return (
         <View style={{ display: 'flex', alignItems: 'center', height: height }}>
             {/*change if the screen is irResponsive height: height s*/}
@@ -315,7 +331,7 @@ const User = ({ navigation }) => {
                     scrollEventThrottle={16}>
                     <View style={{ flexDirection: 'row', flexWrap: 'wrap', display: 'flex', justifyContent: 'space-between', marginBottom: 30 }}>
                         {AdminUsers && AdminUsers.map((item, index) => (
-                            <TouchableOpacity onPress={() => handleUserDetails(item.id, index)} key={index} style={{ marginTop: 10 }}>
+                            <TouchableOpacity onPress={() => handleUserDetails(item, index)} key={index} style={{ marginTop: 10 }}>
                                 <View style={{ borderWidth: 1, flexDirection: 'column', gap: 5, borderColor: '#E6E6E6', borderRadius: 10, padding: 12, width: 176 / 430 * width }}>
                                     <Image
                                         // onLoadStart={() => handleImageLoadStart(item.profile_image)}
@@ -352,7 +368,7 @@ const User = ({ navigation }) => {
                                     <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                                         <Image source={require('../../../assets/Images3/crown2.png')} style={{ height: 15 / 930 * height, width: 15 / 430 * width }} />
                                         <Text style={{ fontWeight: '500', fontSize: 12, fontFamily: customFonts.meduim, color: '#FFC401' }}>
-                                            Monthly
+                                            {getSubscriptionPlan(item)}
                                         </Text>
                                     </View>
                                 </View>

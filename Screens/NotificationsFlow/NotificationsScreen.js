@@ -119,7 +119,7 @@ export default function NotificationsScreen({ navigation }) {
       return not
     } else if (item.notification_type === 'Match') {
       let not = {
-        image: item.fromUser !== null ? item.fromUser.profile_image : placholder,
+        image: item.from ? item.from.profile_image : placholder,
         message: "Congratulations! New match.",
         time: item.createdAt,
         read: item.is_read,
@@ -130,8 +130,8 @@ export default function NotificationsScreen({ navigation }) {
 
     } else if (item.notification_type === 'Message') {
       let not = {
-        image: item.fromUser !== null ? item.fromUser.profile_image : placholder,
-        message: `${item.fromUser !== null ?item.fromUser.first_name:''} ${item.fromUser !== null ?item.fromUser.last_name:''} sent you a message.`,
+        image: item.from ? item.from.profile_image : placholder,
+        message: `${item.from ? item.from.first_name : ''} ${item.from ? item.from.last_name : ''} sent you a message.`,
         time: item.createdAt,
         read: item.is_read,
         type: item.notification_type
@@ -164,7 +164,7 @@ export default function NotificationsScreen({ navigation }) {
     }
     else if (item.notification_type === 'NewUser') {
       let not = {
-        image: item.fromUser !== null ? item.fromUser.profile_image : placholder,
+        image: item.from ? item.from.profile_image : placholder,
         message: 'New user registered.',
         time: item.createdAt,
         read: item.is_read,
@@ -186,7 +186,7 @@ export default function NotificationsScreen({ navigation }) {
 
     } else if (item.notification_type === 'ReportedUser') {
       let not = {
-        image: item.fromUser !== null ? item.fromUser.profile_image : placholder,
+        image: item.fromxs ? item.from.profile_image : placholder,
         message: 'New user reported.',
         time: item.createdAt,
         read: item.is_read,
@@ -201,38 +201,81 @@ export default function NotificationsScreen({ navigation }) {
     }
   }
 
-  const onpressHandle =(item) =>{
-    if(item.notification_type === 'NewUser'){
-      navigation.navigate("UserProfileDetails",{
+  const onpressHandle = (item) => {
+    if (item.notification_type === 'NewUser') {
+      navigation.navigate("UserProfileDetails", {
         DATA: {
           UserDetails: item.from
-      },
+        },
       })
-    } else  if(item.notification_type === 'ReportedUser'){
-      navigation.navigate("UserProfileDetails",{
+    } else if (item.notification_type === 'ReportedUser') {
+      navigation.navigate("UserProfileDetails", {
         DATA: {
-          UserDetails: item.from
-      },
+          UserDetails: item.from.id
+        },
       })
-    } else if(item.notification_type === "Match"){
-      navigation.navigate("SelectedProfile",{
-        data:{
-          user:item.fromUser
+    } else if (item.notification_type === "Match") {
+      navigation.navigate("SelectedProfile", {
+        data: {
+          user: item.from
         }
       })
+    } else if (item.notification_type === "Dislike") {
+      navigation.navigate("SelectedProfile", {
+        data: {
+          user: item.from
+        }
+      })
+    } else if (item.notification_type === "Like") {
+      navigation.navigate("SelectedProfile", {
+        data: {
+          user: item.from
+        }
+      })
+    } else if (item.notification_type === "Message") {
+      if (item.chat) {
+        navigation.navigate("ChatScreen", {
+          data: {
+            chat: item.chat,
+            from: 'Notification',
+          },
+          LastMessage: () => { console.log("Here") }
+        })
+      }
+
+    } else if (item.notification_type === "DateInvite") {
+      if (item.booking) {
+        navigation.navigate("SelectedDateDetails", {
+          data:item.booking.datePlace,
+        })
+      }
+
+    }
+    else if (item.notification_type === "DateInviteToAdmin") {
+      if (item.booking) {
+        navigation.navigate("DateDetails", {
+            DATA: {
+                dateDetails: item.booking.datePlace,
+                from: 'Notification'
+            },
+            DateDeleted: ()=>console.log('here'),
+            DateUpdated:  ()=>console.log('here'),
+        })
+      }
+
     }
   }
 
 
   const renderItem = (item) => {
-    console.log('trying to render items', item.fromUser != null ? item.fromUser.profile_image : placholder)
+    console.log('trying to render items', item)
     let not = getNotificationType(item)
     console.log('notification object is', not)
     // return
 
     return (
-      <TouchableOpacity 
-        onPress={()=>{
+      <TouchableOpacity
+        onPress={() => {
           onpressHandle(item)
         }}
       >

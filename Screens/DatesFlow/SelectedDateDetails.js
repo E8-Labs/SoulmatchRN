@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react'
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import customFonts from '../../assets/fonts/Fonts';
 import colors from '../../assets/colors/Colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ApisPath from '../../lib/ApisPath/ApisPath';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
 import moment from 'moment';
@@ -10,35 +12,57 @@ import moment from 'moment';
 import { Image } from 'expo-image';
 import { GetBudget } from '../../Services/dates/GetBudget';
 import RatingPopup from '../../Components/RatingPopup';
+import { GetDateDeatails } from '../../Services/dates/GetDateDetails';
 
 const { height, width } = Dimensions.get('window');
 
 export default function SelectedDateDetails({ navigation, route }) {
 
-    const data = route.params.data
-    console.log('selected date details are ', data)
+    const date = route.params.data
+    console.log('selected date details are ', date.id)
 
 
     const [loading, setLoading] = useState(false)
     const [invitedDate, setInvitedDate] = useState({})
     const [reviews, setReviews] = useState([])
+    const [data, setData] = useState('')
     const [showRatingPopup, setShowRatingPopup] = useState(false)
 
-    useEffect(()=>{
-        const getReview = () =>{
-            setReviews(data.reviews)
-            console.log('reviews from prev screen', data.reviews)
+
+    useEffect(() => {
+        getDetails()
+    }, [route.params])
+
+    const getDetails = async () => {
+        try {
+            const user = await AsyncStorage.getItem("USER")
+            if (user) {
+                console.log('trying to get date', date.id)
+                let d = JSON.parse(user)
+
+                const result = await fetch(ApisPath.ApiGetDateDetails + `?dateId=${date.id}`, {
+                    method: 'get',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + d.token
+                    }
+                })
+                if (result) {
+                    let json = await result.json()
+                    if (json.status === true) {
+                        console.log('date details are', json.data)
+                        setData(json.data)
+                        setReviews(json.data.reviews)
+                    } else {
+                        console.log('date details message is', json.message)
+                    }
+                }
+
+            }
+        } catch (e) {
+            console.log(' get date detainl error ', e)
         }
-        getReview()
-    },[route.params])
-
-
-    useEffect(()=>{
-       
-            console.log('reviews update', reviews)
-       
-    },[reviews])
-
+    }
     const getInvitedDate = (date) => {
         console.log('invited date on date details screen is  ', date)
         setInvitedDate(date)
@@ -46,7 +70,6 @@ export default function SelectedDateDetails({ navigation, route }) {
 
 
     const reserveDate = () => {
-
         navigation.navigate("ReserveNightScreen", {
             data: {
                 date: data,
@@ -54,7 +77,6 @@ export default function SelectedDateDetails({ navigation, route }) {
                 userId: '',
             },
             invitedDate: getInvitedDate
-
         })
     }
 
@@ -94,14 +116,14 @@ export default function SelectedDateDetails({ navigation, route }) {
         let difference;
 
         if (months > 0) {
-            difference = `${months} months`;
+            difference = `${months} months ago`;
         } else if (days > 0) {
-            difference = `${days} days`;
+            difference = `${days} days ago`;
         } else if (hours > 0) {
-            difference = `${hours} hours`;
-        } else if(minutes > 0) {
-            difference = `${minutes} minutes`;
-        } else{
+            difference = `${hours} hours ago`;
+        } else if (minutes > 0) {
+            difference = `${minutes} minutes ago`;
+        } else {
             difference = 'Just now';
         }
 
@@ -124,12 +146,13 @@ export default function SelectedDateDetails({ navigation, route }) {
                             />
                         </View>
                     </TouchableOpacity>
-                    <Text style={{ fontSize: 24, fontFamily: customFonts.meduim }}>{data.name}</Text>
-
+                    <Text style={{ fontSize: 24, fontFamily: customFonts.meduim, width: 300 / 430 * width }}>
+                        {data.name}
+                    </Text>
                 </View>
                 <View style={{ height: height * 0.85 }}>
                     <ScrollView showsVerticalScrollIndicator={false}>
-                        <View style={{ alignItems: 'center', width: width - 60 / 430 * width ,marginBottom:10}}>
+                        <View style={{ alignItems: 'center', width: width - 60 / 430 * width, marginBottom: 10 }}>
                             <Image source={{ uri: data.imageUrl }}
                                 onLoadStart={() => {
                                     setLoading(true)
@@ -160,7 +183,7 @@ export default function SelectedDateDetails({ navigation, route }) {
                                 <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 5 }}>
                                     <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Category</Text>
 
-                                    <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>{data.Category.name}</Text>
+                                    <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>{data && data.Category.name}</Text>
                                 </View>
 
                                 <View style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 5 }}>
@@ -216,7 +239,7 @@ export default function SelectedDateDetails({ navigation, route }) {
                                     </TouchableOpacity>
                                 </View>
                                 {
-                                   reviews.length > 0 ? (
+                                    reviews.length > 0 ? (
                                         <>
                                             <Text style={{ fontSize: 12, fontFamily: customFonts.regular, marginTop: 5 / 930 * height }}>
                                                 108+Ratings . {data.totalReviews} Reviews
@@ -262,7 +285,7 @@ export default function SelectedDateDetails({ navigation, route }) {
                                                     </View>
                                                     {
                                                         reviews.length > 0 && (
-                                                           reviews.map((item) => (
+                                                            reviews.map((item) => (
                                                                 <View style={{
                                                                     paddingHorizontal: 16 / 430 * width, borderRadius: 10, borderWidth: 1, borderColor: colors.greyText,
                                                                     alignItems: 'flex-start', paddingVertical: 16 / 930 * height, flexDirection: 'column', gap: 8,
@@ -286,10 +309,13 @@ export default function SelectedDateDetails({ navigation, route }) {
                                                                         />
 
                                                                         <Text style={{ fontSize: 12, fontFamily: customFonts.regular, color: '#666666' }}>
-                                                                            {getDuration(item.createdAt)} ago
+                                                                            {getDuration(item.createdAt)}
                                                                         </Text>
                                                                     </View>
-                                                                    <Text numberOfLines={4} style={{ fontSize: 14 / 930 * height, fontFamily: customFonts.regular, width: 230 / 430 * width }}>{item.review}</Text>
+                                                                    <Text numberOfLines={4}
+                                                                        style={{ fontSize: 14 / 930 * height, fontFamily: customFonts.regular, width: 230 / 430 * width }}>
+                                                                        {item.review}
+                                                                    </Text>
 
                                                                 </View>
                                                             ))
@@ -320,12 +346,13 @@ export default function SelectedDateDetails({ navigation, route }) {
                         >
                             <RatingPopup close={() => {
                                 setShowRatingPopup(false)
-                            }} place={data} 
-                            addReview = {(review)=>{
-                                console.log('review added', review)
-                                setReviews([...reviews,review])
-                            }}
-                            
+                            }} place={data}
+                                addReview={(review) => {
+                                    console.log('review added', review)
+                                    setReviews([...reviews, review])
+                                    getDetails()
+                                }}
+
                             />
 
 

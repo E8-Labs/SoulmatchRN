@@ -9,20 +9,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import moment from 'moment'
 import { GetBudget } from '../../../../Services/dates/GetBudget'
 import { useFocusEffect } from '@react-navigation/native'
+import { StarRatingDisplay } from 'react-native-star-rating-widget'
+import GetDateDetails from '../../../../Services/dates/GetDateDetails'
+import ApisPath from '../../../../lib/ApisPath/ApisPath'
 
 const DateDetails = ({ navigation, route }) => {
     const { height, width } = Dimensions.get('window')
     const router = route.params.DATA;
     // const UD = route.params.DATA;
-    // console.log("Data from update is :", UD);
+    console.log("Data from last screen  :", router.dateDetails);
     // console.log("Data passed is :", router.DateDetails.Category);
 
     const [openModal, setOpenModal] = useState(false);
     const [Loading, setLoading] = useState(false);
 
     const [dateDetails, setDateDetails] = useState({})
-
-
 
     const From = router.from;
     console.log("I am comming from :", From);
@@ -31,7 +32,12 @@ const DateDetails = ({ navigation, route }) => {
     console.log("UserDate details are :", UserDateDetails);
 
     useEffect(() => {
-        setDateDetails(router)
+        getDetails()
+    }, [route.params])
+
+
+    useEffect(() => {
+        // setDateDetails(router)
         const update = () => {
             setDateDetails(router.DateDetails)
         }
@@ -48,22 +54,39 @@ const DateDetails = ({ navigation, route }) => {
         setUserDateDetails(dateDetails)
     }, [dateDetails])
 
-    // useFocusEffect(
-    // React.useCallback(() => {
-    // if (route.params.DATA.from === 'Dates') {
-    // console.log("Cmdsnfksknzxkvksdai :", From);
-    // setUserDateDetails2(router.DateDetails);
-    // }else if(route.params.DATA.from === 'UpdateDate'){
-    // console.log("Coming from update :", route.params.DATA.from);
-    // setUserDateDetails2(UD)
-    // }
-    // }, [])
-    // );
-
-    const [updateDate, setUpdateDate] = useState('');
-
-    console.log("Date updated data is :", updateDate.data);
+   
     console.log("Data from previous screen is :", UserDateDetails);
+    const getDetails = async () => {
+        try {
+            const user = await AsyncStorage.getItem("USER")
+            if (user) {
+                console.log('trying to get date', router.dateDetails.id)
+                let d = JSON.parse(user)
+
+                const result = await fetch(ApisPath.ApiGetDateDetails + `?dateId=${router.dateDetails.id}`, {
+                    method: 'get',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + d.token
+                    }
+                })
+                if (result) {
+                    let json = await result.json()
+                    if (json.status === true) {
+                        console.log('date details are', json.data)
+                        setUserDateDetails(json.data)
+                        setDateDetails(json.data)
+                        
+                    } else {
+                        console.log('date details message is', json.message)
+                    }
+                }
+
+            }
+        } catch (e) {
+            console.log(' get date detainl error ', e)
+        }
+    }
 
     const handleModalclick = () => {
         setOpenModal(true);
@@ -138,6 +161,38 @@ const DateDetails = ({ navigation, route }) => {
         }
         return time;
     };
+
+    const getDuration = (date) => {
+        console.log('given date is', date)
+        const currentDate = moment()
+        console.log('current data is', currentDate)
+
+        const duration = moment.duration(currentDate.diff(date));
+
+        const months = duration.months();
+        const days = duration.days();
+        const hours = duration.hours();
+        const minutes = duration.minutes();
+
+        let difference;
+
+        if (months > 0) {
+            difference = `${months} months ago`;
+        } else if (days > 0) {
+            difference = `${days} days ago`;
+        } else if (hours > 0) {
+            difference = `${hours} hours ago`;
+        } else if (minutes > 0) {
+            difference = `${minutes} minutes ago`;
+        } else {
+            difference = 'Just now';
+        }
+
+        console.log(`Difference: ${difference}`);
+
+        return difference
+
+    }
     return (
         <SafeAreaView>
             <View style={{ display: 'flex', alignItems: 'center', height: height }}>
@@ -157,8 +212,10 @@ const DateDetails = ({ navigation, route }) => {
                                             <Image source={require('../../../../assets/Images3/backIcon.png')} style={{ height: 12, width: 6, resizeMode: 'contain' }} />
                                         </View>
                                     </TouchableOpacity>
-                                    <Text style={{ fontWeight: '500', fontSize: 22, fontFamily: customFonts.meduim }}>
-                                        {dateDetails.name}
+                                    <Text style={{
+                                        fontWeight: '500', fontSize: 22, fontFamily: customFonts.meduim, width: 270 / 430 * width,
+                                    }}>
+                                        {dateDetails&&dateDetails.name}
                                     </Text>
                                 </View>
                                 <TouchableOpacity onPress={handleModalclick} style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -168,20 +225,20 @@ const DateDetails = ({ navigation, route }) => {
 
                             <View style={{ marginTop: 20 }}>
                                 <Image
-                                    source={dateDetails.imageUrl ? { uri: dateDetails.imageUrl } :
+                                    source={dateDetails&&dateDetails.imageUrl ? { uri: dateDetails.imageUrl } :
                                         require('../../../../assets/Images3/imagePlaceholder.webp')}
                                     style={{
                                         height: 240 / 930 * height, width: 370 / 430 * width, borderRadius: 10, resizeMode: 'cover'
                                     }} />
                             </View>
-                      
+
                             <View style={{ marginTop: 25, flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View>
                                     <Text style={styles.Budget}>
                                         Budget
                                     </Text>
                                     <Text style={[styles.RatingsValue, { textAlign: 'start' }]}>
-                                        {GetBudget(dateDetails)}
+                                        {dateDetails&&GetBudget(dateDetails)}
                                     </Text>
                                 </View>
                                 <View>
@@ -189,7 +246,7 @@ const DateDetails = ({ navigation, route }) => {
                                         Category
                                     </Text>
                                     <Text style={styles.RatingsValue}>
-                                        {dateDetails.Category ? dateDetails.Category.name : ""}
+                                        {dateDetails&&dateDetails.Category ? dateDetails.Category.name : ""}
                                     </Text>
                                 </View>
                                 <View>
@@ -198,9 +255,9 @@ const DateDetails = ({ navigation, route }) => {
                                     </Text>
                                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
                                         <Image source={require('../../../../assets/Images3/RatingStar.png')} style={{ height: 18, width: 17, resizeMode: 'contain' }} />
-                                        {dateDetails.ratings ?
+                                        {dateDetails&&dateDetails.ratings ?
                                             <Text style={[styles.RatingsValue, { height: 22 }]}>
-                                                {dateDetails.rating}
+                                                {dateDetails&&dateDetails.rating}
                                             </Text> :
                                             <Text style={[styles.RatingsValue, { height: 22 }]}>
                                                 0
@@ -214,72 +271,115 @@ const DateDetails = ({ navigation, route }) => {
                                 Hours of operation
                             </Text>
                             <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, color: '#333333' }}>
-                            {formatTime(dateDetails.openTime)} - {formatTime(dateDetails.closeTime)}            
+                                {formatTime(dateDetails&&dateDetails.openTime)} - {formatTime(dateDetails&&dateDetails.closeTime)}
                             </Text>
                             <Text style={{ fontWeight: '400', fontSize: 12, fontFamily: customFonts.regular, color: '#333333', marginTop: 8 }}>
                                 Description
                             </Text>
                             <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, color: '#333333', marginTop: 3 }}>
-                                {dateDetails.description}
+                                {dateDetails&&dateDetails.description}
                             </Text>
                             <Text style={{ fontWeight: '500', fontSize: 20, fontFamily: customFonts.meduim, marginTop: 10 }}>
                                 Reviews
                             </Text>
-                            <Text style={{ fontWeight: '400', fontSize: 12, fontFamily: customFonts.meduim }}>
-                                108+Ratings . 10 Reviews
-                            </Text>
+                            {
+                               dateDetails&& dateDetails.reviews&& dateDetails.reviews.length > 0 ? (
+                                    <>
+                                        <Text style={{ fontSize: 12, fontFamily: customFonts.regular, marginTop: 5 / 930 * height }}>
+                                            108+Ratings . {dateDetails.totalReviews} Reviews
+                                        </Text>
 
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20, marginTop: 10 }}>
-                                <View style={{ borderRadius: 8, width: 73 / 430 * width, borderWidth: 1, borderColor: '#66666660', justifyContent: 'center', alignItems: 'center' }}>
-                                    <View style={{ alignItems: 'center' }}>
-                                        <AnimatedCircularProgress
-                                            size={50}
-                                            width={8}
-                                            fill={10}
-                                            lineCap='round'
-                                            tintColor="#E9C600"
-                                            backgroundColor="#D7D7D7"
-                                            rotation={40 - 180}
-                                            arcSweepAngle={460 - 180}
-                                        // rotation={33-180}
-                                        // arcSweepAngle={480-180}
+                                        <ScrollView
+                                            horizontal
+                                            showsHorizontalScrollIndicator={false}
                                         >
-                                            {
-                                                () => (
-                                                    <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>
-                                                        4.8
-                                                    </Text>
-                                                )
-                                            }
-                                        </AnimatedCircularProgress>
-                                    </View>
-                                    <View style={{ alignItems: 'center', position: 'absolute', top: 90 }}>
-                                        <Image source={require('../../../../assets/Images3/RatingStar.png')} style={{ height: 16, width: 15, resizeMode: 'contain' }} />
-                                    </View>
-                                </View>
-                                <View style={{ padding: 16, width: 288 / 430 * width, borderRadius: 10, borderWidth: 1, borderColor: '#66666660' }}>
-                                    <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
-                                        <Image source={require('../../../../assets/Images3/olivia.png')} style={{ height: 46, width: 46, borderRadius: 50, resizeMode: 'contain' }} />
-                                        <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, color: '#333333' }}>
-                                            Olivia Williams
+                                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15, marginTop: 22 / 930 * height }}>
+                                                <View style={{
+                                                    paddingHorizontal: 16, height: 198 / 930 * height, borderRadius: 10, borderWidth: 1, borderColor: colors.greyText,
+                                                    alignItems: 'center', justifyContent: 'center'
+                                                }}>
+
+                                                    <AnimatedCircularProgress
+                                                        size={50}
+                                                        width={8}
+                                                        fill={dateDetails.rating * 20}
+                                                        lineCap='round'
+                                                        tintColor="#E9C600"
+                                                        backgroundColor="#D7D7D7"
+                                                        rotation={40 - 180}
+                                                        arcSweepAngle={460 - 180}
+                                                    // rotation={33-180}
+                                                    // arcSweepAngle={480-180}
+                                                    >
+                                                        {
+                                                            () => (
+                                                                <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>
+                                                                    {dateDetails.rating}
+                                                                </Text>
+                                                            )
+                                                        }
+                                                    </AnimatedCircularProgress>
+                                                    <Image source={require('../../../../assets/images/star.png')}
+                                                        style={{
+                                                            height: 13, width: 13, resizeMode: 'contain', tintColor: '#E9C600',
+                                                            position: 'relative', bottom: 17 / 930 * height
+                                                        }}
+                                                    />
+                                                    <Text style={{ fontSize: 10, fontFamily: customFonts.regular }}>of 5 stars</Text>
+                                                </View>
+                                                {
+                                                    dateDetails&&dateDetails.reviews&&dateDetails.reviews.length > 0 && (
+                                                        dateDetails&&dateDetails.reviews.map((item) => (
+                                                            <View style={{
+                                                                paddingHorizontal: 16 / 430 * width, borderRadius: 10, borderWidth: 1, borderColor: colors.greyText,
+                                                                alignItems: 'flex-start', paddingVertical: 16 / 930 * height, flexDirection: 'column', gap: 8,
+                                                                height: 195 / 930 * height
+                                                            }}>
+                                                                <View style={{ flexDirection: 'row', alignItems: 'center', width: 230 / 430 * width, gap: 12 }}>
+                                                                    <Image source={{ uri: item.user.profile_image }}
+                                                                        style={{ height: 46 / 930 * height, width: 46 / 930 * height, borderRadius: 25 }}
+                                                                    />
+                                                                    <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>
+                                                                        {item.user.first_name} {item.user.last_name}
+                                                                    </Text>
+                                                                </View>
+                                                                <View style={{ flexDirection: 'row', alignItems: 'center', width: 230 / 430 * width, gap: 10 }}>
+
+                                                                    <StarRatingDisplay
+                                                                        starSize={18}
+                                                                        color='#FFC403'
+                                                                        rating={item.rating}
+
+                                                                    />
+
+                                                                    <Text style={{ fontSize: 12, fontFamily: customFonts.regular, color: '#666666' }}>
+                                                                        {getDuration(item.createdAt)} ago
+                                                                    </Text>
+                                                                </View>
+                                                                <Text numberOfLines={4}
+                                                                    style={{ fontSize: 14 / 930 * height, fontFamily: customFonts.regular, width: 230 / 430 * width }}>
+                                                                    {item.review}
+                                                                </Text>
+
+                                                            </View>
+                                                        ))
+                                                    )
+                                                }
+
+                                            </View>
+                                        </ScrollView>
+                                    </>
+                                ) : (
+                                    <View style={{ height: 180 / 930 * height }}>
+                                        <Text style={{ marginTop: 10, fontSize: 14, fontFamily: customFonts.regular, }}>
+                                            No reviews
                                         </Text>
                                     </View>
-                                    <View style={{ flexDirection: 'row', gap: 3, marginTop: 8 }}>
-                                        <Image source={require('../../../../assets/Images3/RatingStar.png')} style={{ height: 14, width: 13, resizeMode: 'contain' }} />
-                                        <Image source={require('../../../../assets/Images3/RatingStar.png')} style={{ height: 14, width: 13, resizeMode: 'contain' }} />
-                                        <Image source={require('../../../../assets/Images3/RatingStar.png')} style={{ height: 14, width: 13, resizeMode: 'contain' }} />
-                                        <Image source={require('../../../../assets/Images3/RatingStar.png')} style={{ height: 14, width: 13, resizeMode: 'contain' }} />
-                                        <Image source={require('../../../../assets/Images3/RatingStar.png')} style={{ height: 14, width: 13, resizeMode: 'contain' }} />
-                                        <Text style={{ fontWeight: '400', fontSize: 12, fontFamily: customFonts.regular, color: '#666666' }}>
-                                            2 days ago
-                                        </Text>
-                                    </View>
-                                    <Text style={{ fontWeight: '400', fontSize: 13, fontFamily: customFonts.regular, color: '#333333' }}>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor.
-                                    </Text>
-                                </View>
-                            </View>
+                                )
+                            }
+
                         </ScrollView>
+
                     </View>
 
                     <View style={{ display: 'flex', }}>

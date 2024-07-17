@@ -64,7 +64,7 @@ export default function SelectedProfile({ navigation, route }) {
                     console.log('respone is', response)
                     if (response) {
                         const Result = await response.json();
-                        console.log("Apis response is :", Result.data.email);
+                        console.log("Apis response is :", Result.data);
                         if (Result.status === true) {
                            setUser(Result.data)
                             console.log('user media is ', Result.data)
@@ -388,7 +388,7 @@ export default function SelectedProfile({ navigation, route }) {
                                             {
                                                 item.type === "image" ? (
                                                     <>
-                                                        <Image source={{ uri: item.thumb_url?thumb_url:item.url }}
+                                                        <Image source={{ uri: item.thumb_url?item.thumb_url:item.url }}
                                                             onLoadStart={() => {
                                                                 setLoadImage2(true)
                                                             }}

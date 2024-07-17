@@ -21,7 +21,7 @@ const UserProfileDetails = ({ navigation, route }) => {
     const UserId = route.params.DATA
 
     console.log("User id passed is :", UserId.UserDetails);
-    const ID = UserId.UserDetails;
+    const ID = UserId.UserDetails.id;
 
     const [ProfileData, setProfileData] = useState('');
     const [UserMedia, setUserMedia] = useState([]);
@@ -60,7 +60,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                     console.log('respone is', response)
                     if (response) {
                         const Result = await response.json();
-                        console.log("Apis response is :", Result.data.email);
+                        console.log("Apis response is :", Result.data);
                         if (Result.status === true) {
                             setProfileData(Result.data);
                             setUserMedia(Result.data.media);
@@ -212,6 +212,21 @@ const UserProfileDetails = ({ navigation, route }) => {
         }
     }
 
+    const getSubscriptionPlan = () => {
+        let sub = ProfileData.subscription
+        if (sub && sub.isSubscribed === true) {
+            if (sub.subscriptionDetails.plan === "WeeklySubsciptionSoulmatch0623") {
+                return "Weelky"
+            } else if (sub.subscriptionDetails.plan === "MonthlySubsciptionSoulmatch0623") {
+                return "Monthly"
+            } else if (sub.subscriptionDetails.plan === "YearlySubsciptionSoulmatch0623") {
+                return "Yearly"
+            }
+        } else {
+            return "N/A"
+        }
+    }
+
     return (
         <SafeAreaView>
             <View style={{ display: 'flex', alignItems: 'center' }}>
@@ -288,6 +303,15 @@ const UserProfileDetails = ({ navigation, route }) => {
                                 />
                                 <Text style={styles.viewText}>
                                     {ProfileData.email}
+                                </Text>
+                            </View>
+
+                            <View style={[styles.viewStyle, { marginTop: 5 }]}>
+                                <Image source={require('../../../../assets/images/crown.png')}
+                                    style={styles.viewImage}
+                                />
+                                <Text style={styles.viewText}>
+                                    {getSubscriptionPlan()}
                                 </Text>
                             </View>
 
@@ -410,13 +434,19 @@ const UserProfileDetails = ({ navigation, route }) => {
                                                                             contentFit="cover"
                                                                             transition={1000}
                                                                         />
-                                                                        <Image source={require('../../../../assets/images/playIcon.png')}
-                                                                            style={{ height: 50, width: 50, position: 'absolute', bottom: 100 / 930 * height, left: 150 / 430 * width }}
-                                                                        />
+                                                                        {
+                                                                            !loadVideo && (
+                                                                                <Image source={require('../../../../assets/images/playIcon.png')}
+                                                                                    style={{ height: 50, width: 50, position: 'absolute', bottom: 100 / 930 * height, left: 150 / 430 * width }}
+                                                                                />
+                                                                            )
+                                                                        }
+
                                                                     </TouchableOpacity>
                                                                     {
                                                                         loadVideo ? (
-                                                                            <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 180 / 430 * width }} />
+                                                                            <ActivityIndicator size={'small'} color={colors.blueColor}
+                                                                                style={{ position: 'absolute', bottom: 120, left: 180 / 430 * width }} />
                                                                         ) : <></>
                                                                     }
                                                                 </>
