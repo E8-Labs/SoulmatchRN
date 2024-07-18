@@ -165,10 +165,10 @@ export default function DatesFilterPopup({ visible, close, closeWithouFilters, f
         // }
         setCity(null)
         setState(null)
-        setStartRat(0)
-        setEndRat(100)
-        setMinBudget('')
-        setMaxBudget('')
+        setStartRat(null)
+        setEndRat(null)
+        setMinBudget(null)
+        setMaxBudget(null)
         setselectedCat(-1)
         setselected('')
         // close(filters)
@@ -181,8 +181,8 @@ export default function DatesFilterPopup({ visible, close, closeWithouFilters, f
         let filters = {
             minBudget: minBudget,
             maxBudget: maxBudget,
-            minRating: Math.round(startRat / 20) || 0,
-            maxRating: Math.round(endRat / 20) || 5,
+            minRating: Math.round(startRat / 20) || null,
+            maxRating: Math.round(endRat / 20) || null,
             category: selectedCat,
             budget: selected,
             city: city,

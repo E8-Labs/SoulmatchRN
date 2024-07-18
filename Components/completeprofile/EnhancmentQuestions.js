@@ -424,11 +424,13 @@ const EnhancmentQuestions = ({ navigation, route }) => {
                                 data={userAnswers}
                                 renderItem={({ item }) => (
                                     <View style={{ width: 370 / 430 * width, borderWidth: 1, borderColor: '#E6E6E6', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 30 / 930 * height, borderRadius: 10, padding: 12 }}>
-                                        <View style={{ height: 105 / 930 * height, width: 345 / 430 * width, marginBottom: 9 / 930 * height }}>
+                                        <View style={{ height: 105 / 930 * height, width: 345 / 430 * width, marginBottom: 9 / 930 * height,gap:5 }}>
                                             <TouchableOpacity
                                                 onPress={() => {
                                                     if(hasAnswer(item)){
                                                         setShowAlert(item)
+                                                    }else{
+                                                        setOpenModal(item)
                                                     }
                                                    
                                                 }}
@@ -534,7 +536,9 @@ const EnhancmentQuestions = ({ navigation, route }) => {
                 >
                     <View style={{ height: height, width: width, backgroundColor: '#00000050', alignItems: 'center', padding: 20, justifyContent: 'center' }}>
                         <View style={{ width: width - 40, height: 200, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff', borderRadius: 10, }}>
-                            <Text style = {{fontSize:20,fontFamily:customFonts.meduim,textAlign:'center'}}>Are you sure you want to delete answer</Text>
+                            <Text style = {{fontSize:16,fontFamily:customFonts.meduim,textAlign:'center'}}>
+                                Are you sure you want to delete answer ?
+                            </Text>
                             <View style={{
                                 width: width - 70, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
                                 marginTop: 50
@@ -571,7 +575,7 @@ const EnhancmentQuestions = ({ navigation, route }) => {
                 <Modal
                     transparent={true}
                     visible={OpenModal !== null}
-                    animationType='fade'
+                    animationType='slide'
                     onRequestClose={() => closeModal()}
                 >
                     <TouchableWithoutFeedback style={{ height: height, }} onPress={() => Keyboard.dismiss()}>

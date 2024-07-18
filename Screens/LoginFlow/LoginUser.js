@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {
     View, Text, Dimensions, TextInput, TouchableOpacity, SafeAreaView, Keyboard, KeyboardAvoidingView,
-    TouchableWithoutFeedback, Platform,ActivityIndicator
+    TouchableWithoutFeedback, Platform, ActivityIndicator
 } from 'react-native';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
@@ -23,7 +23,7 @@ const eyeslash = require('../../assets/images/eye-slash.png')
 export default function LoginUser(props) {
 
 
-    
+
 
     const [selected, setSelected] = useState(false);
     const [email, setEmail] = useState("");
@@ -35,13 +35,12 @@ export default function LoginUser(props) {
     const [indicator, setIndicator] = useState(false);
     const [indicator1, setIndicator1] = useState(false);
 
-    const [firstName,setFistName] = useState('')
-    const [lastName,setLastName] = useState('')
+    const [firstName, setFistName] = useState('')
+    const [lastName, setLastName] = useState('')
 
 
     GoogleSignin.configure({
         iosClientId: '532960006063-0lrmd4ktecke70t7ncjr2v7vapt230h6.apps.googleusercontent.com',
-        // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
     });
 
     const getBtnColor = () => {
@@ -88,7 +87,11 @@ export default function LoginUser(props) {
                         }
 
                     } else if (json.message === 'User registered') {
-                        props.navigation.navigate("UploadIntroVideo")
+                        props.navigation.navigate("UploadImage",{
+                            data:{
+                                from:'SocialLogin'
+                            }
+                        })
                     }
                     setIndicator1(false)
                 }
@@ -122,13 +125,13 @@ export default function LoginUser(props) {
             }
             else {
                 //get credentials here
-              let cr =  await AsyncStorage.getItem("applelogin")
+                let cr = await AsyncStorage.getItem("applelogin")
                 if (cr) {
                     credential = JSON.parse(cr)
                 }
             }
             //Call the api here
-            socialLogin({ first_name: credential.fullName.givenName,last_name: credential.fullName.familyName, email: credential.email, provider_name: "apple", provider_id: credential.user })
+            socialLogin({ first_name: credential.fullName.givenName, last_name: credential.fullName.familyName, email: credential.email, provider_name: "apple", provider_id: credential.user })
 
             console.log("Apple credentials ", credential)
         } catch (e) {
@@ -176,11 +179,15 @@ export default function LoginUser(props) {
     //     }
     // }
 
-    const getName = (fullName) =>{
-        
+    const getName = (fullName) => {
+
         const nameParts = fullName.split(' ')
-         setFistName(nameParts[0])
-         setLastName(nameParts[1])
+        // setFistName(nameParts[0])
+        // setLastName(nameParts[1])
+        if(nameParts.length > 1){
+            return {firstName: nameParts[0], lastName: nameParts[1]}
+        }
+        return {firstName: nameParts[0]}
 
     };
 
@@ -191,9 +198,10 @@ export default function LoginUser(props) {
             const userInfo = await GoogleSignin.signIn();
             console.log("user info from google", userInfo)
 
-            getName(userInfo.user.name)
-
-            socialLogin({ first_name: firstName,last_name:lastName, email: userInfo.user.email, provider_name: "google", provider_id: userInfo.user.id, profile_image: userInfo.user.photo, })
+            let name = getName(userInfo.user.name)
+            console.log("Google name is ", userInfo.user.name)
+            console.log("Name is ", name)
+            socialLogin({ first_name: name.firstName, last_name: name.lastName, email: userInfo.user.email, provider_name: "google", provider_id: userInfo.user.id, profile_image: userInfo.user.photo, })
 
             console.log("Trying to signin with google ")
 
@@ -250,12 +258,12 @@ export default function LoginUser(props) {
                             //     })
                             //     return
                             // } else if(data.status === "active") {
-                                let from = "Login"
-                                try {
-                                    await NavigateLogedUser(props.navigation, from)
-                                } catch (e) {
-                                    console.log('error finding in navigate user', e)
-                                }
+                            let from = "Login"
+                            try {
+                                await NavigateLogedUser(props.navigation, from)
+                            } catch (e) {
+                                console.log('error finding in navigate user', e)
+                            }
                             // }
 
 
@@ -322,7 +330,11 @@ export default function LoginUser(props) {
                                                 setPasswordFocused(true)
                                                 setEmailFocused(false)
                                             }}
-                                            style={{ width: 300 / 430 * width, }}
+                                            style={{
+                                                width: 300 / 430 * width, fontSize: 14,
+                                                fontWeight: '500',
+                                                fontFamily: customFonts.meduim
+                                            }}
                                             secureTextEntry={!showPassword}
                                             onChangeText={(text) => {
                                                 setPassword(text)
@@ -385,7 +397,11 @@ export default function LoginUser(props) {
                                 <View style={{ alignItems: 'center', flexDirection: 'row', gap: 5, marginTop: 35 / 924 * height }}>
                                     <Text style={GlobalStyles.LoginMeduimText}>Don't have an account?</Text>
                                     <TouchableOpacity style={{}}
-                                        onPress={() => props.navigation.navigate("UploadImage")}
+                                        onPress={() => props.navigation.navigate("UploadImage",{
+                                            data:{
+                                                from:'Login'
+                                            }
+                                        })}
                                     >
                                         <Text style={{ color: colors.blueColor, fontSize: 14, fontWeight: '500', fontFamily: customFonts.meduim }}>
                                             Sign up
@@ -405,7 +421,7 @@ export default function LoginUser(props) {
                                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 18 / 430 * width, marginTop: 50 / 924 * height }}>
                                     {
                                         indicator1 ? (
-                                            <ActivityIndicator size={'large'} color={colors.blueColor}/>
+                                            <ActivityIndicator size={'large'} color={colors.blueColor} />
                                         ) : (
                                             <TouchableOpacity onPress={GoogleLogin}>
 

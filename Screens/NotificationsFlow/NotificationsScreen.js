@@ -347,7 +347,7 @@ export default function NotificationsScreen({ navigation }) {
                     width: width - 40, flexDirection: 'row', height: 60, paddingTop: 30 / 930 * height, backgroundColor: '#fff', alignItems: 'center',
                     gap: 10,
                   }}>
-                    <Text style={{ fontSize: 14, color: '#999999' }}>{title}</Text>
+                    <Text style={{ fontSize: 14, color:colors.greyLightText ,fontFamily:customFonts.meduim}}>{title}</Text>
                     <View style={[GlobalStyles.divider, { marginTop: 0 }]}></View>
                   </View>
                   // ):null
@@ -379,8 +379,6 @@ export default function NotificationsScreen({ navigation }) {
             )
           }
         </View>
-
-
       </View>
     </SafeAreaView>
   )

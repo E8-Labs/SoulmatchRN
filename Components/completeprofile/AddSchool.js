@@ -24,6 +24,10 @@ const AddSchool = ({ navigation, route }) => {
     }, [])
 
     const handleNext = async () => {
+        if(!school){
+            setError("Enter school name")
+            return
+        }
         setLoading(true)
         let body = JSON.stringify({
             school: school

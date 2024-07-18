@@ -256,6 +256,16 @@ export default function ProfileDetail(props) {
     };
 
 
+    const getHeightInches = () => {
+        if (data[currentIndex] && data[currentIndex].height_inches % 12 > 0) {
+            let inches = data[currentIndex] && data[currentIndex].height_inches % 12 + " inches"
+            return inches
+        } else {
+            return ""
+        }
+    }
+
+
     useEffect(() => {
         console.log("Model opened ", commentedAnswer)
     }, [commentedAnswer])
@@ -486,7 +496,7 @@ export default function ProfileDetail(props) {
                                                         style={styles.viewImage}
                                                     />
                                                     <Text style={styles.viewText}>
-                                                        {data[currentIndex] ? ((data[currentIndex].height_feet * 12 + data[currentIndex].height_inches) * 2.54) : 0} cm</Text>
+                                                    {data[currentIndex]&&data[currentIndex].height_feet} feets {getHeightInches()}                                                    </Text>
                                                 </View>
                                                 <View style={styles.viewStyle}>
                                                     <Image source={require('../../assets/images/location.png')}

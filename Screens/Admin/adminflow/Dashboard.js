@@ -412,12 +412,13 @@ const Dashboard = ({ navigation }) => {
                                     <View style={{ width: 370 / 430 * width, borderWidth: 1, borderColor: '#00000020', borderRadius: 10, marginTop: 35, flexDirection: 'column', justifyContent: 'center', padding: 10 }}>
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 40 }}>
                                             <Text style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.meduim }}>
-                                                Subscription
+                                                Subscriptions
                                             </Text>
                                             <Dropdown
                                                 style={styles.dropdown}
                                                 selectedTextStyle={styles.selectedTextStyle}
                                                 placeholderStyle={styles.placeholderStyle}
+                                                itemTextStyle = {{fontSize:14}}
                                                 //   imageStyle={styles.imageStyle}
                                                 iconStyle={styles.iconStyle}
                                                 maxHeight={200}
@@ -496,9 +497,10 @@ const Dashboard = ({ navigation }) => {
                                             <View style={{ gap: 5, flexDirection: 'row' }}>
                                                 {/*add dropdown*/}
                                                 <Dropdown
-                                                    style={[styles.dropdown, { width: 120 / 430 * width }]}
+                                                    style={[styles.dropdown, { width: 130 / 430 * width }]}
                                                     selectedTextStyle={styles.selectedTextStyle}
                                                     placeholderStyle={styles.placeholderStyle}
+                                                    itemTextStyle={{ fontSize: 14 }}
                                                     //   imageStyle={styles.imageStyle}
                                                     iconStyle={styles.iconStyle}
                                                     maxHeight={200}
@@ -507,7 +509,7 @@ const Dashboard = ({ navigation }) => {
                                                     valueField="value"
                                                     labelField="lable"
                                                     //   imageField="image"
-                                                    placeholder="Select country"
+                                                    placeholder=""
                                                     //   searchPlaceholder="Search..."
                                                     onChange={e => {
                                                         setBoostRev(e.value);
@@ -519,6 +521,7 @@ const Dashboard = ({ navigation }) => {
                                                         <Dropdown
                                                             style={styles.dropdown}
                                                             selectedTextStyle={styles.selectedTextStyle}
+                                                            itemTextStyle={{ fontSize: 14 }}
                                                             placeholderStyle={styles.placeholderStyle}
                                                             //   imageStyle={styles.imageStyle}
                                                             iconStyle={styles.iconStyle}
@@ -594,13 +597,13 @@ const Dashboard = ({ navigation }) => {
                                     </View>
                                 </View>
 
-                                <Text style={{ fontSize: 18, fontWeight: '500', fontFamily: customFonts.meduim }}>
+                                <Text style={{ fontSize: 18, fontWeight: '500', fontFamily: customFonts.meduim,marginTop:22,marginBottom:22 }}>
                                     Users
                                 </Text>
 
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between',width:width-60,alignItems:'center' }}>
                                     <View style={{ height: 79 / 930 * height, width: 175 / 430 * width, borderWidth: 1, justifyContent: 'center', alignItems: 'center', borderColor: '#E6E6E6', borderRadius: 16 }}>
-                                        <View style={{ flexDirection: 'row', gap: 10, width: 165 / 430 * width }}>
+                                        <View style={{ flexDirection: 'row', gap: 10, width: 165 / 430 * width,paddingHorizontal:8 }}>
                                             <View style={{ height: 45, width: 45, borderRadius: 50, backgroundColor: '#F1BB081A', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                                 <Image source={require('../../../assets/Images3/crown2.png')} style={{ height: 24 / 930 * height, width: 24 / 430 * width }} />
                                             </View>
@@ -626,7 +629,7 @@ const Dashboard = ({ navigation }) => {
 
                                     {/* Code for users ratio */}
                                     <View style={{ height: 79 / 930 * height, width: 175 / 430 * width, borderWidth: 1, justifyContent: 'center', alignItems: 'center', borderColor: '#E6E6E6', borderRadius: 16 }}>
-                                        <View style={{ flexDirection: 'row', gap: 10, width: 165 / 430 * width }}>
+                                        <View style={{ flexDirection: 'row', gap: 10, width: 165 / 430 * width ,paddingHorizontal:8}}>
                                             <View style={{ height: 45, width: 45, borderRadius: 50, backgroundColor: '#E6E6E6', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                                 <Image source={require('../../../assets/Images3/happyemoji.png')} style={{ height: 24 / 930 * height, width: 24 / 430 * width }} />
                                             </View>
@@ -683,6 +686,7 @@ const Dashboard = ({ navigation }) => {
                                                     style={styles.dropdown}
                                                     selectedTextStyle={styles.selectedTextStyle}
                                                     placeholderStyle={styles.placeholderStyle}
+                                                    itemTextStyle = {{fontSize:14}}
                                                     //   imageStyle={styles.imageStyle}
                                                     iconStyle={styles.iconStyle}
                                                     maxHeight={200}
@@ -873,9 +877,9 @@ const styles = StyleSheet.create({
     //     color: 'red'
     // },
     selectedTextStyle: {
-        fontSize: 13,
+        fontSize: 14,
         fontWeight: '500',
-        fontFamily: customFonts.meduim
+        fontFamily: customFonts.regular
         // marginLeft: 8,
         // backgroundColor: 'red'
     },

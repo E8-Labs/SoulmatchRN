@@ -120,7 +120,7 @@ const AddName = ({ navigation, route }) => {
                         <Text style={{ fontWeight: '500', fontSize: 16, color: '#333333', marginTop: 40 / 930 * height }}>
                             First name
                         </Text>
-                        <TextInput placeholder='Enter first name'
+                        <TextInput placeholder='Ex. Sarah'
                             onFocus={handleInputfocus1}
                             autoCorrect={false} spellCheck={false}
                             onChangeText={handleSave1}
@@ -144,7 +144,7 @@ const AddName = ({ navigation, route }) => {
                         {/* Adjusting code for next button */}
                         <View style={{ display: 'flex', height: marginTop, flexDirection: 'column', justifyContent: 'space-between' }}>
                             <View>
-                                <TextInput placeholder='Enter last name'
+                                <TextInput placeholder='Ex. Doe'
                                     autoCorrect={false} spellCheck={false}
                                     onFocus={handleInputfocus2}
                                     onChangeText={handleSave2}

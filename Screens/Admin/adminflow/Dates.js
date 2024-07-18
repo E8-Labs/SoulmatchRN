@@ -394,14 +394,14 @@ const Dates = ({ navigation }) => {
     return (
         <View style={{ display: 'flex', alignItems: 'center', height: height }}>
             {/*change if the screen is irResponsive height: height s*/}
-            <View style={{ width: width - 50,alignItems:'center' }}>
+            <View style={{ width: width - 50, alignItems: 'center' }}>
                 <StatusBar
                     barStyle="dark-content"
                     backgroundColor="#FFFFFF"
                     translucent={false}
                 />
                 {/* Header code */}
-                <View style={{width:width-50, flexDirection: 'row', justifyContent: 'space-between', marginTop: 60 }}>
+                <View style={{ width: width - 50, flexDirection: 'row', justifyContent: 'space-between', marginTop: 60, alignItems: 'center' }}>
                     <Text style={[styles.header, { fontWeight: '500', fontSize: 24, fontFamily: customFonts.meduim }]}>
                         Dates
                     </Text>
@@ -418,7 +418,7 @@ const Dates = ({ navigation }) => {
                 {/* Search bar */}
                 <View style={{
                     flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 10 / 930 * height, paddingHorizontal: 10 / 430 * width,
-                    borderWidth: 1, borderRadius: 10, gap: 10, backgroundColor: '#ffffff', borderColor: '#E6E6E6', marginTop: 20
+                    borderWidth: 1, borderRadius: 10, gap: 10, backgroundColor: '#ffffff', borderColor: '#E6E6E6', marginTop: 20, width: width - 50
                 }}>
                     <TouchableOpacity onPress={inputReference} style={{ width: 30 / 430 * width, height: 30 / 930 * height, alignItems: 'center', justifyContent: 'center' }}>
                         <Image source={require('../../../assets/Images3/searchIcon.png')}
@@ -446,7 +446,9 @@ const Dates = ({ navigation }) => {
                     <ScrollView
                         style={{ height: height - 300, marginTop: 30 }}
                         showsVerticalScrollIndicator={false} >
-                        <View style={{ flexDirection: 'row', flexWrap: 'wrap', display: 'flex', justifyContent: 'space-between', marginBottom: 30 }}>
+                        <View style={{
+                            flexDirection: 'row', flexWrap: 'wrap', display: 'flex', justifyContent: 'space-between', marginBottom: 30, width: width - 50, alignItems: 'flex-start'
+                        }}>
                             {DATA.map((item, index) => (
                                 <TouchableOpacity onPress={() => handleDateDetails(item, index)} key={item.id} style={{ marginTop: 10 }}>
                                     <View style={{ borderWidth: 1, borderColor: '#E6E6E6', borderRadius: 10, padding: 12, width: 176 / 430 * width }}>
@@ -465,6 +467,7 @@ const Dates = ({ navigation }) => {
                                                 }}>
                                                 {/* ${item.minBudget} - ${item.maxBudget} */}
                                                 {GetBudget(item)}
+                                                {/* {GetBudgetVal(item)} */}
                                             </Text>
                                         </View>
                                         <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>

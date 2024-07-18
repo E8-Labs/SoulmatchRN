@@ -16,9 +16,12 @@ export const NavigateLogedUser = async (navigation, from) => {
     console.log('u is', u)
     let data = u
     
-    console.log('user status is', data.status)
+    if(!u){
+      navigation.navigate("LoginUser")
+    }
     // return
-    if ( typeof data.role !== undefined && data.role === 'admin') {
+    else if ( typeof data.role !== undefined && data.role === 'admin') {
+      console.log('user status is', data.status)
       navigation.replace("AdminTabBarContainer", {
         data: {
           from: from
@@ -178,7 +181,7 @@ export const NavigateLogedUser = async (navigation, from) => {
         try {
           const customerInfo = await Purchases.getCustomerInfo();
           console.log("Customer on splash ", customerInfo.entitlements.active["premium"])
-          if (typeof customerInfo.entitlements.active["premium"] === "undefined") {
+          if (typeof customerInfo.entitlements.active["premium"] != "undefined") {
             console.log("User subscribed to plan ", customerInfo.entitlements.active["premium"]);
             navigation.reset({
               index: 0,

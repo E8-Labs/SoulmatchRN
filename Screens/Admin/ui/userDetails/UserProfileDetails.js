@@ -343,7 +343,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                                 <Image source={require('../../../../assets/Images3/teacher.png')}
                                     style={styles.viewImage}
                                 />
-                                <Text style={styles.viewTe4xt}>
+                                <Text style={styles.viewText}>
                                     {ProfileData.school}
                                 </Text>
                             </View>
@@ -361,7 +361,7 @@ const UserProfileDetails = ({ navigation, route }) => {
 
                             <View style={styles.viewStyle}>
                                 {/* Add zodiac icon here */}
-                                <Image source={require('../../../../assets/Images3/RatingStar.png')}
+                                <Image source={require('../../../../assets/images/rankingStar.png')}
                                     style={styles.viewImage}
                                 />
                                 <Text style={styles.viewText}>

@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar'
 import React, { useEffect, useState } from 'react'
-import { Alert, View, Text, Dimensions, Modal, Keyboard, Platform, TouchableWithoutFeedback, TouchableOpacity, TextInput, StyleSheet, ScrollView, ActivityIndicator } from 'react-native'
+import { Alert, View, Text, Dimensions, Modal, Keyboard, Platform, TouchableWithoutFeedback, TouchableOpacity, TextInput, StyleSheet, ScrollView, ActivityIndicator, SafeAreaView } from 'react-native'
 import { Image } from 'expo-image'
 import customFonts from '../../../../assets/fonts/Fonts'
 import { Dropdown } from 'react-native-element-dropdown'
@@ -31,11 +31,12 @@ const AddDate = ({ navigation, route }) => {
     const [Address, setAddress] = useState('');
     const [Description, setDescription] = useState('');
     const [ApiCategories, setApiCategories] = useState([]);
-    const [Category, setCategory] = useState('Select category');
+    const [Category, setCategory] = useState('Select business category');
     const [testCat, setTestCat] = useState('');
-    const [CategoryName, setCategoryName] = useState('Select category');
+    const [CategoryName, setCategoryName] = useState('Select business category');
     const [CategoryId, setCategoryId] = useState('');
     const [MinBudget, setMinBudget] = useState('');
+    console.log('Min budget value is :', MinBudget);
     const [MaxBudget, setMaxBudget] = useState('');
     const [Budget, setBudget] = useState('Select budget');
     const [image, setImage] = useState(null);
@@ -43,12 +44,7 @@ const AddDate = ({ navigation, route }) => {
     const [longitude, setlongitude] = useState('');
     const [CityName, setCityName] = useState('');
     const [longAddress, setLongAddress] = useState('');
-    //test code
-    const [country, setCountry] = useState('');
-    const [street, setStreet] = useState('');
-    const [userRoute, setUserRoute] = useState('');
-    const [postalCode, setostalCode] = useState('');
-    //test code ends here
+
     const [StateName, setStateName] = useState('');
     const [Loading, setLoading] = useState(false);
     const [DateOpenTime, setDateOpenTime] = useState('');
@@ -65,25 +61,11 @@ const AddDate = ({ navigation, route }) => {
     const [SelCloseTime, setSelCloseTime] = useState(null);
     const [filters, setFilters] = useState({})
     const [openModalLocation, setOpenModalLocation] = useState(false);
-
-    // console.log("Latitude is :", latitude);
-    // console.log("Longitude is :", longitude);
-    // console.log("Image is :", image);
-    // console.log("MaxBudget is :", MaxBudget);
-    // console.log("MinBudget is :", MinBudget);
-    // console.log('Long address of user is :', longAddress);
-    // useEffect(() => {
-    // const updateCategory = () => {
-    // setCategoryId(Category.value)
-    // setCategoryName(Category.label)
-    // }
-    // }, [Category])
-
+    const [activeKeyboard, setActiveKeyboard] = useState(false);
 
     useEffect(() => {
         if (routeData.from === "EditDate") {
-            // console.log("Date Data is :", DateData);
-            // let DateData = routeData.UserDateDetails
+
             setBusinessName(DateData.name);
             setCategoryId(DateData.Category.id);
             setCategory(DateData.Category.id);
@@ -104,7 +86,7 @@ const AddDate = ({ navigation, route }) => {
             setlongitude(DateData.longitude);
             let openTime = formatTimeWithDate(DateData.openTime)
             let closeTime = formatTimeWithDate(DateData.closeTime)
-            
+
             setDate(new Date(openTime))
             setDate2(new Date(closeTime))
         }
@@ -120,12 +102,12 @@ const AddDate = ({ navigation, route }) => {
         const currentDate = moment();
         // Combine current date with provided time string
         const combinedDateTime = moment(currentDate.format('YYYY-MM-DD') + ' ' + timeString, 'YYYY-MM-DD h:mm A');
-    
+
         // Format the combined datetime in ISO format
         const formattedDateTime = combinedDateTime.utc().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
-    
+
         return formattedDateTime;
-      }
+    }
 
     const handleBackClick = () => {
         navigation.pop()
@@ -190,30 +172,28 @@ const AddDate = ({ navigation, route }) => {
     ]
 
     useEffect(() => {
-        if (Budget === '$80 + = $$$$') {
+        console.log("Budget changed", Budget)
+        if (Budget.lable === '$80 + = $$$$') {
             setMinBudget(80)
             setMaxBudget(10000000)
             // console.log('Budget valus is', MinBudget)
-        } else if (Budget === '$50 - $80 = $$$') {
+        } else if (Budget.lable === '$50 - $80 = $$$') {
             setMinBudget(50)
             setMaxBudget(80)
-        } else if (Budget === '$20 - $50 = $$') {
+        } else if (Budget.lable === '$20 - $50 = $$') {
             setMinBudget(20)
             setMaxBudget(50)
-        } else if (Budget === '$0 - $20 = $') {
+        } else if (Budget.lable === '$0 - $20 = $') {
             setMinBudget(0)
             setMaxBudget(20)
         }
     }, [Budget])
 
-    useEffect(() => {
-        // console.log('Value of budget is', MinBudget)
-    }, [MinBudget])
-
+   
     //alert message
 
     const showAlert = () => {
-        if (BusinessName.length === 0 || Category === 'Select category' || Budget === 'Select budget' || Description.length === 0) {
+        if (BusinessName.length === 0 || Category === 'Select category' || Budget.lable === 'Select budget' || Description.length === 0) {
             Alert.alert(
                 'Warning', // Title of the alert
                 'Enter all credentials.', // Alert message
@@ -249,7 +229,7 @@ const AddDate = ({ navigation, route }) => {
     }
 
     const handleSaveButton = async () => {
-        if (BusinessName.length === 0 || Category === 'Select category' || Budget === 'Select budget' || Description.length === 0, !SelOpenTime || !SelCloseTime) {
+        if (BusinessName.length === 0 || Category === 'Select category' || Budget.lable === 'Select budget' || Description.length === 0, !SelOpenTime || !SelCloseTime) {
             Alert.alert('Enter all credentials')
             return
         }
@@ -340,12 +320,14 @@ const AddDate = ({ navigation, route }) => {
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
             // console.log("Keyboard show")
-            setmarginTop(-300);
+            setmarginTop(-200);
+            setActiveKeyboard(true)
         });
 
         const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
             // console.log("Keyboard hide")
             setmarginTop(0);
+            setActiveKeyboard(false)
         });
 
         return () => {
@@ -524,272 +506,277 @@ const AddDate = ({ navigation, route }) => {
 
 
     return (
-        <View style={{ alignSelf: 'center', alignItems: 'center', height: height * 0.95, marginTop: marginTop, width: width }}>
-            <View style={{ width: width - 50 }}>
-                <StatusBar
-                    barStyle="dark-content"
-                    backgroundColor="#FFFFFF"
-                    translucent={false}
-                />
-                <View style={{ marginTop: 60, flexDirection: 'row', justifyContent: 'space-between', }}>
-                    <View style={{ flexDirection: 'row', gap: 20, alignItems: 'center' }}>
-                        <TouchableOpacity onPress={handleBackClick} style={{ width: 46 / 430 * width }}>
-                            <View style={{ height: 46 / 930 * height, width: 46 / 430 * width, borderWidth: 1, borderColor: '#E6E6E6', alignItems: 'center', justifyContent: 'center', borderRadius: 6 }}>
-                                <Image source={require('../../../../assets/Images3/backIcon.png')} style={{ height: 12, width: 6, resizeMode: 'contain' }} />
-                            </View>
-                        </TouchableOpacity>
+        <SafeAreaView>
+            <View style={{ alignSelf: 'center', alignItems: 'center', height: height * 0.95, width: width }}>
+                <View style={{ width: width - 50, marginTop: marginTop, }}>
+
+                    <View style={{ marginTop: 0, flexDirection: 'row', justifyContent: 'space-between', }}>
+                        <View style={{ flexDirection: 'row', gap: 20, alignItems: 'center' }}>
+                            <TouchableOpacity onPress={handleBackClick} style={{ width: 46 / 430 * width }}>
+                                <View style={{ height: 46 / 930 * height, width: 46 / 430 * width, borderWidth: 1, borderColor: '#E6E6E6', alignItems: 'center', justifyContent: 'center', borderRadius: 6 }}>
+                                    <Image source={require('../../../../assets/Images3/backIcon.png')} style={{ height: 12, width: 6, resizeMode: 'contain' }} />
+                                </View>
+                            </TouchableOpacity>
+                            {
+                                routeData.from === "AdminDates" ? (
+                                    <Text style={{ fontWeight: '500', fontSize: 24, fontFamily: customFonts.meduim }}>
+                                        Add new date
+                                    </Text>
+                                ) : (
+                                    <Text style={{ fontWeight: '500', fontSize: 24, fontFamily: customFonts.meduim }}>
+                                        Edit
+                                    </Text>
+                                )
+                            }
+
+                        </View>
+
                         {
                             routeData.from === "AdminDates" ? (
-                                <Text style={{ fontWeight: '500', fontSize: 24, fontFamily: customFonts.meduim }}>
-                                    Add new date
-                                </Text>
+                                <View style={{ justifyContent: 'center' }}>
+                                    {
+                                        Loading ?
+                                            <ActivityIndicator size={'small'} color={colors.blueColor} /> :
+                                            <TouchableOpacity onPress={handleSaveClick} style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                                <Text style={{ fontWeight: '500', fontFamily: customFonts.meduim, fontSize: 14, color: '#6050DC' }}>
+                                                    Save
+                                                </Text>
+                                            </TouchableOpacity>
+                                    }
+                                </View>
                             ) : (
-                                <Text style={{ fontWeight: '500', fontSize: 24, fontFamily: customFonts.meduim }}>
-                                    Edit
-                                </Text>
+                                <View style={{ justifyContent: 'center' }}>
+                                    {
+                                        loading2 ?
+                                            <ActivityIndicator size={'small'} color={colors.blueColor} /> :
+                                            <TouchableOpacity onPress={handleUpdate} style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                                <Text style={{ fontWeight: '500', fontFamily: customFonts.meduim, fontSize: 14, color: '#6050DC' }}>
+                                                    Update
+                                                </Text>
+                                            </TouchableOpacity>
+                                    }
+                                </View>
                             )
                         }
 
                     </View>
 
-                    {
-                        routeData.from === "AdminDates" ? (
-                            <View style={{ justifyContent: 'center' }}>
-                                {
-                                    Loading ?
-                                        <ActivityIndicator size={'small'} color={colors.blueColor} /> :
-                                        <TouchableOpacity onPress={handleSaveClick} style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                            <Text style={{ fontWeight: '500', fontFamily: customFonts.meduim, fontSize: 14, color: '#6050DC' }}>
-                                                Save
-                                            </Text>
-                                        </TouchableOpacity>
-                                }
-                            </View>
-                        ) : (
-                            <View style={{ justifyContent: 'center' }}>
-                                {
-                                    loading2 ?
-                                        <ActivityIndicator size={'small'} color={colors.blueColor} /> :
-                                        <TouchableOpacity onPress={handleUpdate} style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                            <Text style={{ fontWeight: '500', fontFamily: customFonts.meduim, fontSize: 14, color: '#6050DC' }}>
-                                                Update
-                                            </Text>
-                                        </TouchableOpacity>
-                                }
-                            </View>
-                        )
-                    }
-
-                </View>
-
-                <View style={{ height: height * 0.85 }}>
-                    <ScrollView showsVerticalScrollIndicator={false}>
-                        {/* <Text style={{ fontWeight: '500', fontFamily: customFonts.meduim, fontSize: 16, marginTop: 18 }}>
+                    <View style={{ height: height * 0.85 }}>
+                        <ScrollView showsVerticalScrollIndicator={false} style={{ height: height * 0.85, marginBottom: activeKeyboard && 120 }}>
+                            {/* <Text style={{ fontWeight: '500', fontFamily: customFonts.meduim, fontSize: 16, marginTop: 18 }}>
  Add Image
  </Text> */}
+                            {image ?
+                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                    <TouchableOpacity onPress={pickImage}>
+                                        <Image source={image ? { uri: image } : require('../../../../assets/Images3/imagePlaceholder.webp')}
+                                            style={{ width: 148 / 430 * width, height: 148 / 930 * height, resizeMode: 'cover', marginTop: 30 / 930 * height, borderRadius: 100 }} />
+                                    </TouchableOpacity>
+                                </View> :
+                                <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
+                                    <TouchableOpacity onPress={pickImage}>
+                                        <Image source={require('../../../../assets/Images3/uploadImage.png')}
+                                            style={{ height: 148 / 930 * height, width: 148 / 430 * width, resizeMode: 'contain' }}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                            }
 
-                        {image ?
-                            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                <TouchableOpacity onPress={pickImage}>
-                                    <Image source={image ? { uri: image } : require('../../../../assets/Images3/imagePlaceholder.webp')} style={{ width: 148 / 430 * width, height: 148 / 930 * height, resizeMode: 'cover', marginTop: 30 / 930 * height, borderRadius: 100 }} />
-                                </TouchableOpacity>
-                            </View> :
-                            <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
-                                <TouchableOpacity onPress={pickImage}>
-                                    <Image source={require('../../../../assets/Images3/uploadImage.png')}
-                                        style={{ height: 148 / 930 * height, width: 148 / 430 * width, resizeMode: 'contain' }}
-                                    />
-                                </TouchableOpacity>
+                            <Text style={{ fontWeight: '500', fontFamily: customFonts.meduim, fontSize: 16, marginTop: 18 }}>
+                                Business name
+                            </Text>
+
+                            <View style={{ borderWidth: 1, borderColor: '#CCCCCC', borderRadius: 10, padding: 16, justifyContent: 'center', marginTop: 5 }}>
+                                <TextInput
+                                    value={BusinessName}
+                                    placeholderTextColor={"#999999"}
+                                    onChangeText={(Business) => setBusinessName(Business)}
+                                    style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.meduim, }}
+                                    placeholder='Enter business name'
+                                />
                             </View>
-                        }
 
-                        <Text style={{ fontWeight: '500', fontFamily: customFonts.meduim, fontSize: 16, marginTop: 18 }}>
-                            Business
-                        </Text>
+                            <Text style={styles.Dropdownlabel}>
+                                Category
+                            </Text>
+                            {/*<CategoryDropdown style={{ marginTop: 15 }} onCategoryChange={handleCategoryChange} />*/}
 
-                        <View style={{ borderWidth: 1, borderColor: '#CCCCCC', borderRadius: 10, padding: 16, justifyContent: 'center', marginTop: 5 }}>
-                            <TextInput
-                                value={BusinessName}
-                                placeholderTextColor={"#999999"}
-                                onChangeText={(Business) => setBusinessName(Business)}
-                                style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.meduim, }}
-                                placeholder='Enter business name'
+                            <Dropdown
+                                style={styles.dropdown}
+                                selectedTextStyle={styles.selectedTextStyle}
+                                placeholderStyle={styles.placeholderStyle}
+                                iconStyle={styles.iconStyle}
+                                maxHeight={200}
+                                value={Category}
+                                data={ApiCategories}
+                                valueField="value"
+                                labelField="label"
+                                placeholder={CategoryName}
+                                searchPlaceholder="Search categories"
+                                onChange={item => {
+                                    setCategory(item);
+                                }}
                             />
-                        </View>
 
-                        <Text style={styles.Dropdownlabel}>
-                            Category
-                        </Text>
-                        {/*<CategoryDropdown style={{ marginTop: 15 }} onCategoryChange={handleCategoryChange} />*/}
-
-                        <Dropdown
-                            style={styles.dropdown}
-                            selectedTextStyle={styles.selectedTextStyle}
-                            placeholderStyle={styles.placeholderStyle}
-                            iconStyle={styles.iconStyle}
-                            maxHeight={200}
-                            value={Category}
-                            data={ApiCategories}
-                            valueField="value"
-                            labelField="label"
-                            placeholder={CategoryName}
-                            searchPlaceholder="Search categories"
-                            onChange={item => {
-                                setCategory(item);
-                            }}
-                        />
-
-                        <Text style={styles.Dropdownlabel}>
-                            Budget
-                        </Text>
+                            <Text style={styles.Dropdownlabel}>
+                                Budget
+                            </Text>
 
 
-                        < Dropdown
-                            style={styles.dropdown}
-                            placeholderStyle = {styles.placeholderStyle}
-                            // imageStyle={styles.imageStyle}
-                            iconStyle={styles.iconStyle}
-                            maxHeight={200}
-                            value={Budget}
-                            data={BudgetAmount}
-                            valueField="value"
-                            labelField="lable"
-                            // imageField="image"
-                            placeholder={Budget}
-                            itemTextStyle={{
-                                color: '#000000',
-                                fontWeight: '500',
-                                fontFamily: customFonts.meduim,
-                                fontSize: 14
-                            }
-                            }
-                            onChange={e => {
-                                setBudget(e.lable);
-                            }}
-                        />
+                            < Dropdown
+                                style={styles.dropdown}
+                                selectedTextStyle={{
+                                    fontSize: 14,
+                                    color: '#000',
+                                    fontWeight: '500',
+                                    fontFamily: customFonts.meduim
+                                }}
+                                placeholderStyle={styles.placeholderStyle}
+                                // imageStyle={styles.imageStyle}
+                                iconStyle={styles.iconStyle}
+                                maxHeight={200}
+                                value={Budget}
+                                data={BudgetAmount}
+                                valueField="value"
+                                labelField="lable"
+                                // imageField="image"
+                                placeholder={Budget}
+                                itemTextStyle={{
+                                    color: '#000000',
+                                    fontWeight: '500',
+                                    fontFamily: customFonts.meduim,
+                                    fontSize: 14,
+                                }
+                                }
+                                onChange={e => {
+                                    console.log("On changed ", e.lable)
+                                    setBudget(e);
+                                }}
+                            />
 
-                        <Text style={styles.Dropdownlabel}>
-                            Hours of Operation
-                        </Text>
+                            <Text style={styles.Dropdownlabel}>
+                                Hours of Operation
+                            </Text>
 
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: 300 / 430 * width, alignSelf: 'center' }}>
-                            <View style={{ alignItems: 'center', flexDirection: 'column', gap: 10, marginTop: 20 }}>
-                                <Text style={{ fontSize: 16 }}>Opening Time</Text>
-                                <DateTimePicker
-                                    testID="dateTimePicker"
-                                    value={date}
-                                    // minimumDate={new Date()}
-                                    mode={mode}
-                                    is24Hour={false}
-                                    display="default"
-                                    onChange={handleOpen}
-                                />
-                            </View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: 300 / 430 * width, alignSelf: 'center' }}>
+                                <View style={{ alignItems: 'center', flexDirection: 'column', gap: 10, marginTop: 20 }}>
+                                    <Text style={{ fontSize: 16 }}>Opening Time</Text>
+                                    <DateTimePicker
+                                        testID="dateTimePicker"
+                                        value={date}
+                                        // minimumDate={new Date()}
+                                        mode={mode}
+                                        is24Hour={false}
+                                        display="default"
+                                        onChange={handleOpen}
+                                    />
+                                </View>
 
-                            <View style={{ alignItems: 'center', flexDirection: 'column', gap: 10, marginTop: 20 }}>
-                                <Text style={{ fontSize: 16 }}>Closing Time</Text>
-                                <DateTimePicker
-                                    testID="dateTimePicker"
-                                    value={date2}
-                                    // minimumDate={new Date()}
-                                    mode={mode}
-                                    is24Hour={false}
-                                    display="default"
-                                    onChange={handleClose}
-                                />
-                            </View>
-
-                        </View>
-
-                        <View>
-                            {error && <Text style={styles.ErrorText}>{error}</Text>}
-                        </View>
-
-                        <Text style={styles.Dropdownlabel}>
-                            Address
-                        </Text>
-
-                        <TouchableOpacity onPress={handlePickAddress}>
-                            <View style={{ borderRadius: 10, borderColor: '#CCCCCC', padding: 15, borderWidth: 1 }}>
-                                <Text style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.meduim }}>
-                                    {
-                                        longAddress ?
-                                            <Text>
-                                                {longAddress}
-                                            </Text> :
-                                            <Text>
-                                                {DateData ?
-                                                    <Text>
-                                                        {DateData.address}
-                                                    </Text> :
-                                                    <Text style = {{color:"#00000050"}} >
-                                                        Enter Address
-                                                    </Text>
-                                                }
-                                            </Text>
-                                    }
-                                </Text>
+                                <View style={{ alignItems: 'center', flexDirection: 'column', gap: 10, marginTop: 20 }}>
+                                    <Text style={{ fontSize: 16 }}>Closing Time</Text>
+                                    <DateTimePicker
+                                        testID="dateTimePicker"
+                                        value={date2}
+                                        // minimumDate={new Date()}
+                                        mode={mode}
+                                        is24Hour={false}
+                                        display="default"
+                                        onChange={handleClose}
+                                    />
+                                </View>
 
                             </View>
-                        </TouchableOpacity>
 
-                        <Text style={styles.Dropdownlabel}>
-                            Description
-                        </Text>
-                        <View style={{ borderRadius: 10, borderColor: '#CCCCCC', padding: 8, borderWidth: 1 }}>
-                            <TextInput
-                                value={Description}
-                                onChangeText={(Description) => setDescription(Description)}
-                                multiline
-                                placeholder='Enter description'
-                                textAlignVertical='top'
-                                style={{ fontWeight: '500', color: '#000000', fontSize: 14, fontFamily: customFonts.meduim, height: 100 / 930 * height, }} />
-                        </View>
-                    </ScrollView>
+                            <View>
+                                {error && <Text style={styles.ErrorText}>{error}</Text>}
+                            </View>
+
+                            <Text style={styles.Dropdownlabel}>
+                                Address
+                            </Text>
+
+                            <TouchableOpacity onPress={handlePickAddress}>
+                                <View style={{ borderRadius: 10, borderColor: '#CCCCCC', padding: 15, borderWidth: 1 }}>
+                                    <Text style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.meduim }}>
+                                        {
+                                            longAddress ?
+                                                <Text>
+                                                    {longAddress}
+                                                </Text> :
+                                                <Text>
+                                                    {DateData ?
+                                                        <Text>
+                                                            {DateData.address}
+                                                        </Text> :
+                                                        <Text style={{ color: "#00000050" }} >
+                                                            Enter Address
+                                                        </Text>
+                                                    }
+                                                </Text>
+                                        }
+                                    </Text>
+
+                                </View>
+                            </TouchableOpacity>
+
+                            <Text style={styles.Dropdownlabel}>
+                                Description
+                            </Text>
+                            <View style={{ borderRadius: 10, borderColor: '#CCCCCC', padding: 8, borderWidth: 1 }}>
+                                <TextInput
+                                    value={Description}
+                                    onChangeText={(Description) => setDescription(Description)}
+                                    multiline
+                                    placeholder='Enter description'
+                                    textAlignVertical='top'
+                                    style={{ fontWeight: '500', color: '#000000', fontSize: 14, fontFamily: customFonts.meduim, height: 100 / 930 * height, }} />
+                            </View>
+                        </ScrollView>
+                    </View>
                 </View>
+
+                {
+                    openModalLocation && (
+                        <Modal
+                            visible={openModalLocation}
+                            transparent={true}
+                            animationType='slide'
+                        >
+                            <AddressPicker PickAddress={async (address) => {
+                                console.log("Address picked from popup", address)
+                                setOpenModalLocation(false)
+                                setCityName(address.city);
+                                let completeAddress = ""
+                                if (address.streetNo) {
+                                    completeAddress = address.streetNo
+                                }
+                                if (address.route) {
+                                    completeAddress = completeAddress + ` ${address.route}`
+                                }
+                                if (address.city) {
+                                    completeAddress = completeAddress + ` ${address.city}`
+                                }
+                                if (address.state2) {
+                                    completeAddress = completeAddress + ` ${address.state2}`
+                                }
+                                if (address.state) {
+                                    completeAddress = completeAddress + ` ${address.state}`
+                                }
+                                console.log("Compelte address is ", completeAddress)
+                                setLongAddress(completeAddress);
+                                setlatitude(address.lang);
+                                setlongitude(address.lat);
+                                setStateName(address.state)
+                                // setFilters(newFilters) 
+                            }} backButtonPressed={() => {
+                                setOpenModalLocation(false)
+                            }} />
+                        </Modal>
+                    )
+                }
+
             </View>
-
-            {
-                openModalLocation && (
-                    <Modal
-                        visible={openModalLocation}
-                        transparent={true}
-                        animationType='slide'
-                    >
-                        <AddressPicker PickAddress={async (address) => {
-                            console.log("Address picked from popup", address)
-                            setOpenModalLocation(false)
-                            setCityName(address.city);
-                            let completeAddress = ""
-                            if (address.streetNo) {
-                                completeAddress = address.streetNo
-                            }
-                            if (address.route) {
-                                completeAddress = completeAddress + ` ${address.route}`
-                            }
-                            if (address.city) {
-                                completeAddress = completeAddress + ` ${address.city}`
-                            }
-                            if (address.state2) {
-                                completeAddress = completeAddress + ` ${address.state2}`
-                            }
-                            if (address.state) {
-                                completeAddress = completeAddress + ` ${address.state}`
-                            }
-                            console.log("Compelte address is ", completeAddress)
-                            setLongAddress(completeAddress);
-                            setlatitude(address.lang);
-                            setlongitude(address.lat);
-                            setStateName(address.state)
-                            // setFilters(newFilters) 
-                        }} backButtonPressed={() => {
-                            setOpenModalLocation(false)
-                        }} />
-                    </Modal>
-                )
-            }
-
-        </View>
+        </SafeAreaView>
     )
 }
 
@@ -811,7 +798,7 @@ const styles = StyleSheet.create({
     },
     placeholderStyle: {
         fontSize: 14,
-        color: '#999999',
+        color: '#00000060',
         fontWeight: '500',
         fontFamily: customFonts.meduim
     },
@@ -835,7 +822,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#00000',
         marginTop: 20 / 930 * height,
-        marginBottom:5
+        marginBottom: 5
     },
     OperationTime: {
         color: '#999999',

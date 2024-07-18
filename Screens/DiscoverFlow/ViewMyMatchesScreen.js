@@ -95,14 +95,14 @@ export default function ViewMyMatchesScreen({ navigation }) {
                                         <Image source={{ uri: item.profile_image }}
                                             style={{ height: 98 / 930 * height, width: 158 / 430 * width, borderRadius: 10, resizeMode: 'cover' }}
                                         />
-                                        <View style={{ alignItems: 'flex-start', flexDirection: 'column', width: 150 / 430 * width, }}>
+                                        <View style={{ gap:4,alignItems: 'flex-start', flexDirection: 'column', width: 150 / 430 * width, }}>
                                             <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, }}>
                                                 {item.first_name} {item.last_name}
                                             </Text>
-                                            <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, }}>
+                                            <Text style={{ fontSize: 13, fontFamily: customFonts.meduim, }}>
                                                 {item.gender ? item.gender : 'N/A'}
                                             </Text>
-                                            <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, }}>
+                                            <Text style={{ fontSize: 14, fontFamily: customFonts.regular, }}>
                                                 {item.city ? item.city : 'N/A'}, {item.state ? item.state : "N/A"}
                                             </Text>
                                         </View>

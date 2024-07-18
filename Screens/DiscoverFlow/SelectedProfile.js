@@ -205,6 +205,14 @@ export default function SelectedProfile({ navigation, route }) {
         }
 
     }
+    const getHeightInches = () => {
+        if (user.height_inches % 12 > 0) {
+            let inches = ProfileData.height_inches % 12 + " inches"
+            return inches
+        } else {
+            return ""
+        }
+    }
     return (
 
         <SafeAreaView>
@@ -280,27 +288,6 @@ export default function SelectedProfile({ navigation, route }) {
                             </TouchableOpacity>
 
                         </View>
-                        {/* <View style={{
-                            width: width - 30, padding: 20, shadowColor: '#000',
-                            shadowOffset: {
-                                width: 0,
-                                height: 2,
-                            }, marginTop: 30,
-                            shadowOpacity: 0.05,
-                            shadowRadius: 3,
-                            backgroundColor: '#fff', borderRadius: 10
-                        }}>
-
-                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 }}>
-                                <Image source={require('../../assets/images/compatibility.png')}
-                                    style={{ height: 58 / 930 * height, width: 58 / 930 * height, resizeMode: 'contain' }}
-                                />
-                                <View style={{ flexDirection: 'column', }}>
-                                    <Text style={{ fontSize: 14, fontFamily: customFonts.meduim, color: colors.greyLightText }}>Compatibility score</Text>
-                                    <Text style={{ fontSize: 20, fontFamily: customFonts.semibold, color: '#4D4D4D' }}>85%</Text>
-                                </View>
-                            </View> 
-                        </View> */}
 
                         <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 30 / 930 * height }}>
 
@@ -326,7 +313,7 @@ export default function SelectedProfile({ navigation, route }) {
                                     style={styles.viewImage}
                                 />
                                 <Text style={styles.viewText}>
-                                    {((user.height_feet * 12 + user.height_inches) * 2.54).toFixed(0)} cm
+                                    {user.height_feet} feets {getHeightInches()}
                                 </Text>
                             </View>
                             <View style={styles.viewStyle}>
@@ -334,7 +321,7 @@ export default function SelectedProfile({ navigation, route }) {
                                     style={styles.viewImage}
                                 />
                                     
-                                        <DistanceCalculator userId={user.id} lat={user.lat} lang={user.lang} />
+                                <DistanceCalculator userId={user.id} lat={user.lat} lang={user.lang} />
                             </View>
                             <View style={styles.viewStyle}>
                                 <Image source={require('../../assets/images/eduCap.png')}

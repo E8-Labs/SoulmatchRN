@@ -13,21 +13,13 @@ const CongratsScreen = ({ navigation }) => {
         <View style={{ display: 'flex', alignItems: 'center' }}>
             <View style={{ width: 370 / 430 * width }}>
                 <View style={{ marginTop: 60 / 930 * height, flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-                    {/* <TouchableOpacity onPress={() => {
-                        props.navigation.goBack()
-                    }}>
-                        <View style={GlobalStyles.backBtn}>
-                            <Image source={require('../../assets/images/backArrow.png')}
-                                style={GlobalStyles.backBtnImage}
-                            />
-                        </View>
-                    </TouchableOpacity> */}
+                   
                     <Text style={{ fontWeight: '500', fontSize: 24, marginLeft: 20 / 430 * width }}>
                         Create Profile
                     </Text>
                 </View>
                 <View style={{ marginTop: 200 / 930 * height, display: 'flex', alignItems: 'center' }}>
-                    <Image source={require('../../assets/congrats.png')} style={{ resizeMode: 'contain',height:198,width:206 }} />
+                    <Image source={require('../../assets/images/congrates.svg')} style={{ resizeMode: 'contain',height:198,width:206 }} />
                 </View>
                 <View style = {{alignItems:'center',gap:15,marginTop:50}}>
                     <Text style = {{fontSize:28,fontFamily:customFonts.semibold}}>

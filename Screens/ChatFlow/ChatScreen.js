@@ -499,7 +499,7 @@ export default function ChatScreen({ navigation, route }) {
                 return (
                     <View style={{ alignItems: 'flex-end', marginTop: 10 }}>
                         <View style={{
-                            backgroundColor: colors.blueColor, padding: 10, borderRadius: 5,
+                            backgroundColor: colors.blueColor, padding: 10, 
                             marginTop: 5, marginRight: "5%", maxWidth: '70%', alignSelf: 'flex-end', borderRadius: 20,
                         }}>
                             <Text style={{ fontSize: 14, fontFamily: customFonts.regular, color: 'white' }}>
@@ -1013,12 +1013,6 @@ export default function ChatScreen({ navigation, route }) {
                                     </View>
                                 </TouchableWithoutFeedback>
                             </Modal>
-
-
-
-
-
-
                         </View>
                     ))
                 }
@@ -1032,7 +1026,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         backgroundColor: colors.blueColor,
         width: 20,
-        height: 25,
+        height: 20,
         bottom: 0,
         borderBottomLeftRadius: 25,
         right: -10

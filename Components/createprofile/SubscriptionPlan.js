@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, View, TouchableOpacity, Text, Image, Modal, Platform } from 'react-native'
+import { Dimensions, View, TouchableOpacity, Text, Image, Modal, Platform, ActivityIndicator } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Purchases from 'react-native-purchases';
 import GlobalStyles from '../../assets/styles/GlobalStyles'
@@ -7,7 +7,7 @@ import { UpdateProfile } from '../../Services/ProfileServices/UpdateProfile'
 import { ApiKeys } from '../../keys';
 import customFonts from '../../assets/fonts/Fonts';
 import colors from '../../assets/colors/Colors';
-import ContentLoader, {Rect, Circle} from 'react-content-loader/native';
+import ContentLoader, { Rect, Circle } from 'react-content-loader/native';
 
 const RevenueCatApiKey = ApiKeys.RevenueCatApiKey;
 
@@ -16,7 +16,9 @@ const { height, width } = Dimensions.get('window');
 
 export default function SubscriptionPlan({ navigation }) {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [loading2, setLoading2] = useState(null);
+  const [selected, setSelected] = useState(null);
 
   useEffect(() => {
     initializePurchases();
@@ -77,7 +79,7 @@ export default function SubscriptionPlan({ navigation }) {
   };
 
   const buyProduct = async (product) => {
-
+    setLoading2(product.identifier)
     try {
       console.log("Subscribing to", product.identifier);
       const { customerInfo } = await Purchases.purchaseProduct(product.identifier);
@@ -88,6 +90,7 @@ export default function SubscriptionPlan({ navigation }) {
         console.log("Original date ", date);
         await UpdateProfile(JSON.stringify({ originalPurchaseDate: date }))
         console.log("Profile updated")
+        setLoading2(null)
         navigation.reset({
           index: 0,
           routes: [{ name: 'TabBarContainer' }],
@@ -95,7 +98,9 @@ export default function SubscriptionPlan({ navigation }) {
 
       }
     } catch (e) {
+      setLoading2(null)
       console.log("Exception during purchase:", e);
+      setSelected(null)
       if (!e.userCancelled) {
         // Handle other errors
       }
@@ -132,7 +137,7 @@ export default function SubscriptionPlan({ navigation }) {
             Complete your profile
           </Text>
 
-          <TouchableOpacity style={{ marginLeft: 30/430*width}}
+          <TouchableOpacity style={{ marginLeft: 30 / 430 * width }}
             onPress={logoutUser}
           >
             <Text style={{ color: colors.blueColor, fontSize: 16, fontFamily: customFonts.meduim }}>Logout</Text>
@@ -140,7 +145,7 @@ export default function SubscriptionPlan({ navigation }) {
         </View>
         {/* Code for progressbar */}
         <View style={{ flexDirection: 'row', marginTop: 40 / 930 * height, justifyContent: 'space-between', display: 'flex', alignItems: 'center' }}>
-          <Image source={require('../../assets/enhancement.png')} style={{ height: 56, width: 56, resizeMode: 'contain' }} />
+          <Image source={require('../../assets/images/enhancement.png')} style={{ height: 56, width: 56, resizeMode: 'contain' }} />
           <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
           <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
           <View style={{ height: 4 / 930 * height, width: 16 / 430 * width, backgroundColor: '#6050DC', borderRadius: 10 }} />
@@ -189,37 +194,56 @@ export default function SubscriptionPlan({ navigation }) {
           products.map((product) => (
 
             <TouchableOpacity key={product.identifier}
-              onPress={() => buyProduct(product)}
+              onPress={() => {
+                buyProduct(product)
+                setSelected(product.identifier)
+              }}
             >
-              <View style={{ borderWidth: 1, borderColor: '#E6E6E6', height: 95 / 930 * height, width: 370 / 430 * width, borderRadius: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 30 / 930 * height }}>
-                <View style={{ height: 55 / 930 * height, width: 338 / 430 * width, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <View style={{ backgroundColor: 'transparent', gap: 5 }}>
-                    <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
-                      <Text style={{ fontFamily: customFonts.semibold, fontSize: 14, color: '#000' }}>
-                        {product.title}
+              <View style={{
+                paddingVertical: 10, paddingHorizontal: 10, backgroundColor: selected === product.identifier ? colors.blueColor : colors.transparent, marginTop: 10,
+                width: 400 / 430 * width, alignSelf: 'center', borderRadius: 10,
+              }}>
+                <View style={{
+                  borderWidth: 1, borderColor: '#E6E6E6', height: 95 / 930 * height, width: 370 / 430 * width, borderRadius: 20, display: 'flex', alignItems: 'center',
+                  justifyContent: 'center', marginTop: 0 / 930 * height,backgroundColor:'white'
+                }}>
+                  <View style={{ height: 55 / 930 * height, width: 338 / 430 * width, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <View style={{ backgroundColor: 'white', gap: 5 }}>
+                      <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
+                        <Text style={{ fontFamily: customFonts.semibold, fontSize: 14, color: '#000' }}>
+                          {product.title}
+                        </Text>
+                        <Text style={{ fontFamily: customFonts.meduim, fontSize: 12, color: '#000' }}>
+                          14 days free trail
+                        </Text>
+                      </View>
+
+                      <Text numberOfLines={3}
+                        style={{ width: 280 / 430 * width, fontFamily: customFonts.regular, fontSize: 12, color: '#000' }}>
+                        {product.description}
                       </Text>
-                      <Text style={{ fontFamily: customFonts.meduim, fontSize: 12, color: '#000' }}>
-                        14 days free trail
+                      <Text style={{ fontFamily: customFonts.semibold, fontSize: 18 }}>
+                        {product.priceString}
                       </Text>
                     </View>
+                    {/* <View style={{ width: '50%', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}> */}
+                    {/* <TouchableOpacity > */}
+                    {
+                      loading2 === product.identifier ? (
+                        <ActivityIndicator size={'small'} color={colors.blueColor}/>
+                      ) : (
+                        <View style={{ height: 32 / 930 * height, width: 32 / 930 * height, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#00000020', borderRadius: 50 }}>
+                          <Image source={require('../../assets/forward.png')} style={{ height: 20 / 930 * height, width: 20 / 430 * width, }} />
+                        </View>
+                      )
+                    }
 
-                    <Text numberOfLines={3}
-                      style={{ width: 280 / 430 * width, fontFamily: customFonts.regular, fontSize: 12, color: '#000' }}>
-                      {product.description}
-                    </Text>
-                    <Text style={{ fontFamily: customFonts.semibold, fontSize: 18 }}>
-                      {product.priceString}
-                    </Text>
+                    {/* </TouchableOpacity> */}
+                    {/* </View> */}
                   </View>
-                  {/* <View style={{ width: '50%', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}> */}
-                  {/* <TouchableOpacity > */}
-                  <View style={{ height: 32 / 930 * height, width: 32 / 930 * height, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#00000020', borderRadius: 50 }}>
-                    <Image source={require('../../assets/forward.png')} style={{ height: 20 / 930 * height, width: 20 / 430 * width, }} />
-                  </View>
-                  {/* </TouchableOpacity> */}
-                  {/* </View> */}
                 </View>
               </View>
+
             </TouchableOpacity>
 
           ))

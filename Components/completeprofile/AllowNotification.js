@@ -166,7 +166,7 @@ const AllowNotification = ({ navigation }) => {
                             Allow notifications
                         </Text>
                         <View style={{ marginTop: 100 / 930 * height, display: 'flex', alignItems: 'center' }}>
-                            <Image source={require('../../assets/notification.png')} style={{resizeMode:'contain', height: 160 / 930 * height, width: 160 / 430 * width, }} />
+                            <Image source={require('../../assets/notificationsvg.svg')} style={{resizeMode:'contain', height: 160 / 930 * height, width: 160 / 430 * width, }} />
                             <Text style={{ fontWeight: '500', fontSize: 16, color: '#333333', marginTop: 20 / 930 * height }}>
                                 Please allow us to send you
                             </Text>

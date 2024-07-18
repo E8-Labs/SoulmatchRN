@@ -25,7 +25,9 @@ export const getProfile = async () => {
             // setUser(json.data)
           }
           else {
+            
             console.log('json message is', json.message)
+            return null
           }
         }
       }else{

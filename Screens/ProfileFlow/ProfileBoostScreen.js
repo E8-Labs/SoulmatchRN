@@ -28,7 +28,7 @@ export default function ProfileBoostScreen({ navigation }) {
             identifier: 'BoostSoulmatch1',
             tag: '',
             description: 'Boost profile for 30 minutes',
-            priceString: '10.99$'
+            priceString: '$10.99'
         },
         {
             id: 2,
@@ -36,7 +36,7 @@ export default function ProfileBoostScreen({ navigation }) {
             title: 'Boost profile 5x',
             tag: '',
             description: 'Boost profile for 2 hours and 30 minutes',
-            priceString: '29.95$'
+            priceString: '$29.95'
         },
         {
             id: 3,
@@ -44,7 +44,7 @@ export default function ProfileBoostScreen({ navigation }) {
             title: 'Boost profile 10x',
             tag: 'Best value',
             description: 'Boost profile for 5 hours',
-            priceString: '19.9$'
+            priceString: '$19.00'
         },
     ]
 

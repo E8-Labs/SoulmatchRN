@@ -79,7 +79,7 @@ const User = ({ navigation }) => {
         console.log("Apply filters ", applyFilters)
     }, [applyFilters]);
 
-    const getUsers = async (search) => {
+    const getUsers = async () => {
 
         if (Loading || noMoreUsers) {
             console.log("Already loading")
@@ -95,8 +95,8 @@ const User = ({ navigation }) => {
                 const AuthToken = d.token
                 let path = `${Apis.GetAdminUsers}?offset=${AdminUsers.length}`
 
-                if (search) {
-                    path = `${path}&search=${search}`
+                if (searchUser) {
+                    path = `${path}&search=${searchUser}`
                 }
                 if (typeof filterDetail.city !== 'undefined' && filterDetail.city !== null) {
                     console.log('Filter details i am trying to send in api are :', filterDetail);
@@ -139,6 +139,9 @@ const User = ({ navigation }) => {
                     if (newUsers) {
                         console.log("Prev list ", AdminUsers)
                         setAdminUsers(prevUsers => [...prevUsers, ...newUsers])
+                        if(newUsers.length < 100){
+                            setNoMoreUsers(true)
+                        }
                     }
                     else {
                         setNoMoreUsers(true)
@@ -158,7 +161,7 @@ const User = ({ navigation }) => {
 
     const handleScroll = (event) => {
         const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-        const paddingToBottom = 20;
+        const paddingToBottom = 200;
         if (layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom) {
             console.log("Getting new users in handleScroll")
             getUsers(); // Fetch more data when scrolled to the bottom
@@ -204,8 +207,8 @@ const User = ({ navigation }) => {
         // Set a new timer
         timerRef.current = setTimeout(() => {
             console.log("Search timer clicked")
-            getUsers(searchUser);
-        }, 500);
+            getUsers();
+        }, 600);
 
         // Cleanup function to clear the timer when component unmounts
         return () => clearTimeout(timerRef.current);
@@ -300,7 +303,7 @@ const User = ({ navigation }) => {
                 {/* Search bar */}
                 <View
                     style={{
-                        flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+                        flexDirection: 'row', alignItems: 'center', justifyContent: 'center',width:width-50,
                         padding: 10, borderWidth: 1, borderRadius: 10, gap: 10, backgroundColor: '#ffffff', borderColor: '#E6E6E6', marginTop: 20
                     }}>
                     <TouchableOpacity
@@ -329,7 +332,7 @@ const User = ({ navigation }) => {
                     showsVerticalScrollIndicator={false}
                     onScroll={handleScroll}
                     scrollEventThrottle={16}>
-                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', display: 'flex', justifyContent: 'space-between', marginBottom: 30 }}>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', display: 'flex', justifyContent: 'space-between', marginBottom: 30,alignItems:'flex-start',width:width-50 }}>
                         {AdminUsers && AdminUsers.map((item, index) => (
                             <TouchableOpacity onPress={() => handleUserDetails(item, index)} key={index} style={{ marginTop: 10 }}>
                                 <View style={{ borderWidth: 1, flexDirection: 'column', gap: 5, borderColor: '#E6E6E6', borderRadius: 10, padding: 12, width: 176 / 430 * width }}>
