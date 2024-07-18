@@ -98,7 +98,7 @@ const SendFeedBack = ({ navigation }) => {
                     />
                     <View style={{ width: 370 / 430 * width, height: height * 0.88, justifyContent: 'space-between', display: 'flex' , marginTop: 0 }}>
                         <View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15,marginTop:marginTop}}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15,}}>
                                 <TouchableOpacity
                                     onPress={() => {
                                         navigation.goBack()

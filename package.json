@@ -57,7 +57,8 @@
     "react-native-star-rating-widget": "^1.7.3",
     "react-native-svg": "15.2.0",
     "react-native-swipeable-rating": "^0.2.1",
-    "react-native-wheel-picker-expo": "^0.5.4"
+    "react-native-wheel-picker-expo": "^0.5.4",
+    "react-native-reanimated": "~3.10.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

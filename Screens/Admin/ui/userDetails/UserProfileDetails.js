@@ -223,7 +223,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                 return "Yearly"
             }
         } else {
-            return "N/A"
+            return "Free"
         }
     }
 
@@ -293,7 +293,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                                     style={styles.viewImage}
                                 />
                                 <Text style={styles.viewText}>
-                                    {ProfileData.gender}
+                                    {ProfileData.gender ? ProfileData.gender : 'N/A'}
                                 </Text>
                             </View>
 
@@ -320,14 +320,14 @@ const UserProfileDetails = ({ navigation, route }) => {
                                 <Image source={require('../../../../assets/Images3/cake.png')}
                                     style={styles.viewImage}
                                 />
-                                <Text style={styles.viewText}>{ProfileData.age} years old</Text>
+                                <Text style={styles.viewText}>{ProfileData.age ? ProfileData.age + " years old" : 'N/A'} </Text>
                             </View>
 
                             <View style={styles.viewStyle}>
                                 <Image source={require('../../../../assets/Images3/ruler.png')}
                                     style={styles.viewImage}
                                 />
-                                <Text style={styles.viewText}> {ProfileData.height_feet} feets {getHeightInches()}</Text>
+                                <Text style={styles.viewText}> {ProfileData.height_feet ? ProfileData.height_feet + " feet" : 'N/A'} {getHeightInches()}</Text>
                             </View>
 
                             <View style={styles.viewStyle}>
@@ -335,7 +335,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                                     style={styles.viewImage}
                                 />
                                 <Text style={styles.viewText}>
-                                    {ProfileData.city ? ProfileData.city : 'N/A'}, {ProfileData.state ? ProfileData.state : 'N/A'}
+                                    {ProfileData.city ? ProfileData.city + "," : ''} {ProfileData.state ? ProfileData.state : 'N/A'}
                                 </Text>
                             </View>
 
@@ -354,7 +354,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                                 />
                                 <Text style={styles.viewText}>
                                     <Text style={styles.viewText}>
-                                        {ProfileData.job_title} at {ProfileData.company}
+                                        {ProfileData.job_title ? ProfileData.job_title + " at" : ''}  {ProfileData.company ? ProfileData.company : 'N/A'}
                                     </Text>
                                 </Text>
                             </View>
@@ -365,7 +365,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                                     style={styles.viewImage}
                                 />
                                 <Text style={styles.viewText}>
-                                    {ProfileData.zodiac}
+                                    {ProfileData.zodiac ? ProfileData.zodiac : 'N/A'}
                                 </Text>
                             </View>
 
@@ -494,7 +494,9 @@ const UserProfileDetails = ({ navigation, route }) => {
                                                     )
 
                                                         : ''}
-                                                    {item.answerImage ? <Image source={{ uri: item.answerImage }} style={{ height: 234 / 930 * height, width: 334 / 430 * width, borderRadius: 10, marginTop: 5 }} /> : ''}
+                                                    {item.answerImage ?
+                                                        <Image source={{ uri: item.answerImage }}
+                                                            style={{ height: 234 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 5,alignSelf:'center' }} /> : ''}
                                                     {item.answerVideo ?
                                                         <Video
                                                             ref={videoRef}

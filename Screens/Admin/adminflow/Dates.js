@@ -482,7 +482,7 @@ const Dates = ({ navigation }) => {
                                             <Text style={{ fontSize: 12, fontWeight: '400', fontFamily: customFonts.meduim, color: '#333333' }}>
                                                 Category :
                                             </Text>
-                                            <Text style={{ fontWeight: '500', width: 50, fontSize: 12, fontFamily: customFonts.meduim, color: '#333333', textAlign: 'right' }}>
+                                            <Text style={{fontSize: 12, fontFamily: customFonts.meduim, width: 80 / 430 * width, backgroundColor: 'transparet'  }}>
                                                 {item.Category.name}
                                             </Text>
                                         </View>

@@ -255,14 +255,11 @@ const DateDetails = ({ navigation, route }) => {
                                     </Text>
                                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
                                         <Image source={require('../../../../assets/Images3/RatingStar.png')} style={{ height: 18, width: 17, resizeMode: 'contain' }} />
-                                        {dateDetails&&dateDetails.ratings ?
+                                        
                                             <Text style={[styles.RatingsValue, { height: 22 }]}>
                                                 {dateDetails&&dateDetails.rating}
-                                            </Text> :
-                                            <Text style={[styles.RatingsValue, { height: 22 }]}>
-                                                0
-                                            </Text>
-                                        }
+                                            </Text> 
+                                        
                                     </View>
                                 </View>
                             </View>
@@ -286,7 +283,7 @@ const DateDetails = ({ navigation, route }) => {
                                dateDetails&& dateDetails.reviews&& dateDetails.reviews.length > 0 ? (
                                     <>
                                         <Text style={{ fontSize: 12, fontFamily: customFonts.regular, marginTop: 5 / 930 * height }}>
-                                            108+Ratings . {dateDetails.totalReviews} Reviews
+                                            {dateDetails.totalReviews } Ratings . {dateDetails.totalReviews} Reviews
                                         </Text>
 
                                         <ScrollView

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Dimensions, View, TouchableOpacity, Text, Image, Modal, Platform, Alert } from 'react-native'
+import { Dimensions, View, TouchableOpacity, Text, Image, Modal, Platform, Alert, ActivityIndicator } from 'react-native'
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import customFonts from '../../assets/fonts/Fonts';
 import { ApiKeys } from '../../keys';
@@ -19,6 +19,8 @@ export default function ProfileBoostScreen({ navigation }) {
 
     // const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState([]);
+    const [loading2, setLoading2] = useState(null);
+    const [selected, setSelected] = useState(null);
 
 
     const products = [
@@ -70,10 +72,10 @@ export default function ProfileBoostScreen({ navigation }) {
             });
 
             const data = await response.json();
-            console.log('data is ', data )
+            console.log('data is ', data)
             if (data.status) {
                 Alert.alert(`Purchase successfull`)
-                
+
             } else {
                 Alert.alert("Purchase validation failed", "The server could not validate your purchase.");
             }
@@ -137,19 +139,20 @@ export default function ProfileBoostScreen({ navigation }) {
     };
 
     const buyProduct = async (product) => {
+        setLoading2(product.identifier)
         const productId = product.identifier
         try {
             console.log("Subscribing to", product.identifier);
 
             const { customerInfo, productIdentifier } = await Purchases.purchaseProduct(productId);
             console.log(`Purchased product: ${productIdentifier}`);
-            
+
             if (productIdentifier === productId) {
                 // Send the purchase data to the server
                 // const receiptInfo = await Purchases.getPurchaserInfo();
-                
+
                 // const receipt = customerInfo.entitlements.active[productId];
-                
+
                 const latestTransaction = customerInfo.nonSubscriptionTransactions
                     .filter(txn => txn.productId === productId)
                     .reduce((latest, current) => {
@@ -159,11 +162,12 @@ export default function ProfileBoostScreen({ navigation }) {
                         // console.log(current)
                         return current.purchaseDateMillis > latest.purchaseDateMillis ? current : latest
                     })
-                    const receipt = latestTransaction.purchaseDateMillis
+                const receipt = latestTransaction.purchaseDateMillis
                 console.log("#####################################")
                 console.log(receipt)
                 console.log("#####################################")
                 await notifyServer(receipt);
+                setLoading2(null)
             }
 
 
@@ -183,6 +187,7 @@ export default function ProfileBoostScreen({ navigation }) {
             // }
         } catch (e) {
             console.log("Exception during purchase:", e);
+            setLoading2(null)
             if (!e.userCancelled) {
                 // Handle other errors
             }
@@ -242,47 +247,65 @@ export default function ProfileBoostScreen({ navigation }) {
                 {products.map((product) => (
 
                     <TouchableOpacity key={product.identifier}
-                        onPress={() => buyProduct(product)}
+                        onPress={() => {
+                            buyProduct(product)
+                            setSelected(product.identifier)
+                        }}
                     >
-                        <View style={{ borderWidth: 1, borderColor: '#E6E6E6', height: 95 / 930 * height, width: 370 / 430 * width, borderRadius: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 30 / 930 * height }}>
-                            <View style={{ height: 55 / 930 * height, width: 338 / 430 * width, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <View style={{ backgroundColor: 'transparent', gap: 5 }}>
-                                    <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
-                                        <Text style={{ fontFamily: customFonts.semibold, fontSize: 14, color: '#000' }}>
-                                            {product.title}
+                        <View style={{
+                            paddingVertical: 10, paddingHorizontal: 10, backgroundColor: selected === product.identifier ? colors.blueColor : colors.transparent, marginTop: 10,
+                            width: 400 / 430 * width, alignSelf: 'center', borderRadius: 10,
+                        }}>
+                            <View style={{
+                                borderWidth: 1, borderColor: '#E6E6E6', height: 95 / 930 * height, width: 370 / 430 * width, borderRadius: 20, display: 'flex',
+                                alignItems: 'center', justifyContent: 'center', marginTop: 0 / 930 * height, backgroundColor: 'white'
+                            }}>
+                                <View style={{ height: 55 / 930 * height, width: 338 / 430 * width, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <View style={{ backgroundColor: 'white', gap: 5 }}>
+                                        <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
+                                            <Text style={{ fontFamily: customFonts.semibold, fontSize: 14, color: '#000' }}>
+                                                {product.title}
+                                            </Text>
+
+                                        </View>
+
+                                        <Text numberOfLines={3}
+                                            style={{ width: 280 / 430 * width, fontFamily: customFonts.regular, fontSize: 12, color: '#000' }}>
+                                            {product.description}
                                         </Text>
+                                        <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
+                                            <Text style={{ fontFamily: customFonts.semibold, fontSize: 18 }}>
+                                                {product.priceString}
+                                            </Text>
+                                            {
+                                                product.tag && (
+                                                    <View style={{ paddingHorizontal: 8, paddingVertical: 5, backgroundColor: '#6050DC15', borderRadius: 5 }}>
+                                                        <Text style={{ fontFamily: customFonts.meduim, fontSize: 12, color: colors.blueColor }}>
+                                                            {product.tag}
+                                                        </Text>
+                                                    </View>
+                                                )
+                                            }
+
+
+                                        </View>
 
                                     </View>
+                                    {/* <View style={{ width: '50%', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}> */}
+                                    {/* <TouchableOpacity > */}
+                                    {
+                                        loading2 === product.identifier ? (
+                                            <ActivityIndicator color={colors.blueColor} size={'small'} />
+                                        ) : (
+                                            <View style={{ height: 32 / 930 * height, width: 32 / 930 * height, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#00000020', borderRadius: 50 }}>
+                                                <Image source={require('../../assets/forward.png')} style={{ height: 20 / 930 * height, width: 20 / 430 * width, }} />
+                                            </View>
+                                        )
+                                    }
 
-                                    <Text numberOfLines={3}
-                                        style={{ width: 280 / 430 * width, fontFamily: customFonts.regular, fontSize: 12, color: '#000' }}>
-                                        {product.description}
-                                    </Text>
-                                    <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
-                                        <Text style={{ fontFamily: customFonts.semibold, fontSize: 18 }}>
-                                            {product.priceString}
-                                        </Text>
-                                        {
-                                            product.tag && (
-                                                <View style={{ paddingHorizontal: 8, paddingVertical: 5, backgroundColor: '#6050DC15', borderRadius: 5 }}>
-                                                    <Text style={{ fontFamily: customFonts.meduim, fontSize: 12, color: colors.blueColor }}>
-                                                        {product.tag}
-                                                    </Text>
-                                                </View>
-                                            )
-                                        }
-
-
-                                    </View>
-
+                                    {/* </TouchableOpacity> */}
+                                    {/* </View> */}
                                 </View>
-                                {/* <View style={{ width: '50%', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}> */}
-                                {/* <TouchableOpacity > */}
-                                <View style={{ height: 32 / 930 * height, width: 32 / 930 * height, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#00000020', borderRadius: 50 }}>
-                                    <Image source={require('../../assets/forward.png')} style={{ height: 20 / 930 * height, width: 20 / 430 * width, }} />
-                                </View>
-                                {/* </TouchableOpacity> */}
-                                {/* </View> */}
                             </View>
                         </View>
                     </TouchableOpacity>

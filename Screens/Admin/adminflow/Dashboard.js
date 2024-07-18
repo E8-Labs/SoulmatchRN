@@ -418,7 +418,7 @@ const Dashboard = ({ navigation }) => {
                                                 style={styles.dropdown}
                                                 selectedTextStyle={styles.selectedTextStyle}
                                                 placeholderStyle={styles.placeholderStyle}
-                                                itemTextStyle = {{fontSize:14}}
+                                                itemTextStyle={{ fontSize: 14 }}
                                                 //   imageStyle={styles.imageStyle}
                                                 iconStyle={styles.iconStyle}
                                                 maxHeight={200}
@@ -597,13 +597,13 @@ const Dashboard = ({ navigation }) => {
                                     </View>
                                 </View>
 
-                                <Text style={{ fontSize: 18, fontWeight: '500', fontFamily: customFonts.meduim,marginTop:22,marginBottom:22 }}>
+                                <Text style={{ fontSize: 18, fontWeight: '500', fontFamily: customFonts.meduim, marginTop: 22, marginBottom: 22 }}>
                                     Users
                                 </Text>
 
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between',width:width-60,alignItems:'center' }}>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: width - 60, alignItems: 'center' }}>
                                     <View style={{ height: 79 / 930 * height, width: 175 / 430 * width, borderWidth: 1, justifyContent: 'center', alignItems: 'center', borderColor: '#E6E6E6', borderRadius: 16 }}>
-                                        <View style={{ flexDirection: 'row', gap: 10, width: 165 / 430 * width,paddingHorizontal:8 }}>
+                                        <View style={{ flexDirection: 'row', gap: 10, width: 165 / 430 * width, paddingHorizontal: 8 }}>
                                             <View style={{ height: 45, width: 45, borderRadius: 50, backgroundColor: '#F1BB081A', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                                 <Image source={require('../../../assets/Images3/crown2.png')} style={{ height: 24 / 930 * height, width: 24 / 430 * width }} />
                                             </View>
@@ -629,7 +629,7 @@ const Dashboard = ({ navigation }) => {
 
                                     {/* Code for users ratio */}
                                     <View style={{ height: 79 / 930 * height, width: 175 / 430 * width, borderWidth: 1, justifyContent: 'center', alignItems: 'center', borderColor: '#E6E6E6', borderRadius: 16 }}>
-                                        <View style={{ flexDirection: 'row', gap: 10, width: 165 / 430 * width ,paddingHorizontal:8}}>
+                                        <View style={{ flexDirection: 'row', gap: 10, width: 165 / 430 * width, paddingHorizontal: 8 }}>
                                             <View style={{ height: 45, width: 45, borderRadius: 50, backgroundColor: '#E6E6E6', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                                 <Image source={require('../../../assets/Images3/happyemoji.png')} style={{ height: 24 / 930 * height, width: 24 / 430 * width }} />
                                             </View>
@@ -686,7 +686,7 @@ const Dashboard = ({ navigation }) => {
                                                     style={styles.dropdown}
                                                     selectedTextStyle={styles.selectedTextStyle}
                                                     placeholderStyle={styles.placeholderStyle}
-                                                    itemTextStyle = {{fontSize:14}}
+                                                    itemTextStyle={{ fontSize: 14 }}
                                                     //   imageStyle={styles.imageStyle}
                                                     iconStyle={styles.iconStyle}
                                                     maxHeight={200}
@@ -760,27 +760,38 @@ const Dashboard = ({ navigation }) => {
                                         showsHorizontalScrollIndicator={false}
                                         data={RecentUsers}
                                         renderItem={({ item, index }) => (
-                                            <View key={item.id} style={{ borderWidth: 1, marginLeft: 10, borderColor: '#E6E6E6', borderRadius: 10, padding: 8, width: 140 / 430 * width, alignItems: 'center', justifyContent: 'center' }}>
-                                                <Image source={item.profile_image ? { uri: item.profile_image } : require('../../../assets/Images3/imagePlaceholder.webp')}
-                                                    style={{ height: 96 / 930 * height, width: 126 / 430 * width, borderRadius: 5, resizeMode: 'cover' }} />
-                                                <View style={{ flexDirection: 'column', width: '100%', gap: 7 }}>
-                                                    <Text style={{ fontWeight: '500', fontSize: 12, marginTop: 5, fontFamily: customFonts.meduim, width: '100%' }}>
-                                                        {item.first_name} {item.last_name}
-                                                    </Text>
-                                                    <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-                                                        <Image source={require('../../../assets/Images3/location.png')} style={{ height: 12 / 930 * height, width: 12 / 430 * width }} />
-                                                        <Text style={{ fontWeight: '400', fontSize: 10, fontFamily: customFonts.meduim, color: '#333333' }}>
-                                                            {item.city} {item.city ? ',' : ''} {item.state}
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    navigation.navigate('UserProfileDetails', {
+                                                        DATA: {
+                                                            UserDetails: item
+                                                        }
+                                                    })
+
+                                                }}
+                                            >
+                                                <View style={{ borderWidth: 1, marginLeft: 10, borderColor: '#E6E6E6', borderRadius: 10, padding: 8, width: 140 / 430 * width, alignItems: 'center', justifyContent: 'center' }}>
+                                                    <Image source={item.profile_image ? { uri: item.profile_image } : require('../../../assets/Images3/imagePlaceholder.webp')}
+                                                        style={{ height: 96 / 930 * height, width: 126 / 430 * width, borderRadius: 5, resizeMode: 'cover' }} />
+                                                    <View style={{ flexDirection: 'column', width: '100%', gap: 7 }}>
+                                                        <Text style={{ fontWeight: '500', fontSize: 12, marginTop: 5, fontFamily: customFonts.meduim, width: '100%' }}>
+                                                            {item.first_name} {item.last_name}
                                                         </Text>
-                                                    </View>
-                                                    <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-                                                        <Image source={require('../../../assets/Images3/crown2.png')} style={{ height: 12 / 930 * height, width: 12 / 430 * width }} />
-                                                        <Text style={{ fontWeight: '500', fontSize: 12, fontFamily: customFonts.meduim, color: '#FFC401' }}>
-                                                            {item.pkgName}
-                                                        </Text>
+                                                        <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+                                                            <Image source={require('../../../assets/Images3/location.png')} style={{ height: 12 / 930 * height, width: 12 / 430 * width }} />
+                                                            <Text style={{ fontWeight: '400', fontSize: 10, fontFamily: customFonts.meduim, color: '#333333' }}>
+                                                                {item.city} {item.city ? ',' : ''} {item.state}
+                                                            </Text>
+                                                        </View>
+                                                        <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+                                                            <Image source={require('../../../assets/Images3/crown2.png')} style={{ height: 12 / 930 * height, width: 12 / 430 * width }} />
+                                                            <Text style={{ fontWeight: '500', fontSize: 12, fontFamily: customFonts.meduim, color: '#FFC401' }}>
+                                                                {item.pkgName}
+                                                            </Text>
+                                                        </View>
                                                     </View>
                                                 </View>
-                                            </View>
+                                            </TouchableOpacity>
                                         )}
                                     />
                                 </View>

@@ -35,7 +35,7 @@ const female = require('../../assets/images/femaleIcon.png');
 const nonBinary = require('../../assets/images/nonBinaryIcon.png');
 
 export default function ProfileDetail(props) {
-    const { exceedeMatches, navigation, fromScreen, data, 
+    const { exceedeMatches, navigation, fromScreen, data,
         onMenuClick, filtersData, LastProfileSwiped, ProfileMatched } = props
 
     // const fromScreen = route.params.fromScreen
@@ -127,11 +127,11 @@ export default function ProfileDetail(props) {
                         console.log('Liked:', data[currentIndex].id);
                         if (typeof json.match !== undefined && json.match === true) {
                             // if(d.user.totalMatches+1 >= MatchLimit){
-                                // exceedeMatches = true
-                                ProfileMatched()
+                            // exceedeMatches = true
+                            ProfileMatched()
                             // }
                             // d.user.totalMatches = d.user.totalMatches+1;
-                            
+
 
                             let routeData = {
                                 navigate: 'GotMatch',
@@ -379,7 +379,7 @@ export default function ProfileDetail(props) {
 
                     {
                         exceedeMatches ? (
-                            <DiscoverGotMatch  viewMatches = {(name)=>{
+                            <DiscoverGotMatch viewMatches={(name) => {
                                 let routeData = {
                                     navigate: name,
                                     user: data[currentIndex]
@@ -482,54 +482,62 @@ export default function ProfileDetail(props) {
                                                     <Image source={getGenderIcon()}
                                                         style={styles.viewImage}
                                                     />
-                                                    <Text style={styles.viewText}>{data[currentIndex] ? data[currentIndex].gender : ''}</Text>
+                                                    <Text style={styles.viewText}>
+                                                        {data[currentIndex]&&data[currentIndex].gender ? data[currentIndex].gender : 'N/A'}
+                                                    </Text>
                                                 </View>
 
                                                 <View style={styles.viewStyle}>
-                                                    <Image source={require('../../assets/images/cake.png')}
+                                                    <Image source={require('../../assets/Images3/cake.png')}
                                                         style={styles.viewImage}
                                                     />
-                                                    <Text style={styles.viewText}>{data[currentIndex] ? data[currentIndex].age : ''} years old</Text>
+                                                    <Text style={styles.viewText}>{data[currentIndex]&&data[currentIndex].age ? data[currentIndex].age + " years old" : 'N/A'} </Text>
                                                 </View>
+
                                                 <View style={styles.viewStyle}>
-                                                    <Image source={require('../../assets/images/scale.png')}
+                                                    <Image source={require('../../assets/Images3/ruler.png')}
+                                                        style={styles.viewImage}
+                                                    />
+                                                    <Text style={styles.viewText}> {data[currentIndex]&&data[currentIndex].height_feet ? data[currentIndex].height_feet + " feet" : 'N/A'} {getHeightInches()}</Text>
+                                                </View>
+
+                                                <View style={styles.viewStyle}>
+                                                    <Image source={require('../../assets/Images3/location.png')}
                                                         style={styles.viewImage}
                                                     />
                                                     <Text style={styles.viewText}>
-                                                    {data[currentIndex]&&data[currentIndex].height_feet} feets {getHeightInches()}                                                    </Text>
+                                                        {data[currentIndex]&&data[currentIndex].city ? data[currentIndex].city + "," : ''} {data[currentIndex]&&data[currentIndex].state ? data[currentIndex].state : 'N/A'}
+                                                    </Text>
                                                 </View>
+
                                                 <View style={styles.viewStyle}>
-                                                    <Image source={require('../../assets/images/location.png')}
-                                                        style={styles.viewImage}
-                                                    />
-                                                    {
-                                                        data[currentIndex] && (
-                                                            <DistanceCalculator userId={data[currentIndex].id} lat={data[currentIndex].lat} lang={data[currentIndex].lang} />
-                                                        )
-                                                    }
-                                                    {/* <Text style={styles.viewText}>{calculateDistance()} miles</Text> */}
-                                                </View>
-                                                <View style={styles.viewStyle}>
-                                                    <Image source={require('../../assets/images/eduCap.png')}
-                                                        style={styles.viewImage}
-                                                    />
-                                                    <Text style={styles.viewText}>{data[currentIndex] ? data[currentIndex].school : ''}</Text>
-                                                </View>
-                                                <View style={styles.viewStyle}>
-                                                    <Image source={require('../../assets/images/bag.png')}
+                                                    <Image source={require('../../assets/Images3/teacher.png')}
                                                         style={styles.viewImage}
                                                     />
                                                     <Text style={styles.viewText}>
-                                                        {data[currentIndex] ? (data[currentIndex].job_title) : ''} <Text style={styles.viewText}>
-                                                            at {data[currentIndex] ? (data[currentIndex].company) : ''}
+                                                        {data[currentIndex]&&data[currentIndex].school}
+                                                    </Text>
+                                                </View>
+
+                                                <View style={styles.viewStyle}>
+                                                    <Image source={require('../../assets/Images3/briefcase.png')}
+                                                        style={styles.viewImage}
+                                                    />
+                                                    <Text style={styles.viewText}>
+                                                        <Text style={styles.viewText}>
+                                                            {data[currentIndex]&&data[currentIndex].job_title ? data[currentIndex].job_title + " at" : ''}  {data[currentIndex]&&data[currentIndex].company ? data[currentIndex].company : 'N/A'}
                                                         </Text>
                                                     </Text>
                                                 </View>
+
                                                 <View style={styles.viewStyle}>
+                                                    {/* Add zodiac icon here */}
                                                     <Image source={require('../../assets/images/rankingStar.png')}
                                                         style={styles.viewImage}
                                                     />
-                                                    <Text style={styles.viewText}>{data[currentIndex] ? data[currentIndex].zodiac : ''} </Text>
+                                                    <Text style={styles.viewText}>
+                                                        {data[currentIndex]&&data[currentIndex].zodiac ? data[currentIndex].zodiac : 'N/A'}
+                                                    </Text>
                                                 </View>
                                             </View>
                                             <View style={{ marginTop: 22 / 930 * height, alignItems: 'flex-start', width: width - 40, alignSelf: 'center' }}>

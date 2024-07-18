@@ -263,7 +263,7 @@ const User = ({ navigation }) => {
                 return "Yearly"
             }
         }else{
-            return "N/A"
+            return "Free"
         }
     }
 
