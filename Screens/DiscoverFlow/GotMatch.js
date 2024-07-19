@@ -47,6 +47,40 @@ export default function GotMatch({ navigation, route }) {
     }).start();
   }, []);
 
+useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.parallel([
+          Animated.timing(scaleValue, {
+            toValue: 0.3,
+            duration: 800,
+            easing: Easing.linear,
+            useNativeDriver: true
+          }),
+          Animated.timing(colorValue, {
+            toValue: 1,
+            duration: 800,
+            easing: Easing.linear,
+            useNativeDriver: false
+          })
+        ]),
+        Animated.parallel([
+          Animated.timing(scaleValue, {
+            toValue: 1.0,
+            duration: 800,
+            easing: Easing.linear,
+            useNativeDriver: true
+          }),
+          Animated.timing(colorValue, {
+            toValue: 0,
+            duration: 800,
+            easing: Easing.linear,
+            useNativeDriver: false
+          })
+        ])
+      ])
+    ).start();
+  }, [scaleValue, colorValue]);
 
   useEffect(()=>{
     const getUser = async () =>{
@@ -104,41 +138,7 @@ export default function GotMatch({ navigation, route }) {
     }
   };
 
-  useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.parallel([
-          Animated.timing(scaleValue, {
-            toValue: 0.3,
-            duration: 800,
-            easing: Easing.linear,
-            useNativeDriver: true
-          }),
-          Animated.timing(colorValue, {
-            toValue: 1,
-            duration: 800,
-            easing: Easing.linear,
-            useNativeDriver: false
-          })
-        ]),
-        Animated.parallel([
-          Animated.timing(scaleValue, {
-            toValue: 1.0,
-            duration: 800,
-            easing: Easing.linear,
-            useNativeDriver: true
-          }),
-          Animated.timing(colorValue, {
-            toValue: 0,
-            duration: 800,
-            easing: Easing.linear,
-            useNativeDriver: false
-          })
-        ])
-      ])
-    ).start();
-  }, [scaleValue, colorValue]);
-
+  
   const interpolatedColor = colorValue.interpolate({
     inputRange: [0, 1],
     outputRange: ['#E6E6E650', '#6050DC']

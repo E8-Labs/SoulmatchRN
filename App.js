@@ -358,8 +358,6 @@ async function registerForPushNotificationsAsync() {
           <Stack.Screen name='SelectedResourceDetails' component={SelectedResourceDetails} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='NotificationsScreen' component={NotificationsScreen} />
 
-          {/* <Stack.Screen name='Testfile' component={Testfile} options={{ gestureEnabled: false, headerShown: false }} /> */}
-
 
           <Stack.Screen name='AdminTabBarContainer' component={AdminTabBarContainer} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='AddNewDate' component={AddDate} />
@@ -370,27 +368,10 @@ async function registerForPushNotificationsAsync() {
           <Stack.Screen name='UserProfileDetails' component={UserProfileDetails}   />
           <Stack.Screen name='AddressPicker' component={AddressPicker} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='FlaggedUserDetails' component={FlaggedUSerDetails}/>
-          {/* <Stack.Screen name='DatePicker' component={TestDatePicker} options={{ gestureEnabled: false, headerShown: false }} /> */}
-          {/* <Stack.Screen name='TestAddDate' component={TestAddDate} options={{ gestureEnabled: false, headerShown: false }} /> */}
           <Stack.Screen name='AdminNotifications' component={AdminNotifications} options={{ gestureEnabled: false, headerShown: false }} />
-          {/* <Stack.Screen name='User' component={User} options={{ gestureEnabled: false, headerShown: false }} /> */}
 
         </Stack.Navigator>
       </NavigationContainer>
-
-      // {/* <Testfile /> */}
-      // <ProfileDetail/>
-      // {/* <LikesList/> */}
-      // <SplashMainScreen />
-      // <SlideScreen3/>
-      // <SplashMainScreen/>
-      // <SlideContainer/>
-      // <LoginUser/>
-      // <RegisterUser/>
-      // <GetEmail/>
-      // <EmailVerification/>
-      // <CreateNewPassword/>
-      // <SuccessfullyPasswordChanged/>
     );
   }
 }

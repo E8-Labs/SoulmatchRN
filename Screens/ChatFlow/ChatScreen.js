@@ -500,7 +500,7 @@ export default function ChatScreen({ navigation, route }) {
                     <View style={{ alignItems: 'flex-end', marginTop: 10 }}>
                         <View style={{
                             backgroundColor: colors.blueColor, padding: 10, 
-                            marginTop: 5, marginRight: "5%", maxWidth: '70%', alignSelf: 'flex-end', borderRadius: 20,
+                            marginTop: 5, marginRight: "5%", maxWidth: '70%', alignSelf: 'flex-end', borderRadius: 11,borderBottomEndRadius:15
                         }}>
                             <Text style={{ fontSize: 14, fontFamily: customFonts.regular, color: 'white' }}>
                                 {item.content}
@@ -543,7 +543,7 @@ export default function ChatScreen({ navigation, route }) {
                             </TouchableOpacity>
                             <Text style={{
                                 fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right',
-                                marginTop: 10 / 430 * width
+                                marginTop: 10 / 430 * width,color:'grey'
                             }}>
                                 {moment(item.createdAt).format('h:mm')}
                             </Text>
@@ -587,7 +587,7 @@ export default function ChatScreen({ navigation, route }) {
                             <ImageViewer swipeToCloseEnabled={true} visible={imageUrl !== null} close={() => { setImageUrl(null) }} url={imageUrl} />
                             <Text style={{
                                 fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right',
-                                paddingTop: 10 / 430 * width
+                                paddingTop: 10 / 430 * width,color:'grey'
                             }}>
                                 {moment(item.createdAt).format('h:mm')}
                             </Text>
@@ -607,8 +607,8 @@ export default function ChatScreen({ navigation, route }) {
                 return (
                     <View style={{ alignItems: 'flex-start', width: width - 50, marginTop: 10 }}>
                         <View style={{
-                            backgroundColor: "#F5F5F5", padding: 10, borderRadius: 5, marginTop: 5, marginLeft: "5%",
-                            maxWidth: '70%', alignSelf: 'flex-start', borderRadius: 20,
+                            backgroundColor: "#F5F5F5", padding: 10,borderRadius: 11,borderBottomStartRadius:15, marginTop: 5, marginLeft: "5%",
+                            maxWidth: '70%', alignSelf: 'flex-start',
                         }}>
                             <Text style={{ fontSize: 14, fontFamily: customFonts.regular, }}>
                                 {item.content}
@@ -650,7 +650,7 @@ export default function ChatScreen({ navigation, route }) {
                             </TouchableOpacity>
                             <Text style={{
                                 fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right',
-                                paddingTop: 10 / 430 * width
+                                paddingTop: 10 / 430 * width,color:'grey'
                             }}>
                                 {moment(item.createdAt).format('h:mm')}
                             </Text>
@@ -692,7 +692,7 @@ export default function ChatScreen({ navigation, route }) {
                             <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', width: imageWidth }}>
                                 <Text style={{
                                     fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right',
-                                    paddingTop: 10 / 430 * width, paddingRight: 5
+                                    paddingTop: 10 / 430 * width, paddingRight: 5,color:'grey'
                                 }}>
                                     {moment(item.createdAt).format('h:mm')}
                                 </Text>
