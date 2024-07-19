@@ -29,15 +29,10 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>abc.com</string>
+				<string>soulmatch.com</string>
 			</array>
 		</dict>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>plurawlapp.com</string>
-			</array>
-		</dict>
+		
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
@@ -68,7 +63,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>6.1.2</string>
+	<string>6.1.6</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
