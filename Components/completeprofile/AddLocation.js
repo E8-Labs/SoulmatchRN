@@ -38,6 +38,7 @@ const AddLocation = ({ navigation }) => {
             });
 
             if (reverseGeocode.length > 0) {
+                console.log('location data is', reverseGeocode)
                 setAddress(reverseGeocode[0]);
                 let userLocation = {
                     lat:location.coords.latitude,
@@ -45,6 +46,7 @@ const AddLocation = ({ navigation }) => {
                     city:reverseGeocode[0].city,
                     state:reverseGeocode[0].region
                 }
+                // console.log('user location is', userLocation)
                 updateProfile(userLocation)
             }
             

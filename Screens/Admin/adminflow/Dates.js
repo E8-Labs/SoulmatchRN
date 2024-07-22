@@ -475,7 +475,7 @@ const Dates = ({ navigation }) => {
                                                 Ratings :
                                             </Text>
                                             <Text style={{ fontWeight: '500', fontSize: 12, fontFamily: customFonts.bold, color: '#333333' }}>
-                                                {item.rating}
+                                                {Math.round(item.rating)}
                                             </Text>
                                         </View>
                                         <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>

@@ -8,6 +8,7 @@ import customFonts from '../../assets/fonts/Fonts';
 import colors from '../../assets/colors/Colors';
 import fonts from 'fonts';
 import moment from 'moment';
+import { ShowMessage } from '../../Services/Snakbar/ShowMessage';
 
 
 const { height, width } = Dimensions.get('window')
@@ -241,6 +242,8 @@ export default function NotificationsScreen({ navigation }) {
           },
           LastMessage: () => { console.log("Here") }
         })
+      }else{
+        ShowMessage("This chat was deleted")
       }
 
     } else if (item.notification_type === "DateInvite") {
@@ -248,6 +251,8 @@ export default function NotificationsScreen({ navigation }) {
         navigation.navigate("SelectedDateDetails", {
           data:item.booking.datePlace,
         })
+      }else{
+        ShowMessage("This date was deleted")
       }
 
     }

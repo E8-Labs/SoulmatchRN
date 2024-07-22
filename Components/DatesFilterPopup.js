@@ -362,7 +362,6 @@ export default function DatesFilterPopup({ visible, close, closeWithouFilters, f
                                     animationType='slide'
                                     visible={openAddressPicker}
                                 >
-
                                     <AddressPicker PickAddress={(address) => {
                                         console.log('address pick from address picker', address)
                                         setOpenAddressPicker(false)

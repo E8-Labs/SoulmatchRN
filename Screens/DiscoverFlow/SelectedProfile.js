@@ -207,7 +207,7 @@ export default function SelectedProfile({ navigation, route }) {
     }
     const getHeightInches = () => {
         if (user.height_inches % 12 > 0) {
-            let inches = ProfileData.height_inches % 12 + " inches"
+            let inches = user.height_inches % 12 + " inches"
             return inches
         } else {
             return ""
@@ -234,7 +234,6 @@ export default function SelectedProfile({ navigation, route }) {
                 </View>
 
                 <View style={{ height: height * 0.83, marginTop: 20 }} >
-
                     <ScrollView style={{ height: 100 }} showsVerticalScrollIndicator={false}>
 
                         <Image source={{ uri: user.profile_image }}
@@ -360,11 +359,11 @@ export default function SelectedProfile({ navigation, route }) {
                                     renderItem={({ item }) => (
                                         <View key={item.id} style={{
                                             borderWidth: 1, borderColor: colors.greyText, padding: 16, borderRadius: 10, width: width - 30,
-                                            marginTop: 22 / 930 * height,
+                                            marginTop: 22 / 930 * height,alignItems:'center'
                                         }}>
                                             {
                                                 item.caption !== "null" ? (
-                                                    <Text style={{ fontSize: 16, fontFamily: customFonts.regular }}>{item.caption}</Text>
+                                                    <Text style={{ fontSize: 16, fontFamily: customFonts.regular,width:width-80,textAlign:'left' }}>{item.caption}</Text>
                                                 ) : ""
                                             }
                                             {/* {

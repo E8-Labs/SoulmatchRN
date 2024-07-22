@@ -10,6 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image } from 'react-native';
 import DistanceCalculator from '../../../../Components/DistanceCalculator';
+import { ShowMessage } from '../../../../Services/Snakbar/ShowMessage';
 
 
 const placholder = require('../../../../assets/images/imagePlaceholder.webp')
@@ -28,6 +29,8 @@ const UserProfileDetails = ({ navigation, route }) => {
     const [QuestionAnswers, setQuestionAnswers] = useState([]);
     const [loadImage, setLoadImage] = useState(false);
     const [loadVideo, setLoadVideo] = useState(false);
+    const [isSuspended,setIsSuspended] = useState(false)
+    const [isDeleted,setIsDeleted] = useState(false)
     const videoRef = React.useRef(null);
     // const videoSource = .answerVideo;
     const [Status, setStatus] = useState({});
@@ -90,6 +93,10 @@ const UserProfileDetails = ({ navigation, route }) => {
     const [openSuspendModal, setopenSuspendModal] = useState(false)
 
     const handleModalclick = () => {
+        if(ProfileData.status === "deleted"){
+            ShowMessage("User already deleted")
+            return
+        }
         setOpenModal(true);
     }
 
@@ -162,7 +169,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                 if (response.ok) {
                     const Result = await response.json();
                     route.params.UserDeleted(route.params.index)
-                    // console.log("Resprronse of api is :", Result);
+                    console.log("Resprronse of api is :", Result);
                     navigation.pop();
                 } else if (!response.ok) {
                     console.log("Status is :", response.status);
@@ -175,6 +182,10 @@ const UserProfileDetails = ({ navigation, route }) => {
 
     //api call for suspending user
     const handleSuspend = async () => {
+        if(ProfileData.status === "suspended"){
+            ShowMessage("User already suspended")
+            return
+        }
         try {
             // const ApiUrl = "https://plurawlapp.com/soulmatch/api/admin/suspend_user";
             const ApiUrl = Apis.SuspendUser;
@@ -193,6 +204,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                 if (response.ok) {
                     const Result = await response.json();
                     console.log("Responsee of api is : ", Result.status);
+                    setIsSuspended
                     navigation.pop();
                 } else if (!response.ok) {
                     console.log("Response is not ok :", response.status);
@@ -255,9 +267,17 @@ const UserProfileDetails = ({ navigation, route }) => {
                             <Image source={ProfileData.profile_image ? { uri: ProfileData.profile_image } : require('../../../../assets/Images3/imagePlaceholder.webp')} style={{ height: 530 / 930 * height, width: 370 / 430 * width, resizeMode: 'cover', borderRadius: 10, marginTop: 10 }} />
                             {/* Suspend delete button */}
                             <View style={{ flexDirection: 'row', marginTop: 15, justifyContent: 'space-between' }}>
-                                <TouchableOpacity onPress={() => setopenSuspendModal(true)} style={GlobalStyles.SuspendDelBtn}>
+                                <TouchableOpacity 
+                                onPress={() => {
+                                    if(ProfileData.status === "suspended"){
+                                        ShowMessage("User already suspended")
+                                        return
+                                    }
+                                    setopenSuspendModal(true)
+
+                                    }} style={GlobalStyles.SuspendDelBtn}>
                                     <Text style={GlobalStyles.SuspendDelBText}>
-                                        Suspend
+                                    {ProfileData.status === "suspended" ? "Suspended":'Suspend'}
                                     </Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
@@ -269,7 +289,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                                     <Text style={[GlobalStyles.SuspendDelBText, {
                                         color: 'white'
                                     }]}>
-                                        Delete
+                                        {ProfileData.status === "deleted"? "Deleted":'Delete'}
                                     </Text>
                                 </TouchableOpacity>
                             </View>

@@ -177,7 +177,7 @@ const User = ({ navigation }) => {
     ];
 
     const deleteUser = (index) => {
-        console.log("Deleting user at inxex", index)
+        console.log("Deleting user at index", index)
         const newItems = [...AdminUsers];
         newItems.splice(index, 1);
         setAdminUsers(newItems);
@@ -261,6 +261,8 @@ const User = ({ navigation }) => {
                 return "Monthly"
             } else if(sub.subscriptionDetails.plan === "YearlySubsciptionSoulmatch0623"){
                 return "Yearly"
+            }else{
+                return "Free"
             }
         }else{
             return "Free"

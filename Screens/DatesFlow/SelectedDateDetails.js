@@ -192,7 +192,7 @@ export default function SelectedDateDetails({ navigation, route }) {
                                         <Image source={require('../../assets/images/star.png')}
                                             style={{ height: 12, width: 12 }}
                                         />
-                                        <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>{data.rating}</Text>
+                                        <Text style={{ fontSize: 16, fontFamily: customFonts.meduim }}>{Math.round(data.rating)}</Text>
 
                                     </View>
 
@@ -242,7 +242,7 @@ export default function SelectedDateDetails({ navigation, route }) {
                                     reviews.length > 0 ? (
                                         <>
                                             <Text style={{ fontSize: 12, fontFamily: customFonts.regular, marginTop: 5 / 930 * height }}>
-                                                108+Ratings . {data.totalReviews} Reviews
+                                                {data.totalReviews} Ratings . {data.totalReviews} Reviews
                                             </Text>
 
                                             <ScrollView
@@ -270,7 +270,7 @@ export default function SelectedDateDetails({ navigation, route }) {
                                                             {
                                                                 () => (
                                                                     <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>
-                                                                        {data.rating}
+                                                                        {Math.round(data.rating)}
                                                                     </Text>
                                                                 )
                                                             }
@@ -307,6 +307,8 @@ export default function SelectedDateDetails({ navigation, route }) {
                                                                             rating={item.rating}
 
                                                                         />
+
+
 
                                                                         <Text style={{ fontSize: 12, fontFamily: customFonts.regular, color: '#666666' }}>
                                                                             {getDuration(item.createdAt)}

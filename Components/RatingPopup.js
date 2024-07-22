@@ -14,14 +14,24 @@ const RatingPopup = ({ close, place ,addReview}) => {
     const [rating, setRating] = useState(0)
     const [review, setReview] = useState(null)
     const [loading, setLoading] = useState(false)
+    const [error,setError] = useState(null)
 
     const ratingCompleted = (rating) => {
         console.log("Rating is: " + rating)
         setRating(rating)
+        setError(null)
     }
 
 
     const RateBusiness = async () => {
+        if(!rating){
+            setError("Add ratings")
+            return
+        }
+        if(!review){
+            setError("Add review")
+            return
+        }
         let url = ApisPath.ApiReviewDatePlace
         let data = { placeId: place.id, rating: rating, review: review }
         setLoading(true)
@@ -45,6 +55,7 @@ const RatingPopup = ({ close, place ,addReview}) => {
                 addReview(json.data)
                 close(true)
             } else {
+                setError(json.message)
                 console.log('Error rating business ', json.message)
             }
         }
@@ -77,6 +88,7 @@ const RatingPopup = ({ close, place ,addReview}) => {
                     multiline
                     onChangeText={(text) => {
                         setReview(text)
+                        setError(null)
                     }}
                 // maxLength={200}
                 />
@@ -94,6 +106,9 @@ const RatingPopup = ({ close, place ,addReview}) => {
 
                 />
                 {/* </View> */}
+                {
+                    error&&<Text style = {GlobalStyles.errorText}>{error}</Text>
+                }
 
                 {
                     loading ? (

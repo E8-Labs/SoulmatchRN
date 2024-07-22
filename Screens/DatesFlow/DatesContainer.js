@@ -296,7 +296,7 @@ export default function DatesContainer({ navigation }) {
         Animated.parallel([
             Animated.timing(searchWidth, {
                 toValue: isSearching ? 0 : 280 / 430 * width, // Change 250 to the desired width of the search field
-                duration: 300,
+                duration: 400,
                 easing: Easing.linear,
                 useNativeDriver: false,
             }),

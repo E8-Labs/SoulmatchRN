@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Alert, View, Text, Dimensions, Modal, Keyboard, Platform, TouchableWithoutFeedback, TouchableOpacity, TextInput, StyleSheet, ScrollView, ActivityIndicator, SafeAreaView } from 'react-native'
 import { Image } from 'expo-image'
 import customFonts from '../../../../assets/fonts/Fonts'
@@ -23,6 +23,8 @@ const AddDate = ({ navigation, route }) => {
     // const LocationSelected = routeData.LocationSel;
     // console.log("selected location is :", LocationSelected);
     const { height, width } = Dimensions.get('window');
+
+    const scrolToTop = useRef(null)
 
 
     const [BusinessName, setBusinessName] = useState('');
@@ -61,18 +63,17 @@ const AddDate = ({ navigation, route }) => {
     const [SelCloseTime, setSelCloseTime] = useState(null);
     const [filters, setFilters] = useState({})
     const [openModalLocation, setOpenModalLocation] = useState(false);
-    const [activeKeyboard, setActiveKeyboard] = useState(false);
+    const [activeKeyboard, setActiveKeyboard] = useState(0);
 
     useEffect(() => {
         if (routeData.from === "EditDate") {
-
             setBusinessName(DateData.name);
             setCategoryId(DateData.Category.id);
-            setCategory(DateData.Category.id);
+            setCategory(DateData.Category);
             setTestCat(DateData.Category.id);
             console.log('Category passed from previous screen is :', DateData.Category);
             setCategoryName(DateData.Category.name);
-            setBudget(`$${DateData.minBudget} - $${DateData.maxBudget}`);
+            setBudget(formateBudget());
             setMaxBudget(DateData.maxBudget);
             setMinBudget(DateData.minBudget);
             setDescription(DateData.description);
@@ -91,6 +92,19 @@ const AddDate = ({ navigation, route }) => {
             setDate2(new Date(closeTime))
         }
     }, [])
+
+
+    const formateBudget = () =>{
+        if(DateData.minBudget == "0" && DateData.maxBudget == "20"){
+            return `$0 - $20 = $`
+        }else  if(DateData.minBudget == "30" && DateData.maxBudget == "50"){
+            return `$20 - $50 = $$`
+        } else  if(DateData.minBudget == "50" && DateData.maxBudget == "80"){
+            return `$50 - $80 = $$$`
+        } else  if(DateData.minBudget == "80" ){
+            return `$80+ = $$$$`
+        }
+    }
 
     useEffect(() => {
         // setSelOpenTime(DateData.openTime)
@@ -189,7 +203,7 @@ const AddDate = ({ navigation, route }) => {
         }
     }, [Budget])
 
-   
+
     //alert message
 
     const showAlert = () => {
@@ -320,14 +334,14 @@ const AddDate = ({ navigation, route }) => {
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
             // console.log("Keyboard show")
-            setmarginTop(-200);
-            setActiveKeyboard(true)
+           
+            // setmarginTop(-200);
         });
 
         const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
             // console.log("Keyboard hide")
             setmarginTop(0);
-            setActiveKeyboard(false)
+            setActiveKeyboard(0)
         });
 
         return () => {
@@ -424,16 +438,14 @@ const AddDate = ({ navigation, route }) => {
             if (data) {
                 let d = JSON.parse(data);
                 const AuthToken = d.token;
-                // let AuthToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoyNSwiZmlyc3RfbmFtZSI6ImFkbWluIiwibGFzdF9uYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQHNvdWxtYXRjaC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRmazNoTEN6MGlObGNNdjd4RVV3U2ouOWZtdms2SFNIRi4wdG5SWS5YWGl0MllTLkhsbUhBQyIsInByb2ZpbGVfaW1hZ2UiOiIiLCJpbnRyb192aWRlbyI6bnVsbCwiaW50cm9fdGh1bWJuYWlsX3VybCI6bnVsbCwiY29tcGFueSI6bnVsbCwiam9iX3RpdGxlIjpudWxsLCJhZ2UiOm51bGwsImhlaWdodF9pbmNoZXMiOm51bGwsImhlaWdodF9mZWV0IjpudWxsLCJ6b2RpYWMiOm51bGwsInNjaG9vbCI6bnVsbCwiY2l0eSI6bnVsbCwic3RhdGUiOm51bGwsImxhdCI6bnVsbCwibGFuZyI6bnVsbCwiZ2VuZGVyIjpudWxsLCJmY21fdG9rZW4iOm51bGwsImRldmljZV9pZCI6IiIsInByb3ZpZGVyX2lkIjoiIiwicHJvdmlkZXJfbmFtZSI6IkVtYWlsIiwicm9sZSI6ImFkbWluIiwic3RhdHVzIjpudWxsLCJlbmNfa2V5IjpudWxsLCJlbmNfaXYiOm51bGwsImRvYiI6bnVsbCwicG9pbnRzIjowLCJpbnRlcmVzdGVkX2dlbmRlciI6bnVsbCwiaW50ZXJlc3RlZF9taW5fYWdlIjpudWxsLCJpbnRlcmVzdGVkX21heF9hZ2UiOm51bGwsImNyZWF0ZWRBdCI6IjIwMjQtMDUtMjhUMDY6NDg6NTEuMDAwWiIsInVwZGF0ZWRBdCI6IjIwMjQtMDUtMjhUMDY6NTA6MDQuMDAwWiJ9LCJpYXQiOjE3MTY4NzkwNzUsImV4cCI6MTc0ODQxNTA3NX0.WdN1uRySZaxW2BzDJSWt3b97puD51PViXu6fL-sJQIs"
-                // const ApiUrl = "https://plurawlapp.com/soulmatch/api/admin/dates/update_date_place";
                 const formData = new FormData();
                 let CatVal = '';
-                if (Category.value) {
-                    CatVal = Category.value;
+                if (Category.name) {
+                    CatVal = Category.name;
                 } else {
                     CatVal = DateData.Category.id
                 }
-                formData.append("categoryId", CatVal);
+                formData.append("categoryId", CategoryId);
                 formData.append("minBudget", MinBudget);
                 formData.append("maxBudget", MaxBudget);
                 formData.append("openTime", SelOpenTime);
@@ -451,6 +463,7 @@ const AddDate = ({ navigation, route }) => {
                 });
                 formData.append("id", DateData.id);
                 console.log('Form data is :', formData);
+                // return
                 const response = await fetch(Apis.UpdateDatePlace, {
                     'method': 'post',
                     headers: {
@@ -507,62 +520,67 @@ const AddDate = ({ navigation, route }) => {
 
     return (
         <SafeAreaView>
-            <View style={{ alignSelf: 'center', alignItems: 'center', height: height * 0.95, width: width }}>
-                <View style={{ width: width - 50, marginTop: marginTop, }}>
+            <TouchableWithoutFeedback style={{ height: height }}
+                onPress={() => {
+                    Keyboard.dismiss()
+                }}
+            >
+                <View style={{ alignSelf: 'center', alignItems: 'center', height: height * 0.95, width: width }}>
+                    <View style={{ width: width - 50, marginTop: marginTop, }}>
 
-                    <View style={{ marginTop: 0, flexDirection: 'row', justifyContent: 'space-between', }}>
-                        <View style={{ flexDirection: 'row', gap: 20, alignItems: 'center' }}>
-                            <TouchableOpacity onPress={handleBackClick} style={{ width: 46 / 430 * width }}>
-                                <View style={{ height: 46 / 930 * height, width: 46 / 430 * width, borderWidth: 1, borderColor: '#E6E6E6', alignItems: 'center', justifyContent: 'center', borderRadius: 6 }}>
-                                    <Image source={require('../../../../assets/Images3/backIcon.png')} style={{ height: 12, width: 6, resizeMode: 'contain' }} />
-                                </View>
-                            </TouchableOpacity>
+                        <View style={{ marginTop: 0, flexDirection: 'row', justifyContent: 'space-between', }}>
+                            <View style={{ flexDirection: 'row', gap: 20, alignItems: 'center' }}>
+                                <TouchableOpacity onPress={handleBackClick} style={{ width: 46 / 430 * width }}>
+                                    <View style={{ height: 46 / 930 * height, width: 46 / 430 * width, borderWidth: 1, borderColor: '#E6E6E6', alignItems: 'center', justifyContent: 'center', borderRadius: 6 }}>
+                                        <Image source={require('../../../../assets/Images3/backIcon.png')} style={{ height: 12, width: 6, resizeMode: 'contain' }} />
+                                    </View>
+                                </TouchableOpacity>
+                                {
+                                    routeData.from === "AdminDates" ? (
+                                        <Text style={{ fontWeight: '500', fontSize: 24, fontFamily: customFonts.meduim }}>
+                                            Add new date
+                                        </Text>
+                                    ) : (
+                                        <Text style={{ fontWeight: '500', fontSize: 24, fontFamily: customFonts.meduim }}>
+                                            Edit
+                                        </Text>
+                                    )
+                                }
+
+                            </View>
+
                             {
                                 routeData.from === "AdminDates" ? (
-                                    <Text style={{ fontWeight: '500', fontSize: 24, fontFamily: customFonts.meduim }}>
-                                        Add new date
-                                    </Text>
+                                    <View style={{ justifyContent: 'center' }}>
+                                        {
+                                            Loading ?
+                                                <ActivityIndicator size={'small'} color={colors.blueColor} /> :
+                                                <TouchableOpacity onPress={handleSaveClick} style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                                    <Text style={{ fontWeight: '500', fontFamily: customFonts.meduim, fontSize: 14, color: '#6050DC' }}>
+                                                        Save
+                                                    </Text>
+                                                </TouchableOpacity>
+                                        }
+                                    </View>
                                 ) : (
-                                    <Text style={{ fontWeight: '500', fontSize: 24, fontFamily: customFonts.meduim }}>
-                                        Edit
-                                    </Text>
+                                    <View style={{ justifyContent: 'center' }}>
+                                        {
+                                            loading2 ?
+                                                <ActivityIndicator size={'small'} color={colors.blueColor} /> :
+                                                <TouchableOpacity onPress={handleUpdate} style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                                    <Text style={{ fontWeight: '500', fontFamily: customFonts.meduim, fontSize: 14, color: '#6050DC' }}>
+                                                        Update
+                                                    </Text>
+                                                </TouchableOpacity>
+                                        }
+                                    </View>
                                 )
                             }
 
                         </View>
 
-                        {
-                            routeData.from === "AdminDates" ? (
-                                <View style={{ justifyContent: 'center' }}>
-                                    {
-                                        Loading ?
-                                            <ActivityIndicator size={'small'} color={colors.blueColor} /> :
-                                            <TouchableOpacity onPress={handleSaveClick} style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                                <Text style={{ fontWeight: '500', fontFamily: customFonts.meduim, fontSize: 14, color: '#6050DC' }}>
-                                                    Save
-                                                </Text>
-                                            </TouchableOpacity>
-                                    }
-                                </View>
-                            ) : (
-                                <View style={{ justifyContent: 'center' }}>
-                                    {
-                                        loading2 ?
-                                            <ActivityIndicator size={'small'} color={colors.blueColor} /> :
-                                            <TouchableOpacity onPress={handleUpdate} style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                                <Text style={{ fontWeight: '500', fontFamily: customFonts.meduim, fontSize: 14, color: '#6050DC' }}>
-                                                    Update
-                                                </Text>
-                                            </TouchableOpacity>
-                                    }
-                                </View>
-                            )
-                        }
-
-                    </View>
-
-                    <View style={{ height: height * 0.85 }}>
-                        <ScrollView showsVerticalScrollIndicator={false} style={{ height: height * 0.85, marginBottom: activeKeyboard && 120 }}>
+                        <View style={{ height: height * 0.85 }}>
+                            {/* <ScrollView refr={scrolToTop} showsVerticalScrollIndicator={false} style={{ height: height * 0.85,}}> */}
                             {/* <Text style={{ fontWeight: '500', fontFamily: customFonts.meduim, fontSize: 16, marginTop: 18 }}>
  Add Image
  </Text> */}
@@ -570,13 +588,13 @@ const AddDate = ({ navigation, route }) => {
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                     <TouchableOpacity onPress={pickImage}>
                                         <Image source={image ? { uri: image } : require('../../../../assets/Images3/imagePlaceholder.webp')}
-                                            style={{ width: 148 / 430 * width, height: 148 / 930 * height, resizeMode: 'cover', marginTop: 30 / 930 * height, borderRadius: 100 }} />
+                                            style={{ width: 120 / 430 * width, height: 120 / 930 * height, resizeMode: 'cover', marginTop: 30 / 930 * height, borderRadius: 100 }} />
                                     </TouchableOpacity>
                                 </View> :
                                 <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
                                     <TouchableOpacity onPress={pickImage}>
                                         <Image source={require('../../../../assets/Images3/uploadImage.png')}
-                                            style={{ height: 148 / 930 * height, width: 148 / 430 * width, resizeMode: 'contain' }}
+                                            style={{ height: 120 / 930 * height, width: 120 / 430 * width, resizeMode: 'contain' }}
                                         />
                                     </TouchableOpacity>
                                 </View>
@@ -589,6 +607,9 @@ const AddDate = ({ navigation, route }) => {
                             <View style={{ borderWidth: 1, borderColor: '#CCCCCC', borderRadius: 10, padding: 16, justifyContent: 'center', marginTop: 5 }}>
                                 <TextInput
                                     value={BusinessName}
+                                    onFocus={() => {
+                                        setmarginTop(-200/930*height)
+                                    }}
                                     placeholderTextColor={"#999999"}
                                     onChangeText={(Business) => setBusinessName(Business)}
                                     style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.meduim, }}
@@ -615,6 +636,7 @@ const AddDate = ({ navigation, route }) => {
                                 searchPlaceholder="Search categories"
                                 onChange={item => {
                                     setCategory(item);
+                                    setCategoryId(item.value)
                                 }}
                             />
 
@@ -658,9 +680,9 @@ const AddDate = ({ navigation, route }) => {
                                 Hours of Operation
                             </Text>
 
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: 300 / 430 * width, alignSelf: 'center' }}>
-                                <View style={{ alignItems: 'center', flexDirection: 'column', gap: 10, marginTop: 20 }}>
-                                    <Text style={{ fontSize: 16 }}>Opening Time</Text>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: width - 30, alignSelf: 'center' }}>
+                                <View style={{ alignItems: 'center', flexDirection: 'row', gap: 10, marginTop: 5 }}>
+                                    <Text style={{ fontSize: 16, fontFamily: customFonts.regular, marginLeft: 10 / 430 * width }}>Open</Text>
                                     <DateTimePicker
                                         testID="dateTimePicker"
                                         value={date}
@@ -672,8 +694,8 @@ const AddDate = ({ navigation, route }) => {
                                     />
                                 </View>
 
-                                <View style={{ alignItems: 'center', flexDirection: 'column', gap: 10, marginTop: 20 }}>
-                                    <Text style={{ fontSize: 16 }}>Closing Time</Text>
+                                <View style={{ alignItems: 'center', flexDirection: 'row', gap: 10, marginTop: 5 }}>
+                                    <Text style={{ fontSize: 16, fontFamily: customFonts.regular }}>Close</Text>
                                     <DateTimePicker
                                         testID="dateTimePicker"
                                         value={date2}
@@ -725,57 +747,61 @@ const AddDate = ({ navigation, route }) => {
                             <View style={{ borderRadius: 10, borderColor: '#CCCCCC', padding: 8, borderWidth: 1 }}>
                                 <TextInput
                                     value={Description}
+                                    onFocus={() => {
+                                        setmarginTop(-300/930*height)
+                                    }}
                                     onChangeText={(Description) => setDescription(Description)}
                                     multiline
                                     placeholder='Enter description'
                                     textAlignVertical='top'
-                                    style={{ fontWeight: '500', color: '#000000', fontSize: 14, fontFamily: customFonts.meduim, height: 100 / 930 * height, }} />
+                                    style={{ fontWeight: '500', color: '#000000', fontSize: 14, fontFamily: customFonts.meduim, height: 80 / 930 * height, }} />
                             </View>
-                        </ScrollView>
+                            {/* </ScrollView> */}
+                        </View>
                     </View>
+
+                    {
+                        openModalLocation && (
+                            <Modal
+                                visible={openModalLocation}
+                                transparent={true}
+                                animationType='slide'
+                            >
+                                <AddressPicker PickAddress={async (address) => {
+                                    console.log("Address picked from popup", address)
+                                    setOpenModalLocation(false)
+                                    setCityName(address.city);
+                                    let completeAddress = ""
+                                    if (address.streetNo) {
+                                        completeAddress = address.streetNo
+                                    }
+                                    if (address.route) {
+                                        completeAddress = completeAddress + ` ${address.route}`
+                                    }
+                                    if (address.city) {
+                                        completeAddress = completeAddress + ` ${address.city}`
+                                    }
+                                    if (address.state2) {
+                                        completeAddress = completeAddress + ` ${address.state2}`
+                                    }
+                                    if (address.state) {
+                                        completeAddress = completeAddress + ` ${address.state}`
+                                    }
+                                    console.log("Compelte address is ", completeAddress)
+                                    setLongAddress(completeAddress);
+                                    setlatitude(address.lang);
+                                    setlongitude(address.lat);
+                                    setStateName(address.state)
+                                    // setFilters(newFilters) 
+                                }} backButtonPressed={() => {
+                                    setOpenModalLocation(false)
+                                }} />
+                            </Modal>
+                        )
+                    }
+
                 </View>
-
-                {
-                    openModalLocation && (
-                        <Modal
-                            visible={openModalLocation}
-                            transparent={true}
-                            animationType='slide'
-                        >
-                            <AddressPicker PickAddress={async (address) => {
-                                console.log("Address picked from popup", address)
-                                setOpenModalLocation(false)
-                                setCityName(address.city);
-                                let completeAddress = ""
-                                if (address.streetNo) {
-                                    completeAddress = address.streetNo
-                                }
-                                if (address.route) {
-                                    completeAddress = completeAddress + ` ${address.route}`
-                                }
-                                if (address.city) {
-                                    completeAddress = completeAddress + ` ${address.city}`
-                                }
-                                if (address.state2) {
-                                    completeAddress = completeAddress + ` ${address.state2}`
-                                }
-                                if (address.state) {
-                                    completeAddress = completeAddress + ` ${address.state}`
-                                }
-                                console.log("Compelte address is ", completeAddress)
-                                setLongAddress(completeAddress);
-                                setlatitude(address.lang);
-                                setlongitude(address.lat);
-                                setStateName(address.state)
-                                // setFilters(newFilters) 
-                            }} backButtonPressed={() => {
-                                setOpenModalLocation(false)
-                            }} />
-                        </Modal>
-                    )
-                }
-
-            </View>
+            </TouchableWithoutFeedback>
         </SafeAreaView>
     )
 }

@@ -100,7 +100,7 @@ const FlaggedUsers = ({ navigation }) => {
         if (flaggedUsers.length === 0) {
             return (
                 <View>
-                    <Text style={{ fontWeight: '500', fontSize: 20, fontFamily: customFonts.meduim, textAlign: 'center', marginTop: 30 }}>
+                    <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.regular, textAlign: 'center', marginTop: 30 }}>
                         No flagged users
                     </Text>
                 </View>

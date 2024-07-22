@@ -1,7 +1,8 @@
 import {
     View, Text, Dimensions, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform, StyleSheet,
     TextInput, Modal, TouchableWithoutFeedback, Keyboard,
-    ScrollView, ActivityIndicator
+    ScrollView, ActivityIndicator,
+    DeviceEventEmitter
 } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import GlobalStyles from '../../assets/styles/GlobalStyles'
@@ -25,7 +26,8 @@ import { Ionicons } from '@expo/vector-icons';
 import VoiceMessagePlayer from '../../Components/VoiceMessagePlayer'
 import { ImageViewer } from '../../Components/ImageViewer'
 import { getProfile } from '../../Services/ProfileServices/GetProfile'
-import { placholder } from '../../models/Constants'
+import { BroadcastEvents, placholder } from '../../models/Constants'
+import { ShowMessage } from '../../Services/Snakbar/ShowMessage'
 
 
 
@@ -51,7 +53,7 @@ export default function ChatScreen({ navigation, route }) {
     const [openModal3, setOpenModal3] = useState(false);
     const [openModal2, setOpenModal2] = useState(false);
     const [message, setMessage] = useState('');
-    const [messages, setMessages] = useState([]); 
+    const [messages, setMessages] = useState([]);
     const [thumbnail, setThumnail] = useState(null);
     const [loading, setLoading] = useState(false)
     const [recording, setRecording] = useState();
@@ -126,11 +128,13 @@ export default function ChatScreen({ navigation, route }) {
     }
 
     const pusherRef = useRef(null);
+    const pusher = '';
+    let channel = '';
 
     async function SubscribeChatEvents(chatId, setMessages) {
-        let channel = `chat-channel-${chatId}`;
+        channel = `chat-channel-${chatId}`;
         console.log("Subscribing Event ", channel);
-        const pusher = Pusher.getInstance();
+        pusher = Pusher.getInstance();
 
         await pusher.init({
             apiKey: "404f727e86e2044ed1f4",
@@ -161,7 +165,11 @@ export default function ChatScreen({ navigation, route }) {
             }
         });
         console.log("Event response ", sub)
-        return pusher;
+        return () => {
+            pusher
+            pusher.subscribe(channel)
+            pusher.disconnect()
+        };
     }
 
     const closeModal2 = () => {
@@ -404,7 +412,12 @@ export default function ChatScreen({ navigation, route }) {
     const blockUser = async () => {
         console.log('trying to block')
         const data = await AsyncStorage.getItem("USER")
+
+        // DeviceEventEmitter.emit(BroadcastEvents.EventBlock, {message: "User Blocked"})
+        // setOpenModal3(false)
+        // navigation.goBack()
         setLoading(true)
+        // return
         try {
             if (data) {
                 let d = JSON.parse(data)
@@ -426,6 +439,8 @@ export default function ChatScreen({ navigation, route }) {
                     let json = await result.json()
                     if (json.status === true) {
                         console.log('user blocked',)
+                        // ShowMessage("User blocked successfully")
+                        DeviceEventEmitter.emit(BroadcastEvents.EventBlock, { message: "User Blocked" })
                         setOpenModal3(false)
                         navigation.goBack()
                     } else {
@@ -497,10 +512,10 @@ export default function ChatScreen({ navigation, route }) {
             }
             if (getMessageType(item) === "text") {
                 return (
-                    <View style={{ alignItems: 'flex-end', marginTop: 10 }}>
+                    <View style={{ alignItems: 'flex-end', marginTop: 10,width: width}}>
                         <View style={{
-                            backgroundColor: colors.blueColor, padding: 10, 
-                            marginTop: 5, marginRight: "5%", maxWidth: '70%', alignSelf: 'flex-end', borderRadius: 11,borderBottomEndRadius:15
+                            backgroundColor: colors.blueColor, padding: 10,
+                            marginTop: 5, marginRight: "5%", maxWidth: '70%', alignSelf: 'flex-end', borderRadius: 11, borderBottomEndRadius: 15
                         }}>
                             <Text style={{ fontSize: 14, fontFamily: customFonts.regular, color: 'white' }}>
                                 {item.content}
@@ -543,7 +558,7 @@ export default function ChatScreen({ navigation, route }) {
                             </TouchableOpacity>
                             <Text style={{
                                 fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right',
-                                marginTop: 10 / 430 * width,color:'grey'
+                                marginTop: 10 / 430 * width, color: 'grey'
                             }}>
                                 {moment(item.createdAt).format('h:mm')}
                             </Text>
@@ -587,7 +602,7 @@ export default function ChatScreen({ navigation, route }) {
                             <ImageViewer swipeToCloseEnabled={true} visible={imageUrl !== null} close={() => { setImageUrl(null) }} url={imageUrl} />
                             <Text style={{
                                 fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right',
-                                paddingTop: 10 / 430 * width,color:'grey'
+                                paddingTop: 10 / 430 * width, color: 'grey'
                             }}>
                                 {moment(item.createdAt).format('h:mm')}
                             </Text>
@@ -607,7 +622,7 @@ export default function ChatScreen({ navigation, route }) {
                 return (
                     <View style={{ alignItems: 'flex-start', width: width - 50, marginTop: 10 }}>
                         <View style={{
-                            backgroundColor: "#F5F5F5", padding: 10,borderRadius: 11,borderBottomStartRadius:15, marginTop: 5, marginLeft: "5%",
+                            backgroundColor: "#F5F5F5", padding: 10, borderRadius: 11, borderBottomStartRadius: 15, marginTop: 5, marginLeft: "5%",
                             maxWidth: '70%', alignSelf: 'flex-start',
                         }}>
                             <Text style={{ fontSize: 14, fontFamily: customFonts.regular, }}>
@@ -619,7 +634,7 @@ export default function ChatScreen({ navigation, route }) {
                         </View>
                         <Text style={{
                             fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right',
-                            paddingLeft: 20 / 430 * width, color: 'grey',paddingTop:3
+                            paddingLeft: 20 / 430 * width, color: 'grey', paddingTop: 3
                         }}>
                             {moment(item.createdAt).format('h:mm')}
                         </Text>
@@ -650,7 +665,7 @@ export default function ChatScreen({ navigation, route }) {
                             </TouchableOpacity>
                             <Text style={{
                                 fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right',
-                                paddingTop: 10 / 430 * width,color:'grey'
+                                paddingTop: 10 / 430 * width, color: 'grey'
                             }}>
                                 {moment(item.createdAt).format('h:mm')}
                             </Text>
@@ -692,7 +707,7 @@ export default function ChatScreen({ navigation, route }) {
                             <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', width: imageWidth }}>
                                 <Text style={{
                                     fontSize: 10, fontFamily: customFonts.regular, textAlign: 'right',
-                                    paddingTop: 10 / 430 * width, paddingRight: 5,color:'grey'
+                                    paddingTop: 10 / 430 * width, paddingRight: 5, color: 'grey'
                                 }}>
                                     {moment(item.createdAt).format('h:mm')}
                                 </Text>
@@ -863,32 +878,34 @@ export default function ChatScreen({ navigation, route }) {
                     renderItem={({ item }) => (renderItem(item))}
                 />
                 {
-                    messages.length === 0 ? (
-                        <>
-                            <Text style={{ fontSize: 14, textAlign: 'center' }}>Select an ice breaker</Text>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, width: width - 50, marginTop: 25 / 930 * height }}>
-                                <ScrollView
-                                    horizontal
-                                    showsHorizontalScrollIndicator={false}
-                                >
-                                    {
-                                        iceBreakers.map((item) => (
-                                            <TouchableOpacity onPress={() => {
-                                                sendMessage(item.text)
-                                            }}>
-                                                <View style={{
-                                                    paddingVertical: 12 / 930 * height, paddingHorizontal: 14 / 430 * height, borderWidth: 1, borderRadius: 50,
-                                                    borderColor: colors.greyText, marginLeft: 10
-                                                }}
-                                                >
-                                                    <Text style={{ fontSize: 16, color: colors.blueColor }}>{item.text}</Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                        ))
-                                    }
-                                </ScrollView>
-                            </View>
-                        </>
+                    !chat.users[0] && chat.users[0].blockedByMe || chat.users[0] && chat.users[0].blockedMe ? (
+                        messages.length === 0 ? (
+                            <>
+                                <Text style={{ fontSize: 14, textAlign: 'center' }}>Select an ice breaker</Text>
+                                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, width: width - 50, marginTop: 25 / 930 * height }}>
+                                    <ScrollView
+                                        horizontal
+                                        showsHorizontalScrollIndicator={false}
+                                    >
+                                        {
+                                            iceBreakers.map((item) => (
+                                                <TouchableOpacity onPress={() => {
+                                                    sendMessage(item.text)
+                                                }}>
+                                                    <View style={{
+                                                        paddingVertical: 12 / 930 * height, paddingHorizontal: 14 / 430 * height, borderWidth: 1, borderRadius: 50,
+                                                        borderColor: colors.greyText, marginLeft: 10
+                                                    }}
+                                                    >
+                                                        <Text style={{ fontSize: 16, color: colors.blueColor }}>{item.text}</Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            ))
+                                        }
+                                    </ScrollView>
+                                </View>
+                            </>
+                        ) : null
                     ) : null
                 }
 

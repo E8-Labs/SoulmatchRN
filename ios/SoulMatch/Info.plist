@@ -32,7 +32,6 @@
 				<string>soulmatch.com</string>
 			</array>
 		</dict>
-		
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
@@ -40,30 +39,24 @@
 			</array>
 		</dict>
 		<dict>
-			<key>CFBundleURLTypes</key>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>Fb Login</string>
+			<key>CFBundleURLSchemes</key>
 			<array>
-				<dict>
-					<key>CFBundleURLSchemes</key>
-					<array>
-						<string>fb753527366987241</string>
-					</array>
-				</dict>
-			</array>
-			<key>FacebookAppID</key>
-			<string>753527366987241</string>
-			<key>FacebookDisplayName</key>
-			<string>SoulMatch</string>
-			<key>LSApplicationQueriesSchemes</key>
-			<array>
-				<string>fbapi</string>
-				<string>fb-messenger-api</string>
-				<string>fbauth2</string>
-				<string>fbshareextension</string>
+				<string>fb753527366987241</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>6.1.6</string>
+	<key>FacebookAppID</key>
+	<string>753527366987241</string>
+	<key>FacebookClientToken</key>
+	<string>3c9a9525dab247f54481c7dbc4003c5c</string>
+	<key>FacebookDisplayName</key>
+	<string>SoulMatch</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

@@ -37,17 +37,23 @@ export default function MessagesList({ navigation }) {
     const [isSearching, setIsSearching] = useState(false)
     const [filteredMessages, setFilteredMessages] = useState([]);
 
-    useEffect(() => {
-        const listener = DeviceEventEmitter.addListener(BroadcastEvents.EventCreateChat, (data) => {
-            console.log('chat object received from broad cast', data)
-            getMessagesList()
+      useFocusEffect(
+        React.useCallback(() => {
+            receiveBlockEvent()
+        }, [])
+    )
 
-
-        })
-        return () => {
-            listener.remove()
-        }
-    }, [])
+    const receiveBlockEvent = () =>{
+        console.log('trying to receive block event ')
+        const listener = DeviceEventEmitter.addListener(BroadcastEvents.EventBlock, (data) => {
+            console.log('user blocked event received', data);
+            getMessagesList();
+          });
+    
+          return () => {
+            listener.remove();
+          };
+    }
 
     useEffect(() => {
         console.log("Fitlered messages chagned ", filteredMessages)
@@ -58,7 +64,6 @@ export default function MessagesList({ navigation }) {
         console.log('rearranged messasges list is', messageList)
     }, [])
 
-
     const searchUserName = (search) => {
         setSearch(search);
         setIsSearching(true);
@@ -67,9 +72,12 @@ export default function MessagesList({ navigation }) {
             setFilteredMessages(messageList); // Show all messages if search is empty
         } else {
             const filtered = messageList.filter((chat) => {
-                let user = chat.users[0]
-                if (user.first_name.toLowerCase().includes(search.toLowerCase()) || user.last_name.toLowerCase().includes(search.toLowerCase())) {
-                    return chat
+                if (chat.users[0]) {
+                    let user = chat.users[0]
+                    if (user.first_name.toLowerCase().includes(search.toLowerCase()) || user.last_name.toLowerCase().includes(search.toLowerCase())) {
+                        return chat
+                    }
+
                 }
             }
             );
@@ -362,7 +370,7 @@ export default function MessagesList({ navigation }) {
                     </View>
                 </View>
 
-                <View style={{ flexDirection: 'column', alignItems: 'center', width: width, height: height * 0.76, paddingBottom: 10, backgroundColor: 'white' }}>
+                <View style={{ flexDirection: 'column', alignItems: 'center', width: width, height: height * 0.82, paddingBottom: 10, backgroundColor: 'white' }}>
                     {
                         showIndicator ? (
                             <ContentLoader

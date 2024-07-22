@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {
     View, Text, Dimensions, TextInput, TouchableOpacity, SafeAreaView, Keyboard, KeyboardAvoidingView,
-    TouchableWithoutFeedback, Platform, ActivityIndicator
+    TouchableWithoutFeedback, Platform, ActivityIndicator, Alert
 } from 'react-native';
 import GlobalStyles from '../../assets/styles/GlobalStyles';
 import colors from '../../assets/colors/Colors';
@@ -10,8 +10,10 @@ import ApisPath from '../../lib/ApisPath/ApisPath';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import * as AppleAuthentication from 'expo-apple-authentication';
+import { LoginManager, AccessToken, Profile } from 'react-native-fbsdk-next';
 import { NavigateLogedUser } from '../../Services/user/NavigateLogedUser';
 import { Image } from 'expo-image';
+
 
 const { height, width } = Dimensions.get("window");
 
@@ -21,9 +23,6 @@ const eye = require('../../assets/images/eye.png')
 const eyeslash = require('../../assets/images/eye-slash.png')
 
 export default function LoginUser(props) {
-
-
-
 
     const [selected, setSelected] = useState(false);
     const [email, setEmail] = useState("");
@@ -87,9 +86,9 @@ export default function LoginUser(props) {
                         }
 
                     } else if (json.message === 'User registered') {
-                        props.navigation.navigate("UploadImage",{
-                            data:{
-                                from:'SocialLogin'
+                        props.navigation.navigate("UploadImage", {
+                            data: {
+                                from: 'SocialLogin'
                             }
                         })
                     }
@@ -145,49 +144,54 @@ export default function LoginUser(props) {
     }
 
 
-    // const facebookLogin = () => {
-    //     try {
-    //         LoginManager.logInWithPermissions(["public_profile", "email"]).then(
-    //             function (result) {
-    //                 if (result.isCancelled) {
-    //                     console.log("Login cancelled");
-    //                 } else {
-    //                     console.log(
-    //                         "Login success with permissions: ", result
-    //                     );
-    //                     const currentProfile = Profile.getCurrentProfile().then(
-    //                         function (currentProfile) {
-    //                             console.log("Current Profile ", currentProfile)
-    //                             if (currentProfile) {
-    //                                 console.log("The current logged user is: ",
-    //                                     currentProfile
-    //                                 );
-    //                                 signInSocial({ name: currentProfile.name, email: currentProfile.email, provider_name: "facebook", provider_id: currentProfile.userID, profile_image: currentProfile.imageURL, device_id: did })
+    const handleFacebookLogin = async () => {
+        try {
+            const result = await LoginManager.logInWithPermissions(["public_profile"]);
 
-    //                             }
-    //                         }
-    //                     );
-    //                 }
-    //             },
-    //             function (error) {
-    //                 console.log("Login fail with error: " + error);
-    //             }
-    //         );
-    //     }
-    //     catch (error) {
-    //         console.log("Error", error)
-    //     }
-    // }
+            if (result.isCancelled) {
+                console.log("Login cancelled");
+                Alert.alert('Login cancelled');
+            } else {
+                console.log("Login success with permissions:", result);
+
+                const data = await AccessToken.getCurrentAccessToken();
+
+                if (!data) {
+                    console.log("Something went wrong obtaining access token");
+                    Alert.alert('Error', 'Something went wrong obtaining access token');
+                } else {
+                    console.log("Access token obtained:", data.accessToken.toString());
+
+                    const currentProfile = await Profile.getCurrentProfile();
+
+                    if (currentProfile) {
+                        console.log("Current Profile:", currentProfile);
+                        // Alert.alert('Login Success', `Logged in as ${currentProfile.name}`);
+                        socialLogin({ first_name: currentProfile.firstName, last_name: currentProfile.lastName, email:currentProfile.userID+"@gmail.com", provider_name: "facebook", provider_id: currentProfile.userID, profile_image: currentProfile.imageURL, })
+
+                        // Perform further actions with the profile data, e.g., signInSocial function
+                    } else {
+                        console.log("No current profile found");
+                        Alert.alert('Error', 'No current profile found');
+                    }
+                }
+            }
+        } catch (error) {
+            console.log("Login failed with error:", error);
+            Alert.alert('Login failed', error.message);
+        }
+    };
+
 
     const getName = (fullName) => {
 
         const nameParts = fullName.split(' ')
         // setFistName(nameParts[0])
         // setLastName(nameParts[1])
-        if(nameParts.length > 1){
-            return {firstName: nameParts[0], lastName: nameParts[1]}
+        if (nameParts.length > 1) {
+            return { firstName: nameParts[0], lastName: nameParts[1] }
         }
-        return {firstName: nameParts[0]}
+        return { firstName: nameParts[0] }
 
     };
 
@@ -397,9 +401,9 @@ export default function LoginUser(props) {
                                 <View style={{ alignItems: 'center', flexDirection: 'row', gap: 5, marginTop: 35 / 924 * height }}>
                                     <Text style={GlobalStyles.LoginMeduimText}>Don't have an account?</Text>
                                     <TouchableOpacity style={{}}
-                                        onPress={() => props.navigation.navigate("UploadImage",{
-                                            data:{
-                                                from:'Login'
+                                        onPress={() => props.navigation.navigate("UploadImage", {
+                                            data: {
+                                                from: 'Login'
                                             }
                                         })}
                                     >
@@ -435,7 +439,9 @@ export default function LoginUser(props) {
                                         )
                                     }
 
-                                    <TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={handleFacebookLogin}
+                                    >
 
                                         <View style={{ borderWidth: 1, borderRadius: 10, borderColor: colors.greyText, padding: 18 }}>
                                             <Image source={require('../../assets/images/facebook.png')}

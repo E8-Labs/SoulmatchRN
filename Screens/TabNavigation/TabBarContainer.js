@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, Text, ImageBackground, StyleSheet, TouchableOpacity, Dimensions, Platform, Alert, AppState} from "react-native";
+import { View, Text, ImageBackground, StyleSheet, TouchableOpacity, Dimensions, Platform, Alert, AppState } from "react-native";
 import { Image } from "expo-image";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as Device from 'expo-device';
@@ -16,6 +16,7 @@ import MessagesList from "../ChatFlow/MessagesList";
 import { getProfile } from "../../Services/ProfileServices/GetProfile";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Purchases from "react-native-purchases";
+import { Pusher } from "@pusher/pusher-websocket-react-native";
 
 const Tab = createBottomTabNavigator()
 
@@ -170,6 +171,75 @@ export default function TabBarContainer(props) {
     const responseListener = useRef();
 
 
+    // user deleted or suspent event receive code
+
+    useEffect(() => {
+        const pusher = Pusher.getInstance()
+        
+        let channel = ''
+        const subscribeEvent = async () => {
+            await pusher.init({
+                apiKey: "404f727e86e2044ed1f4",
+                cluster: "us3"
+            });
+            const user = await AsyncStorage.getItem("USER")
+            if (user) {
+                let u = JSON.parse(user)
+               channel = `UserDeletedSuspended-${u.user.id}`
+                await pusher.connect()
+                await pusher.subscribe({
+                    channelName:channel,
+                    onEvent :(event)=>{
+                        console.log('event tabbar ', event)
+                        if(event.eventName === "deleted"){
+                            Alert.alert(
+                                "Account deleted",
+                                "Your account has been deleted by admin",
+                                [{
+                                    text: 'Logout',
+                                    onPress: () =>{
+                                        AsyncStorage.removeItem("USER")
+                                        props.navigation.reset({
+                                            index:0,
+                                            routes: [{ name: 'LoginUser' }],
+                                        })
+                                    },
+                                  },]
+                            )
+                        } else if(event.eventName === "suspended"){
+                            Alert.alert(
+                                "Account suspended",
+                                "Your account has been suspended by admin",
+                                [
+                                  {
+                                    text: 'Logout',
+                                    onPress: async () => {
+                                      await AsyncStorage.removeItem("USER");
+                                      console.log('user suspended');
+                                      props.navigation.replace("SplashMainScreen");
+                                      // props.navigation.reset({
+                                      //     index:0,
+                                      //     routes: [{ name: 'LoginUser' }],
+                                      // })
+                                    },
+                                  },
+                                ],
+                              );
+                              
+                        }
+                    }
+                })
+            }
+        }
+        subscribeEvent()
+
+
+        return ()=>{
+            pusher.subscribe(channel)
+            pusher.disconnect()
+        }
+    },[])
+
     // useEffect(() => {
     //     const subscription = Notifications.addNotificationResponseReceivedListener(response => {
     //         const notData = response.notification.request.content.data;
@@ -188,7 +258,7 @@ export default function TabBarContainer(props) {
     //                         data: {
     //                             chat: additionalData,
     //                             from: 'Notification', 
-                                
+
     //                         },
     //                         LastMessage: ()=>{console.log("Here")}
     //                     });
@@ -224,13 +294,13 @@ export default function TabBarContainer(props) {
 
     //     return () => subscription.remove();
     // }, []);
-    useEffect(()=>{
-        const getUserProfile =async() =>{
+    useEffect(() => {
+        const getUserProfile = async () => {
             console.log('trying to get pro')
-            try{
+            try {
                 let userData = await AsyncStorage.getItem("USER")
                 let data = JSON.parse(userData)
-                if(data){
+                if (data) {
                     console.log('user profile on dashboard is', data.user.subscription)
                     // if(!data.user.subscription.isSubscribed){
                     //     props.navigation.navigate("SubscriptionPlan")
@@ -249,7 +319,7 @@ export default function TabBarContainer(props) {
                     //   }
                     refreshSubscriptionStatus()
                 }
-            }catch(e) {
+            } catch (e) {
                 console.log('error in get profile', e)
             }
         }
@@ -259,15 +329,15 @@ export default function TabBarContainer(props) {
         return () => {
             subscription.remove();
         };
-        
-     },[])
 
-     
+    }, [])
+
+
 
     useEffect(() => {
         const subscription = Notifications.addNotificationResponseReceivedListener(response => {
             const notData = response.notification.request.content.data;
-            
+
             console.log("notification data is", notData);
             let data = notData.notification;
             let additionalData = notData.additional;
@@ -287,14 +357,14 @@ export default function TabBarContainer(props) {
         }
     };
 
-    function checkSubscriptionStatus(info){
-        if (typeof info.entitlements.active["premium"] != "undefined") {
+    function checkSubscriptionStatus(info) {
+        if (typeof info.entitlements.active["premium"] === "undefined") {
             console.log("User subscribed to plan Tabbar", info.entitlements.active["premium"]);
-          }
-          else{
+        }
+        else {
             console.log("User not subscribed")
-              props.navigation.navigate("SubscriptionPlan")
-          }
+            props.navigation.navigate("SubscriptionPlan")
+        }
     }
 
     const refreshSubscriptionStatus = async () => {
@@ -319,7 +389,7 @@ export default function TabBarContainer(props) {
                 props.navigation.navigate("ChatScreen", {
                     data: {
                         chat: additionalData,
-                        from: 'Notification', 
+                        from: 'Notification',
                     },
                     LastMessage: () => { console.log("Here") }
                 });

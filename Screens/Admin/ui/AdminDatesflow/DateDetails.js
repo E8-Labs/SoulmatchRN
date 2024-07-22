@@ -54,7 +54,7 @@ const DateDetails = ({ navigation, route }) => {
         setUserDateDetails(dateDetails)
     }, [dateDetails])
 
-   
+
     console.log("Data from previous screen is :", UserDateDetails);
     const getDetails = async () => {
         try {
@@ -76,7 +76,7 @@ const DateDetails = ({ navigation, route }) => {
                         console.log('date details are', json.data)
                         setUserDateDetails(json.data)
                         setDateDetails(json.data)
-                        
+
                     } else {
                         console.log('date details message is', json.message)
                     }
@@ -204,28 +204,27 @@ const DateDetails = ({ navigation, route }) => {
                         translucent={false}
                     />
                     <View style={{ height: height * 0.86 }}>
-                        <ScrollView showsVerticalScrollIndicator={false}>
-                            <View style={{ marginTop: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <View style={{ flexDirection: 'row', gap: 20, alignItems: 'center' }}>
-                                    <TouchableOpacity onPress={handleBackClick} style={{ width: 46 / 430 * width }}>
-                                        <View style={{ height: 46 / 930 * height, width: 46 / 430 * width, borderWidth: 1, borderColor: '#E6E6E6', alignItems: 'center', justifyContent: 'center', borderRadius: 6 }}>
-                                            <Image source={require('../../../../assets/Images3/backIcon.png')} style={{ height: 12, width: 6, resizeMode: 'contain' }} />
-                                        </View>
-                                    </TouchableOpacity>
-                                    <Text style={{
-                                        fontWeight: '500', fontSize: 22, fontFamily: customFonts.meduim, width: 270 / 430 * width,
-                                    }}>
-                                        {dateDetails&&dateDetails.name}
-                                    </Text>
-                                </View>
-                                <TouchableOpacity onPress={handleModalclick} style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    <Image source={require('../../../../assets/Images3/trash.png')} style={{ height: 28, width: 28, resizeMode: 'contain' }} />
+                        <View style={{ marginTop: 0, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', gap: 20, alignItems: 'center' }}>
+                                <TouchableOpacity onPress={handleBackClick} style={{ width: 46 / 430 * width }}>
+                                    <View style={{ height: 46 / 930 * height, width: 46 / 430 * width, borderWidth: 1, borderColor: '#E6E6E6', alignItems: 'center', justifyContent: 'center', borderRadius: 6 }}>
+                                        <Image source={require('../../../../assets/Images3/backIcon.png')} style={{ height: 12, width: 6, resizeMode: 'contain' }} />
+                                    </View>
                                 </TouchableOpacity>
+                                <Text style={{
+                                    fontWeight: '500', fontSize: 22, fontFamily: customFonts.meduim, width: 270 / 430 * width,
+                                }}>
+                                    {dateDetails && dateDetails.name}
+                                </Text>
                             </View>
-
+                            <TouchableOpacity onPress={handleModalclick} style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                <Image source={require('../../../../assets/Images3/trash.png')} style={{ height: 28, width: 28, resizeMode: 'contain' }} />
+                            </TouchableOpacity>
+                        </View>
+                        <ScrollView showsVerticalScrollIndicator={false}>
                             <View style={{ marginTop: 20 }}>
                                 <Image
-                                    source={dateDetails&&dateDetails.imageUrl ? { uri: dateDetails.imageUrl } :
+                                    source={dateDetails && dateDetails.imageUrl ? { uri: dateDetails.imageUrl } :
                                         require('../../../../assets/Images3/imagePlaceholder.webp')}
                                     style={{
                                         height: 240 / 930 * height, width: 370 / 430 * width, borderRadius: 10, resizeMode: 'cover'
@@ -238,7 +237,7 @@ const DateDetails = ({ navigation, route }) => {
                                         Budget
                                     </Text>
                                     <Text style={[styles.RatingsValue, { textAlign: 'start' }]}>
-                                        {dateDetails&&GetBudget(dateDetails)}
+                                        {dateDetails && GetBudget(dateDetails)}
                                     </Text>
                                 </View>
                                 <View>
@@ -246,7 +245,7 @@ const DateDetails = ({ navigation, route }) => {
                                         Category
                                     </Text>
                                     <Text style={styles.RatingsValue}>
-                                        {dateDetails&&dateDetails.Category ? dateDetails.Category.name : ""}
+                                        {dateDetails && dateDetails.Category ? dateDetails.Category.name : ""}
                                     </Text>
                                 </View>
                                 <View>
@@ -255,11 +254,11 @@ const DateDetails = ({ navigation, route }) => {
                                     </Text>
                                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
                                         <Image source={require('../../../../assets/Images3/RatingStar.png')} style={{ height: 18, width: 17, resizeMode: 'contain' }} />
-                                        
-                                            <Text style={[styles.RatingsValue, { height: 22 }]}>
-                                                {dateDetails&&dateDetails.rating}
-                                            </Text> 
-                                        
+
+                                        <Text style={[styles.RatingsValue, { height: 22 }]}>
+                                            {dateDetails && Math.round(dateDetails.rating)}
+                                        </Text>
+
                                     </View>
                                 </View>
                             </View>
@@ -268,22 +267,22 @@ const DateDetails = ({ navigation, route }) => {
                                 Hours of operation
                             </Text>
                             <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, color: '#333333' }}>
-                                {formatTime(dateDetails&&dateDetails.openTime)} - {formatTime(dateDetails&&dateDetails.closeTime)}
+                                {formatTime(dateDetails && dateDetails.openTime)} - {formatTime(dateDetails && dateDetails.closeTime)}
                             </Text>
                             <Text style={{ fontWeight: '400', fontSize: 12, fontFamily: customFonts.regular, color: '#333333', marginTop: 8 }}>
                                 Description
                             </Text>
                             <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, color: '#333333', marginTop: 3 }}>
-                                {dateDetails&&dateDetails.description}
+                                {dateDetails && dateDetails.description}
                             </Text>
                             <Text style={{ fontWeight: '500', fontSize: 20, fontFamily: customFonts.meduim, marginTop: 10 }}>
                                 Reviews
                             </Text>
                             {
-                               dateDetails&& dateDetails.reviews&& dateDetails.reviews.length > 0 ? (
+                                dateDetails && dateDetails.reviews && dateDetails.reviews.length > 0 ? (
                                     <>
                                         <Text style={{ fontSize: 12, fontFamily: customFonts.regular, marginTop: 5 / 930 * height }}>
-                                            {dateDetails.totalReviews } Ratings . {dateDetails.totalReviews} Reviews
+                                            {dateDetails.totalReviews} Ratings . {dateDetails.totalReviews} Reviews
                                         </Text>
 
                                         <ScrollView
@@ -311,7 +310,7 @@ const DateDetails = ({ navigation, route }) => {
                                                         {
                                                             () => (
                                                                 <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>
-                                                                    {dateDetails.rating}
+                                                                    {Math.round(dateDetails.rating)}
                                                                 </Text>
                                                             )
                                                         }
@@ -325,8 +324,8 @@ const DateDetails = ({ navigation, route }) => {
                                                     <Text style={{ fontSize: 10, fontFamily: customFonts.regular }}>of 5 stars</Text>
                                                 </View>
                                                 {
-                                                    dateDetails&&dateDetails.reviews&&dateDetails.reviews.length > 0 && (
-                                                        dateDetails&&dateDetails.reviews.map((item) => (
+                                                    dateDetails && dateDetails.reviews && dateDetails.reviews.length > 0 && (
+                                                        dateDetails && dateDetails.reviews.map((item) => (
                                                             <View style={{
                                                                 paddingHorizontal: 16 / 430 * width, borderRadius: 10, borderWidth: 1, borderColor: colors.greyText,
                                                                 alignItems: 'flex-start', paddingVertical: 16 / 930 * height, flexDirection: 'column', gap: 8,
@@ -350,7 +349,7 @@ const DateDetails = ({ navigation, route }) => {
                                                                     />
 
                                                                     <Text style={{ fontSize: 12, fontFamily: customFonts.regular, color: '#666666' }}>
-                                                                        {getDuration(item.createdAt)} ago
+                                                                        {getDuration(item.createdAt)}
                                                                     </Text>
                                                                 </View>
                                                                 <Text numberOfLines={4}
@@ -421,26 +420,29 @@ const DateDetails = ({ navigation, route }) => {
                                 </Text>
 
                                 <View style={{ width: width - 50, flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 }}>
-                                    <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 1, }}>
-                                        <TouchableOpacity onPress={() => setOpenModal(false)}>
+                                    <TouchableOpacity onPress={() => setOpenModal(false)}>
+
+                                        <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 1, }}>
                                             <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.meduim }}>
                                                 Cancel
                                             </Text>
-                                        </TouchableOpacity>
-                                    </View>
+                                        </View>
+                                    </TouchableOpacity>
 
                                     <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, alignItems: 'center', justifyContent: 'center' }}>
                                         {Loading ?
                                             <View>
                                                 <ActivityIndicator color={colors.blueColor} size={'small'} />
                                             </View> :
-                                            <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: '#E01F1F' }}>
-                                                <TouchableOpacity onPress={handleDeleteDate}>
+                                            <TouchableOpacity onPress={handleDeleteDate}>
+
+                                                <View style={{ height: 48 / 930 * height, width: 173 / 430 * width, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: '#E01F1F' }}>
                                                     <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: customFonts.meduim, color: 'white' }}>
                                                         Yes, Delete
                                                     </Text>
-                                                </TouchableOpacity>
-                                            </View>
+                                                </View>
+                                            </TouchableOpacity>
+
                                         }
                                     </View>
                                 </View>

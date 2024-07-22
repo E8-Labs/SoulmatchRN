@@ -556,7 +556,7 @@ export default function ProfileDetail(props) {
                                                             }}>
                                                                 {
                                                                     item.caption !== "null" ? (
-                                                                        <Text style={{ fontSize: 16, fontFamily: customFonts.regular }}>{item.caption}</Text>
+                                                                        <Text style={{ fontSize: 16, fontFamily: customFonts.regular,textAlign:'left' ,width: width - 60,}}>{item.caption}</Text>
                                                                     ) : ""
                                                                 }
                                                                 {/* {

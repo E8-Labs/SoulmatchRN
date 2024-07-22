@@ -177,11 +177,10 @@ export const NavigateLogedUser = async (navigation, from) => {
 
         // if last condition runs then profile complition comment will 11
 
-
         try {
           const customerInfo = await Purchases.getCustomerInfo();
           console.log("Customer on splash ", customerInfo.entitlements.active["premium"])
-          if (typeof customerInfo.entitlements.active["premium"] != "undefined") {
+          if (typeof customerInfo.entitlements.active["premium"] === "undefined") {
             console.log("User subscribed to plan ", customerInfo.entitlements.active["premium"]);
             navigation.reset({
               index: 0,
