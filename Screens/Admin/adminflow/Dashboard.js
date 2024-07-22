@@ -379,8 +379,8 @@ const Dashboard = ({ navigation }) => {
     };
 
     return (
-        <View style={{ width: width, alignItems: 'center', height: height }}>
-            <View style={{ width: width - 50, height: height * 0.87 }}>
+        <View style={{ width: width, alignItems: 'center', height: height, backgroundColor: 'white' }}>
+            <View style={{ width: width - 50, height: height * 0.97 }}>
                 <StatusBar
                     barStyle="dark-content"
                     backgroundColor="#FFFFFF"

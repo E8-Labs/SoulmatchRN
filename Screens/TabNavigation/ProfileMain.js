@@ -226,7 +226,7 @@ export default function ProfileMain(props) {
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity>
+              {/* <TouchableOpacity>
                 <View style={styles.mainView}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                     <Image source={require('../../assets/images/plans.png')}
@@ -241,7 +241,7 @@ export default function ProfileMain(props) {
                   />
 
                 </View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
 
               <TouchableOpacity
                 onPress={() => {

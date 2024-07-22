@@ -138,13 +138,14 @@ function MyTabBar({ state, descriptors, navigation }) {
                             testID={options.tabBarTestID}
                             onPress={onPress}
                             onLongPress={onLongPress}
-                            style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', }}
+                            style={{backgroundColor: 'transparent', flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', }}
                         >
-                            <View style={{ alignItems: 'center', }}>
+                            <View style={{ alignItems: 'center', backgroundColor: 'transparent',}}>
                                 <Image source={getImage(index, isFocused)}
                                     style={{
                                         width: isFocused ? 60 : 30, marginRight: getMarginRight(index),
-                                        height: isFocused ? 60 : 30, marginLeft: getMarginLeft(index)
+                                        height: isFocused ? 60 : 30, marginLeft: getMarginLeft(index),
+                                        backgroundColor: 'transparent',
                                         // marginBottom: isFocused ? 50 / 930 * height : 15 / 930 * height
                                     }}>
                                 </Image>
@@ -364,7 +365,10 @@ export default function AdminTabBarContainer(props) {
 
         <Tab.Navigator initialRouteName="Dashboard"
             screenOptions={{
-                headerShown: false
+                headerShown: false,
+                tabBarStyle: {
+                    backgroundColor: 'transparent',
+                },
             }}
             
             tabBar={props =>
