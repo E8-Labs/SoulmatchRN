@@ -97,7 +97,7 @@ export default function PlanDateNigth(props) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const validEmail = emailRegex.test(email);
         if (!email || !description) {
-            setError("Enter all cridentials")
+            setError("Enter all credentials")
             return
         }
 
@@ -110,7 +110,7 @@ export default function PlanDateNigth(props) {
 
     const inviteDate = async () => {
         if(!email || !description ){
-            setError2("Enter all cridentials")
+            setError2("Enter all credentials")
             return
         }
         try {

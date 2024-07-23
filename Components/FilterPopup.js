@@ -129,7 +129,7 @@ export default function FilterPopup({ visible, close, addressPicker, filters }) 
     const applyFilters = async () => {
 
         // if (!selected) {
-        //     setError("Enter all cridentials")
+        //     setError("Enter all credentials")
         //     return
         // }
 

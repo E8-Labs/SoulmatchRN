@@ -33,7 +33,7 @@ export default function RegisterUser(props) {
                 // call regiser api
             }
         } else {
-            setError("Enter all cridentials")
+            setError("Enter all credentials")
         }
     }
     const getBtnColor = () => {

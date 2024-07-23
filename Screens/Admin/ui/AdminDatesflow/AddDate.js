@@ -94,16 +94,18 @@ const AddDate = ({ navigation, route }) => {
     }, [])
 
 
-    const formateBudget = () =>{
-        if(DateData.minBudget == "0" && DateData.maxBudget == "20"){
+    const formateBudget = () => {
+        console.log('min budget and max budget is',`${DateData.minBudget} ${DateData.maxBudget}`  )
+        if (DateData.minBudget == "0" && DateData.maxBudget == "20") {
             return `$0 - $20 = $`
-        }else  if(DateData.minBudget == "30" && DateData.maxBudget == "50"){
+        } else if (DateData.minBudget == "20" && DateData.maxBudget == "50") {
             return `$20 - $50 = $$`
-        } else  if(DateData.minBudget == "50" && DateData.maxBudget == "80"){
+        } else if (DateData.minBudget == "50" && DateData.maxBudget == "80") {
             return `$50 - $80 = $$$`
-        } else  if(DateData.minBudget == "80" ){
+        } else if (DateData.minBudget == "80") {
             return `$80+ = $$$$`
         }
+        
     }
 
     useEffect(() => {
@@ -187,19 +189,23 @@ const AddDate = ({ navigation, route }) => {
 
     useEffect(() => {
         console.log("Budget changed", Budget)
-        if (Budget.lable === '$80 + = $$$$') {
-            setMinBudget(80)
-            setMaxBudget(10000000)
-            // console.log('Budget valus is', MinBudget)
-        } else if (Budget.lable === '$50 - $80 = $$$') {
-            setMinBudget(50)
-            setMaxBudget(80)
-        } else if (Budget.lable === '$20 - $50 = $$') {
-            setMinBudget(20)
-            setMaxBudget(50)
-        } else if (Budget.lable === '$0 - $20 = $') {
-            setMinBudget(0)
-            setMaxBudget(20)
+        if (Budget) {
+
+
+            if (Budget.lable === '$80 + = $$$$') {
+                setMinBudget(80)
+                setMaxBudget(10000000)
+                // console.log('Budget valus is', MinBudget)
+            } else if (Budget.lable === '$50 - $80 = $$$') {
+                setMinBudget(50)
+                setMaxBudget(80)
+            } else if (Budget.lable === '$20 - $50 = $$') {
+                setMinBudget(20)
+                setMaxBudget(50)
+            } else if (Budget.lable === '$0 - $20 = $') {
+                setMinBudget(0)
+                setMaxBudget(20)
+            }
         }
     }, [Budget])
 
@@ -334,7 +340,7 @@ const AddDate = ({ navigation, route }) => {
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
             // console.log("Keyboard show")
-           
+
             // setmarginTop(-200);
         });
 
@@ -604,11 +610,11 @@ const AddDate = ({ navigation, route }) => {
                                 Business name
                             </Text>
 
-                            <View style={{ borderWidth: 1, borderColor: '#CCCCCC', borderRadius: 10, padding: 16, justifyContent: 'center', marginTop: 5 }}>
+                            <View style={{ borderWidth: 1, borderColor: colors.greyText, borderRadius: 10, padding: 16, justifyContent: 'center', marginTop: 5 }}>
                                 <TextInput
                                     value={BusinessName}
                                     onFocus={() => {
-                                        setmarginTop(-200/930*height)
+                                        setmarginTop(-200 / 930 * height)
                                     }}
                                     placeholderTextColor={"#999999"}
                                     onChangeText={(Business) => setBusinessName(Business)}
@@ -645,7 +651,7 @@ const AddDate = ({ navigation, route }) => {
                             </Text>
 
 
-                            < Dropdown
+                            <Dropdown
                                 style={styles.dropdown}
                                 selectedTextStyle={{
                                     fontSize: 14,
@@ -718,7 +724,7 @@ const AddDate = ({ navigation, route }) => {
                             </Text>
 
                             <TouchableOpacity onPress={handlePickAddress}>
-                                <View style={{ borderRadius: 10, borderColor: '#CCCCCC', padding: 15, borderWidth: 1 }}>
+                                <View style={{ borderRadius: 10, borderColor: colors.greyText, padding: 15, borderWidth: 1 }}>
                                     <Text style={{ fontWeight: '500', fontSize: 14, fontFamily: customFonts.meduim }}>
                                         {
                                             longAddress ?
@@ -744,11 +750,11 @@ const AddDate = ({ navigation, route }) => {
                             <Text style={styles.Dropdownlabel}>
                                 Description
                             </Text>
-                            <View style={{ borderRadius: 10, borderColor: '#CCCCCC', padding: 8, borderWidth: 1 }}>
+                            <View style={{ borderRadius: 10, borderColor: colors.greyText, padding: 8, borderWidth: 1 }}>
                                 <TextInput
                                     value={Description}
                                     onFocus={() => {
-                                        setmarginTop(-300/930*height)
+                                        setmarginTop(-300 / 930 * height)
                                     }}
                                     onChangeText={(Description) => setDescription(Description)}
                                     multiline
@@ -817,10 +823,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 15,
         width: width - 50,
-        borderRadius: 5,
+        borderRadius: 10,
         paddingHorizontal: 8,
         borderWidth: 1,
-        borderColor: '#E6E6E6',
+        borderColor: colors.greyText,
     },
     placeholderStyle: {
         fontSize: 14,

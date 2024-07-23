@@ -22,7 +22,6 @@ export default function ProfileBoostScreen({ navigation }) {
     const [loading2, setLoading2] = useState(null);
     const [selected, setSelected] = useState(null);
 
-
     const products = [
         {
             id: 1,
@@ -46,7 +45,7 @@ export default function ProfileBoostScreen({ navigation }) {
             title: 'Boost profile 10x',
             tag: 'Best value',
             description: 'Boost profile for 5 hours',
-            priceString: '$19.00'
+            priceString: '$19.99'
         },
     ]
 

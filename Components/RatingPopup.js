@@ -100,7 +100,7 @@ const RatingPopup = ({ close, place ,addReview}) => {
                     ratingCount={5}
                     imageSize={30}
                     startingValue={1}
-                    fractions={1}
+                    fractions={0}
                     showRating={false}
                     onFinishRating={ratingCompleted}
 

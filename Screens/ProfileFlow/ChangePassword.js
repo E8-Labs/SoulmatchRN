@@ -28,7 +28,7 @@ export default function ChangePassword({ navigation, route }) {
 
     const changePassword = async () => {
         if (!currentPass || !newPass || !confirmPass) {
-            setError("Enter all cridentials")
+            setError("Enter all credentials")
             return
         }
         if (confirmPass !== newPass) {

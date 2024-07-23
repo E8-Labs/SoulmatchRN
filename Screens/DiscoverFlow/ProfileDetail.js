@@ -483,7 +483,7 @@ export default function ProfileDetail(props) {
                                                         style={styles.viewImage}
                                                     />
                                                     <Text style={styles.viewText}>
-                                                        {data[currentIndex]&&data[currentIndex].gender ? data[currentIndex].gender : 'N/A'}
+                                                        {data[currentIndex] && data[currentIndex].gender ? data[currentIndex].gender : 'N/A'}
                                                     </Text>
                                                 </View>
 
@@ -491,14 +491,16 @@ export default function ProfileDetail(props) {
                                                     <Image source={require('../../assets/Images3/cake.png')}
                                                         style={styles.viewImage}
                                                     />
-                                                    <Text style={styles.viewText}>{data[currentIndex]&&data[currentIndex].age ? data[currentIndex].age + " years old" : 'N/A'} </Text>
+                                                    <Text style={styles.viewText}>{data[currentIndex] && data[currentIndex].age ? data[currentIndex].age + " years old" : 'N/A'} </Text>
                                                 </View>
 
                                                 <View style={styles.viewStyle}>
-                                                    <Image source={require('../../assets/Images3/ruler.png')}
+                                                    <Image source={require('../../assets/images/scale.png')}
                                                         style={styles.viewImage}
                                                     />
-                                                    <Text style={styles.viewText}> {data[currentIndex]&&data[currentIndex].height_feet ? data[currentIndex].height_feet + " feet" : 'N/A'} {getHeightInches()}</Text>
+                                                    <Text style={styles.viewText}>
+                                                        {data[currentIndex]&&data[currentIndex].height_feet?data[currentIndex].height_feet:'N/A'} feets {getHeightInches()}
+                                                    </Text>
                                                 </View>
 
                                                 <View style={styles.viewStyle}>
@@ -506,7 +508,7 @@ export default function ProfileDetail(props) {
                                                         style={styles.viewImage}
                                                     />
                                                     <Text style={styles.viewText}>
-                                                        {data[currentIndex]&&data[currentIndex].city ? data[currentIndex].city + "," : ''} {data[currentIndex]&&data[currentIndex].state ? data[currentIndex].state : 'N/A'}
+                                                        {data[currentIndex] && data[currentIndex].city ? data[currentIndex].city + "," : ''} {data[currentIndex] && data[currentIndex].state ? data[currentIndex].state : 'N/A'}
                                                     </Text>
                                                 </View>
 
@@ -515,7 +517,7 @@ export default function ProfileDetail(props) {
                                                         style={styles.viewImage}
                                                     />
                                                     <Text style={styles.viewText}>
-                                                        {data[currentIndex]&&data[currentIndex].school}
+                                                        {data[currentIndex] && data[currentIndex].school}
                                                     </Text>
                                                 </View>
 
@@ -525,7 +527,7 @@ export default function ProfileDetail(props) {
                                                     />
                                                     <Text style={styles.viewText}>
                                                         <Text style={styles.viewText}>
-                                                            {data[currentIndex]&&data[currentIndex].job_title ? data[currentIndex].job_title + " at" : ''}  {data[currentIndex]&&data[currentIndex].company ? data[currentIndex].company : 'N/A'}
+                                                            {data[currentIndex] && data[currentIndex].job_title ? data[currentIndex].job_title + " at" : ''}  {data[currentIndex] && data[currentIndex].company ? data[currentIndex].company : 'N/A'}
                                                         </Text>
                                                     </Text>
                                                 </View>
@@ -536,7 +538,7 @@ export default function ProfileDetail(props) {
                                                         style={styles.viewImage}
                                                     />
                                                     <Text style={styles.viewText}>
-                                                        {data[currentIndex]&&data[currentIndex].zodiac ? data[currentIndex].zodiac : 'N/A'}
+                                                        {data[currentIndex] && data[currentIndex].zodiac ? data[currentIndex].zodiac : 'N/A'}
                                                     </Text>
                                                 </View>
                                             </View>
@@ -556,7 +558,7 @@ export default function ProfileDetail(props) {
                                                             }}>
                                                                 {
                                                                     item.caption !== "null" ? (
-                                                                        <Text style={{ fontSize: 16, fontFamily: customFonts.regular,textAlign:'left' ,width: width - 60,}}>{item.caption}</Text>
+                                                                        <Text style={{ fontSize: 16, fontFamily: customFonts.regular, textAlign: 'left', width: width - 60, }}>{item.caption}</Text>
                                                                     ) : ""
                                                                 }
                                                                 {/* {
@@ -828,7 +830,8 @@ const styles = StyleSheet.create({
         // justifyContent:'center',
         width: width - 30,
         gap: 12,
-        marginTop: 8
+        marginTop: 8,
+        // backgroundColor:'red'
     },
     viewImage: {
         height: 20,
@@ -839,7 +842,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: customFonts.meduim,
         textAlign: 'left',
-        width: 334 / 430 * width
+        width: 334 / 430 * width,
+        // backgroundColor:'red'
     },
     image: {
         height: 28 / 930 * height,

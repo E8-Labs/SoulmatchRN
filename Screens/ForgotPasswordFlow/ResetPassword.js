@@ -73,7 +73,7 @@ export default function ResetPassword({ navigation, route }) {
                 setError("Password must be same")
             }
         } else {
-            setError("Enter all cridentials")
+            setError("Enter all credentials")
         }
     }
 
