@@ -11,6 +11,7 @@ import ApisPath from '../../lib/ApisPath/ApisPath';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import colors from '../../assets/colors/Colors';
+import DiscoverLoading from '../../Services/ProfileServices/DiscoverLoading';
 
 const { height, width } = Dimensions.get("window");
 
@@ -103,7 +104,7 @@ const MatchLimit = 3
     <View style={{ flex: 1, alignItems: 'center', backgroundColor: 'transparent' }}>
       {
         loading ? (
-          <ActivityIndicator color={colors.blueColor} size={'large'} style={{ alignSelf: 'center', height: height }} />
+          <DiscoverLoading />
         ) : (
           <ProfileDetail exceedeMatches={exceedeMatches} navigation={props.navigation} data={discovers} fromScreen={'Main'} filtersData={(data) => {
             console.log('filters data is ', data)

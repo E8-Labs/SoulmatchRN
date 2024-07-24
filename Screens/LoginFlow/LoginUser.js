@@ -33,6 +33,8 @@ export default function LoginUser(props) {
     const [showPassword, setShowPassword] = useState(false);
     const [indicator, setIndicator] = useState(false);
     const [indicator1, setIndicator1] = useState(false);
+    const [indicator2, setIndicator2] = useState(false);
+    const [indicator3, setIndicator3] = useState(false);
 
     const [firstName, setFistName] = useState('')
     const [lastName, setLastName] = useState('')
@@ -62,11 +64,11 @@ export default function LoginUser(props) {
                 body: JSON.stringify(data)
             })
             if (data.provider_name === 'apple') {
-                // setShowIndicater2(true)
+                setIndicator3(true)
             } else if (data.provider_name === 'google') {
                 setIndicator1(true)
             } else if (data.provider_name === 'facebook') {
-                // setShowIndicater4(true)
+                setIndicator2(true)
             }
             if (result) {
                 let json = await result.json();
@@ -93,6 +95,8 @@ export default function LoginUser(props) {
                         })
                     }
                     setIndicator1(false)
+                    setIndicator2(false)
+                    setIndicator3(false)
                 }
                 else {
 
@@ -167,7 +171,7 @@ export default function LoginUser(props) {
                     if (currentProfile) {
                         console.log("Current Profile:", currentProfile);
                         // Alert.alert('Login Success', `Logged in as ${currentProfile.name}`);
-                        socialLogin({ first_name: currentProfile.firstName, last_name: currentProfile.lastName, email:currentProfile.userID+"@gmail.com", provider_name: "facebook", provider_id: currentProfile.userID, profile_image: currentProfile.imageURL, })
+                        socialLogin({ first_name: currentProfile.firstName, last_name: currentProfile.lastName, email: currentProfile.userID + "@gmail.com", provider_name: "facebook", provider_id: currentProfile.userID, profile_image: currentProfile.imageURL, })
 
                         // Perform further actions with the profile data, e.g., signInSocial function
                     } else {
@@ -438,26 +442,36 @@ export default function LoginUser(props) {
                                             </TouchableOpacity>
                                         )
                                     }
+                                    {
+                                        indicator2 ? (
+                                            <ActivityIndicator size={'large'} color={colors.blueColor} />
+                                        ) : (
+                                            <TouchableOpacity
+                                                onPress={handleFacebookLogin}
+                                            >
 
-                                    <TouchableOpacity
-                                        onPress={handleFacebookLogin}
-                                    >
+                                                <View style={{ borderWidth: 1, borderRadius: 10, borderColor: colors.greyText, padding: 18 }}>
+                                                    <Image source={require('../../assets/images/facebook.png')}
+                                                        style={{ height: 26 / 930 * height, width: 26 / 924 * height, }}
+                                                    />
+                                                </View>
 
-                                        <View style={{ borderWidth: 1, borderRadius: 10, borderColor: colors.greyText, padding: 18 }}>
-                                            <Image source={require('../../assets/images/facebook.png')}
-                                                style={{ height: 26 / 930 * height, width: 26 / 924 * height, }}
-                                            />
-                                        </View>
+                                            </TouchableOpacity>
+                                        )}
 
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={appleLogin}>
+                                    {
+                                        indicator3 ? (
+                                            <ActivityIndicator size={'large'} color={colors.blueColor} />
+                                        ) : (
+                                            <TouchableOpacity onPress={appleLogin}>
 
-                                        <View style={{ borderWidth: 1, borderRadius: 10, borderColor: colors.greyText, padding: 18 }}>
-                                            <Image source={require('../../assets/images/apple.png')}
-                                                style={{ height: 28 / 930 * height, width: 25 / 924 * height, resizeMode: 'contain' }}
-                                            />
-                                        </View>
-                                    </TouchableOpacity>
+                                                <View style={{ borderWidth: 1, borderRadius: 10, borderColor: colors.greyText, padding: 18 }}>
+                                                    <Image source={require('../../assets/images/apple.png')}
+                                                        style={{ height: 28 / 930 * height, width: 25 / 924 * height, resizeMode: 'contain' }}
+                                                    />
+                                                </View>
+                                            </TouchableOpacity>
+                                        )}
                                 </View>
                             </View>
                         </View>

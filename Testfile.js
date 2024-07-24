@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Dimensions } from 'react-native';
 import ContentLoader, { Rect, Circle } from 'react-content-loader/native';
+import colors from './assets/colors/Colors';
 
 const { height, width } = Dimensions.get('window')
 const Testfile = () => {
@@ -44,56 +45,17 @@ const Testfile = () => {
         height={height}
         width={width}
         speed={1}
-        backgroundColor={'#fff'}
-        foregroundColor={'#999'}
-      // viewBox="0 0 380 70"
+        backgroundColor={"#D5D0F6"}
+        foregroundColor={'#ececec'}
       >
-        {/* {renderItems()} */}
+        <Rect x={20} y={20} ry={5} rx={5} height={30} width={200} />
 
-        <Rect x={30} y={0} ry={5} rx={5} height={30} width={250} />
-        <Rect x={30} y={50} ry={5} rx={5} height={100} width={150} />
-        <Rect x={30} y={160} ry={5} rx={5} height={10} width={100} />
-        <Rect x={30} y={180} ry={5} rx={5} height={10} width={50} />
-        <Rect x={150} y={180} ry={5} rx={5} height={10} width={30} />
-        <Rect x={30} y={200} ry={5} rx={5} height={10} width={50} />
-        <Rect x={150} y={200} ry={5} rx={5} height={10} width={30} />
-        <Rect x={30} y={220} ry={5} rx={5} height={10} width={50} />
-        <Rect x={150} y={220} ry={5} rx={5} height={10} width={30} />
-
-        <Rect x={250} y={50} ry={5} rx={5} height={100} width={150} />
-        <Rect x={250} y={160} ry={5} rx={5} height={10} width={100} />
-        <Rect x={250} y={180} ry={5} rx={5} height={10} width={50} />
-        <Rect x={370} y={180} ry={5} rx={5} height={10} width={30} />
-        <Rect x={250} y={200} ry={5} rx={5} height={10} width={50} />
-        <Rect x={370} y={200} ry={5} rx={5} height={10} width={30} />
-        <Rect x={250} y={220} ry={5} rx={5} height={10} width={50} />
-        <Rect x={370} y={220} ry={5} rx={5} height={10} width={30} />
-
-
-        <Rect x={30} y={280} ry={5} rx={5} height={30} width={250} />
-
-        <Rect x={30} y={360} ry={5} rx={5} height={100} width={150} />
-        <Rect x={30} y={470} ry={5} rx={5} height={10} width={100} />
-        <Rect x={30} y={490} ry={5} rx={5} height={10} width={50} />
-        <Rect x={150} y={490} ry={5} rx={5} height={10} width={30} />
-        <Rect x={30} y={510} ry={5} rx={5} height={10} width={50} />
-        <Rect x={150} y={510} ry={5} rx={5} height={10} width={30} />
-        <Rect x={30} y={530} ry={5} rx={5} height={10} width={50} />
-        <Rect x={150} y={530} ry={5} rx={5} height={10} width={30} />
-
-        <Rect x={250} y={360} ry={5} rx={5} height={100} width={150} />
-        <Rect x={250} y={470} ry={5} rx={5} height={10} width={100} />
-        <Rect x={250} y={490} ry={5} rx={5} height={10} width={50} />
-        <Rect x={370} y={490} ry={5} rx={5} height={10} width={30} />
-        <Rect x={250} y={510} ry={5} rx={5} height={10} width={50} />
-        <Rect x={370} y={510} ry={5} rx={5} height={10} width={30} />
-        <Rect x={250} y={530} ry={5} rx={5} height={10} width={50} />
-        <Rect x={370} y={530} ry={5} rx={5} height={10} width={30} />
-
-
-        <Rect x={30} y={580} ry={5} rx={5} height={30} width={250} />
-
-
+        <Rect x={20} y={70} ry={10} rx={10} height={530/930*height} width={390/430*width} />
+        <Rect x={20} y={620} ry={5} rx={5} height={20} width={150} />
+        <Rect x={20} y={660} ry={5} rx={5} height={20} width={200} />
+        <Rect x={20} y={700} ry={5} rx={5} height={20} width={150} />
+        <Rect x={20} y={740} ry={5} rx={5} height={20} width={200} />
+        <Rect x={20} y={780} ry={5} rx={5} height={20} width={150} />
 
       </ContentLoader>
 
