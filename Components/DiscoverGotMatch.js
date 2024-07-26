@@ -13,7 +13,7 @@ export default function DiscoverGotMatch({viewMatches}) {
                 style={{ height: 160 / 930 * height, width: 160 / 430 * width }}
             />
             <View style={{ width: width * 0.55, alignItems: 'center', marginTop: 50 }}>
-                <Text style={{ fontSize: 28, fontFamily: customFonts.semibold, textAlign: 'center' }}>
+                <Text style={{ fontSize: 25, fontFamily: customFonts.semibold, textAlign: 'center' }}>
                     It looks like you have a match
                 </Text>
             </View>

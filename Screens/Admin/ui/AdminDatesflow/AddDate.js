@@ -95,7 +95,7 @@ const AddDate = ({ navigation, route }) => {
 
 
     const formateBudget = () => {
-        console.log('min budget and max budget is',`${DateData.minBudget} ${DateData.maxBudget}`  )
+        console.log('min budget and max budget is', `${DateData.minBudget} ${DateData.maxBudget}`)
         if (DateData.minBudget == "0" && DateData.maxBudget == "20") {
             return `$0 - $20 = $`
         } else if (DateData.minBudget == "20" && DateData.maxBudget == "50") {
@@ -105,7 +105,7 @@ const AddDate = ({ navigation, route }) => {
         } else if (DateData.minBudget == "80") {
             return `$80+ = $$$$`
         }
-        
+
     }
 
     useEffect(() => {
@@ -594,7 +594,7 @@ const AddDate = ({ navigation, route }) => {
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                     <TouchableOpacity onPress={pickImage}>
                                         <Image source={image ? { uri: image } : require('../../../../assets/Images3/imagePlaceholder.webp')}
-                                            style={{ width: 120 / 430 * width, height: 120 / 930 * height, resizeMode: 'cover', marginTop: 30 / 930 * height, borderRadius: 100 }} />
+                                            style={{ width: 120 / 430 * width, height: 120 / 930 * height, resizeMode: 'cover', marginTop: 10 / 930 * height, borderRadius: 100 }} />
                                     </TouchableOpacity>
                                 </View> :
                                 <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
@@ -687,8 +687,10 @@ const AddDate = ({ navigation, route }) => {
                             </Text>
 
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: width - 30, alignSelf: 'center' }}>
-                                <View style={{ alignItems: 'center', flexDirection: 'row', gap: 10, marginTop: 5 }}>
-                                    <Text style={{ fontSize: 16, fontFamily: customFonts.regular, marginLeft: 10 / 430 * width }}>Open</Text>
+                                <View style={{ alignItems: 'center', gap: 5, marginTop: 5 }}>
+                                    <Text style={{ fontSize: 16, fontFamily: customFonts.regular, marginLeft: 10 / 430 * width }}>
+                                        Opening Time
+                                    </Text>
                                     <DateTimePicker
                                         testID="dateTimePicker"
                                         value={date}
@@ -700,8 +702,10 @@ const AddDate = ({ navigation, route }) => {
                                     />
                                 </View>
 
-                                <View style={{ alignItems: 'center', flexDirection: 'row', gap: 10, marginTop: 5 }}>
-                                    <Text style={{ fontSize: 16, fontFamily: customFonts.regular }}>Close</Text>
+                                <View style={{ alignItems: 'center', gap: 5, marginTop: 5 }}>
+                                    <Text style={{ fontSize: 16, fontFamily: customFonts.regular }}>
+                                        Closing Time
+                                    </Text>
                                     <DateTimePicker
                                         testID="dateTimePicker"
                                         value={date2}

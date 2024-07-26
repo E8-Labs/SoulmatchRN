@@ -267,7 +267,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                             <Image source={ProfileData.profile_image ? { uri: ProfileData.profile_image } : require('../../../../assets/Images3/imagePlaceholder.webp')} style={{ height: 530 / 930 * height, width: 370 / 430 * width, resizeMode: 'cover', borderRadius: 10, marginTop: 10 }} />
                             {/* Suspend delete button */}
                             <View style={{ flexDirection: 'row', marginTop: 15, justifyContent: 'space-between' }}>
-                                <TouchableOpacity 
+                                {/* <TouchableOpacity 
                                 onPress={() => {
                                     if(ProfileData.status === "suspended"){
                                         ShowMessage("User already suspended")
@@ -279,10 +279,10 @@ const UserProfileDetails = ({ navigation, route }) => {
                                     <Text style={GlobalStyles.SuspendDelBText}>
                                     {ProfileData.status === "suspended" ? "Suspended":'Suspend'}
                                     </Text>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                                 <TouchableOpacity
                                     onPress={handleModalclick}
-                                    style={[GlobalStyles.SuspendDelBtn, {
+                                    style={[GlobalStyles.reqtengularBtn, {
                                         backgroundColor: '#E01F1F',
                                         borderWidth: 0,
                                     }]}>

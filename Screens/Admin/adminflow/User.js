@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { ActivityIndicator, Dimensions, FlatList, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Dimensions, FlatList, Keyboard, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { Image } from 'expo-image'
 import customFonts from '../../../assets/fonts/Fonts'
@@ -160,6 +160,7 @@ const User = ({ navigation }) => {
     };
 
     const handleScroll = (event) => {
+        Keyboard.dismiss()
         const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
         const paddingToBottom = 200;
         if (layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom) {
@@ -319,6 +320,8 @@ const User = ({ navigation }) => {
                     <TextInput
                         ref={inputRef2}
                         value={searchUser}
+                        returnKeyLabel='done'
+                        returnKeyType='done'
                         onChangeText={(e) => setSearchUser(e)}
                         style={{
                             width: 304 / 430 * width, fontSize: 14, fontWeight: '500',
@@ -352,14 +355,16 @@ const User = ({ navigation }) => {
  <ActivityIndicator size={'small'} color={colors.blueColor} />
  </View> : ""
  } */}
-                                    <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, marginTop: 7 }}>
+                                    <Text style={{
+                                        fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, marginTop: 7, }}
+                                        numberOfLines={1}
+                                        >
                                         {item.first_name} {item.last_name}
                                     </Text>
                                     <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                                         <Image source={require('../../../assets/Images3/location.png')} style={{ height: 14 / 930 * height, width: 14 / 430 * width }} />
-                                        <Text>
                                             {item.city ?
-                                                <Text
+                                                <Text numberOfLines={1}
                                                     style={{
                                                         fontWeight: '400', fontSize: 12,
                                                         fontFamily: customFonts.meduim, color: '#333333'
@@ -368,7 +373,6 @@ const User = ({ navigation }) => {
                                                 </Text> :
                                                 <Text>N/A</Text>
                                             }
-                                        </Text>
                                     </View>
                                     <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                                         <Image source={require('../../../assets/Images3/crown2.png')} style={{ height: 15 / 930 * height, width: 15 / 430 * width }} />

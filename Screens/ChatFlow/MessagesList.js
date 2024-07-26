@@ -304,19 +304,19 @@ export default function MessagesList({ navigation }) {
 
     return (
 
-        <View style={{ width: width, height: height, alignItems: 'center' }}>
+        <View style={{ width: width, height: height, alignItems: 'center',alignSelf:'center' }}>
 
             <View style={{ alignItems: 'center', height: height, backgroundColor: 'white' }}>
 
                 <View style={{
-                    backgroundColor: '#fff', height: 110 / 930 * height, width: width, shadowColor: 'grey', shadowOffset: {
-                        width: 0,
-                        height: 5
-                    }, shadowRadius: 5, shadowOpacity: 0.4,
+                    // backgroundColor: '#fff', height: 110 / 930 * height, width: width, shadowColor: 'grey', shadowOffset: {
+                    //     width: 0,
+                    //     height: 5
+                    // }, shadowRadius: 5, shadowOpacity: 0.4,
                 }}>
                     <View style={{
-                        alignItems: 'flex-end', flexDirection: 'row', height: 110 / 930 * height, width: width - 50, alignSelf: 'center', paddingBottom: 10,
-                        justifyContent: 'space-between',
+                        alignItems: 'flex-end', flexDirection: 'row',  width:width-50/430*width, alignSelf: 'center', paddingBottom: 10,justifyContent:'space-between',
+                        
                     }}>
                         <Text style={{ fontSize: 23, fontFamily: customFonts.meduim }}>Messages</Text>
                         <Animated.View style={[styles.searchContainer, { width: searchWidth, opacity: searchOpacity }]}>
@@ -347,7 +347,7 @@ export default function MessagesList({ navigation }) {
 
                             </View>
                         </Animated.View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10,marginRight:0 }}>
                             {
                                 !isSearching &&
                                 <TouchableOpacity style={{ paddingBottom: 0 }}
@@ -370,7 +370,7 @@ export default function MessagesList({ navigation }) {
                     </View>
                 </View>
 
-                <View style={{ flexDirection: 'column', alignItems: 'center', width: width, height: height * 0.82, paddingBottom: 10, backgroundColor: 'white' }}>
+                <View style={{ flexDirection: 'column', alignItems: 'center', width: width, paddingBottom: 10, }}>
                     {
                         showIndicator ? (
                             <ContentLoader
@@ -387,6 +387,7 @@ export default function MessagesList({ navigation }) {
                         ) : (
                             filteredMessages && filteredMessages.length > 0 ? (
                                 <FlatList
+                                    style = {{marginBottom:50}}
                                     showsVerticalScrollIndicator={false}
                                     data={filteredMessages}
                                     renderItem={({ item }) => (

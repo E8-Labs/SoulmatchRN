@@ -481,7 +481,7 @@ export default function DatesContainer({ navigation }) {
                                                             </View>
                                                             <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
                                                                 <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Category</Text>
-                                                                <Text style={{ fontSize: 12, fontFamily: customFonts.meduim, width: 80 / 430 * width, backgroundColor: 'transparet' }}>{item.Category.name}</Text>
+                                                                <Text style={{textAlign:'right', fontSize: 12, fontFamily: customFonts.meduim, width: 80 / 430 * width, backgroundColor: 'transparet' }}>{item.Category.name}</Text>
                                                             </View>
 
                                                         </View>
@@ -547,7 +547,7 @@ export default function DatesContainer({ navigation }) {
                                                             </View>
                                                             <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
                                                                 <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Category</Text>
-                                                                <Text style={{ fontSize: 12, fontFamily: customFonts.meduim, width: 80 / 430 * width }}>{item.Category.name}</Text>
+                                                                <Text style={{textAlign:'right', fontSize: 12, fontFamily: customFonts.meduim, width: 80 / 430 * width }}>{item.Category.name}</Text>
                                                             </View>
 
                                                         </View>

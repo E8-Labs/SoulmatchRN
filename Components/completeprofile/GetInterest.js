@@ -222,7 +222,7 @@ const GetInterest = ({ navigation, route }) => {
                                     initialSelectedIndex={MaxAge - 1}
                                     items={SelectMaxAge.map(name => ({ label: name, value: '' }))}
                                     onChange={({ item }) => {
-                                        setMaxAge(item.label - 17)
+                                        setMaxAge(item.label - 18)
                                         setError(null)
                                     }} />
                             </View>

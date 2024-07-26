@@ -18,6 +18,7 @@ const FlaggedUSerDetails = ({ navigation, route }) => {
     const [isAvailable, setIsAvailable] = useState(false);
     const [imageLoading, setImgLoading] = useState(false);
     const [delLoading, setDelLoading] = useState(false);
+    const [ignorLoading, setIgnorLoading] = useState(false)
     const [susLoading, setSusLoading] = useState(false);
 
     useEffect(() => {
@@ -189,6 +190,7 @@ const FlaggedUSerDetails = ({ navigation, route }) => {
     const reportID = data.reportId;
     console.log('Report id of user is:', data);
     const handleIgnoreReport = async () => {
+        setIgnorLoading(true)
         const data = await AsyncStorage.getItem("USER")
         if (data) {
             let d = JSON.parse(data);
@@ -207,6 +209,7 @@ const FlaggedUSerDetails = ({ navigation, route }) => {
                 });
                 console.log('REsponse is :', response)
                 if (response.ok) {
+                    setIgnorLoading(false)
                     const Result = await response.json();
                     console.log('Response of api is :', Result);
                     const ignoredReport = { reportID }
@@ -215,9 +218,11 @@ const FlaggedUSerDetails = ({ navigation, route }) => {
                     route.params.ignoredUserId(ignoredReport);
                     navigation.pop();
                 } else {
+                    setIgnorLoading(false)
                     console.log('Response is not ok');
                 }
             } catch (error) {
+                setIgnorLoading(false)
                 console.log('Error occured is :', error);
             }
         } else {
@@ -279,7 +284,7 @@ const FlaggedUSerDetails = ({ navigation, route }) => {
                                 </View> : ''}
                             {/* Suspend delete button */}
                             <View style={{ flexDirection: 'row', marginTop: 15, justifyContent: 'space-between' }}>
-                                <TouchableOpacity style={{
+                                {/* <TouchableOpacity style={{
                                     height: 40 / 930 * height,
                                     width: 175 / 430 * width,
                                     borderWidth: 1,
@@ -291,22 +296,30 @@ const FlaggedUSerDetails = ({ navigation, route }) => {
                                     <Text style={[styles.ReactionText, { color: '#E01F1F' }]}>
                                         Suspend/Remove
                                     </Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    onPress={handleIgnoreReport}
-                                    style={{
-                                        height: 40 / 930 * height,
-                                        width: 175 / 430 * width,
-                                        borderWidth: 1,
-                                        borderColor: '#000000',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        borderRadius: 10,
-                                    }}>
-                                    <Text style={styles.ReactionText}>
-                                        Ignore the report
-                                    </Text>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
+                                {
+                                    ignorLoading ? (
+                                        <ActivityIndicator size={'large'} color={colors.blueColor} 
+                                        style = {{alignSelf:'center',width:width-50,marginTop:10}} />
+                                    ) : (
+                                        <TouchableOpacity
+                                            onPress={handleIgnoreReport}
+                                            style={{
+                                                height: 50 / 930 * height,
+                                                width: 370 / 430 * width,
+                                                borderWidth: 1,
+                                                borderColor: '#000000',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                borderRadius: 10,
+                                            }}>
+                                            <Text style={styles.ReactionText}>
+                                                Ignore the report
+                                            </Text>
+                                        </TouchableOpacity>
+                                    )
+                                }
+
                             </View>
                             <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, marginTop: 20 }}>
                                 Flagger
@@ -323,7 +336,7 @@ const FlaggedUSerDetails = ({ navigation, route }) => {
                                     {delLoading ?
                                         <ActivityIndicator style={{ width: 150 / 430 * width, }} size={'small'} color={colors.blueColor} /> :
                                         <View>
-                                            <TouchableOpacity onPress={()=>handleSuspendUser(routeData.userDetails.reportingUserId)}
+                                            {/* <TouchableOpacity onPress={() => handleSuspendUser(routeData.userDetails.reportingUserId)}
                                                 style={{
                                                     height: 40 / 930 * height,
                                                     width: 150 / 430 * width,
@@ -336,15 +349,15 @@ const FlaggedUSerDetails = ({ navigation, route }) => {
                                                 <Text style={[styles.ReactionText, { color: '#E01F1F', }]}>
                                                     Suspend Flagger
                                                 </Text>
-                                            </TouchableOpacity>
+                                            </TouchableOpacity> */}
                                         </View>
                                     }
                                     <TouchableOpacity
                                         onPress={sendEmail}
                                         style={{
-                                            height: 40 / 930 * height,
-                                            width: 150 / 430 * width,
-                                            borderWidth: 2,
+                                            height: 50 / 930 * height,
+                                            width: 340 / 430 * width,
+                                            borderWidth: 1,
                                             borderColor: '#000000',
                                             alignItems: 'center',
                                             justifyContent: 'center',
@@ -429,7 +442,7 @@ const FlaggedUSerDetails = ({ navigation, route }) => {
                                             <ActivityIndicator style={{ width: 155 / 430 * width, }} size={'small'} color={colors.blueColor} />
                                         </View> :
                                         <View>
-                                            <TouchableOpacity onPress={()=>handleSuspendUser(routeData.userDetails.reportedUserId)}
+                                            <TouchableOpacity onPress={() => handleSuspendUser(routeData.userDetails.reportedUserId)}
                                                 style={{
                                                     height: 40 / 930 * height,
                                                     width: 155 / 430 * width,

@@ -10,6 +10,7 @@ import colors from '../assets/colors/Colors';
 import ApisPath from '../lib/ApisPath/ApisPath';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image } from 'expo-image';
+import { ShowMessage } from '../Services/Snakbar/ShowMessage';
 const { height, width } = Dimensions.get('window');
 const selectedImage = require('../assets/images/selectedCircle.png');
 const unselectedImage = require('../assets/images/unselectedCircle.png');
@@ -89,6 +90,7 @@ export default function ReportChat({ navigation, route }) {
           let json = await result.json()
           if (json.status === true) {
             console.log('report sent',)
+            ShowMessage("User reported",colors.blueColor)
             navigation.goBack()
 
           } else {

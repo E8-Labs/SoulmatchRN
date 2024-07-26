@@ -59,8 +59,8 @@ export default function ReserveNightScreen({ navigation, route }) {
 
   const bookDate = async () => {
 
-    if (!numberofGuest || !selectedDateProfile) {
-      setError("Enter all credentials")
+    if (!selectedDateProfile) {
+      setError("Please invite a date")
       return
 
     }

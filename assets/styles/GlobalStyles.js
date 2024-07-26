@@ -92,10 +92,11 @@ const GlobalStyles = {
          width: 27, 
     },
     divider: {
-        width: width - 60,
+        width: width - 60/430*width,
         borderWidth: 0.5,
         borderColor: colors.greyText,
-        marginTop: 25 / 930 * height
+        marginTop: 25 / 930 * height,
+        alignSelf : 'center'
     },
     Resourcesbtn: {
         // backgroundColor: 'red'

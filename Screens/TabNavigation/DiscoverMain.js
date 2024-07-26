@@ -151,7 +151,10 @@ const MatchLimit = 3
                 })
               }
               else if (data.navigate === 'Logout') {
-                props.navigation.push("LoginUser")
+                props.navigation.reset({
+                  index:0,
+                  routes: [{ name: 'LoginUser' }]
+                })
 
               } else if (data.navigate === 'Notifications') {
                 props.navigation.navigate("NotificationsScreen")
