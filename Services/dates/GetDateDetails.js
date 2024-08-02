@@ -9,7 +9,7 @@ export const GetDateDatails = async (dateId) => {
             console.log('trying to get date', dateId)
             let d = JSON.parse(data)
 
-            const result = await fetch(ApisPath.ApiGetDateDetails + `?dateId=${dateId}`, {
+            const result = await fetch(ApisPath.Apiils + `?dateId=${dateId}`, {
                 method: 'get',
                 headers: {
                     'Content-Type': 'application/json',

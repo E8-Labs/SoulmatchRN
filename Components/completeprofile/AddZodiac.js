@@ -22,7 +22,7 @@ const AddZodiac = ({ navigation, route }) => {
     useEffect(() => {
         if (data.from === 'Profile') {
             console.log('from profile screen')
-            setSelectedZodiac(data.user.zodiac)
+            setSelectedZodiac(data.user&&data.user.zodiac)
         }
     }, [])
 

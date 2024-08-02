@@ -239,7 +239,7 @@ export default function InviteDateFromChatScreen({ navigation, route }) {
                                                             style={{ height: 98 / 930 * height, width: 158 / 430 * width, borderRadius: 10, resizeMode: 'cover' }}
                                                         />
                                                         <View style={{ alignItems: 'flex-start', flexDirection: 'column', width: 150 / 430 * width, }}>
-                                                            <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, }}>{item.name}</Text>
+                                                            <Text numberOfLines={1} style={{ fontSize: 16, fontFamily: customFonts.meduim, }}>{item.name}</Text>
                                                         </View>
 
                                                         <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
@@ -252,13 +252,13 @@ export default function InviteDateFromChatScreen({ navigation, route }) {
                                                                 <Image source={require('../../assets/images/star.png')}
                                                                     style={{ height: 12 / 930 * height, width: 12 / 930 * height }}
                                                                 />
-                                                                <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{item.rating}</Text>
+                                                                <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{Math.round(item.rating)}</Text>
                                                             </View>
 
                                                         </View>
                                                         <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
                                                             <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Category</Text>
-                                                            <Text style={{ fontSize: 12, fontFamily: customFonts.meduim }}>{item.Category.name}</Text>
+                                                            <Text numberOfLines={1} style={{ fontSize: 12, fontFamily: customFonts.meduim ,width:80/430*width}}>{item.Category.name}</Text>
                                                         </View>
 
                                                     </View>

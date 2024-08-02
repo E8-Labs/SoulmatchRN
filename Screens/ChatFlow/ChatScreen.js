@@ -774,7 +774,7 @@ export default function ChatScreen({ navigation, route }) {
                             </TouchableOpacity>
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 / 430 * width }}>
-                            <TouchableOpacity>
+                            <TouchableOpacity style = {{opacity:0}}>
                                 <Image source={require('../../assets/images/videoCall.png')}
                                     style={GlobalStyles.backBtnImage}
                                 />

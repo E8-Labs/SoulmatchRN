@@ -266,6 +266,8 @@ export default function NotificationsScreen({ navigation }) {
             DateDeleted: ()=>console.log('here'),
             DateUpdated:  ()=>console.log('here'),
         })
+      }else{
+        ShowMessage("This date was deleted")
       }
 
     }

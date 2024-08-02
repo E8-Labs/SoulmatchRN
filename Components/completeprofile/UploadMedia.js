@@ -56,9 +56,8 @@ const UploadMedia = ({ navigation, route }) => {
                 setUser(data);
                 setMedia(data.media)
             } catch (err) {
-                setError(err);
-            } finally {
-                setLoading(false);
+                
+                // setError(err);
             }
         }
         fetchProfile()

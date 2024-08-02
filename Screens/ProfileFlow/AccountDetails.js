@@ -23,14 +23,14 @@ export default function AccountDetails({ navigation, route }) {
     // console.log('Image updated is :', userImg);
     console.log('user from prev screen is', user)
 
-    const [firstName, setFirstName] = useState(user.first_name !== null ? user.first_name : '');
-    const [lastName, setLastName] = useState(user.last_name !== null ? user.last_name : '');
-    const [email, setEmail] = useState(user.email !== null ? user.email : '');
+    const [firstName, setFirstName] = useState(user!== null ? user.first_name : '');
+    const [lastName, setLastName] = useState(user !== null ? user.last_name : '');
+    const [email, setEmail] = useState(user !== null ? user.email : '');
     const [error, setError] = useState(null);
     const [marginTop, setmarginTop] = useState(null);
     const [showIndicator, setShowIndicator] = useState(false);
     const [showIndicator2, setShowIndicator2] = useState(false);
-    const [image, setImage] = useState(user.profile_image !== null ? user.profile_image : '');
+    const [image, setImage] = useState(user!== null ? user.profile_image : '');
     const [loadImage, setLoadImage] = useState(false);
 
 

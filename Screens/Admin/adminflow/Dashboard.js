@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Text, TouchableOpacity, View, StyleSheet, ScrollView, FlatList, ActivityIndicator } from 'react-native';
+import { Dimensions, Text, TouchableOpacity, View, StyleSheet, ScrollView, FlatList, ActivityIndicator, DeviceEventEmitter } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import customFonts from '../../../assets/fonts/Fonts';
 import Dropdown2 from '../ui/Dropdown2';
@@ -10,9 +10,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image } from 'expo-image';
 import colors from '../../../assets/colors/Colors';
 import moment from 'moment/moment';
+import { GetSubscriptionPlan } from '../../../Services/user/GetSubscriptionPlan';
+import { useFocusEffect } from '@react-navigation/native';
+import { BroadcastEvents } from '../../../models/Constants';
+
+
+const { height, width } = Dimensions.get('window');
 
 const Dashboard = ({ navigation }) => {
-    const { height, width } = Dimensions.get('window');
+
+
     const [Loading, setLoading] = useState(false);
     const [ApiResponse, setApiResponse] = useState('');
     const [RecentUsers, setRecentUsers] = useState([]);
@@ -101,6 +108,20 @@ const Dashboard = ({ navigation }) => {
     ]
 
 
+    useFocusEffect(
+        React.useCallback(() => {
+
+        }, [])
+    )
+
+    useEffect(() => {
+        DeviceEventEmitter.addListener(BroadcastEvents.EventDeleteUser, (id) => {
+            console.log('user id received ', id)
+          dashBoardDetails()
+
+        })
+    }, [])
+
     //code for calling dashboarddetails api
     useEffect(() => {
 
@@ -127,7 +148,7 @@ const Dashboard = ({ navigation }) => {
                     console.log('Response of api :', Result);
                     setApiResponse(Result.data);
                     setRecentUsers(Result.data.recent_users);
-
+                    
                     let boostdate = []
                     let boostdata = []
 
@@ -774,19 +795,19 @@ const Dashboard = ({ navigation }) => {
                                                     <Image source={item.profile_image ? { uri: item.profile_image } : require('../../../assets/Images3/imagePlaceholder.webp')}
                                                         style={{ height: 96 / 930 * height, width: 126 / 430 * width, borderRadius: 5, resizeMode: 'cover' }} />
                                                     <View style={{ flexDirection: 'column', width: '100%', gap: 7 }}>
-                                                        <Text style={{ fontWeight: '500', fontSize: 12, marginTop: 5, fontFamily: customFonts.meduim, width: '100%' }}>
+                                                        <Text numberOfLines={1} style={{ fontWeight: '500', fontSize: 12, marginTop: 5, fontFamily: customFonts.meduim, width: '100%' }}>
                                                             {item.first_name} {item.last_name}
                                                         </Text>
-                                                        <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+                                                        <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', gap: 3 }}>
                                                             <Image source={require('../../../assets/Images3/location.png')} style={{ height: 12 / 930 * height, width: 12 / 430 * width }} />
-                                                            <Text style={{ fontWeight: '400', fontSize: 10, fontFamily: customFonts.meduim, color: '#333333' }}>
-                                                                {item.city} {item.city ? ',' : ''} {item.state}
+                                                            <Text numberOfLines={1} style={{ width: 100, fontWeight: '400', fontSize: 10, fontFamily: customFonts.meduim, color: '#333333' }}>
+                                                                {item.city} {item.city ? ',' : 'N/A'} {item.state}
                                                             </Text>
                                                         </View>
                                                         <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                                                             <Image source={require('../../../assets/Images3/crown2.png')} style={{ height: 12 / 930 * height, width: 12 / 430 * width }} />
                                                             <Text style={{ fontWeight: '500', fontSize: 12, fontFamily: customFonts.meduim, color: '#FFC401' }}>
-                                                                {item.pkgName}
+                                                                {GetSubscriptionPlan(item)}
                                                             </Text>
                                                         </View>
                                                     </View>
@@ -888,7 +909,7 @@ const styles = StyleSheet.create({
     //     color: 'red'
     // },
     selectedTextStyle: {
-        fontSize: 14,
+        fontSize: 14/930*height,
         fontWeight: '500',
         fontFamily: customFonts.regular
         // marginLeft: 8,

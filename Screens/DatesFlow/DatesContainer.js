@@ -163,7 +163,7 @@ export default function DatesContainer({ navigation }) {
 
     //search bar timer code
 
-    useEffect(()=> {
+    useEffect(() => {
         console.log("Loading changed ", loading)
     }, [loading])
     const getDates = async (from = "None") => {
@@ -171,7 +171,7 @@ export default function DatesContainer({ navigation }) {
         console.log("")
         console.log('trying to get dates from ', from)
         setLoading(true)
-       
+
         const data = await AsyncStorage.getItem("USER")
         try {
             if (data) {
@@ -462,7 +462,7 @@ export default function DatesContainer({ navigation }) {
                                                                 style={{ height: 98 / 930 * height, width: 158 / 430 * width, borderRadius: 10, resizeMode: 'cover' }}
                                                             />
                                                             <View style={{ alignItems: 'flex-start', flexDirection: 'column', width: 150 / 430 * width, }}>
-                                                                <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, }}>{item.name}</Text>
+                                                                <Text numberOfLines={1} style={{ fontSize: 16, fontFamily: customFonts.meduim, }}>{item.name}</Text>
                                                             </View>
 
                                                             <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
@@ -481,7 +481,7 @@ export default function DatesContainer({ navigation }) {
                                                             </View>
                                                             <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
                                                                 <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Category</Text>
-                                                                <Text style={{textAlign:'right', fontSize: 12, fontFamily: customFonts.meduim, width: 80 / 430 * width, backgroundColor: 'transparet' }}>{item.Category.name}</Text>
+                                                                <Text numberOfLines={1} style={{ textAlign: 'right', fontSize: 12, fontFamily: customFonts.meduim, width: 80 / 430 * width, backgroundColor: 'transparet' }}>{item.Category.name}</Text>
                                                             </View>
 
                                                         </View>
@@ -528,7 +528,7 @@ export default function DatesContainer({ navigation }) {
                                                                 style={{ height: 98 / 930 * height, width: 158 / 430 * width, borderRadius: 10, resizeMode: 'cover' }}
                                                             />
                                                             <View style={{ alignItems: 'flex-start', flexDirection: 'column', width: 150 / 430 * width, }}>
-                                                                <Text style={{ fontSize: 16, fontFamily: customFonts.meduim, }}>{item.name}</Text>
+                                                                <Text numberOfLines={1} style={{ fontSize: 16, fontFamily: customFonts.meduim, }}>{item.name}</Text>
                                                             </View>
 
                                                             <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
@@ -547,7 +547,9 @@ export default function DatesContainer({ navigation }) {
                                                             </View>
                                                             <View style={{ alignItems: 'cemter', flexDirection: 'row', width: 150 / 430 * width, justifyContent: 'space-between' }}>
                                                                 <Text style={{ fontSize: 12, fontFamily: customFonts.regular }}>Category</Text>
-                                                                <Text style={{textAlign:'right', fontSize: 12, fontFamily: customFonts.meduim, width: 80 / 430 * width }}>{item.Category.name}</Text>
+                                                                <Text numberOfLines={1} style={{ textAlign: 'right', fontSize: 12, fontFamily: customFonts.meduim, width: 80 / 430 * width }}>
+                                                                    {item.Category.name}
+                                                                </Text>
                                                             </View>
 
                                                         </View>
@@ -622,7 +624,7 @@ export default function DatesContainer({ navigation }) {
                                                     You don't have any upcoming dates planned
                                                 </Text>
 
-                                                <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 40 / 930 * height, marginBottom: isSearching ? 100/930*height : 100/930*height }]}
+                                                <TouchableOpacity style={[GlobalStyles.reqtengularBtn, { marginTop: 40 / 930 * height, marginBottom: isSearching ? 100 / 930 * height : 100 / 930 * height }]}
                                                     onPress={() => {
                                                         navigation.navigate("PlanDateNight")
                                                     }}
@@ -663,8 +665,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 10,
         width: 280 / 430 * width,
-        alignSelf:'flex-end',
-        marginBottom:8/930*height
+        alignSelf: 'flex-end',
+        marginBottom: 8 / 930 * height
     },
     searchInput: {
         flex: 1,

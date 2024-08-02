@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { ActivityIndicator, Dimensions, FlatList, Keyboard, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, DeviceEventEmitter, Dimensions, FlatList, Keyboard, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { Image } from 'expo-image'
 import customFonts from '../../../assets/fonts/Fonts'
@@ -9,6 +9,8 @@ import { useFocusEffect } from '@react-navigation/native'
 import { DateFilterpoupAdmin } from '../ui/AdminDatesflow/DateFilterpoupAdmin'
 import colors from '../../../assets/colors/Colors'
 import DatesLoadingIndicator from '../../../Services/dates/DatesLoadingIndicator'
+import { GetSubscriptionPlan } from '../../../Services/user/GetSubscriptionPlan'
+import { BroadcastEvents } from '../../../models/Constants'
 
 
 
@@ -177,7 +179,7 @@ const User = ({ navigation }) => {
         { id: 'yearly', label: 'Yearly' }
     ];
 
-    const deleteUser = (index) => {
+    const deleteUser = (index,id) => {
         console.log("Deleting user at index", index)
         const newItems = [...AdminUsers];
         newItems.splice(index, 1);
@@ -250,23 +252,6 @@ const User = ({ navigation }) => {
     const inputReference = () => {
         if (inputRef2.current) {
             inputRef2.current.focus();
-        }
-    }
-
-    const getSubscriptionPlan = (item) =>{
-        let sub = item
-        if(sub.isSubscribed === true){
-            if(sub.subscriptionDetails.plan === "WeeklySubsciptionSoulmatch0623"){
-                return "Weelky"
-            } else if(sub.subscriptionDetails.plan === "MonthlySubsciptionSoulmatch0623"){
-                return "Monthly"
-            } else if(sub.subscriptionDetails.plan === "YearlySubsciptionSoulmatch0623"){
-                return "Yearly"
-            }else{
-                return "Free"
-            }
-        }else{
-            return "Free"
         }
     }
 
@@ -377,7 +362,7 @@ const User = ({ navigation }) => {
                                     <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                                         <Image source={require('../../../assets/Images3/crown2.png')} style={{ height: 15 / 930 * height, width: 15 / 430 * width }} />
                                         <Text style={{ fontWeight: '500', fontSize: 12, fontFamily: customFonts.meduim, color: '#FFC401' }}>
-                                            {getSubscriptionPlan(item)}
+                                            {GetSubscriptionPlan(item)}
                                         </Text>
                                     </View>
                                 </View>

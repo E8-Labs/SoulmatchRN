@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Dimensions, ScrollView, StyleSheet, Modal, Text, TouchableOpacity, View, FlatList, ActivityIndicator } from 'react-native'
+import { Dimensions, ScrollView, StyleSheet, Modal, Text, TouchableOpacity, View, FlatList, ActivityIndicator,DeviceEventEmitter } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import customFonts from '../../../../assets/fonts/Fonts';
 import colors from '../RangeSlider/Colors';
@@ -11,6 +11,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image } from 'react-native';
 import DistanceCalculator from '../../../../Components/DistanceCalculator';
 import { ShowMessage } from '../../../../Services/Snakbar/ShowMessage';
+import { GetSubscriptionPlan } from '../../../../Services/user/GetSubscriptionPlan';
+import { BroadcastEvents } from '../../../../models/Constants';
 
 
 const placholder = require('../../../../assets/images/imagePlaceholder.webp')
@@ -29,8 +31,8 @@ const UserProfileDetails = ({ navigation, route }) => {
     const [QuestionAnswers, setQuestionAnswers] = useState([]);
     const [loadImage, setLoadImage] = useState(false);
     const [loadVideo, setLoadVideo] = useState(false);
-    const [isSuspended,setIsSuspended] = useState(false)
-    const [isDeleted,setIsDeleted] = useState(false)
+    const [isSuspended, setIsSuspended] = useState(false)
+    const [isDeleted, setIsDeleted] = useState(false)
     const videoRef = React.useRef(null);
     // const videoSource = .answerVideo;
     const [Status, setStatus] = useState({});
@@ -93,7 +95,7 @@ const UserProfileDetails = ({ navigation, route }) => {
     const [openSuspendModal, setopenSuspendModal] = useState(false)
 
     const handleModalclick = () => {
-        if(ProfileData.status === "deleted"){
+        if (ProfileData.status === "deleted") {
             ShowMessage("User already deleted")
             return
         }
@@ -148,6 +150,11 @@ const UserProfileDetails = ({ navigation, route }) => {
     //api call for deleting user
 
     const handleDelete = async () => {
+        // route.params.UserDeleted(route.params.index, ProfileData.id)
+        // DeviceEventEmitter.emit(BroadcastEvents.EventDeleteUser,ProfileData.id)
+        // // console.log("Resprronse of api is :", Result);
+        // navigation.pop();
+        // return
         try {
             // const ApiUrl = "https://plurawlapp.com/soulmatch/api/admin/delete_user";
             const ApiUrl = Apis.DeleteUser;
@@ -168,8 +175,9 @@ const UserProfileDetails = ({ navigation, route }) => {
                 console.log('Respopnse is :', response);
                 if (response.ok) {
                     const Result = await response.json();
-                    route.params.UserDeleted(route.params.index)
+                    route.params.UserDeleted(route.params.index, ProfileData.id)
                     console.log("Resprronse of api is :", Result);
+                    DeviceEventEmitter.emit(BroadcastEvents.EventDeleteUser,ProfileData.id)
                     navigation.pop();
                 } else if (!response.ok) {
                     console.log("Status is :", response.status);
@@ -182,7 +190,7 @@ const UserProfileDetails = ({ navigation, route }) => {
 
     //api call for suspending user
     const handleSuspend = async () => {
-        if(ProfileData.status === "suspended"){
+        if (ProfileData.status === "suspended") {
             ShowMessage("User already suspended")
             return
         }
@@ -221,21 +229,6 @@ const UserProfileDetails = ({ navigation, route }) => {
             return inches
         } else {
             return ""
-        }
-    }
-
-    const getSubscriptionPlan = () => {
-        let sub = ProfileData.subscription
-        if (sub && sub.isSubscribed === true) {
-            if (sub.subscriptionDetails.plan === "WeeklySubsciptionSoulmatch0623") {
-                return "Weelky"
-            } else if (sub.subscriptionDetails.plan === "MonthlySubsciptionSoulmatch0623") {
-                return "Monthly"
-            } else if (sub.subscriptionDetails.plan === "YearlySubsciptionSoulmatch0623") {
-                return "Yearly"
-            }
-        } else {
-            return "Free"
         }
     }
 
@@ -289,7 +282,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                                     <Text style={[GlobalStyles.SuspendDelBText, {
                                         color: 'white'
                                     }]}>
-                                        {ProfileData.status === "deleted"? "Deleted":'Delete'}
+                                        {ProfileData.status === "deleted" ? "Deleted" : 'Delete'}
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -331,7 +324,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                                     style={styles.viewImage}
                                 />
                                 <Text style={styles.viewText}>
-                                    {getSubscriptionPlan()}
+                                    {GetSubscriptionPlan(ProfileData)}
                                 </Text>
                             </View>
 
@@ -516,7 +509,7 @@ const UserProfileDetails = ({ navigation, route }) => {
                                                         : ''}
                                                     {item.answerImage ?
                                                         <Image source={{ uri: item.answerImage }}
-                                                            style={{ height: 234 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 5,alignSelf:'center' }} /> : ''}
+                                                            style={{ height: 234 / 930 * height, width: 350 / 430 * width, borderRadius: 10, marginTop: 5, alignSelf: 'center' }} /> : ''}
                                                     {item.answerVideo ?
                                                         <Video
                                                             ref={videoRef}

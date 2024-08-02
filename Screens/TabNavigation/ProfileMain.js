@@ -111,8 +111,8 @@ export default function ProfileMain(props) {
         {
 
           loadImage && (
-            <View style={{ height: 110 / 930 * height, width: 110 / 930 * height, marginTop: -60 / 930 * height }}>
-              <ActivityIndicator size={'small'} color={colors.blueColor} style={{}} />
+            <View style={{ }}>
+              <ActivityIndicator size={'small'} color={colors.blueColor} style={{marginTop: -65 / 930 * height}} />
             </View>
           )
         }

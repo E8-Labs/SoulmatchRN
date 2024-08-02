@@ -34,6 +34,10 @@ export default function DatesFilterPopup({ visible, close, closeWithouFilters, f
     const [city, setCity] = useState(null)
     const [state, setState] = useState(null)
 
+    useEffect(()=>{
+        console.log('max rating update', endRat)
+    },[endRat])
+
 
     const budget = [
         {
@@ -181,8 +185,8 @@ export default function DatesFilterPopup({ visible, close, closeWithouFilters, f
         let filters = {
             minBudget: minBudget,
             maxBudget: maxBudget,
-            minRating: Math.round(startRat / 20) || null,
-            maxRating: Math.round(endRat / 20) || null,
+            minRating: Math.round(startRat / 20) || 0,
+            maxRating: Math.round(endRat / 20) || 5,
             category: selectedCat,
             budget: selected,
             city: city,
