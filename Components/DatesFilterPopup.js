@@ -27,8 +27,8 @@ export default function DatesFilterPopup({ visible, close, closeWithouFilters, f
     const [minBudget, setMinBudget] = useState('');
     const [maxBudget, setMaxBudget] = useState('');
     const [selectedCat, setselectedCat] = useState(-1);
-    const [startRat, setStartRat] = useState(0);
-    const [endRat, setEndRat] = useState(100);
+    const [startRat, setStartRat] = useState(null);
+    const [endRat, setEndRat] = useState(null);
     const [categories, setCategories] = useState([]);
     const [openAddressPicker, setOpenAddressPicker] = useState(false);
     const [city, setCity] = useState(null)
@@ -36,7 +36,7 @@ export default function DatesFilterPopup({ visible, close, closeWithouFilters, f
 
     useEffect(()=>{
         console.log('max rating update', endRat)
-    },[endRat])
+    },[])
 
 
     const budget = [
@@ -86,8 +86,8 @@ export default function DatesFilterPopup({ visible, close, closeWithouFilters, f
 
             setCity(filters.city)
             setState(filters.state)
-            setStartRat(filters.minRating * 20 || 0)
-            setEndRat(filters.maxRating * 20 ||100)
+            setStartRat(filters.minRating * 20 || null)
+            setEndRat(filters.maxRating * 20 ||null)
             setMinBudget(filters.minBudget )
             setMaxBudget(filters.maxBudget)
             setselectedCat(filters.category)
@@ -96,15 +96,15 @@ export default function DatesFilterPopup({ visible, close, closeWithouFilters, f
     }
 
     function isBudgetSelected(item) {
-        console.log("Budget Select Check ", item)
-        console.log("Min Budget ", minBudget)
-        console.log("Max Budget ", maxBudget)
+        // console.log("Budget Select Check ", item)
+        // console.log("Min Budget ", minBudget)
+        // console.log("Max Budget ", maxBudget)
         if (minBudget === item.minBudget && maxBudget === item.maxBudget) {
 
-            console.log("Budget Selected  true")
+            // console.log("Budget Selected  true")
             return true
         }
-        console.log("Budget Selected  false")
+        // console.log("Budget Selected  false")
         return false
     }
 
@@ -185,8 +185,8 @@ export default function DatesFilterPopup({ visible, close, closeWithouFilters, f
         let filters = {
             minBudget: minBudget,
             maxBudget: maxBudget,
-            minRating: Math.round(startRat / 20) || 0,
-            maxRating: Math.round(endRat / 20) || 5,
+            minRating: Math.round(startRat / 20) || null,
+            maxRating: Math.round(endRat / 20) || null,
             category: selectedCat,
             budget: selected,
             city: city,
@@ -297,6 +297,7 @@ export default function DatesFilterPopup({ visible, close, closeWithouFilters, f
                                     setStartRat(value)
                                 }} rangeEndUpdated={(value) => {
                                     setEndRat(value)
+                                    console.log('rating end value', value)
                                 }} />
 
                                 <Text style={{ fontSize: 16, fontFamily: customFonts.semibold, textAlign: 'left', width: width - 60, marginTop: 20 / 930 * height }}>

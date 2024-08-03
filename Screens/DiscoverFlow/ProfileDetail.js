@@ -582,7 +582,8 @@ export default function ProfileDetail(props) {
 
                                                                             {
                                                                                 loadImage2 ? (
-                                                                                    <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 150 }} />
+                                                                                    <ActivityIndicator size={'small'} color={colors.blueColor} 
+                                                                                    style={{ position: 'absolute', bottom: 120/930*height, left: 180/430*width }} />
                                                                                 ) : <></>
                                                                             }
                                                                         </>
@@ -684,7 +685,8 @@ export default function ProfileDetail(props) {
 
                                                                         {
                                                                             loadImage3 ? (
-                                                                                <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 100, left: 180 / 430 * width }} />
+                                                                                <ActivityIndicator size={'small'} color={colors.blueColor} 
+                                                                                style={{ position: 'absolute', bottom: 120/930*height, left: 180 / 430 * width }} />
                                                                             ) : <></>
                                                                         }
                                                                         <TouchableOpacity style={{
@@ -728,7 +730,8 @@ export default function ProfileDetail(props) {
                                                                                 </TouchableOpacity>
                                                                                 {
                                                                                     loadImage5 ? (
-                                                                                        <ActivityIndicator size={'small'} color={colors.blueColor} style={{ position: 'absolute', bottom: 120, left: 160 }} />
+                                                                                        <ActivityIndicator size={'small'} color={colors.blueColor} 
+                                                                                            style={{ position: 'absolute', bottom: 120/930*height, left: 160/430*width }} />
                                                                                     ) : <></>
                                                                                 }
 

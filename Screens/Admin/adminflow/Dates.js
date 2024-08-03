@@ -452,8 +452,9 @@ const Dates = ({ navigation }) => {
                             {DATA.map((item, index) => (
                                 <TouchableOpacity onPress={() => handleDateDetails(item, index)} key={item.id} style={{ marginTop: 10 }}>
                                     <View style={{ borderWidth: 1, borderColor: '#E6E6E6', borderRadius: 10, padding: 12, width: 176 / 430 * width }}>
-                                        <Image source={item.imageUrl ? { uri: item.imageUrl } : require('../../../assets/Images3/imagePlaceholder.webp')} style={{ height: 98 / 930 * height, width: 152 / 430 * width, borderRadius: 6, resizeMode: 'cover' }} />
-                                        <Text style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, marginTop: 7 }}>
+                                        <Image source={item.imageUrl ? { uri: item.imageUrl } : require('../../../assets/Images3/imagePlaceholder.webp')} 
+                                            style={{ height: 98 / 930 * height, width: 152 / 430 * width, borderRadius: 6, resizeMode: 'cover' }} />
+                                        <Text numberOfLines={1} style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, marginTop: 7 }}>
                                             {item.name}
                                         </Text>
                                         <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -482,7 +483,7 @@ const Dates = ({ navigation }) => {
                                             <Text style={{ fontSize: 12, fontWeight: '400', fontFamily: customFonts.meduim, color: '#333333' }}>
                                                 Category :
                                             </Text>
-                                            <Text style={{fontSize: 12, fontFamily: customFonts.meduim, width: 80 / 430 * width,textAlign:'right', backgroundColor: 'transparet'  }}>
+                                            <Text numberOfLines={1} style={{fontSize: 12, fontFamily: customFonts.meduim, width: 80 / 430 * width,textAlign:'right', backgroundColor: 'transparet'  }}>
                                                 {item.Category.name}
                                             </Text>
                                         </View>
