@@ -19,14 +19,22 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.e8labs.soulmatch",
       "googleServicesFile": "./GoogleService-Info.plist",
-      "buildNumber": 5.8,
+      "buildNumber": "5.8",  
       "infoPlist": {
         "UIBackgroundModes": [
           "audio"
         ],
-        
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": false, 
+          "NSExceptionDomains": {
+            "18.118.184.156": { 
+              "NSTemporaryExceptionAllowsInsecureHTTPLoads": true,
+              "NSTemporaryExceptionMinimumTLSVersion": "TLSv1.0"
+            }
+          }
+        },
         "NSLocationWhenInUseUsageDescription": "This app uses your location to find you nearby matches.",
-        "NSMicrophoneUsageDescription": "Let Soulmatch access microphone to record voice messages.",
+        "NSMicrophoneUsageDescription": "Let SoulMatch access microphone to record voice messages.",
         "CFBundleURLTypes": [
           {
             "CFBundleURLSchemes": [
@@ -35,31 +43,17 @@
           },
           {
             "CFBundleURLSchemes": [
-              "http://192.168.10.2:8081"
-            ]
-          },
-          {
-            "CFBundleURLSchemes": [
               "com.googleusercontent.apps.532960006063-0lrmd4ktecke70t7ncjr2v7vapt230h6"
             ]
-          },
-          {
-            "CFBundleURLTypes": [
-              {
-                "CFBundleURLSchemes": [
-                  "fb753527366987241"
-                ]
-              }
-            ],
-            "FacebookAppID": "753527366987241",
-            "FacebookDisplayName": "SoulMatch",
-            "LSApplicationQueriesSchemes": [
-              "fbapi",
-              "fb-messenger-api",
-              "fbauth2",
-              "fbshareextension"
-            ]
           }
+        ],
+        "FacebookAppID": "753527366987241",
+        "FacebookDisplayName": "SoulMatch",
+        "LSApplicationQueriesSchemes": [
+          "fbapi",
+          "fb-messenger-api",
+          "fbauth2",
+          "fbshareextension"
         ]
       }
     },
@@ -79,15 +73,14 @@
     "plugins": [
       [
         "expo-font",
-      {
-        "fonts": [
-          "node_modules/@expo-google-fonts/inter/Poppins_400Regular.ttf",
-          "node_modules/@expo-google-fonts/inter/Poppins_500Medium.ttf",
-          "node_modules/@expo-google-fonts/inter/Poppins_700Bold.ttf",
-          "node_modules/@expo-google-fonts/inter/Poppins_600SemiBold.ttf"
-        ]
-      }
-       
+        {
+          "fonts": [
+            "node_modules/@expo-google-fonts/inter/Poppins_400Regular.ttf",
+            "node_modules/@expo-google-fonts/inter/Poppins_500Medium.ttf",
+            "node_modules/@expo-google-fonts/inter/Poppins_700Bold.ttf",
+            "node_modules/@expo-google-fonts/inter/Poppins_600SemiBold.ttf"
+          ]
+        }
       ],
       "expo-apple-authentication",
       [
@@ -106,7 +99,6 @@
         }
       ],
       "expo-av"
-      
     ],
     "extra": {
       "eas": {

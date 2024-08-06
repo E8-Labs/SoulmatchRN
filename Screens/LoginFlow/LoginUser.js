@@ -282,6 +282,7 @@ export default function LoginUser(props) {
                         }
                     }
                 } catch (error) {
+                    setIndicator(false)
                     console.log('error finding', error)
                 }
             }
