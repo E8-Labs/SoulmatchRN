@@ -878,7 +878,7 @@ export default function ChatScreen({ navigation, route }) {
                     renderItem={({ item }) => (renderItem(item))}
                 />
                 {
-                    !chat.users[0] && chat.users[0].blockedByMe || chat.users[0] && chat.users[0].blockedMe ? (
+                    chat.users[0] && !chat.users[0].blockedByMe || chat.users[0] && !chat.users[0].blockedMe ? (
                         messages.length === 0 ? (
                             <>
                                 <Text style={{ fontSize: 14, textAlign: 'center' }}>Select an ice breaker</Text>
