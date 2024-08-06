@@ -29,6 +29,8 @@ export default function PlanDateNigth(props) {
     const [numberofGuest, setNumberofGuest] = useState(2)
     const [openDatePicker, setOpenDatePicker] = useState('')
     const [openTimePicker, setOpenTimePicker] = useState('')
+    const [formatedDate, setFormatedDate] = useState('')
+    const [formatedTime, setFormatedTime] = useState('')
     const [email, setEmail] = useState(null)
     const [description, setDescription] = useState(null)
     const [error, setError] = useState(null)
@@ -36,7 +38,7 @@ export default function PlanDateNigth(props) {
     const [time, setTime] = useState(sourceDate);
     const [date, setDate] = useState(sourceDate);
     const [openModal, setOpenModal] = useState(false)
-    const [loading,setLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
     const [modalHeight, setModalHeight] = useState(height * 0.6)
 
 
@@ -82,14 +84,26 @@ export default function PlanDateNigth(props) {
         setOpenTimePicker(!openTimePicker)
     }
     const formatDate = (dateString) => {
-        return moment(dateString).format("MM-DD-YYYY")
+        return moment(dateString).format("MMM/DD/YYYY")
     };
     function handleChangeStartDate(event, selectedDate) {
         const currentDate = selectedDate || date;
+        console.log('current date is', currentDate)
         setDate(currentDate);
+        let formatted = formatDate(currentDate)
+        setFormatedDate(formatted)
+        console.log('formatted date is', formatted)
         setOpenTimePicker(false)
-        let formatted = moment(currentDate).format('YYYY/MM/DD');
-        console.log("Formatted date is ", formatDate(currentDate))
+    }
+    function handleChangeStartTime(event, selectedDate) {
+        const currentDate = selectedDate || date;
+        console.log('current time is', currentDate)
+        const formattedTime = moment(currentDate).format('h:mm a');
+        setTime(currentDate);
+        setFormatedTime(formattedTime)
+        console.log('formated time is', formatedTime)
+        setOpenTimePicker(true)
+
     }
 
     const handleSubmit = async () => {
@@ -109,39 +123,40 @@ export default function PlanDateNigth(props) {
     };
 
     const inviteDate = async () => {
-        if(!email || !description ){
+        if (!email || !description) {
             setError2("Enter all credentials")
             return
         }
         try {
             setLoading(true)
             const data = await AsyncStorage.getItem("USER")
-            if(data){
+            if (data) {
                 let d = JSON.parse(data)
                 let body = JSON.stringify({
-                    email:email,
-                    description:description,
-                    time:time,
-                    date:date,
-                    guests:numberofGuest
+                    email: email,
+                    description: description,
+                    time: formatedTime,
+                    date: formatedDate,
+                    guests: numberofGuest
                 })
                 console.log('body is', body)
-                const result = await fetch(ApisPath.ApiInviteDateViaEmail,{
-                    method:'post',
-                    headers:{
+                // return
+                const result = await fetch(ApisPath.ApiInviteDateViaEmail, {
+                    method: 'post',
+                    headers: {
                         'Content-Type': 'application/json',
                         'Authorization': 'Bearer ' + d.token
                     },
-                    body:body
+                    body: body
                 })
-                if(result){
+                if (result) {
                     setLoading(false)
                     let json = await result.json()
-                    if(json.status === true){
+                    if (json.status === true) {
                         console.log('invite sent via email ')
-                        ShowMessage("Congrats, date invite is sent",colors.blueColor)
+                        ShowMessage("Congrats, date invite is sent", colors.blueColor)
                         props.navigation.goBack()
-                    }else{
+                    } else {
                         console.log('invite daye via email message is', json.message)
                     }
                 }
@@ -224,7 +239,7 @@ export default function PlanDateNigth(props) {
                             mode={"time"}
                             is24Hour={false}
                             display="default"
-                            onChange={handleChangeStartDate}
+                            onChange={handleChangeStartTime}
                             style={styles.dateTimePicker}
                         // width = {400}
                         />
@@ -258,7 +273,7 @@ export default function PlanDateNigth(props) {
                         </View>
                     </View>
                     {
-                        error2 ? <Text style = {GlobalStyles.errorText}> {error}</Text>:''
+                        error2 ? <Text style={GlobalStyles.errorText}> {error}</Text> : ''
                     }
 
                     {
@@ -281,20 +296,20 @@ export default function PlanDateNigth(props) {
 
                 </View>
                 {
-                    loading ?(
-                        <ActivityIndicator size = {'large'} color={colors.blueColor} />
-                    ):(
-                         <TouchableOpacity style={GlobalStyles.reqtengularBtn}
-                    onPress={inviteDate}
-                >
-                    <Text style={GlobalStyles.btnText}>
-                        Submit
-                    </Text>
-                </TouchableOpacity>
+                    loading ? (
+                        <ActivityIndicator size={'large'} color={colors.blueColor} />
+                    ) : (
+                        <TouchableOpacity style={GlobalStyles.reqtengularBtn}
+                            onPress={inviteDate}
+                        >
+                            <Text style={GlobalStyles.btnText}>
+                                Submit
+                            </Text>
+                        </TouchableOpacity>
                     )
                 }
 
-               
+
 
 
 
