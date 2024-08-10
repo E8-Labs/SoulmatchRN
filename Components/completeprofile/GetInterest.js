@@ -13,8 +13,6 @@ const GetInterest = ({ navigation, route }) => {
     const data = route.params.data
     console.log('user from prev screen', data)
 
-
-
     const { height, width } = Dimensions.get('window');
     const [MinAge, setMinAge] = useState(1);
     const [MaxAge, setMaxAge] = useState(32);
