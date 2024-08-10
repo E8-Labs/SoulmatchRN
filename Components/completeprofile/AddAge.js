@@ -24,6 +24,10 @@ const AddAge = ({ navigation, route }) => {
         }
     },[])
 
+    useEffect(()=>{
+        console.log('age is ', age)
+    },[age])
+
     //getting data from previous screen
 
 
@@ -115,7 +119,7 @@ const AddAge = ({ navigation, route }) => {
                             selectedStyle={{ borderWidth: 2, borderColor: colors.blueColor, width: "4", borderRadius: 50 }}
                             initialSelectedIndex={age-1}
                             items={CITIES.map(name => ({ label: name, value: '' }))}
-                            onChange={({ item }) => setAge(item.label-17)} />
+                            onChange={({ item }) => setAge(item.label)} />
                     </View>
                 </View>
                 {

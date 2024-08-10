@@ -53,8 +53,8 @@ const GetInterest = ({ navigation, route }) => {
     useEffect(() => {
         if (data.from === "Profile") {
             let user = data.user
-            setMinAge(user.interested_min_age)
-            setMaxAge(user.interested_max_age)
+            setMinAge(user.interested_min_age-18)
+            setMaxAge(user.interested_max_age-19)
             setSelectedGender(user.interested_gender)
         }
     }, [])
@@ -199,10 +199,10 @@ const GetInterest = ({ navigation, route }) => {
                                     width={50 / width * 430}
                                     // backgroundColor='#000000'
                                     selectedStyle={{ borderWidth: 2, width: "4", borderRadius: 50, borderColor: colors.blueColor }}
-                                    initialSelectedIndex={MinAge - 1}
+                                    initialSelectedIndex={MinAge}
                                     items={SelectMinAge.map(name => ({ label: name, value: '' }))}
                                     onChange={({ item }) => {
-                                        setMinAge(item.label - 17)
+                                        setMinAge(item.label)
                                         setError(null)
                                     }} />
                             </View>
@@ -219,10 +219,10 @@ const GetInterest = ({ navigation, route }) => {
                                     width={50 / width * 430}
                                     // backgroundColor='#000000'
                                     selectedStyle={{ borderWidth: 2, width: "4", borderRadius: 50, borderColor: colors.blueColor }}
-                                    initialSelectedIndex={MaxAge - 1}
+                                    initialSelectedIndex={MaxAge}
                                     items={SelectMaxAge.map(name => ({ label: name, value: '' }))}
                                     onChange={({ item }) => {
-                                        setMaxAge(item.label - 18)
+                                        setMaxAge(item.label)
                                         setError(null)
                                     }} />
                             </View>
