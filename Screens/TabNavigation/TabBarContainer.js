@@ -547,8 +547,8 @@ export default function TabBarContainer(props) {
 
         <Tab.Navigator initialRouteName="DiscoverMain"
             screenOptions={{
-                headerShown: false
-            }}
+                headerShown: false,tabBarStyle:{backgroundColor:'transparent'}
+            }} 
 
             tabBar={props =>
                 <MyTabBar {...props} />} >

@@ -104,7 +104,7 @@ const CreatePassword = ({ navigation, route }) => {
             const result = await fetch(ApisPath.ApiRegisterUser, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    // 'Content-Type': 'application/json',
                     // 'Authorization': 'Bearer ' + d.token
                 },
                 body: formdata

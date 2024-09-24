@@ -186,7 +186,6 @@ export default function EmailVerification({ route, navigation }) {
                             <TextInput placeholder=""
                                 autoFocus={true}
                                 style={{ fontSize: 32 }}
-
                                 keyboardType="numeric"
                                 maxLength={1}
                                 onfoucus={() => setinput1Foucused(true)}
