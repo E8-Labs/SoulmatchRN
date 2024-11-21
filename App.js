@@ -391,7 +391,11 @@ export default function App() {
             component={InviteDateFromChatScreen}
           />
           <Stack.Screen name="SelectedProfile" component={SelectedProfile} />
-          <Stack.Screen name="SubscriptionPlan" component={SubscriptionPlan} />
+          <Stack.Screen
+            name="SubscriptionPlan"
+            component={SubscriptionPlan}
+            options={{ gestureEnabled: false }}
+          />
 
           {/* <Stack.Screen name='Signin' component={Signin} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name='Signup' component={Signup} options={{ gestureEnabled: false, headerShown: false }} /> */}
