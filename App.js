@@ -112,6 +112,7 @@ import User from "./Screens/Admin/adminflow/User";
 import SubscriptionPlan from "./Components/createprofile/SubscriptionPlan";
 import ProfileBoostScreen from "./Screens/ProfileFlow/ProfileBoostScreen";
 import ViewMyMatchesScreen from "./Screens/DiscoverFlow/ViewMyMatchesScreen";
+import TermsAndConditions from "./Components/TermsAndCondirions";
 
 // import dotenv from 'dotenv'
 // dotenv.config();
@@ -505,6 +506,12 @@ export default function App() {
           <Stack.Screen
             name="AdminNotifications"
             component={AdminNotifications}
+            options={{ gestureEnabled: false, headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="TermsAndConditions"
+            component={TermsAndConditions}
             options={{ gestureEnabled: false, headerShown: false }}
           />
         </Stack.Navigator>

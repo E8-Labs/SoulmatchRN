@@ -696,7 +696,11 @@ export default function LoginUser(props) {
                 <Text style={[{ fontSize: 12 }]}>
                   By signing up you agree to our{" "}
                 </Text>
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={()=>{
+                      props.navigation.push("TermsAndConditions")
+                    }}
+                >
                   <Text
                     style={[
                       GlobalStyles.LoginMeduimText,
@@ -715,7 +719,9 @@ export default function LoginUser(props) {
                   {" "}
                   and{" "}
                 </Text>
-                <TouchableOpacity>
+                <TouchableOpacity  onPress={()=>{
+                      props.navigation.push("TermsAndConditions")
+                    }}>
                   <Text
                     style={[
                       GlobalStyles.LoginMeduimText,
@@ -731,7 +737,12 @@ export default function LoginUser(props) {
                   </Text>
                 </TouchableOpacity>
               </View>
-              <TouchableOpacity>
+              <TouchableOpacity
+                  onPress={()=>{
+                    props.navigation.push("TermsAndConditions")
+                    
+                  }}
+              >
                 <Text
                   style={[
                     GlobalStyles.LoginMeduimText,
