@@ -1,4 +1,4 @@
-const BasePath = "http://18.118.184.156/"
+const BasePath = "http://54.196.165.141:8004/"
 
 const Apis = {
     DashboardDetails: `${BasePath}api/admin/dashboard`,

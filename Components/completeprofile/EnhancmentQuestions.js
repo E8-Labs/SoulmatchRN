@@ -77,7 +77,7 @@ const EnhancmentQuestions = ({ navigation, route }) => {
                     let json = await result.json();
                     if (json.status === true) {
                         setShowIndicator2(false);
-                        //console.log('enancmennt questions are', json.data);
+                        console.log('enancmennt questions are', json.data);
                         //console.log('user answers from local are ', d.user.answers);
                         updateQuestionMedia(json.data, d.user.answers || []);
                         setQuestions(json.data);

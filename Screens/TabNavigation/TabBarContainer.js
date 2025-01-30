@@ -393,7 +393,7 @@ export default function TabBarContainer(props) {
   };
 
   function checkSubscriptionStatus(info) {
-    if (typeof info.entitlements.active["premium"] !== "undefined") {
+    if (typeof info.entitlements.active["premium"] == "undefined") {
       console.log(
         "User subscribed to plan Tabbar",
         info.entitlements.active["premium"]

@@ -62,7 +62,15 @@ export default function LoginUser(props) {
 
   const socialLogin = async (data) => {
     console.log("data is", data);
+    console.log('data.provider_name', data.provider_name)
     // return
+    if (data.provider_name === "apple") {
+      setIndicator3(true);
+    } else if (data.provider_name === "google") {
+      setIndicator1(true);
+    } else if (data.provider_name === "facebook") {
+      setIndicator2(true);
+    }
 
     try {
       const result = await fetch(ApisPath.ApiSocialLogin, {
@@ -70,13 +78,7 @@ export default function LoginUser(props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      if (data.provider_name === "apple") {
-        setIndicator3(true);
-      } else if (data.provider_name === "google") {
-        setIndicator1(true);
-      } else if (data.provider_name === "facebook") {
-        setIndicator2(true);
-      }
+
       if (result) {
         let json = await result.json();
         console.log(json);
@@ -135,13 +137,21 @@ export default function LoginUser(props) {
         }
       }
       //Call the api here
+      // socialLogin({
+      //   first_name: credential.fullName.givenName,
+      //   last_name: credential.fullName.familyName,
+      //   email: credential.email,
+      //   provider_name: "apple",
+      //   provider_id: credential.user,
+      // });
+
       socialLogin({
-        first_name: credential.fullName.givenName,
-        last_name: credential.fullName.familyName,
-        email: credential.email,
+        first_name: credential.fullName?.givenName || "Unknown",
+        last_name: credential.fullName?.familyName || "User",
+        email: credential.email || `${credential.user}@apple.com`,
         provider_name: "apple",
         provider_id: credential.user,
-      });
+    });
 
       console.log("Apple credentials ", credential);
     } catch (e) {
@@ -221,7 +231,8 @@ export default function LoginUser(props) {
       let name = getName(userInfo.user.name);
       console.log("Google name is ", userInfo.user.name);
       console.log("Name is ", name);
-      socialLogin({
+
+      await socialLogin({
         first_name: name.firstName,
         last_name: name.lastName,
         email: userInfo.user.email,
@@ -281,6 +292,7 @@ export default function LoginUser(props) {
               // } else if(data.status === "active") {
               let from = "Login";
               try {
+                console.log('trying to navogate')
                 await NavigateLogedUser(props.navigation, from);
               } catch (e) {
                 console.log("error finding in navigate user", e);
@@ -697,9 +709,9 @@ export default function LoginUser(props) {
                   By signing up you agree to our{" "}
                 </Text>
                 <TouchableOpacity
-                    onPress={()=>{
-                      props.navigation.push("TermsAndConditions")
-                    }}
+                  onPress={() => {
+                    props.navigation.push("TermsAndConditions")
+                  }}
                 >
                   <Text
                     style={[
@@ -719,9 +731,9 @@ export default function LoginUser(props) {
                   {" "}
                   and{" "}
                 </Text>
-                <TouchableOpacity  onPress={()=>{
-                      props.navigation.push("TermsAndConditions")
-                    }}>
+                <TouchableOpacity onPress={() => {
+                  props.navigation.push("TermsAndConditions")
+                }}>
                   <Text
                     style={[
                       GlobalStyles.LoginMeduimText,
@@ -738,10 +750,10 @@ export default function LoginUser(props) {
                 </TouchableOpacity>
               </View>
               <TouchableOpacity
-                  onPress={()=>{
-                    props.navigation.push("TermsAndConditions")
-                    
-                  }}
+                onPress={() => {
+                  props.navigation.push("TermsAndConditions")
+
+                }}
               >
                 <Text
                   style={[

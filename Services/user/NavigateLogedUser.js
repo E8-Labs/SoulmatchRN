@@ -225,6 +225,7 @@ export const NavigateLogedUser = async (navigation, from) => {
     // navigation.navigate('TabBarContainer')
 
   } else {
+    console.log('data not found ')
     return "SlideScreen"
   }
 }
