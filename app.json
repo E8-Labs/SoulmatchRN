@@ -11,23 +11,19 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "usesAppleSignIn": true,
       "supportsTablet": true,
       "bundleIdentifier": "com.e8labs.soulmatch",
       "googleServicesFile": "./GoogleService-Info.plist",
-      "buildNumber": "10",  
+      "buildNumber": "10",
       "infoPlist": {
-        "UIBackgroundModes": [
-          "audio"
-        ],
+        "UIBackgroundModes": ["audio"],
         "NSAppTransportSecurity": {
-          "NSAllowsArbitraryLoads": false, 
+          "NSAllowsArbitraryLoads": false,
           "NSExceptionDomains": {
-            "18.118.184.156": { 
+            "18.118.184.156": {
               "NSTemporaryExceptionAllowsInsecureHTTPLoads": true,
               "NSTemporaryExceptionMinimumTLSVersion": "TLSv1.0"
             }
@@ -37,9 +33,7 @@
         "NSMicrophoneUsageDescription": "Let SoulMatch access microphone to record voice messages.",
         "CFBundleURLTypes": [
           {
-            "CFBundleURLSchemes": [
-              "plurawlapp.com"
-            ]
+            "CFBundleURLSchemes": ["plurawlapp.com"]
           },
           {
             "CFBundleURLSchemes": [
@@ -62,9 +56,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": [
-        "android.permission.RECORD_AUDIO"
-      ],
+      "permissions": ["android.permission.RECORD_AUDIO"],
       "package": "com.e8labs.soulmatch"
     },
     "web": {
