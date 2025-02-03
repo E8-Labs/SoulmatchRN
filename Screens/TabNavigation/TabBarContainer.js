@@ -274,6 +274,10 @@ export default function TabBarContainer(props) {
     };
   }, []);
 
+  useEffect(()=>{
+    refreshSubscriptionStatus()
+  },[])
+
   // useEffect(() => {
   //     const subscription = Notifications.addNotificationResponseReceivedListener(response => {
   //         const notData = response.notification.request.content.data;
