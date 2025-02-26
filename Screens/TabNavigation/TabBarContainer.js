@@ -404,7 +404,7 @@ export default function TabBarContainer(props) {
       );
     } else {
       console.log("User not subscribed");
-      props.navigration.navigate("SubscriptionPlan");
+      // props.navigation.navigate("SubscriptionPlan");
     }
   }
 
