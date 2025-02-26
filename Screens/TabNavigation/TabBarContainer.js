@@ -274,9 +274,9 @@ export default function TabBarContainer(props) {
     };
   }, []);
 
-  useEffect(()=>{
-    refreshSubscriptionStatus()
-  },[])
+  useEffect(() => {
+    refreshSubscriptionStatus();
+  }, []);
 
   // useEffect(() => {
   //     const subscription = Notifications.addNotificationResponseReceivedListener(response => {
@@ -404,7 +404,7 @@ export default function TabBarContainer(props) {
       );
     } else {
       console.log("User not subscribed");
-      props.navigation.navigate("SubscriptionPlan");
+      props.navigration.navigate("SubscriptionPlan");
     }
   }
 
