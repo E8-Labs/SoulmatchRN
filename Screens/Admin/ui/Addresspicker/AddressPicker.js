@@ -9,7 +9,7 @@ import GlobalStyles from '../../../../assets/styles/GlobalStyles';
 const GOOGLE_PLACES_API_KEY = 'AIzaSyAvhNXgMGSYcFIHLkRmZkDta_U7yWdgQQI'; // never save your real api key in a snack!
 const AddressPicker = ({ backButtonPressed, PickAddress, inputReference }) => {
 
-    let useinputRef = useRef('');
+    let useinputRef = useRef(null);
     const [CityName, setCityName] = useState('');
     const [StateName, setStateName] = useState('');
     const [stateName2, setStateName2] = useState('');
@@ -22,7 +22,7 @@ const AddressPicker = ({ backButtonPressed, PickAddress, inputReference }) => {
 
     useEffect(() => {
         if (useinputRef.current) {
-            useinputRef.current.focus();
+            // useinputRef.current.focus();
         }
     }, []);
 

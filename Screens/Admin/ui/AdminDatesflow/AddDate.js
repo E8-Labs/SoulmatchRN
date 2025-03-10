@@ -366,8 +366,8 @@ const AddDate = ({ navigation, route }) => {
     }
 
     const handlePickAddress = () => {
-        setOpenModalLocation(true)
         // console.warn("hello");
+        setOpenModalLocation(true)
         // navigation.navigate('AddressPicker', {
         // PickAddress: pickAddress
         // })
@@ -815,7 +815,6 @@ const AddDate = ({ navigation, route }) => {
         </SafeAreaView>
     )
 }
-
 export default AddDate;
 
 

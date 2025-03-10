@@ -25,7 +25,7 @@ PODS:
     - ExpoModulesCore
   - Expo (51.0.39):
     - ExpoModulesCore
-  - ExpoAdapterFBSDKNext (13.1.4):
+  - ExpoAdapterFBSDKNext (13.4.1):
     - ExpoModulesCore
     - FBSDKCoreKit
     - React-Core
@@ -33,7 +33,7 @@ PODS:
     - ExpoModulesCore
     - GoogleSignIn (~> 7.0)
     - React-Core
-  - ExpoAppleAuthentication (6.4.2):
+  - ExpoAppleAuthentication (7.1.3):
     - ExpoModulesCore
   - ExpoAsset (10.0.10):
     - ExpoModulesCore
@@ -43,6 +43,8 @@ PODS:
     - ExpoModulesCore
   - ExpoFont (12.0.10):
     - ExpoModulesCore
+  - ExpoHaptics (14.0.1):
+    - ExpoModulesCore
   - ExpoImage (1.13.0):
     - ExpoModulesCore
     - libavif/libdav1d
@@ -50,15 +52,15 @@ PODS:
     - SDWebImageAVIFCoder (~> 0.11.0)
     - SDWebImageSVGCoder (~> 1.7.0)
     - SDWebImageWebPCoder (~> 0.14.6)
-  - ExpoImagePicker (15.0.7):
+  - ExpoImagePicker (15.1.0):
     - ExpoModulesCore
   - ExpoKeepAwake (13.0.2):
     - ExpoModulesCore
-  - ExpoLinearGradient (13.0.2):
+  - ExpoLinearGradient (14.0.2):
     - ExpoModulesCore
   - ExpoMailComposer (13.0.1):
     - ExpoModulesCore
-  - ExpoModulesCore (1.12.26):
+  - ExpoModulesCore (2.2.2):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -85,21 +87,21 @@ PODS:
     - ExpoModulesCore
   - ExpoVideoThumbnails (7.9.0):
     - ExpoModulesCore
-  - FBAEMKit (17.4.0):
-    - FBSDKCoreKit_Basics (= 17.4.0)
+  - FBAEMKit (18.0.0):
+    - FBSDKCoreKit_Basics (= 18.0.0)
   - FBLazyVector (0.74.1)
-  - FBSDKCoreKit (17.4.0):
-    - FBAEMKit (= 17.4.0)
-    - FBSDKCoreKit_Basics (= 17.4.0)
-  - FBSDKCoreKit_Basics (17.4.0)
-  - FBSDKGamingServicesKit (17.4.0):
-    - FBSDKCoreKit (= 17.4.0)
-    - FBSDKCoreKit_Basics (= 17.4.0)
-    - FBSDKShareKit (= 17.4.0)
-  - FBSDKLoginKit (17.4.0):
-    - FBSDKCoreKit (= 17.4.0)
-  - FBSDKShareKit (17.4.0):
-    - FBSDKCoreKit (= 17.4.0)
+  - FBSDKCoreKit (18.0.0):
+    - FBAEMKit (= 18.0.0)
+    - FBSDKCoreKit_Basics (= 18.0.0)
+  - FBSDKCoreKit_Basics (18.0.0)
+  - FBSDKGamingServicesKit (18.0.0):
+    - FBSDKCoreKit (= 18.0.0)
+    - FBSDKCoreKit_Basics (= 18.0.0)
+    - FBSDKShareKit (= 18.0.0)
+  - FBSDKLoginKit (18.0.0):
+    - FBSDKCoreKit (= 18.0.0)
+  - FBSDKShareKit (18.0.0):
+    - FBSDKCoreKit (= 18.0.0)
   - fmt (9.1.0)
   - glog (0.3.5)
   - GoogleSignIn (7.0.0):
@@ -1067,20 +1069,20 @@ PODS:
   - React-Mapbuffer (0.74.1):
     - glog
     - React-debug
-  - react-native-fbsdk-next (13.1.4):
+  - react-native-fbsdk-next (13.4.1):
     - React-Core
-    - react-native-fbsdk-next/Core (= 13.1.4)
-    - react-native-fbsdk-next/Login (= 13.1.4)
-    - react-native-fbsdk-next/Share (= 13.1.4)
-  - react-native-fbsdk-next/Core (13.1.4):
-    - FBSDKCoreKit (~> 17.4)
+    - react-native-fbsdk-next/Core (= 13.4.1)
+    - react-native-fbsdk-next/Login (= 13.4.1)
+    - react-native-fbsdk-next/Share (= 13.4.1)
+  - react-native-fbsdk-next/Core (13.4.1):
+    - FBSDKCoreKit (~> 18.0)
     - React-Core
-  - react-native-fbsdk-next/Login (13.1.4):
-    - FBSDKLoginKit (~> 17.4)
+  - react-native-fbsdk-next/Login (13.4.1):
+    - FBSDKLoginKit (~> 18.0)
     - React-Core
-  - react-native-fbsdk-next/Share (13.1.4):
-    - FBSDKGamingServicesKit (~> 17.4)
-    - FBSDKShareKit (~> 17.4)
+  - react-native-fbsdk-next/Share (13.4.1):
+    - FBSDKGamingServicesKit (~> 18.0)
+    - FBSDKShareKit (~> 18.0)
     - React-Core
   - react-native-safe-area-context (4.8.2):
     - React-Core
@@ -1316,7 +1318,7 @@ PODS:
   - RevenueCat (4.43.2)
   - RNCAsyncStorage (1.23.1):
     - React-Core
-  - RNDateTimePicker (8.2.0):
+  - RNDateTimePicker (8.3.0):
     - React-Core
   - RNGoogleSignin (11.0.1):
     - GoogleSignIn (~> 7.0.0)
@@ -1401,6 +1403,7 @@ DEPENDENCIES:
   - ExpoDevice (from `../node_modules/expo-device/ios`)
   - ExpoFileSystem (from `../node_modules/expo-file-system/ios`)
   - ExpoFont (from `../node_modules/expo-font/ios`)
+  - ExpoHaptics (from `../node_modules/expo-haptics/ios`)
   - ExpoImage (from `../node_modules/expo-image/ios`)
   - ExpoImagePicker (from `../node_modules/expo-image-picker/ios`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
@@ -1535,6 +1538,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-file-system/ios"
   ExpoFont:
     :path: "../node_modules/expo-font/ios"
+  ExpoHaptics:
+    :path: "../node_modules/expo-haptics/ios"
   ExpoImage:
     :path: "../node_modules/expo-image/ios"
   ExpoImagePicker:
@@ -1689,28 +1694,29 @@ SPEC CHECKSUMS:
   EXLocation: 43e9b582ca63a23c6f0a18d8cbe2145b3a388b55
   EXNotifications: 85496c9fab09d759d0e4ff594bca078ab817c40c
   Expo: 8c995afb875c15bf8439af0b20bcb9ed8f90d0bd
-  ExpoAdapterFBSDKNext: aee105dbf4a586a26b24103b2077c07c640cbc2a
+  ExpoAdapterFBSDKNext: ea93990577019c9cd85df68a0c10683bc08f4f23
   ExpoAdapterGoogleSignIn: 8b749750f4b43e884a89d5c5c8a64ae21854e84d
-  ExpoAppleAuthentication: 265219fa0ba1110872079f55f56686b9737b0065
+  ExpoAppleAuthentication: ee61704f441b3ef10a3d1280acbb6b9e2e04a38d
   ExpoAsset: 323700f291684f110fb55f0d4022a3362ea9f875
   ExpoDevice: fc94f0e42ecdfd897e7590f2874fc64dfa7e9b1c
   ExpoFileSystem: 80bfe850b1f9922c16905822ecbf97acd711dc51
   ExpoFont: 00756e6c796d8f7ee8d211e29c8b619e75cbf238
+  ExpoHaptics: e01cce0741d68c281853118eb0267f88d42c6b7a
   ExpoImage: 42162e3d264ce07a62766d6bd26bd299fe4c6faa
-  ExpoImagePicker: 12a420923383ae38dccb069847218f27a3b87816
+  ExpoImagePicker: 1e696c26a3e5c01a0ab1b99897db3da59c04a141
   ExpoKeepAwake: 3b8815d9dd1d419ee474df004021c69fdd316d08
-  ExpoLinearGradient: 8cec4a09426d8934c433e83cb36262d72c667fce
+  ExpoLinearGradient: ee9efc5acb988b911320e964fab9b4cbdeb198c4
   ExpoMailComposer: e6da16de4682fba919051b2e680f804af00341f3
-  ExpoModulesCore: 831ece8311a489418746925820bbffdda587d6f4
+  ExpoModulesCore: 314398d8427f26fbe9924775f2f19dc06a1a3508
   ExpoVideo: 9bf68ae981f3cb64b4fd2fc9f5a5337e55716b5b
   ExpoVideoThumbnails: 9b6c0dada0b3240dd3527e0dc688711e17842c88
-  FBAEMKit: 58cb5f302cdd715a56d4c1d0dfdd2e423ac1421a
+  FBAEMKit: e34530df538b8eb8aeb53c35867715ba6c63ef0c
   FBLazyVector: 898d14d17bf19e2435cafd9ea2a1033efe445709
-  FBSDKCoreKit: 94d7461d0cecf441b1ba7c41acfff41daa8ccd41
-  FBSDKCoreKit_Basics: 151b43db8b834d3f0e02f95d36a44ffd36265e45
-  FBSDKGamingServicesKit: 55a13febe0cd117bf5f8f61f315d75aab9b7876e
-  FBSDKLoginKit: 5c1cd53c91a2282b3a4fe6e6d3dcf2b8b0d33d55
-  FBSDKShareKit: 00546a02dce72f37a4209cd68aaf5fb749185c3b
+  FBSDKCoreKit: d3f479a69127acebb1c6aad91c1a33907bcf6c2f
+  FBSDKCoreKit_Basics: 017b6dc2a1862024815a8229e75661e627ac1e29
+  FBSDKGamingServicesKit: cdb625419879a651d07906d8f874fc76291be660
+  FBSDKLoginKit: 5875762d1fe09ddcb05d03365d4f5dc34413843d
+  FBSDKShareKit: 082d1b087d6481af36f8d8433542f25f2fc2c8dd
   fmt: 4c2741a687cc09f0634a2e2c72a838b99f1ff120
   glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
   GoogleSignIn: b232380cf495a429b8095d3178a8d5855b42e842
@@ -1748,7 +1754,7 @@ SPEC CHECKSUMS:
   React-jsitracing: 233d1a798fe0ff33b8e630b8f00f62c4a8115fbc
   React-logger: 7e7403a2b14c97f847d90763af76b84b152b6fce
   React-Mapbuffer: 11029dcd47c5c9e057a4092ab9c2a8d10a496a33
-  react-native-fbsdk-next: de7d8792163c648b27ed853d0dab181cf928aa32
+  react-native-fbsdk-next: 1baeeacf0ecdeb839cca16ca75cb16a9bbbf8e03
   react-native-safe-area-context: 0ee144a6170530ccc37a0fd9388e28d06f516a89
   React-nativeconfig: b0073a590774e8b35192fead188a36d1dca23dec
   React-NativeModulesApple: df46ff3e3de5b842b30b4ca8a6caae6d7c8ab09f
@@ -1775,7 +1781,7 @@ SPEC CHECKSUMS:
   ReactCommon: f42444e384d82ab89184aed5d6f3142748b54768
   RevenueCat: 3d934653b7e8b09af88fd47e9e84cfaf5d0a89ba
   RNCAsyncStorage: 826b603ae9c0f88b5ac4e956801f755109fa4d5c
-  RNDateTimePicker: 40ffda97d071a98a10fdca4fa97e3977102ccd14
+  RNDateTimePicker: a793ed8822283f576dd0a205a0916c5098c2611f
   RNGoogleSignin: 24d3b3261f78b0fae0aa013f8ab6f8d25e369b0c
   RNPurchases: 4305de02b902d3c1e56a50295dc0a6e758b73095
   RNReanimated: 35f9ac9c3ac42d0497ebd1cce5c39d7687a8493e
@@ -1789,6 +1795,6 @@ SPEC CHECKSUMS:
   TweetNacl: 3abf4d1d2082b0114e7a67410e300892448951e6
   Yoga: b9a182ab00cf25926e7f79657d08c5d23c2d03b0
 
-PODFILE CHECKSUM: 707b792697023763b4f8f59b2c404b048fa3bc4f
+PODFILE CHECKSUM: 1234402c1e01f081a90d0902ba409f116fecbd9b
 
 COCOAPODS: 1.15.2

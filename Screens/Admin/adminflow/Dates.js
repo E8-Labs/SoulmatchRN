@@ -12,6 +12,7 @@ import { GetBudget } from '../../../Services/dates/GetBudget'
 import { DateFilterpoupAdmin } from '../ui/AdminDatesflow/DateFilterpoupAdmin'
 import DatesFilterPopup from '../../../Components/DatesFilterPopup'
 import DatesLoadingIndicator from '../../../Services/dates/DatesLoadingIndicator'
+import GlobalStyles from '../../../assets/styles/GlobalStyles'
 
 const Dates = ({ navigation }) => {
     const timerRef = useRef(null);
@@ -449,47 +450,56 @@ const Dates = ({ navigation }) => {
                         <View style={{
                             flexDirection: 'row', flexWrap: 'wrap', display: 'flex', justifyContent: 'space-between', marginBottom: 30, width: width - 50, alignItems: 'flex-start'
                         }}>
-                            {DATA.map((item, index) => (
-                                <TouchableOpacity onPress={() => handleDateDetails(item, index)} key={item.id} style={{ marginTop: 10 }}>
-                                    <View style={{ borderWidth: 1, borderColor: '#E6E6E6', borderRadius: 10, padding: 12, width: 176 / 430 * width }}>
-                                        <Image source={item.imageUrl ? { uri: item.imageUrl } : require('../../../assets/Images3/imagePlaceholder.webp')} 
-                                            style={{ height: 98 / 930 * height, width: 152 / 430 * width, borderRadius: 6, resizeMode: 'cover' }} />
-                                        <Text numberOfLines={1} style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, marginTop: 7 }}>
-                                            {item.name}
-                                        </Text>
-                                        <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                            <Text style={{ fontSize: 12, fontWeight: '400', fontFamily: customFonts.meduim, color: '#333333' }}>
-                                                Budget :
+
+                            {DATA.length > 0 ? (
+                                DATA.map((item, index) => (
+                                    <TouchableOpacity onPress={() => handleDateDetails(item, index)} key={item.id} style={{ marginTop: 10 }}>
+                                        <View style={{ borderWidth: 1, borderColor: '#E6E6E6', borderRadius: 10, padding: 12, width: 176 / 430 * width }}>
+                                            <Image source={item.imageUrl ? { uri: item.imageUrl } : require('../../../assets/Images3/imagePlaceholder.webp')}
+                                                style={{ height: 98 / 930 * height, width: 152 / 430 * width, borderRadius: 6, resizeMode: 'cover' }} />
+                                            <Text numberOfLines={1} style={{ fontWeight: '500', fontSize: 16, fontFamily: customFonts.meduim, marginTop: 7 }}>
+                                                {item.name}
                                             </Text>
-                                            <Text
-                                                style={{
-                                                    fontWeight: '500', fontSize: 12,
-                                                    fontFamily: customFonts.bold, color: '#333333'
-                                                }}>
-                                                {/* ${item.minBudget} - ${item.maxBudget} */}
-                                                {GetBudget(item)}
-                                                {/* {GetBudgetVal(item)} */}
-                                            </Text>
+                                            <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                <Text style={{ fontSize: 12, fontWeight: '400', fontFamily: customFonts.meduim, color: '#333333' }}>
+                                                    Budget :
+                                                </Text>
+                                                <Text
+                                                    style={{
+                                                        fontWeight: '500', fontSize: 12,
+                                                        fontFamily: customFonts.bold, color: '#333333'
+                                                    }}>
+                                                    {/* ${item.minBudget} - ${item.maxBudget} */}
+                                                    {GetBudget(item)}
+                                                    {/* {GetBudgetVal(item)} */}
+                                                </Text>
+                                            </View>
+                                            <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                <Text style={{ fontSize: 12, fontWeight: '400', fontFamily: customFonts.meduim, color: '#333333' }}>
+                                                    Ratings :
+                                                </Text>
+                                                <Text style={{ fontWeight: '500', fontSize: 12, fontFamily: customFonts.bold, color: '#333333' }}>
+                                                    {Math.round(item.rating)}
+                                                </Text>
+                                            </View>
+                                            <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                <Text style={{ fontSize: 12, fontWeight: '400', fontFamily: customFonts.meduim, color: '#333333' }}>
+                                                    Category :
+                                                </Text>
+                                                <Text numberOfLines={1} style={{ fontSize: 12, fontFamily: customFonts.meduim, width: 80 / 430 * width, textAlign: 'right', backgroundColor: 'transparet' }}>
+                                                    {item.Category.name}
+                                                </Text>
+                                            </View>
                                         </View>
-                                        <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                            <Text style={{ fontSize: 12, fontWeight: '400', fontFamily: customFonts.meduim, color: '#333333' }}>
-                                                Ratings :
-                                            </Text>
-                                            <Text style={{ fontWeight: '500', fontSize: 12, fontFamily: customFonts.bold, color: '#333333' }}>
-                                                {Math.round(item.rating)}
-                                            </Text>
-                                        </View>
-                                        <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                            <Text style={{ fontSize: 12, fontWeight: '400', fontFamily: customFonts.meduim, color: '#333333' }}>
-                                                Category :
-                                            </Text>
-                                            <Text numberOfLines={1} style={{fontSize: 12, fontFamily: customFonts.meduim, width: 80 / 430 * width,textAlign:'right', backgroundColor: 'transparet'  }}>
-                                                {item.Category.name}
-                                            </Text>
-                                        </View>
-                                    </View>
-                                </TouchableOpacity>
-                            ))}
+                                    </TouchableOpacity>
+                                ))
+
+                                ): (
+                                <Text style = {[GlobalStyles.btnText,{color:'#000'}]}>
+                                    No date
+                                </Text>
+                            )}
+
                         </View>
                     </ScrollView>
                 }
