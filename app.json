@@ -15,6 +15,7 @@
     "ios": {
       "usesAppleSignIn": true,
       "supportsTablet": true,
+      "deploymentTarget": "15.1",
       "bundleIdentifier": "com.e8labs.soulmatch",
       "googleServicesFile": "./GoogleService-Info.plist",
       "buildNumber": "10",

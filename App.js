@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState, useRef } from "react";
 import { StatusBar } from "expo-status-bar";
+import "react-native-get-random-values";
+
 import {
   StyleSheet,
   Text,
