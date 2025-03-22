@@ -194,7 +194,7 @@ export const NavigateLogedUser = async (navigation, from) => {
               customerInfo.entitlements.active["premium"]
             );
             if (
-              typeof customerInfo.entitlements.active["premium"] === "undefined"
+              typeof customerInfo.entitlements.active["premium"] !== "undefined"
             ) {
               console.log(
                 "User subscribed to plan ",
