@@ -22,9 +22,9 @@
       "infoPlist": {
         "UIBackgroundModes": ["audio"],
         "NSAppTransportSecurity": {
-          "NSAllowsArbitraryLoads": false,
+          "NSAllowsArbitraryLoads": true,
           "NSExceptionDomains": {
-            "18.118.184.156": {
+            "54.196.165.141": {
               "NSTemporaryExceptionAllowsInsecureHTTPLoads": true,
               "NSTemporaryExceptionMinimumTLSVersion": "TLSv1.0"
             }
