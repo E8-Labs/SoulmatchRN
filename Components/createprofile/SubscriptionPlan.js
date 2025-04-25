@@ -134,7 +134,7 @@ export default function SubscriptionPlan({ navigation }) {
       console.log("logout successfully");
       navigation.reset({
         index: 0,
-        routes: [{ name: "LoginScreen" }],
+        routes: [{ name: "LoginUser" }],
       });
     } catch (e) {
       console.log("finding error in logout user", e);
