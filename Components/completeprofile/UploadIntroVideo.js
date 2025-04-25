@@ -262,7 +262,7 @@ const UploadIntroVideo = ({ navigation }) => {
                                         <View style={{ flexDirection: 'row', gap: 30 }}>
                                             <TouchableOpacity onPress={pickVideo}>
                                                 <View style={{ height: 120 / 930 * height, width: 126 / 430 * width, borderWidth: 1, borderColor: '#E6E6E6', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
-                                                    <Image source={require('../../assets/galleryicon.png')} style={{ height: 35 / 930 * height, width: 35 / 430 * width }} />
+                                                    <Image source={require('../../assets/galleryicon.png')} style={{ height: 35 / 930 * height, width: 35 / 430 * width, resizeMode: 'contain' }} />
                                                     <Text style={{ fontWeight: '500', fontSize: 14, color: '#4D4D4D' }}>
                                                         Gallery
                                                     </Text>
@@ -270,7 +270,7 @@ const UploadIntroVideo = ({ navigation }) => {
                                             </TouchableOpacity>
                                             <TouchableOpacity onPress={captureVideo}>
                                                 <View style={{ height: 120 / 930 * height, width: 126 / 430 * width, borderWidth: 1, borderColor: '#E6E6E6', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
-                                                    <Image source={require('../../assets/cameraicon.png')} style={{ height: 35 / 930 * height, width: 35 / 430 * width }} />
+                                                    <Image source={require('../../assets/cameraicon.png')} style={{ height: 35 / 930 * height, width: 35 / 430 * width , resizeMode: 'contain'}} />
                                                     <Text style={{ fontWeight: '500', fontSize: 14, color: '#4D4D4D' }}>
                                                         Camera
                                                     </Text>

@@ -146,7 +146,7 @@ useEffect(() => {
 
   return (
     <SafeAreaView>
-      <View style={[GlobalStyles.container, { justifyContent: 'flex-start',backgroundColor:colors.transparent }]}>
+      <View style={[ { justifyContent: 'flex-start',backgroundColor:colors.transparent,alignItems:'center' }]}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20, width: width - 60 }}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <View style={GlobalStyles.backBtn}>

@@ -8,6 +8,7 @@ import {
   Modal,
   Platform,
   ActivityIndicator,
+  Linking,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Purchases from "react-native-purchases";
@@ -131,7 +132,10 @@ export default function SubscriptionPlan({ navigation }) {
       await AsyncStorage.removeItem("USER");
       await AsyncStorage.removeItem("UserAnswers");
       console.log("logout successfully");
-      navigation.navigate("LoginUser");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "LoginScreen" }],
+      });
     } catch (e) {
       console.log("finding error in logout user", e);
     }
@@ -326,6 +330,17 @@ export default function SubscriptionPlan({ navigation }) {
           Choose a plan
         </Text>
 
+        <Text
+          style={{
+            fontFamily: customFonts.meduim,
+            fontSize: 14,
+            color: "#000",
+            marginTop: 20
+          }}
+        >
+          14 days free trail
+        </Text>
+
         {loading ? (
           <ContentLoader
             height={height}
@@ -333,7 +348,7 @@ export default function SubscriptionPlan({ navigation }) {
             speed={1}
             backgroundColor={"#D5D0F6"}
             foregroundColor={"#ececec"}
-            // viewBox="0 0 380 70"
+          // viewBox="0 0 380 70"
           >
             <Rect x={30} y={50} ry={5} rx={5} height={10} width={250} />
             <Rect x={30} y={70} ry={5} rx={5} height={10} width={300} />
@@ -410,15 +425,7 @@ export default function SubscriptionPlan({ navigation }) {
                         >
                           {product.title}
                         </Text>
-                        <Text
-                          style={{
-                            fontFamily: customFonts.meduim,
-                            fontSize: 12,
-                            color: "#000",
-                          }}
-                        >
-                          14 days free trail
-                        </Text>
+
                       </View>
 
                       <Text
@@ -494,7 +501,7 @@ export default function SubscriptionPlan({ navigation }) {
             </TouchableOpacity>
           ))
         )}
-        <View style={{ alignItems: "center" }}>
+        <View style={{ alignItems: "center", marginTop: 20 }}>
           <View
             style={{
               flexDirection: "row",
@@ -504,71 +511,19 @@ export default function SubscriptionPlan({ navigation }) {
               justifyContent: "center",
             }}
           >
-            <Text style={[{ fontSize: 12 }]}>
-              By subscribing you agree to our{" "}
-            </Text>
             <TouchableOpacity
-              onPress={() => {
-                navigation.push("TermsAndConditions");
+              onPress={()=>{
+                Linking.openURL("https://www.soulmatch.dating/terms-and-condition")
               }}
             >
-              <Text
-                style={[
-                  GlobalStyles.LoginMeduimText,
-                  {
-                    fontSize: 12,
-                    color: "#000",
-                    fontWeight: "500",
-                    fontFamily: customFonts.meduim,
-                  },
-                ]}
-              >
-                Terms
+              <Text style={[{ fontSize: 12 }]}>
+                Terms & Conditions | Privacy Policy
               </Text>
             </TouchableOpacity>
-            <Text style={[GlobalStyles.LoginMeduimText, { fontSize: 12 }]}>
-              {" "}
-              and{" "}
-            </Text>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.push("TermsAndConditions");
-              }}
-            >
-              <Text
-                style={[
-                  GlobalStyles.LoginMeduimText,
-                  {
-                    fontSize: 12,
-                    color: "#000",
-                    fontWeight: "500",
-                    fontFamily: customFonts.meduim,
-                  },
-                ]}
-              >
-                Conditions
-              </Text>
-            </TouchableOpacity>
+
+
           </View>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.push("TermsAndConditions");
-            }}
-          >
-            <Text
-              style={[
-                GlobalStyles.LoginMeduimText,
-                {
-                  fontSize: 12,
-                  color: "#000",
-                  fontWeight: "500",
-                  fontFamily: customFonts.meduim,
-                },
-              ]}
-            >
-              and Privacy Policy
-            </Text>
-          </TouchableOpacity>
+
         </View>
       </View>
     </View>

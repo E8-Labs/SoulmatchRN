@@ -9,7 +9,7 @@ const { height, width } = Dimensions.get('window')
 
 export default function MessageMain(props) {
   return (
-    <View style={{ alignItems: 'center', height: height,backgroundColor:'white' }}>
+    <View style={{ alignItems: 'center', height: height, backgroundColor: 'green', width: "100%", borderWidth: 1 }}>
 
       {/* <View style={{
         backgroundColor: 'white', height: 110 / 930 * height, width: width, shadowColor: '#000', shadowOffset: {
@@ -37,16 +37,17 @@ export default function MessageMain(props) {
           </View>
         </View>
       </View> */}
-
-      <MessagesList navigate={(chat) => {
-        console.log("User selected ", chat)
-        props.navigation.navigate("ChatScreen",{
-          data:{
-            chat:chat,
-            from:'message'
-          }
-        })
-      }}/>
+      <View style = {{width:width}}>
+        <MessagesList navigate={(chat) => {
+          console.log("User selected ", chat)
+          props.navigation.navigate("ChatScreen", {
+            data: {
+              chat: chat,
+              from: 'message'
+            }
+          })
+        }} />
+      </View>
 
     </View>
   )

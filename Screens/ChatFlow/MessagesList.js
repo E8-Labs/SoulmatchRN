@@ -303,10 +303,9 @@ export default function MessagesList({ navigation }) {
 
 
     return (
+        <View style={GlobalStyles.container}>
 
-        <View style={{ width: width, height: height, alignItems: 'center',alignSelf:'center' }}>
-
-            <View style={{ alignItems: 'center', height: height, backgroundColor: 'white' }}>
+            <View style={{ alignItems: 'center', height: height, backgroundColor: 'white',width:"100%" }}>
 
                 <View style={{
                     // backgroundColor: '#fff', height: 110 / 930 * height, width: width, shadowColor: 'grey', shadowOffset: {
@@ -315,7 +314,7 @@ export default function MessagesList({ navigation }) {
                     // }, shadowRadius: 5, shadowOpacity: 0.4,
                 }}>
                     <View style={{
-                        alignItems: 'flex-end', flexDirection: 'row',  width:width-50/430*width, alignSelf: 'center', paddingBottom: 10,justifyContent:'space-between',
+                        alignItems: 'flex-end', flexDirection: 'row',  width:"90%", alignSelf: 'center', paddingBottom: 10,justifyContent:'space-between',
                         
                     }}>
                         <Text style={{ fontSize: 23, fontFamily: customFonts.meduim }}>Messages</Text>
@@ -370,7 +369,7 @@ export default function MessagesList({ navigation }) {
                     </View>
                 </View>
 
-                <View style={{ flexDirection: 'column', alignItems: 'center', width: width, paddingBottom: 10, }}>
+                <View style={{ flexDirection: 'column', alignItems: 'center', width: "100%", paddingBottom: 10, }}>
                     {
                         showIndicator ? (
                             <ContentLoader
@@ -393,7 +392,7 @@ export default function MessagesList({ navigation }) {
                                     renderItem={({ item }) => (
                                         <>
                                             <TouchableOpacity onPress={() => handleOnPress(item)} >
-                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: width - 60, alignSelf: 'center', paddingTop: 20, }}>
+                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: "90%", alignSelf: 'center', paddingTop: 20,borderWidth:0 }}>
                                                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                                                         <Image source={item.users[0] ? { uri: item.users[0].profile_image } : placholder}
                                                             onLoadStart={() => {

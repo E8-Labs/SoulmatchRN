@@ -12,6 +12,7 @@ import {
   Platform,
   ActivityIndicator,
   Alert,
+  Linking,
 } from "react-native";
 import GlobalStyles from "../../assets/styles/GlobalStyles";
 import colors from "../../assets/colors/Colors";
@@ -151,7 +152,7 @@ export default function LoginUser(props) {
         email: credential.email || `${credential.user}@apple.com`,
         provider_name: "apple",
         provider_id: credential.user,
-    });
+      });
 
       console.log("Apple credentials ", credential);
     } catch (e) {
@@ -343,17 +344,18 @@ export default function LoginUser(props) {
             <View
               style={{
                 justifyContent: "space-between",
-                height: height * 0.8,
+                height: height * 0.85,
                 alignItems: "center",
+                borderWidth: 0,
               }}
             >
               <View style={{ alignItems: "center" }}>
                 <View
                   style={{
-                    width: width - 40,
+                    width: '90%',
                     marginTop: 0,
                     alignSelf: "center",
-                    marginLeft: (20 / 430) * width,
+                    marginLeft: (0 / 430) * width,
                   }}
                 >
                   <Text
@@ -710,7 +712,7 @@ export default function LoginUser(props) {
                 </Text>
                 <TouchableOpacity
                   onPress={() => {
-                    props.navigation.push("TermsAndConditions")
+                    Linking.openURL("https://www.soulmatch.dating/terms-and-condition")
                   }}
                 >
                   <Text
@@ -732,7 +734,7 @@ export default function LoginUser(props) {
                   and{" "}
                 </Text>
                 <TouchableOpacity onPress={() => {
-                  props.navigation.push("TermsAndConditions")
+                  Linking.openURL("https://www.soulmatch.dating/terms-and-condition")
                 }}>
                   <Text
                     style={[
@@ -751,8 +753,7 @@ export default function LoginUser(props) {
               </View>
               <TouchableOpacity
                 onPress={() => {
-                  props.navigation.push("TermsAndConditions")
-
+                  Linking.openURL("https://www.soulmatch.dating/terms-and-condition")
                 }}
               >
                 <Text

@@ -11,7 +11,11 @@ const GlobalStyles = {
         alignItems: 'center',
         height: height,
         justifyContent: 'center',
-        width:width
+        width:"100%",
+        // maxWidth: 500,r
+        flex:1,
+        borderWidth:1,
+        height:"100%"
     },
     skipText: {
         color: colors.blueColor,
